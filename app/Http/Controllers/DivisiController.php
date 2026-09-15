@@ -14,7 +14,7 @@ class DivisiController extends Controller
     public function index()
     {
         $divisis = Divisi::all();
-        return view('admin.divisi.index', compact('divisis'));
+        return view('auth.admin.divisi.index', compact('divisis'));
     }
 
     /**
@@ -22,7 +22,7 @@ class DivisiController extends Controller
      */
     public function create()
     {
-        return view('admin.divisi.create');
+        return view('auth.admin.divisi.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class DivisiController extends Controller
      */
     public function edit(Divisi $divisi)
     {
-        return view('admin.divisi.edit', compact('divisi'));
+        return view('auth.admin.divisi.edit', compact('divisi'));
     }
 
     /**

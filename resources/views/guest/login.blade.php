@@ -1,0 +1,68 @@
+@extends('guest.layouts.index')
+
+@section('title', 'Masuk')
+
+@section('content')
+    <div class="flex flex-col items-center justify-center px-4 py-8">
+
+        <div
+            class="w-full sm:max-w-md bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-2xl p-8 md:p-10 border border-gray-100">
+
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 tracking-tight">
+                    Masuk ke <span class="text-red-600">Akun Anda</span>
+                </h2>
+                <p class="text-gray-500 mt-2 font-medium">Selamat datang kembali! Silakan masuk untuk melanjutkan.</p>
+            </div>
+
+            @if (session('status'))
+                <div
+                    class="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 font-medium text-sm text-green-700 text-center">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            {{-- Menambahkan onsubmit agar fungsi disableButton jalan --}}
+            <form method="POST" action="{{ route('guest.login') }}" onsubmit="return disableButton(this)" class="space-y-5">
+                @csrf
+
+                <div>
+                    <label for="email" class="block font-semibold text-gray-700 text-sm mb-1">Email</label>
+                    <input id="email" type="email" name="email"
+                        class="block w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none"
+                        value="{{ old('email') }}" required autofocus placeholder="Masukkan email Anda" />
+
+                    @error('email')
+                        <p class="text-sm text-red-600 mt-1.5 font-medium">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div>
+                    <label for="password" class="block font-semibold text-gray-700 text-sm mb-1">Password</label>
+                    <input id="password" type="password" name="password"
+                        class="block w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none pr-12"
+                        required placeholder="••••••••" />
+                    @error('password')
+                        <p class="text-sm text-red-600 mt-1.5 font-medium">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white py-3.5 rounded-lg font-bold transition-all shadow-md hover:shadow-lg active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:active:scale-100 cursor-pointer">
+                        <span id="btn-text">Masuk</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="flex flex-col items-center space-y-3 pt-3 border-t border-gray-100">
+                <p class="text-sm text-gray-500">
+                    Belum punya akun?
+                    <a href="{{ route('guest.register') }}"
+                        class="text-red-600 hover:text-red-700 hover:underline font-bold ml-1 cursor-pointer">
+                        Daftar di sini
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+@endsection

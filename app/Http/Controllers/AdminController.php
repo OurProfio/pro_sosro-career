@@ -16,9 +16,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $admins = Admin::where('id', '!=', 1)->with('user', 'cabang')->get();
+        $admins = Admin::where('user_id', '!=', auth()->user()->id)->with('user', 'cabang')->get();
 
-        return view('admin.admin.index', compact('admins'));
+        return view('auth.admin.admin.index', compact('admins'));
     }
 
     /**
@@ -28,7 +28,7 @@ class AdminController extends Controller
     {
         $cabangs = Cabang::all();
 
-        return view('admin.admin.create', compact('cabangs'));
+        return view('auth.admin.admin.create', compact('cabangs'));
     }
 
     /**
@@ -69,7 +69,7 @@ class AdminController extends Controller
     {
         $cabangs = Cabang::all();
 
-        return view('admin.admin.edit', compact('admin', 'cabangs'));
+        return view('auth.admin.admin.edit', compact('admin', 'cabangs'));
     }
 
     /**

@@ -31,6 +31,11 @@ class User extends Authenticatable
 
     public function admin()
     {
-        return $this->belongs(Admin::class);
+        return $this->hasOne(Admin::class);
+    }
+
+    public function applicant()
+    {
+        return $this->hasOne(Applicant::class);
     }
 }
