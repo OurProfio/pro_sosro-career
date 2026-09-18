@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
-use App\Models\Cabang;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
+    public function dashboard()
+    {
+        return view('auth.admin.index');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $admins = Admin::where('user_id', '!=', auth()->user()->id)->with('user', 'cabang')->get();
+        $admins = Admin::where('user_id', '!=', auth()->user()->id)->with('user', 'office')->get();
 
         return view('auth.admin.admin.index', compact('admins'));
     }
@@ -26,9 +30,9 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $cabangs = Cabang::all();
+        $offices = Office::all();
 
-        return view('auth.admin.admin.create', compact('cabangs'));
+        return view('auth.admin.admin.create', compact('offices'));
     }
 
     /**
@@ -38,19 +42,20 @@ class AdminController extends Controller
     {
         DB::transaction(function () use ($request) {
             $user = User::create([
-                'nama' => $request->nama,
                 'email' => $request->email,
                 'password' => $request->password,
                 'role' => 'admin',
-            ]);
+                ]);
 
             Admin::create([
+                'name' => $request->name,
                 'user_id' => $user->id,
-                'cabang_id' => $request->cabang_id,
+                'office_id' => $request->office_id,
                 'role' => $request->role,
             ]);
         });
 
+        
         return redirect()->route('admin.index')->with('success', 'Berhasil menambahkan data admin baru.');
     }
 

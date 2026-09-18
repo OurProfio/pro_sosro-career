@@ -18,7 +18,7 @@ class ApplicantProfileController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->applicant->is_profile_complete) {
+        if (auth()->user()->applicant->is_profile_complete === 1) {
             return view('auth.applicant.biodata.index');
         } else {
             return redirect()->route('biodata.create')->with('warning', 'Silahkan lengkapi data profil anda terlebih dahulu.');

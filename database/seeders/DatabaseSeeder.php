@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\Cabang;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -18,21 +19,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $user = User::create([
-            'nama' => 'Admin',
             'email' => 'admin@admin.admin',
             'password' => 'admin',
             'role' => 'admin',
         ]);
 
-        $cabang = Cabang::create([
-            'nama' => 'Kantor Pusat',
-            'tipe' => 'HO',
+        $office = Office::create([
+            'name' => 'Kantor Pusat',
+            'type' => 'HO',
         ]);
 
         Admin::create([
             'user_id' => $user->id,
-            'cabang_id' => $cabang->id,
+            'office_id' => $office->id,
             'role' => 'superadmin',
+            'name' => 'Admin',
         ]);
     }
 }

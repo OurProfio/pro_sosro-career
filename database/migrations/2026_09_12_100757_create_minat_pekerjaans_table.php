@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('minat_pekerjaans', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('applicant_profile_id')->constrained('applicant_profiles')->cascadeOnDelete();
-            $table->foreignId('divisi_id')->constrained('divisis')->cascadeOnDelete();
-            $table->integer('urutan');
-            $table->timestamps();
-        });
+        // Schema::create('minat_pekerjaans', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('applicant_profile_id')->constrained('applicant_profiles')->cascadeOnDelete();
+        //     $table->foreignId('divisi_id')->constrained('divisis')->cascadeOnDelete();
+        //     $table->integer('ordinal');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('minat_pekerjaans');
+        // Schema::dropIfExists('minat_pekerjaans');
     }
 };

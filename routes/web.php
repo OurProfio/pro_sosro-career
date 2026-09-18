@@ -3,8 +3,9 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicantProfileController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CabangController;
-use App\Http\Controllers\DivisiController;
+use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\OfficeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('guest.index'))->name('guest.index');
@@ -17,12 +18,18 @@ Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::resource('cabang', CabangController::class);
-    Route::resource('admin', AdminController::class);
-    Route::resource('divisi', DivisiController::class);
+    Route::group(['middleware' => ['admin']], function () {
+        Route::get('/admin/dashboard', fn() => view('auth.admin.index'))->name('admin.dashboard');
+        Route::resource('office', OfficeController::class);
+        Route::resource('admin', AdminController::class);
+        Route::resource('division', DivisionController::class);
+        Route::resource('job', JobController::class);
+    });
 
-    Route::get('dashboard', fn() => view('auth.applicant.index'))->name('applicant.index');
-    Route::resource('biodata', ApplicantProfileController::class)->parameters(['biodata' => 'applicantProfile']);
-    
+    Route::group(['middleware' => ['applicant']], function () {
+        Route::get('dashboard', fn() => view('auth.applicant.index'))->name('applicant.index');
+        Route::resource('biodata', ApplicantProfileController::class)->parameters(['biodata' => 'applicantProfile']);
+    });
+
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });

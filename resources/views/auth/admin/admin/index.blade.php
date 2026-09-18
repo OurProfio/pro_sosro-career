@@ -8,7 +8,7 @@
         <div class="flex items-center gap-1.5 flex-wrap">
             <div class="relative">
                 <i data-lucide="search" class="w-3.5 h-3.5 absolute left-2 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" placeholder="Cari nama, email, cabang..."
+                <input type="text" placeholder="Cari nama, email, kantor cabang..."
                     class="pl-7 pr-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] w-56 focus:bg-white focus:outline-none focus:border-blue-600 font-sans">
             </div>
 
@@ -60,17 +60,16 @@
                                     {{ $index + 1 }}
                                 </td>
                                 <td class="p-1.5 border-r border-slate-200 font-semibold text-slate-900 truncate max-w-xs">
-                                    {{ $admin->user->nama }}
+                                    {{ $admin->user->admin->name }}
                                 </td>
                                 <td class="p-1.5 border-r border-slate-200 font-mono text-slate-700">
                                     {{ $admin->user->email }}
                                 </td>
-                                <!-- Kolom Cabang -->
                                 <td class="p-1.5 border-r border-slate-200 font-semibold text-slate-800">
-                                    @if ($admin->cabang)
+                                    @if ($admin->office)
                                         <span class="inline-flex items-center gap-1 text-slate-800">
                                             <i data-lucide="building-2" class="w-3 h-3 text-slate-400"></i>
-                                            {{ $admin->cabang->nama }}
+                                            {{ $admin->office->name }}
                                         </span>
                                     @else
                                         <span class="text-slate-400 italic font-normal">-</span>

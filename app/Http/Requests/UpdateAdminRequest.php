@@ -23,10 +23,10 @@ class UpdateAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'password' => ['nullable', 'string', 'min:8'],
-            'cabang_id' => ['required', 'exists:cabangs,id'],
+            'office_id' => ['required', 'exists:offices,id'],
             'role' => ['required', 'in:admin,superadmin'],
         ];
     }
@@ -34,17 +34,17 @@ class UpdateAdminRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama lengkap wajib diisi.',
-            'nama.string' => 'Nama lengkap harus berupa teks.',
-            'nama.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string' => 'Nama lengkap harus berupa teks.',
+            'name.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.string' => 'Alamat email harus berupa teks.',
             'email.email' => 'Alamat email tidak valid.',
             'email.max' => 'Alamat email tidak boleh lebih dari 255 karakter.',
             'password.string' => 'Password harus berupa teks.',
             'password.min' => 'Password minimal 8 karakter.',
-            'cabang_id.required' => 'Penempatan cabang wajib dipilih.',
-            'cabang_id.exists' => 'Cabang yang dipilih tidak valid.',
+            'office_id.required' => 'Penempatan cabang wajib dipilih.',
+            'office_id.exists' => 'Cabang yang dipilih tidak valid.',
             'role.required' => 'Hak akses (role) wajib dipilih.',
             'role.in' => 'Hak akses (role) yang dipilih tidak valid. Pilih antara admin atau superadmin.',
         ];

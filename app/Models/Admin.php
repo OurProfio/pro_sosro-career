@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['user_id', 'cabang_id', 'role'])]
+// #[Fillable(['user_id', 'cabang_id', 'role'])]
+#[Fillable(['user_id', 'office_id', 'name', 'role'])]
 class Admin extends Model
 {
     /** @use HasFactory<\Database\Factories\AdminFactory> */
@@ -17,8 +18,8 @@ class Admin extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function cabang()
+    public function office()
     {
-        return $this->belongsTo(Cabang::class);
+        return $this->belongsTo(Office::class);
     }
 }

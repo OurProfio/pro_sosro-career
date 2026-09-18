@@ -23,20 +23,20 @@ class StoreAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:admin,superadmin'],
-            'cabang_id' => ['nullable', 'exists:cabangs,id'],
+            'office_id' => ['nullable', 'exists:offices,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'nama.required' => 'Nama lengkap wajib diisi.',
-            'nama.string' => 'Nama lengkap harus berupa teks.',
-            'nama.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'name.string' => 'Nama lengkap harus berupa teks.',
+            'name.max' => 'Nama lengkap tidak boleh lebih dari 255 karakter.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.string' => 'Alamat email harus berupa teks.',
             'email.email' => 'Alamat email tidak valid.',
@@ -47,7 +47,7 @@ class StoreAdminRequest extends FormRequest
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'role.required' => 'Peran wajib dipilih.',
             'role.in' => 'Peran yang dipilih tidak valid.',
-            'cabang_id.exists' => 'Cabang yang dipilih tidak valid.',
+            'office_id.exists' => 'Cabang yang dipilih tidak valid.',
         ];
     }
 }

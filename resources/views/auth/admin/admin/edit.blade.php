@@ -29,7 +29,7 @@
                 <span class="text-[10px] font-mono text-slate-400">ADMIN_ID: {{ $admin->id }}</span>
             </div>
 
-            @if ($cabangs->isEmpty())
+            @if ($offices->isEmpty())
                 <div class="m-4 p-3 bg-amber-50 border border-amber-300 rounded flex items-start gap-2.5 text-amber-800">
                     <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
                     <div class="text-[11px] space-y-1">
@@ -65,12 +65,12 @@
                                 Nama Lengkap <span class="text-rose-600">*</span>
                             </label>
                             <div class="sm:col-span-3">
-                                <input type="text" id="name" name="nama"
-                                    value="{{ old('nama', $admin->user->nama ?? '') }}"
+                                <input type="text" id="name" name="name"
+                                    value="{{ old('name', $admin->user->name ?? '') }}"
                                     placeholder="Masukkan nama lengkap admin..."
-                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('nama') border-rose-500 @enderror"
-                                    {{ $cabangs->isEmpty() ? 'disabled' : '' }} required>
-                                @error('nama')
+                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('name') border-rose-500 @enderror"
+                                    {{ $offices->isEmpty() ? 'disabled' : '' }} required>
+                                @error('name')
                                     <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -85,7 +85,7 @@
                                     value="{{ old('email', $admin->user->email ?? '') }}"
                                     placeholder="contoh: admin@perusahaan.com"
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('email') border-rose-500 @enderror"
-                                    {{ $cabangs->isEmpty() ? 'disabled' : '' }} required>
+                                    {{ $offices->isEmpty() ? 'disabled' : '' }} required>
                                 @error('email')
                                     <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                 @enderror
@@ -100,7 +100,7 @@
                                 <input type="password" id="password" name="password"
                                     placeholder="Kosongkan jika tidak ingin mengubah password..."
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('password') border-rose-500 @enderror"
-                                    {{ $cabangs->isEmpty() ? 'disabled' : '' }}>
+                                    {{ $offices->isEmpty() ? 'disabled' : '' }}>
                                 <span class="text-[10px] text-slate-500 mt-0.5 block italic">*Isi field ini hanya jika ingin
                                     mengganti password admin.</span>
                                 @error('password')
@@ -122,22 +122,22 @@
                     <div class="grid grid-cols-1 gap-2 text-[11px]">
 
                         <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
-                            <label for="cabang_id" class="font-semibold text-slate-700 sm:text-right">
+                            <label for="office_id" class="font-semibold text-slate-700 sm:text-right">
                                 Penempatan Cabang <span class="text-rose-600">*</span>
                             </label>
                             <div class="sm:col-span-3">
-                                <select id="cabang_id" name="cabang_id"
-                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('cabang_id') border-rose-500 @enderror"
-                                    {{ $cabangs->isEmpty() ? 'disabled' : '' }} required>
+                                <select id="office_id" name="office_id"
+                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('office_id') border-rose-500 @enderror"
+                                    {{ $offices->isEmpty() ? 'disabled' : '' }} required>
                                     <option value="" disabled>-- Pilih Lokasi Cabang --</option>
-                                    @foreach ($cabangs as $cabang)
-                                        <option value="{{ $cabang->id }}"
-                                            {{ old('cabang_id', $admin->cabang_id) == $cabang->id ? 'selected' : '' }}>
-                                            {{ $cabang->nama }} ({{ $cabang->tipe }})
+                                    @foreach ($offices as $office)
+                                        <option value="{{ $office->id }}"
+                                            {{ old('office_id', $admin->office_id) == $office->id ? 'selected' : '' }}>
+                                            {{ $office->name }} ({{ $office->type }})
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('cabang_id')
+                                @error('office_id')
                                     <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -150,7 +150,7 @@
                             <div class="sm:col-span-3">
                                 <select id="role" name="role"
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('role') border-rose-500 @enderror"
-                                    {{ $cabangs->isEmpty() ? 'disabled' : '' }} required>
+                                    {{ $offices->isEmpty() ? 'disabled' : '' }} required>
                                     <option value="" disabled>-- Pilih Level Role --</option>
                                     <option value="admin" {{ old('role', $admin->role) == 'admin' ? 'selected' : '' }}>
                                         Admin (Akses Standar Cabang)
@@ -176,7 +176,7 @@
                     </a>
                     <button type="submit"
                         class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded text-[11px] font-semibold flex items-center gap-1 shadow-sm transition-colors hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                        {{ $cabangs->isEmpty() ? 'disabled' : '' }}>
+                        {{ $offices->isEmpty() ? 'disabled' : '' }}>
                         <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i> Perbarui Data Admin
                     </button>
                 </div>
