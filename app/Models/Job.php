@@ -11,4 +11,14 @@ class Job extends Model
 {
     /** @use HasFactory<\Database\Factories\JobFactory> */
     use HasFactory;
+
+    public function office()
+    {
+        return $this->belongsTo(Office::class, 'office_id');
+    }
+    
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
 }

@@ -4,11 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicantProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\OfficeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => view('guest.index'))->name('guest.index');
+Route::get('/', [GuestController::class, 'index'])->name('guest.index');
 Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
     Route::get('login', fn() => view('guest.login'))->name('login');
     Route::post('login', [AuthController::class, 'login'])->name('login');

@@ -20,7 +20,7 @@
                 class="flex items-center gap-2 cursor-pointer hover:text-slate-200 transition-colors focus:outline-none">
                 <i data-lucide="user-check" class="w-3.5 h-3.5 text-blue-400"></i>
                 <span class="font-medium text-slate-300">
-                    {{ auth()->user()->nama ?? 'Guest' }}
+                    {{ auth()->user()->name ?? auth()->user()->applicant->name ?? 'Guest' }}
                     @if (auth()->user() && auth()->user()->admin)
                         <span class="text-slate-500 text-[10px]">
                             ({{ auth()->user()->admin->role == 'superadmin' ? 'Super Admin' : 'Admin' }})
@@ -38,12 +38,12 @@
                 x-transition:leave-end="transform opacity-0 scale-95"
                 class="absolute right-0 mt-1.5 w-48 bg-white text-slate-800 border border-slate-300 rounded shadow-lg overflow-hidden z-50 text-[11px]">
                 <div class="p-2.5 bg-slate-50 border-b border-slate-200">
-                    <p class="font-bold truncate text-slate-900">{{ auth()->user()->nama ?? 'Guest' }}</p>
+                    <p class="font-bold truncate text-slate-900">{{ auth()->user()->name ?? auth()->user()->applicant->name ?? 'Guest' }}</p>
                     <p class="text-[10px] text-slate-500 font-mono truncate">{{ auth()->user()->email ?? '-' }}</p>
                     @if (auth()->user() && auth()->user()->admin && auth()->user()->admin->cabang)
                         <div class="mt-1 flex items-center gap-1 text-[10px] text-blue-600 font-semibold">
                             <i data-lucide="building-2" class="w-3 h-3"></i>
-                            <span class="truncate">{{ auth()->user()->admin->cabang->nama }}</span>
+                            <span class="truncate">{{ auth()->user()->admin->cabang->name ?? auth()->user()->applicant->name }}</span>
                         </div>
                     @endif
                 </div>

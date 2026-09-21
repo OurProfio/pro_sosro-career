@@ -92,7 +92,7 @@
                         <span>Deskripsi Pekerjaan</span>
                     </div>
                     <div class="text-slate-800 leading-relaxed whitespace-pre-line flex-1">
-                        {{ $job->description ?? $job->jobdescription }}
+                        {{ $job->description }}
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
                     Informasi Periode & Riwayat
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
                     <div class="bg-slate-50 p-2 rounded border border-slate-200">
                         <span class="text-[10px] text-slate-500 block font-mono uppercase">Periode Pendaftaran</span>
                         <span class="font-mono font-semibold text-slate-800">
@@ -127,7 +127,7 @@
                     <div class="bg-slate-50 p-2 rounded border border-slate-200">
                         <span class="text-[10px] text-slate-500 block font-mono uppercase">Dibuat Oleh Admin</span>
                         <span class="font-semibold text-slate-800">
-                            {{ $job->admin->name ?? 'Sistem / Admin' }}
+                            {{ $job->admin->name ?? ($job->admin->user->name ?? 'Admin #' . $job->admin_id) }}
                         </span>
                     </div>
 
@@ -135,6 +135,13 @@
                         <span class="text-[10px] text-slate-500 block font-mono uppercase">Tanggal Dibuat</span>
                         <span class="font-mono text-slate-700">
                             {{ $job->created_at ? $job->created_at->format('d/m/Y H:i') : '-' }}
+                        </span>
+                    </div>
+
+                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Terakhir Diperbarui</span>
+                        <span class="font-mono text-slate-700">
+                            {{ $job->updated_at ? $job->updated_at->format('d/m/Y H:i') : '-' }}
                         </span>
                     </div>
                 </div>

@@ -16,4 +16,9 @@ class Office extends Model
     {
         return $this->hasMany(Admin::class);
     }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class, 'office_id');
+    }
 }

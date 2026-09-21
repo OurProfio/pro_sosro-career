@@ -22,4 +22,9 @@ class Admin extends Model
     {
         return $this->belongsTo(Office::class);
     }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class, 'admin_id');
+    }
 }

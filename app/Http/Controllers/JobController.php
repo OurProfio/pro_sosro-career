@@ -46,6 +46,8 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
+        $job->load(['office', 'admin.user']);
+        
         return view('auth.admin.job.show', compact('job'));
     }
 
@@ -55,7 +57,7 @@ class JobController extends Controller
     public function edit(Job $job)
     {
         $offices = Office::all();
-        
+
         return view('auth.admin.job.edit', compact('job', 'offices'));
     }
 
@@ -74,6 +76,8 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
-        //
+        $job->delete();
+
+        return redirect()->route('job.index')->with('success', 'Berhasil menghapus data lowongan.');
     }
 }
