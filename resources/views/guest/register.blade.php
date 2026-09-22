@@ -21,28 +21,9 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('guest.register') }}" onsubmit="return disableButton(this)" class="space-y-5">
+            <form method="POST" action="{{ route('guest.register') }}" onsubmit="return disableButton(this)"
+                class="space-y-5">
                 @csrf
-
-                <div>
-                    <label for="nama" class="block font-semibold text-gray-700 text-sm mb-1">Nama Lengkap</label>
-                    <div class="relative flex items-center">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <input id="nama"
-                            class="block w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none"
-                            type="text" name="nama" value="{{ old('nama') }}" required autofocus
-                            placeholder="Nama sesuai KTP" />
-                    </div>
-                    @error('nama')
-                        <p class="text-sm text-red-600 mt-1.5 font-medium">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <div>
                     <label for="email" class="block font-semibold text-gray-700 text-sm mb-1">Alamat Email</label>
                     <div class="relative flex items-center">

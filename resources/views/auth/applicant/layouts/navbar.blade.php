@@ -11,7 +11,7 @@
 
                     <div class="text-right hidden sm:block">
                         <p class="text-[11px] font-bold text-white tracking-wide leading-none mb-1 drop-shadow-sm">
-                            {{ Auth::user()->admin->name ?? Auth::user()->applicant->name }}
+                            {{ Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome" }}
                         </p>
                         <p
                             class="text-[9px] font-medium text-gray-200/80 leading-none truncate max-w-[130px] drop-shadow-sm">
@@ -21,7 +21,7 @@
 
                     <div
                         class="h-8 w-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold shadow-md border border-white/20 transition group-hover:scale-105 group-active:scale-95">
-                        {{ substr(Auth::user()->admin->name ?? Auth::user()->applicant->name, 0, 1) }}
+                        {{ substr(Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome", 0, 1) }}
                     </div>
                 </button>
 
@@ -31,7 +31,7 @@
                     class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-2xl py-2 z-[70] border border-gray-100 overflow-hidden">
 
                     <div class="px-4 py-3 border-b border-gray-50 mb-1 sm:hidden">
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->admin->name ?? Auth::user()->applicant->name }}</p>
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome" }}</p>
                         <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
 

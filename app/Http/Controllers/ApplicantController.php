@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Applicant;
 use App\Http\Requests\StoreApplicantRequest;
 use App\Http\Requests\UpdateApplicantRequest;
+use App\Models\Division;
 
 class ApplicantController extends Controller
 {
@@ -13,7 +14,9 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        //
+        $divisions = Division::all();
+
+        return view('auth.applicant.biodata.create', compact('divisions'));
     }
 
     /**
@@ -29,7 +32,11 @@ class ApplicantController extends Controller
      */
     public function store(StoreApplicantRequest $request)
     {
-        //
+        Applicant::create($request->validated() + [
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return redirect()->route('applicant.index')->with('success', 'Berhasil menambahkan biodata pelamar.');
     }
 
     /**

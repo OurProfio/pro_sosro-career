@@ -26,7 +26,6 @@ class AuthController extends Controller
             } else if(auth()->user()->role === 'user') {
                 return redirect()->intended(route('applicant.index'));
             }
-            return redirect()->intended(route('applicant.index'));
         }
 
         return back()->with('error', 'Email atau password yang Anda masukkan salah.')->withInput();
@@ -34,17 +33,10 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $newUser = User::create([
-                'nama' => $request->nama,
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
-
-            Applicant::create([
-                'user_id' => $newUser->id,
-            ]);
-        });
+        User::create([
+            'email' => $request->email,
+            'password' => $request->password,
+        ]);
 
         return redirect()->route('guest.login')->with('success', 'Pendaftaran berhasil. Silakan masuk dengan akun Anda.');
     }

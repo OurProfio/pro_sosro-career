@@ -15,7 +15,7 @@ class IsApplicant
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->role !== 'applicant') {
+        if (auth()->user()->role !== 'user') {
             abort(403, 'Unauthorized action.');
         }
         

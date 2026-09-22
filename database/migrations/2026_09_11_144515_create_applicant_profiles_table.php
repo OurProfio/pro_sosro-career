@@ -14,17 +14,6 @@ return new class extends Migration
         // Schema::create('applicant_profiles', function (Blueprint $table) {
         //     $table->id();
         //     $table->foreignId('applicant_id')->constrained('applicants')->cascadeOnDelete();
-        //     $table->string('nik')->unique();
-        //     $table->enum('jenis_kelamin', ['l', 'p']);
-        //     $table->string('tempat_lahir');
-        //     $table->date('tanggal_lahir');
-        //     $table->string('tinggi_badan');
-        //     $table->string('berat_badan');
-        //     $table->text('alamat_ktp');
-        //     $table->text('alamat_domisili');
-        //     $table->string('no_telepon');
-        //     $table->string('agama');
-        //     $table->enum('status_pernikahan', ['belum_menikah', 'sudah_menikah', 'cerai_hidup', 'cerai_mati']);
         //     $table->json('jenis_sim')->nullable();
         //     $table->string('instagram')->nullable();
         //     $table->string('linkedin')->nullable();

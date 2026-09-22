@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\ApplicantProfile;
 use App\Http\Requests\StoreApplicantProfileRequest;
 use App\Http\Requests\UpdateApplicantProfileRequest;
-use App\Models\Applicant;
 use App\Models\Divisi;
 use App\Models\MinatPekerjaan;
 use Illuminate\Support\Arr;

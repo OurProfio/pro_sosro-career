@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ApplicantProfileController;
+use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\GuestController;
@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['applicant']], function () {
         Route::get('dashboard', fn() => view('auth.applicant.index'))->name('applicant.index');
-        Route::resource('biodata', ApplicantProfileController::class)->parameters(['biodata' => 'applicantProfile']);
+        Route::resource('biodata', ApplicantController::class)->parameters(['biodata' => 'applicantProfile']);
     });
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
