@@ -6,6 +6,7 @@ use App\Models\Job;
 use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
 use App\Models\Office;
+use Illuminate\Support\Facades\Gate;
 
 class JobController extends Controller
 {
@@ -14,7 +15,15 @@ class JobController extends Controller
      */
     public function index()
     {
-        $jobs = Job::all();
+        $admin = auth()->user()->admin;
+
+        $query = Job::query();
+
+        if ($admin->role !== 'superadmin') {
+            $query->where('office_id', $admin->office_id);
+        }
+
+        $jobs = $query->latest()->get();
 
         return view('auth.admin.job.index', compact('jobs'));
     }
@@ -24,7 +33,13 @@ class JobController extends Controller
      */
     public function create()
     {
-        $offices = Office::all();
+        $admin = auth()->user()->admin;
+
+        if ($admin->role === 'superadmin'){
+            $offices = Office::all();
+        } else {
+            $offices = Office::where('id',$admin->office_id)->get();
+        }
 
         return view('auth.admin.job.create', compact('offices'));
     }
@@ -34,6 +49,7 @@ class JobController extends Controller
      */
     public function store(StoreJobRequest $request)
     {
+        gate::authorize('create', Job::class);
         Job::create($request->validated() + [
             "admin_id" => auth()->user()->admin->id,
         ]);
@@ -46,6 +62,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
+        Gate::authorize('view', $job);
         $job->load(['office', 'admin.user']);
         
         return view('auth.admin.job.show', compact('job'));
@@ -56,6 +73,7 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
+        Gate::authorize('update', $job);
         $offices = Office::all();
 
         return view('auth.admin.job.edit', compact('job', 'offices'));
@@ -66,6 +84,7 @@ class JobController extends Controller
      */
     public function update(UpdateJobRequest $request, Job $job)
     {
+        Gate::authorize('update', $job);
         $job->update($request->validated());
 
         return redirect()->route('job.index');
@@ -76,6 +95,7 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
+        Gate::authorize('delete', $job);
         $job->delete();
 
         return redirect()->route('job.index')->with('success', 'Berhasil menghapus data lowongan.');
