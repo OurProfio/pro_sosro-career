@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use App\Http\Requests\StoreAdminRequest;
 use App\Http\Requests\UpdateAdminRequest;
+use App\Models\Admin;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function dashboard()
-    {
-        return view('auth.admin.index');
-    }
     /**
      * Display a listing of the resource.
      */
@@ -45,7 +41,7 @@ class AdminController extends Controller
                 'email' => $request->email,
                 'password' => $request->password,
                 'role' => 'admin',
-                ]);
+            ]);
 
             Admin::create([
                 'name' => $request->name,
@@ -55,7 +51,6 @@ class AdminController extends Controller
             ]);
         });
 
-        
         return redirect()->route('admin.index')->with('success', 'Berhasil menambahkan data admin baru.');
     }
 
@@ -72,9 +67,9 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        $cabangs = Cabang::all();
+        $offices = Office::all();
 
-        return view('auth.admin.admin.edit', compact('admin', 'cabangs'));
+        return view('auth.admin.admin.edit', compact('admin', 'offices'));
     }
 
     /**

@@ -36,5 +36,12 @@
                 class="w-4 h-4 shrink-0 {{ request()->is('admin*') && !request()->is('admin/dashboard') ? 'text-white' : 'text-slate-400' }}"></i>
             <span x-show="!sidebarOpen" class="truncate text-[11px]">Admin</span>
         </a>
+
+        <a href="{{ route('user.index') }}"
+            class="flex items-center gap-2.5 px-2 py-1.5 rounded font-medium transition-colors {{ request()->is('user*') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700 hover:text-white' }}">
+            <i data-lucide="users"
+                class="w-4 h-4 shrink-0 {{ request()->is('user*') ? 'text-white' : 'text-slate-400' }}"></i>
+            <span x-show="!sidebarOpen" class="truncate text-[11px]">User</span>
+        </a>
     </nav>
 </aside>

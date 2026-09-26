@@ -74,7 +74,7 @@
                                     <form action="{{ route('office.destroy', $office->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button onclick="return confirm('Apakah Anda yakin ingin menghapus kantor cabang ini?')"
+                                        <button onclick="return confirm('Apakah Anda yakin ingin menghapus kantor cabang ini ? \n(Semua data terkait juga akan dihapus)')"
                                             class="text-rose-600 hover:text-rose-800 font-semibold text-[10px] hover:cursor-pointer transition-colors">
                                             Hapus
                                         </button>
