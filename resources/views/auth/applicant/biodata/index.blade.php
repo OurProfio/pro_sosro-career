@@ -67,12 +67,12 @@
     </div>
 
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        {{-- Control Bar (Actionable & Clear Affordance) --}}
+        {{-- Control Bar --}}
         <div
             class="mb-6 flex flex-wrap justify-between items-center gap-4 no-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center gap-3">
-                <a href="#" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition"
-                    title="Kembali">
+                <a href="{{ route('biodata.workExperience.create') }}"
+                    class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition" title="Kembali">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -80,12 +80,12 @@
                 </a>
                 <div>
                     <h2 class="text-base font-bold text-slate-800">Preview Biodata</h2>
-                    <p class="text-xs text-slate-500">Periksa kembali kelengkapan data sebelum mengunduh</p>
+                    <p class="text-xs text-slate-500">Periksa kembali kelengkapan data sebelum mengunduh atau mencetak</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
-                <a href="{{ route('biodata.edit', auth()->user()->applicant->applicantProfile->id) }}"
+                <a href="{{ route('biodata.edit', auth()->user()->applicant->id) }}"
                     class="px-4 py-2 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-semibold transition flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -94,7 +94,7 @@
                     Edit Data
                 </a>
                 <button onclick="window.print()"
-                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-md shadow-red-200">
+                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-md shadow-red-200 cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -104,11 +104,11 @@
             </div>
         </div>
 
-        {{-- Main Resume Layout (Asymmetric 2-Column Grid) --}}
+        {{-- Main Layout --}}
         <div
             class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden print-grid grid grid-cols-1 lg:grid-cols-12">
 
-            {{-- COLUMN 1: Sidebar Informasi Pribadi & Kontak (4 Cols) --}}
+            {{-- COLUMN 1: Sidebar Informasi Pribadi & Kontak --}}
             <aside
                 class="lg:col-span-4 bg-slate-50 border-b lg:border-b-0 lg:border-r border-slate-200 p-6 sm:p-8 flex flex-col justify-between">
                 <div class="space-y-6">
@@ -116,13 +116,19 @@
                     <div class="text-center lg:text-left">
                         <div
                             class="w-32 h-40 mx-auto lg:mx-0 bg-slate-200 rounded-xl overflow-hidden border-2 border-white shadow-md relative flex items-center justify-center">
-                            <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                            @if ($applicant->photo_url)
+                                <img src="{{ asset('storage/' . $applicant->photo_url) }}" alt="Foto {{ $applicant->name }}"
+                                    class="w-full h-full object-cover">
+                            @else
+                                <svg class="w-16 h-16 text-slate-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            @endif
                         </div>
                         <h1 class="mt-4 text-xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                            Alandrian Surya Tantra
+                            {{ $applicant->name }}
                         </h1>
                         <p class="text-xs font-medium text-slate-500 mt-0.5">Pelamar Kerja</p>
                     </div>
@@ -137,7 +143,7 @@
                                         d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                                 </svg>
                             </div>
-                            <span class="font-semibold">0812-3456-7890</span>
+                            <span class="font-semibold">{{ $applicant->phone_number }}</span>
                         </div>
 
                         <div class="flex items-center gap-3 text-slate-700">
@@ -148,66 +154,112 @@
                                         d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
                             </div>
-                            <span class="font-medium truncate">alandrian@example.com</span>
+                            <span class="font-medium truncate">{{ $applicant->email }}</span>
                         </div>
 
-                        <div class="flex items-center gap-3 text-slate-700">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
-                                <span class="text-[10px] font-black">IN</span>
+                        @if ($applicant->linkedin)
+                            <div class="flex items-center gap-3 text-slate-700">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
+                                    <span class="text-[10px] font-black">IN</span>
+                                </div>
+                                <span class="font-medium truncate">{{ $applicant->linkedin }}</span>
                             </div>
-                            <span class="font-medium truncate">linkedin.com/in/alandrian</span>
-                        </div>
+                        @endif
 
-                        <div class="flex items-center gap-3 text-slate-700">
-                            <div
-                                class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
-                                <span class="text-[10px] font-black">IG</span>
+                        @if ($applicant->instagram)
+                            <div class="flex items-center gap-3 text-slate-700">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
+                                    <span class="text-[10px] font-black">IG</span>
+                                </div>
+                                <span class="font-medium">{{ $applicant->instagram }}</span>
                             </div>
-                            <span class="font-medium">@alandrian_st</span>
-                        </div>
+                        @endif
                     </div>
 
-                    {{-- Fisik & Identitas --}}
+                    {{-- Detail Personal --}}
                     <div class="space-y-3 pt-4 border-t border-slate-200 text-xs">
                         <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Detail Personal</h3>
 
                         <div class="grid grid-cols-2 gap-2 bg-white p-3 rounded-xl border border-slate-200">
                             <div>
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">NIK</p>
-                                <p class="font-bold text-slate-800 tracking-tight text-[11px]">3175091411050001</p>
+                                <p class="font-bold text-slate-800 tracking-tight text-[11px]">{{ $applicant->nik }}</p>
                             </div>
                             <div>
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">Agama</p>
-                                <p class="font-semibold text-slate-700">Islam</p>
+                                <p class="font-semibold text-slate-700">{{ ucfirst($applicant->religion) }}</p>
                             </div>
                             <div class="mt-2">
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">Gender</p>
-                                <p class="font-semibold text-slate-700">Laki-laki</p>
+                                <p class="font-semibold text-slate-700">
+                                    {{ $applicant->gender == 'l' ? 'Laki-laki' : 'Perempuan' }}</p>
                             </div>
                             <div class="mt-2">
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">Status</p>
-                                <p class="font-semibold text-slate-700">Lajang</p>
+                                <p class="font-semibold text-slate-700">
+                                    @switch($applicant->marital_status)
+                                        @case('single')
+                                            Lajang
+                                        @break
+
+                                        @case('married')
+                                            Menikah
+                                        @break
+
+                                        @case('divorced')
+                                            Cerai
+                                        @break
+
+                                        @case('widowed')
+                                            Duda/Janda
+                                        @break
+
+                                        @default
+                                            {{ ucfirst($applicant->marital_status) }}
+                                    @endswitch
+                                </p>
                             </div>
                         </div>
 
                         <div class="space-y-1.5 pt-1">
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">TTL</span>
-                                <span class="font-medium text-slate-800">Jakarta, 14 Nov 2005</span>
+                                <span class="font-medium text-slate-800">
+                                    {{ $applicant->place_of_birth }},
+                                    {{ \Carbon\Carbon::parse($applicant->date_of_birth)->translatedFormat('d M Y') }}
+                                </span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">Tinggi / Berat</span>
-                                <span class="font-medium text-slate-800">173 cm / 65 kg</span>
+                                <span class="font-medium text-slate-800">{{ $applicant->height }} cm /
+                                    {{ $applicant->weight }} kg</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">SIM</span>
-                                <span class="font-medium text-slate-800">SIM A, SIM C</span>
+                                <span class="font-medium text-slate-800">
+                                    @php
+                                        $licenses = is_array($applicant->driver_licenses)
+                                            ? $applicant->driver_licenses
+                                            : json_decode($applicant->driver_licenses ?? '[]', true);
+                                    @endphp
+                                    {{ !empty($licenses) ? implode(', ', array_map('strtoupper', $licenses)) : '-' }}
+                                </span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">Rokok / Tato</span>
-                                <span class="font-medium text-slate-800">Tidak / Tidak</span>
+                                <span class="font-medium text-slate-800">
+                                    {{ $applicant->is_smoker == 'y' ? 'Ya' : 'Tidak' }} /
+                                    {{ $applicant->has_tattoo == 'y' ? 'Ya' : 'Tidak' }}
+                                </span>
                             </div>
+                            @if ($applicant->medical_history)
+                                <div class="py-1 border-b border-slate-200/60">
+                                    <span class="text-slate-500 block">Riwayat Medis:</span>
+                                    <span class="font-medium text-slate-800">{{ $applicant->medical_history }}</span>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
@@ -219,231 +271,216 @@
                             <div>
                                 <p class="text-[9px] font-bold text-slate-400 uppercase">KTP</p>
                                 <p class="text-slate-700 leading-relaxed font-medium mt-0.5">
-                                    Jl. Raya Harapan Indah No. 12, Medan Satria, Bekasi, Jawa Barat
+                                    {{ $applicant->address_ktp }}
                                 </p>
                             </div>
                             <div class="pt-1">
                                 <p class="text-[9px] font-bold text-slate-400 uppercase">Domisili Saat Ini</p>
                                 <p class="text-slate-700 leading-relaxed font-medium mt-0.5">
-                                    Perum. Kebon Jeruk Indah Blok B3 No. 5, Jakarta Barat
+                                    {{ $applicant->address_domisili }}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="pt-6 mt-6 border-t border-slate-200 text-[10px] text-slate-400 text-center lg:text-left">
-                    Ref-ID: APP-2026-0912
-                </div>
             </aside>
 
-            {{-- COLUMN 2: Main Content Area (8 Cols) --}}
+            {{-- COLUMN 2: Main Content Area --}}
             <main class="lg:col-span-8 p-6 sm:p-8 space-y-8">
 
-                {{-- 1. PREFERENSI KERJA & MINAT --}}
-                <section class="break-inside-avoid">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-4 bg-red-600 rounded-full"></div>
-                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Preferensi & Minat Karir</h2>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        {{-- Gaji & Ekspektasi --}}
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
-                            <div class="space-y-3">
-                                <div>
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase block">Ekspektasi
-                                        Gaji</span>
-                                    <span class="text-base font-extrabold text-red-600">Rp 7.500.000</span>
-                                </div>
-                                <div>
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase block">Fasilitas
-                                        Diharapkan</span>
-                                    <span class="font-medium text-slate-700">BPJS Kesehatan, BPJS Ketenagakerjaan,
-                                        Tunjangan Transport</span>
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-2 pt-4 mt-2 border-t border-slate-200">
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    <span class="text-[11px] font-semibold text-slate-700">Dinas Luar Kota</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                    <span class="text-[11px] font-semibold text-slate-700">Relokasi Kerja</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Prioritas Minat --}}
-                        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                            <span class="text-[10px] text-slate-400 font-bold uppercase block mb-3">Prioritas Bidang
-                                Pekerjaan</span>
-                            <div class="space-y-1.5">
-                                <div
-                                    class="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
-                                    <span
-                                        class="w-4 h-4 rounded-md bg-slate-900 text-white font-mono text-[9px] font-bold flex items-center justify-center">1</span>
-                                    <span class="font-bold text-slate-800 text-[11px]">Software Engineering</span>
-                                </div>
-                                <div
-                                    class="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
-                                    <span
-                                        class="w-4 h-4 rounded-md bg-slate-700 text-white font-mono text-[9px] font-bold flex items-center justify-center">2</span>
-                                    <span class="font-bold text-slate-800 text-[11px]">Research & Development</span>
-                                </div>
-                                <div
-                                    class="flex items-center gap-2 bg-white px-2.5 py-1.5 rounded-lg border border-slate-200 shadow-2xs">
-                                    <span
-                                        class="w-4 h-4 rounded-md bg-slate-400 text-white font-mono text-[9px] font-bold flex items-center justify-center">3</span>
-                                    <span class="font-semibold text-slate-700 text-[11px]">IT Infrastructure</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {{-- 2. PENGALAMAN KERJA (Timeline UI) --}}
+                {{-- 1. PENGALAMAN KERJA --}}
                 <section class="break-inside-avoid">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="w-1.5 h-4 bg-red-600 rounded-full"></div>
                         <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Pengalaman Kerja</h2>
                     </div>
 
-                    <div class="space-y-4">
-                        <div class="relative pl-6 border-l-2 border-slate-200 space-y-2">
-                            <div class="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-red-600 border-2 border-white">
-                            </div>
+                    @if ($applicant->workExperiences && $applicant->workExperiences->count() > 0)
+                        <div class="space-y-4">
+                            @foreach ($applicant->workExperiences->sortByDesc(fn($exp) => [$exp->end_date ?? '9999-12-31', $exp->start_date]) as $exp)
+                                <div class="relative pl-6 border-l-2 border-slate-200 space-y-2">
+                                    <div
+                                        class="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-red-600 border-2 border-white">
+                                    </div>
 
-                            <div class="flex flex-wrap justify-between items-start gap-1">
-                                <div>
-                                    <h3 class="text-sm font-bold text-slate-900">Backend Developer Intern</h3>
-                                    <p class="text-xs font-semibold text-red-600">PT Teknologi Nusantara</p>
-                                </div>
-                                <span class="px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold">
-                                    Jan 2026 - Jun 2026
-                                </span>
-                            </div>
+                                    <div class="flex flex-wrap justify-between items-start gap-1">
+                                        <div>
+                                            <h3 class="text-sm font-bold text-slate-900">{{ $exp->position ?? '-' }}</h3>
+                                            <p class="text-xs font-semibold text-red-600">{{ $exp->company_name ?? '-' }}
+                                                {{ $exp->division ? "({$exp->division})" : '' }}</p>
+                                        </div>
+                                        <span
+                                            class="px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold">
+                                            {{ $exp->start_date ? \Carbon\Carbon::parse($exp->start_date)->translatedFormat('M Y') : '-' }}
+                                            -
+                                            {{ $exp->end_date ? \Carbon\Carbon::parse($exp->end_date)->translatedFormat('M Y') : 'Saat Ini' }}
+                                        </span>
+                                    </div>
 
-                            <div
-                                class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-100 text-[11px] mt-2">
-                                <div>
-                                    <span class="text-slate-400 text-[9px] block uppercase font-semibold">Gaji
-                                        Terakhir</span>
-                                    <span class="font-medium text-slate-700">Rp 4.500.000</span>
+                                    <div
+                                        class="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border border-slate-100 text-[11px] mt-2">
+                                        <div>
+                                            <span class="text-slate-400 text-[9px] block uppercase font-semibold">Gaji
+                                                Terakhir</span>
+                                            <span class="font-medium text-slate-700">
+                                                {{ $exp->salary ? 'Rp ' . number_format($exp->salary, 0, ',', '.') : '-' }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <span
+                                                class="text-slate-400 text-[9px] block uppercase font-semibold">Referensi</span>
+                                            <span
+                                                class="font-medium text-slate-700">{{ $exp->reference_name ?? '-' }}</span>
+                                        </div>
+                                        <div class="col-span-2 sm:col-span-1">
+                                            <span class="text-slate-400 text-[9px] block uppercase font-semibold">Alasan
+                                                Berhenti</span>
+                                            <span
+                                                class="font-medium text-slate-700">{{ $exp->reason_for_leaving ?? '-' }}</span>
+                                        </div>
+                                        @if ($exp->facility)
+                                            <div class="col-span-2 sm:col-span-3 pt-1 border-t border-slate-200/60">
+                                                <span
+                                                    class="text-slate-400 text-[9px] block uppercase font-semibold">Fasilitas</span>
+                                                <span class="font-medium text-slate-700">{{ $exp->facility }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="text-slate-400 text-[9px] block uppercase font-semibold">Referensi</span>
-                                    <span class="font-medium text-slate-700">Budi Santoso (Supervisor)</span>
-                                </div>
-                                <div class="col-span-2 sm:col-span-1">
-                                    <span class="text-slate-400 text-[9px] block uppercase font-semibold">Alasan
-                                        Berhenti</span>
-                                    <span class="font-medium text-slate-700">Kontrak Selesai</span>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
-                    </div>
+                    @else
+                        <p class="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            Belum memiliki pengalaman kerja (Fresh Graduate).
+                        </p>
+                    @endif
                 </section>
 
-                {{-- 3. PENDIDIKAN FORMAL --}}
+                {{-- 2. PENDIDIKAN FORMAL --}}
                 <section class="break-inside-avoid">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="w-1.5 h-4 bg-red-600 rounded-full"></div>
                         <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Pendidikan Formal</h2>
                     </div>
 
-                    <div class="space-y-3 text-xs">
-                        {{-- Perguruan Tinggi --}}
-                        <div
-                            class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-wrap justify-between items-center gap-2">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span
-                                        class="px-2 py-0.5 bg-slate-900 text-white font-bold text-[9px] rounded">S1</span>
-                                    <h3 class="font-bold text-slate-900">Universitas Esa Unggul</h3>
+                    @if ($applicant->educations && $applicant->educations->count() > 0)
+                        <div class="space-y-3 text-xs">
+                            @foreach ($applicant->educations as $edu)
+                                <div
+                                    class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-wrap justify-between items-center gap-2">
+                                    <div>
+                                        <div class="flex items-center gap-2">
+                                            <span
+                                                class="px-2 py-0.5 bg-slate-900 text-white font-bold text-[9px] rounded uppercase">
+                                                {{ $edu->degree_level }}
+                                            </span>
+                                            <h3 class="font-bold text-slate-900">{{ $edu->institution_name }}</h3>
+                                        </div>
+                                        <p class="text-slate-600 mt-1">{{ $edu->major }}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <span class="text-slate-600 font-medium text-[11px]">
+                                            {{ $edu->entry_year }} - {{ $edu->graduation_year }}
+                                        </span>
+                                        <p class="text-slate-500 text-[11px] mt-0.5 font-semibold">IPK / Nilai:
+                                            {{ $edu->gpa }}</p>
+                                    </div>
                                 </div>
-                                <p class="text-slate-600 mt-1">Teknik Informatika</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full text-[10px] font-bold">
-                                    Sedang Memtempuh
-                                </span>
-                                <p class="text-slate-500 text-[11px] mt-1 font-semibold">IPK: 3.85 (Angkatan 2024)</p>
-                            </div>
+                            @endforeach
                         </div>
-
-                        {{-- Sekolah Menengah --}}
-                        <div
-                            class="p-3 bg-white border border-slate-200 rounded-xl flex flex-wrap justify-between items-center gap-2">
-                            <div>
-                                <div class="flex items-center gap-2">
-                                    <span
-                                        class="px-2 py-0.5 bg-slate-200 text-slate-700 font-bold text-[9px] rounded">SMA</span>
-                                    <h3 class="font-bold text-slate-800">SMA Negeri 1 Jakarta</h3>
-                                </div>
-                                <p class="text-slate-500 mt-0.5 text-[11px]">MIPA</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-slate-600 font-medium text-[11px]">Lulus 2024</span>
-                                <p class="text-slate-500 text-[11px] font-medium">Nilai Akhir: 88.50</p>
-                            </div>
-                        </div>
-                    </div>
+                    @else
+                        <p class="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            Data pendidikan formal belum diisi.
+                        </p>
+                    @endif
                 </section>
 
-                {{-- 4. KELUARGA --}}
+                {{-- 3. KELUARGA --}}
                 <section class="break-inside-avoid">
                     <div class="flex items-center gap-2 mb-4">
                         <div class="w-1.5 h-4 bg-red-600 rounded-full"></div>
                         <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Data Keluarga Kandung</h2>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-slate-900">Suryadi Tantra</span>
-                                <span
-                                    class="px-2 py-0.5 bg-red-100 text-red-700 font-bold text-[9px] rounded uppercase">Ayah</span>
-                            </div>
-                            <p class="text-slate-500 text-[11px]">51 Th • S1 Wiraswasta</p>
-                            <p class="text-slate-600 font-medium text-[11px] pt-1">Kontak: 0813-9988-7766</p>
-                        </div>
+                    @if ($applicant->families && $applicant->families->count() > 0)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            @foreach ($applicant->families as $fam)
+                                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                                    <div class="flex justify-between items-center">
+                                        <span class="font-bold text-slate-900">{{ $fam->name }}</span>
+                                        <span
+                                            class="px-2 py-0.5 bg-red-100 text-red-700 font-bold text-[9px] rounded uppercase">
+                                            @switch($fam->relationship)
+                                                @case('father')
+                                                    Ayah
+                                                @break
 
-                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                            <div class="flex justify-between items-center">
-                                <span class="font-bold text-slate-900">Ratna Dewi</span>
-                                <span
-                                    class="px-2 py-0.5 bg-red-100 text-red-700 font-bold text-[9px] rounded uppercase">Ibu</span>
-                            </div>
-                            <p class="text-slate-500 text-[11px]">48 Th • SMA (Ibu Rumah Tangga)</p>
-                            <p class="text-slate-600 font-medium text-[11px] pt-1">Kontak: 0813-8877-6655</p>
+                                                @case('mother')
+                                                    Ibu
+                                                @break
+
+                                                @case('sibling')
+                                                    Saudara
+                                                @break
+
+                                                @case('spouse')
+                                                    Pasangan
+                                                @break
+
+                                                @case('child')
+                                                    Anak
+                                                @break
+
+                                                @default
+                                                    {{ ucfirst($fam->relationship) }}
+                                            @endswitch
+                                        </span>
+                                    </div>
+                                    <p class="text-slate-500 text-[11px]">
+                                        {{ \Carbon\Carbon::parse($fam->date_of_birth)->age }} Th • {{ $fam->education }} •
+                                        {{ $fam->work }}
+                                    </p>
+                                    <p class="text-slate-600 font-medium text-[11px] pt-1">Kontak:
+                                        {{ $fam->phone_number }}</p>
+                                </div>
+                            @endforeach
                         </div>
-                    </div>
+                    @else
+                        <p class="text-xs text-slate-400 italic bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            Data keluarga belum diisi.
+                        </p>
+                    @endif
                 </section>
 
-                {{-- 5. PELATIHAN & DOKUMEN LAMPIRAN --}}
+                {{-- 4. PELATIHAN & DOKUMEN LAMPIRAN --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 break-inside-avoid">
                     {{-- Pelatihan --}}
                     <div>
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-1.5 h-3 bg-red-600 rounded-full"></div>
-                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Pelatihan / Kursus</h2>
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Pelatihan / Sertifikasi
+                            </h2>
                         </div>
-                        <div class="space-y-2 text-xs">
-                            <div class="p-2.5 bg-white border border-slate-200 rounded-lg">
-                                <p class="font-bold text-slate-800">RESTful API Development</p>
-                                <p class="text-[10px] text-slate-500">Dicoding Academy • 2026</p>
+                        @if ($applicant->trainings && $applicant->trainings->count() > 0)
+                            <div class="space-y-2 text-xs">
+                                @foreach ($applicant->trainings as $train)
+                                    <div class="p-2.5 bg-white border border-slate-200 rounded-lg">
+                                        <p class="font-bold text-slate-800">{{ $train->training_name }}</p>
+                                        <p class="text-[10px] text-slate-500">
+                                            {{ $train->organizer }} •
+                                            {{ \Carbon\Carbon::parse($train->finished)->translatedFormat('Y') }}
+                                        </p>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="p-2.5 bg-white border border-slate-200 rounded-lg">
-                                <p class="font-bold text-slate-800">Machine Learning Specialization</p>
-                                <p class="text-[10px] text-slate-500">Coursera / Stanford • 2025</p>
-                            </div>
-                        </div>
+                        @else
+                            <p class="text-xs text-slate-400 italic bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                                Belum ada riwayat pelatihan.
+                            </p>
+                        @endif
                     </div>
 
-                    {{-- Lampiran Berkas --}}
+                    {{-- Lampiran Berkas (STATIS) --}}
                     <div>
                         <div class="flex items-center gap-2 mb-3">
                             <div class="w-1.5 h-3 bg-red-600 rounded-full"></div>

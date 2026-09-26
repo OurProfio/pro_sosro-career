@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\ApplicantProfile;
+use App\Models\ApplicantWorkExprience;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<ApplicantProfile>
+ * @extends Factory<ApplicantWorkExprience>
  */
-class ApplicantProfileFactory extends Factory
+class ApplicantWorkExprienceFactory extends Factory
 {
     /**
      * Define the model's default state.

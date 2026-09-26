@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\Cabang;
+use App\Models\Division;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -35,5 +36,24 @@ class DatabaseSeeder extends Seeder
             'role' => 'superadmin',
             'name' => 'Admin',
         ]);
+
+        $divisions = [
+            'Administrasi',
+            'Finance & Accounting',
+            'General Affairs',
+            'Human Resources & People Development',
+            'Information Technology',
+            'Internal Audit',
+            'Marketing',
+            'Produksi / Teknik',
+            'Purchasing',
+            'Quality Control',
+            'Research & Development',
+            'Sales & Distribution',
+            'Supply Chain & Logistic',
+        ];
+        foreach ($divisions as $name) {
+            Division::firstOrCreate(['name' => $name]);
+        }
     }
 }

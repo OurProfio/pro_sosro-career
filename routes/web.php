@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicantController;
+use App\Http\Controllers\ApplicantEducationController;
+use App\Http\Controllers\ApplicantFamilyController;
+use App\Http\Controllers\ApplicantWorkExprienceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\GuestController;
@@ -29,7 +32,14 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::group(['middleware' => ['applicant']], function () {
         Route::get('dashboard', fn() => view('auth.applicant.index'))->name('applicant.index');
-        Route::resource('biodata', ApplicantController::class)->parameters(['biodata' => 'applicantProfile']);
+
+        Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
+        Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');
+        Route::get('/biodata/pendidikan', [ApplicantEducationController::class, 'create'])->name('biodata.education.create');
+        Route::post('/biodata/pendidikan', [ApplicantEducationController::class, 'store'])->name('biodata.education.store');
+        Route::get('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'create'])->name('biodata.workExperience.create');
+        Route::post('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'store'])->name('biodata.workExperience.store');
+        Route::resource('biodata', ApplicantController::class)->parameters(['biodata' => 'applicant']);
     });
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');

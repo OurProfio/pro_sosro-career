@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Applicant;
 use App\Http\Requests\StoreApplicantRequest;
 use App\Http\Requests\UpdateApplicantRequest;
+use App\Models\ApplicantExpectation;
+use App\Models\ApplicantInterest;
+use App\Models\ApplicantWorkExprience;
 use App\Models\Division;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantController extends Controller
 {
@@ -14,9 +18,18 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        $divisions = Division::all();
+        if (!auth()->user()->applicant) {
+            return redirect()->route('biodata.create');
+        }
 
-        return view('auth.applicant.biodata.create', compact('divisions'));
+        $applicant = Applicant::with([
+            'workExperiences',
+            'educations',
+            'families',
+            'trainings'
+        ])->where('user_id', auth()->id())->firstOrFail();
+
+        return view('auth.applicant.biodata.index', compact('applicant'));
     }
 
     /**
@@ -24,7 +37,10 @@ class ApplicantController extends Controller
      */
     public function create()
     {
-        //
+        $divisions = Division::all();
+        $applicant = auth()->user()->applicant ?? null;
+
+        return view('auth.applicant.biodata.create.biodata', compact('divisions', 'applicant'));
     }
 
     /**
@@ -32,11 +48,35 @@ class ApplicantController extends Controller
      */
     public function store(StoreApplicantRequest $request)
     {
-        Applicant::create($request->validated() + [
-            'user_id' => auth()->user()->id,
-        ]);
+        DB::transaction(function () use ($request) {
+            $validated = $request->validated();
+            $validated['user_id'] = auth()->user()->id;
 
-        return redirect()->route('applicant.index')->with('success', 'Berhasil menambahkan biodata pelamar.');
+            $applicant = Applicant::create($validated + [
+                'photo_url' => $request->file('photo') ? $request->file('photo')->store('applicants', 'public') : null,
+            ]);
+            ApplicantInterest::updateOrCreate(
+                ['applicant_id' => $applicant->id],
+                ['interests' => $request->validated('division_preferences')],
+            );
+            ApplicantExpectation::create([
+                'applicant_id' => $applicant->id,
+                'salary_expectation' => $request['salary_expectation'],
+                'facility_expectation' => $request['facility_expectation'] ?? null,
+                'ready_to_relocate' => $request['ready_to_relocate'],
+                'ready_to_travel' => $request['ready_to_travel'],
+                'reference_by' => $request['reference_by'] ?? null,
+            ]);
+            if ($request->validated('has_worked_in_sosro')) {
+                ApplicantWorkExprience::create([
+                    'applicant_id' => $applicant->id,
+                    'company_name' => $request['previous_sosro_company'],
+                    'position' => $request['previous_sosro_position'],
+                ]);
+            }
+        });
+
+        return redirect()->route('biodata.family.create')->with('success', 'Berhasil menambahkan biodata pelamar.');
     }
 
     /**
@@ -52,7 +92,9 @@ class ApplicantController extends Controller
      */
     public function edit(Applicant $applicant)
     {
-        //
+        $divisions = Division::all();
+
+        return view('auth.applicant.biodata.edit', compact('applicant', 'divisions'));
     }
 
     /**

@@ -22,7 +22,6 @@
                 </div>
             @endif
 
-            {{-- Menambahkan onsubmit agar fungsi disableButton jalan --}}
             <form method="POST" action="{{ route('guest.login') }}" onsubmit="return disableButton(this)" class="space-y-5">
                 @csrf
 

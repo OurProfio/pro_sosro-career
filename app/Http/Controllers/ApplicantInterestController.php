@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MinatPekerjaan;
-use App\Http\Requests\StoreMinatPekerjaanRequest;
-use App\Http\Requests\UpdateMinatPekerjaanRequest;
+use App\Models\ApplicantInterest;
+use App\Http\Requests\StoreApplicantInterestRequest;
+use App\Http\Requests\UpdateApplicantInterestRequest;
 
-class MinatPekerjaanController extends Controller
+class ApplicantInterestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,7 +27,7 @@ class MinatPekerjaanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreMinatPekerjaanRequest $request)
+    public function store(StoreApplicantInterestRequest $request)
     {
         //
     }
@@ -35,7 +35,7 @@ class MinatPekerjaanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MinatPekerjaan $minatPekerjaan)
+    public function show(ApplicantInterest $applicantInterest)
     {
         //
     }
@@ -43,7 +43,7 @@ class MinatPekerjaanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MinatPekerjaan $minatPekerjaan)
+    public function edit(ApplicantInterest $applicantInterest)
     {
         //
     }
@@ -51,7 +51,7 @@ class MinatPekerjaanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateMinatPekerjaanRequest $request, MinatPekerjaan $minatPekerjaan)
+    public function update(UpdateApplicantInterestRequest $request, ApplicantInterest $applicantInterest)
     {
         //
     }
@@ -59,7 +59,7 @@ class MinatPekerjaanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(MinatPekerjaan $minatPekerjaan)
+    public function destroy(ApplicantInterest $applicantInterest)
     {
         //
     }
