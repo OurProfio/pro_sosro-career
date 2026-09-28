@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('jobs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('office_id')->constrained('offices')->cascadeOnDelete();
             $table->foreignId('admin_id')->constrained('admins')->cascadeOnDelete();
             $table->string('title');
             $table->string('category');
             $table->string('occupation');
             $table->string('type');
+            $table->foreignId('office_id')->constrained('offices')->cascadeOnDelete();
             $table->string('location');
-            $table->string('description');
-            $table->string('qualification');
             $table->date('opening_date');
             $table->date('closing_date');
+            $table->string('description');
+            $table->string('qualification');
             $table->enum('status', ['aktif', 'nonaktif', 'dihapus', 'selesai'])->default('aktif');
             $table->timestamps();
         });

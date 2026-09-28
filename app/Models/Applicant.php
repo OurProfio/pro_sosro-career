@@ -62,4 +62,9 @@ class Applicant extends Model
     {
         return $this->hasMany(ApplicantTraining::class);
     }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
+    }
 }

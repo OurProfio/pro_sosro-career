@@ -35,7 +35,7 @@
                         <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
 
-                    <a href="{{ route('applicant.index') }}"
+                    <a href="{{ route('applicant.dashboard') }}"
                         class="group flex items-center px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 transition">
                         <div
                             class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-gray-200 transition">

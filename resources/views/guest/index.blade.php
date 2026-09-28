@@ -171,10 +171,42 @@
                         </div>
 
                         <div class="flex justify-end pt-2 border-t border-gray-100">
-                            <a href="{{ route('job.show', $job->id) }}"
-                                class="bg-[#B11116] hover:bg-red-800 text-white font-semibold px-8 py-2.5 rounded-full transition cursor-pointer inline-block">
-                                Lamar
-                            </a>
+                            @auth
+                                @php
+                                    $applicant = auth()->user()->applicant;
+                                    $sudahMelamar = $applicant
+                                        ? \App\Models\Application::where('applicant_id', $applicant->id)
+                                            ->where('job_id', $job->id)
+                                            ->exists()
+                                        : false;
+                                @endphp
+
+                                @if ($sudahMelamar)
+                                    <button disabled
+                                        class="bg-emerald-600 text-white font-semibold px-6 py-2 rounded-full text-sm cursor-not-allowed flex items-center gap-1.5 shadow-sm">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        Sudah Dilamar
+                                    </button>
+                                @else
+                                    <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
+                                        @csrf
+                                        <input type="hidden" name="job_id" value="{{ $job->id }}">
+                                        <button type="button" onclick="konfirmasiLamar(this)"
+                                            data-title="{{ $job->title }}"
+                                            class="bg-[#B11116] hover:bg-red-800 text-white font-semibold px-8 py-2.5 rounded-full transition cursor-pointer inline-block active:scale-95">
+                                            Lamar
+                                        </button>
+                                    </form>
+                                @endif
+                            @else
+                                <a href="{{ route('login') }}"
+                                    class="bg-[#B11116] hover:bg-red-800 text-white font-semibold px-8 py-2.5 rounded-full transition cursor-pointer inline-block">
+                                    Lamar
+                                </a>
+                            @endauth
                         </div>
                     </div>
                 @empty
@@ -194,4 +226,72 @@
             @endif
         </div>
     </section>
+    {{-- SWEETALERT2 MODAL KONFIRMASI --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function konfirmasiLamar(button) {
+            const title = button.getAttribute('data-title');
+            const form = button.closest('form');
+
+            Swal.fire({
+                title: 'Konfirmasi Lamaran Pekerjaan',
+                html: `<div class="text-gray-500 text-sm">Apakah Anda yakin ingin mengirimkan lamaran untuk posisi:</div>
+                   <div class="font-bold text-gray-900 mt-2 text-base">${title}</div>`,
+                icon: 'question',
+                iconColor: '#B11116',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Kirim Lamaran',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                buttonsStyling: false,
+                customClass: {
+                    popup: 'rounded-2xl border-none shadow-2xl p-6 font-sans',
+                    confirmButton: 'bg-[#B11116] hover:bg-red-800 text-white font-bold px-6 py-2.5 rounded-full text-xs mx-1.5 transition-all cursor-pointer',
+                    cancelButton: 'bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-6 py-2.5 rounded-full text-xs mx-1.5 transition-all cursor-pointer'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    button.disabled = true;
+                    button.innerHTML = `
+                    <span class="flex items-center gap-2">
+                        <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Mengirim...
+                    </span>
+                `;
+                    form.submit();
+                }
+            });
+        }
+    </script>
+
+    {{-- FLASH MESSAGE ALERT --}}
+    <script>
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                showConfirmButton: false,
+                customClass: {
+                    popup: 'rounded-2xl font-sans'
+                }
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: "{{ session('error') }}",
+                confirmButtonColor: '#B11116',
+                customClass: {
+                    popup: 'rounded-2xl font-sans'
+                }
+            });
+        @endif
+    </script>
 @endsection

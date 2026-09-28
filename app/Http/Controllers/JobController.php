@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Job;
 use App\Http\Requests\StoreJobRequest;
 use App\Http\Requests\UpdateJobRequest;
+use App\Models\Division;
 use App\Models\Office;
 
 class JobController extends Controller
@@ -24,9 +25,15 @@ class JobController extends Controller
      */
     public function create()
     {
-        $offices = Office::all();
+        if (auth()->user()->admin->role === 'superadmin') {
+            $offices = Office::all();
+        } else {
+            $offices = Office::where('id', auth()->user()->admin->office_id)->get();
+        }
 
-        return view('auth.admin.job.create', compact('offices'));
+        $divisions = Division::all();
+
+        return view('auth.admin.job.create', compact('offices', 'divisions'));
     }
 
     /**
@@ -47,7 +54,7 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $job->load(['office', 'admin.user']);
-        
+
         return view('auth.admin.job.show', compact('job'));
     }
 

@@ -7,11 +7,11 @@
         <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h2 class="text-2xl md:text-3xl font-black text-gray-800 tracking-tight">
-                    Halo, <span class="text-red-600">{{ auth()->user()->nama }}</span>
+                    Halo, <span class="text-red-600">{{ auth()->user()->applicant->name }}</span>
                 </h2>
 
                 <p class="text-gray-500 mt-1 font-medium">
-                    Selamat datang di <b>Dashboard Pelamar</b>, Pantau progres lamaran Anda di sini.
+                    Selamat datang di <b>Dashboard Pelamar</b>, pantau proses lamaran Anda di sini.
                 </p>
             </div>
 

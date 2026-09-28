@@ -90,21 +90,36 @@
                             </label>
                             <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <input type="text" id="category" name="category"
-                                        value="{{ old('category', $job->category) }}"
-                                        placeholder="Kategori (misal: Profesional, Magang)"
+                                    <select id="category" name="category"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('category') border-rose-500 @enderror"
                                         required>
+                                        <option value="" disabled>-- Pilih Kategori --</option>
+                                        <option value="profesional"
+                                            {{ old('category', $job->category) == 'profesional' ? 'selected' : '' }}>
+                                            Profesional</option>
+                                        <option value="management_trainee"
+                                            {{ old('category', $job->category) == 'management_trainee' ? 'selected' : '' }}>
+                                            Management Trainee</option>
+                                        <option value="internship"
+                                            {{ old('category', $job->category) == 'internship' ? 'selected' : '' }}>Magang /
+                                            Internship</option>
+                                    </select>
                                     @error('category')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div>
-                                    <input type="text" id="occupation" name="occupation"
-                                        value="{{ old('occupation', $job->occupation) }}"
-                                        placeholder="Bidang (misal: Information Technology)"
+                                    <select id="occupation" name="occupation"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('occupation') border-rose-500 @enderror"
                                         required>
+                                        <option value="" disabled>-- Pilih Bidang --</option>
+                                        @foreach ($divisions as $division)
+                                            <option value="{{ $division->name }}"
+                                                {{ old('occupation', $job->occupation) == $division->name ? 'selected' : '' }}>
+                                                {{ $division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('occupation')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror
@@ -119,11 +134,22 @@
                             </label>
                             <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <input type="text" id="type" name="type"
-                                        value="{{ old('type', $job->type) }}"
-                                        placeholder="Tipe (misal: Full-Time, Part-Time)"
+                                    <select id="type" name="type"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('type') border-rose-500 @enderror"
                                         required>
+                                        <option value="" disabled>-- Pilih Tipe Kerja --</option>
+                                        <option value="Full-Time"
+                                            {{ old('type', $job->type) == 'Full-Time' ? 'selected' : '' }}>Full-Time
+                                        </option>
+                                        <option value="Part-Time"
+                                            {{ old('type', $job->type) == 'Part-Time' ? 'selected' : '' }}>Part-Time
+                                        </option>
+                                        <option value="Freelance"
+                                            {{ old('type', $job->type) == 'Freelance' ? 'selected' : '' }}>Freelance
+                                        </option>
+                                        <option value="Kontrak"
+                                            {{ old('type', $job->type) == 'Kontrak' ? 'selected' : '' }}>Kontrak</option>
+                                    </select>
                                     @error('type')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror

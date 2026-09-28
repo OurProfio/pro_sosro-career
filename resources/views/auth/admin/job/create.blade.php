@@ -29,13 +29,13 @@
                 </div>
             </div>
 
-            {{-- ALERT NOTIFIKASI KETIKA CABANG KOSONG --}}
             @if ($offices->isEmpty())
                 <div class="m-4 p-3 bg-amber-50 border border-amber-300 rounded flex items-start gap-2.5 text-amber-800">
                     <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
                     <div class="text-[11px] space-y-1">
                         <p class="font-bold">Belum Ada Data Kantor Cabang Terdaftar!</p>
-                        <p>Sistem membutuhkan setidaknya 1 kantor cabang terdaftar untuk mengaitkan penempatan lowongan pekerjaan. Silakan buat data kantor cabang terlebih dahulu sebelum melanjutkan.</p>
+                        <p>Sistem membutuhkan setidaknya 1 kantor cabang terdaftar untuk mengaitkan penempatan lowongan
+                            pekerjaan. Silakan buat data kantor cabang terlebih dahulu sebelum melanjutkan.</p>
                         <div class="pt-1">
                             <a href="{{ route('office.create') }}"
                                 class="inline-flex items-center gap-1 px-2 py-1 bg-amber-600 hover:bg-amber-700 text-white font-semibold rounded text-[10px] transition-colors">
@@ -48,8 +48,6 @@
 
             <form action="{{ route('job.store') }}" method="POST" class="p-4 space-y-4">
                 @csrf
-
-                <!-- SEKSI 1: INFORMASI UTAMA LOWONGAN -->
                 <div class="space-y-3">
                     <div class="border-b border-slate-200 pb-1 flex items-center justify-between">
                         <span class="font-bold text-[11px] text-slate-700 uppercase tracking-tight font-mono">
@@ -75,28 +73,30 @@
                             </div>
                         </div>
 
-                        <!-- Kantor / Cabang Penempatan -->
-                        <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
-                            <label for="office_id" class="font-semibold text-slate-700 sm:text-right">
-                                Kantor / Cabang <span class="text-rose-600">*</span>
-                            </label>
-                            <div class="sm:col-span-3">
-                                <select id="office_id" name="office_id"
-                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('office_id') border-rose-500 @enderror"
-                                    {{ $offices->isEmpty() ? 'disabled' : '' }} required>
-                                    <option value="" disabled {{ old('office_id') == '' ? 'selected' : '' }}>-- Pilih Lokasi Cabang --</option>
-                                    @foreach ($offices as $office)
-                                        <option value="{{ $office->id }}"
-                                            {{ old('office_id') == $office->id ? 'selected' : '' }}>
-                                            {{ $office->name ?? $office->title }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('office_id')
-                                    <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
-                                @enderror
+                        @if (auth()->user()->admin->role === 'superadmin')
+                            <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
+                                <label for="office_id" class="font-semibold text-slate-700 sm:text-right">
+                                    Kantor / Cabang <span class="text-rose-600">*</span>
+                                </label>
+                                <div class="sm:col-span-3">
+                                    <select id="office_id" name="office_id"
+                                        class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('office_id') border-rose-500 @enderror"
+                                        {{ $offices->isEmpty() ? 'disabled' : '' }} required>
+                                        <option value="" disabled {{ old('office_id') == '' ? 'selected' : '' }}>--
+                                            Pilih Lokasi Cabang --</option>
+                                        @foreach ($offices as $office)
+                                            <option value="{{ $office->id }}"
+                                                {{ old('office_id') == $office->id ? 'selected' : '' }}>
+                                                {{ $office->name ?? $office->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('office_id')
+                                        <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
+                                    @enderror
+                                </div>
                             </div>
-                        </div>
+                        @endif
 
                         <!-- Kategori & Bidang Pekerjaan -->
                         <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
@@ -105,19 +105,36 @@
                             </label>
                             <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <input type="text" id="category" name="category" value="{{ old('category') }}"
-                                        placeholder="Kategori (misal: Profesional, Magang)"
+                                    <select id="category" name="category"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('category') border-rose-500 @enderror"
                                         {{ $offices->isEmpty() ? 'disabled' : '' }} required>
+                                        <option value="" disabled {{ old('category') == '' ? 'selected' : '' }}>--
+                                            Pilih Kategori --</option>
+                                        <option value="profesional"
+                                            {{ old('category') == 'profesional' ? 'selected' : '' }}>Profesional</option>
+                                        <option value="management_trainee"
+                                            {{ old('category') == 'management_trainee' ? 'selected' : '' }}>Management
+                                            Trainee</option>
+                                        <option value="internship" {{ old('category') == 'internship' ? 'selected' : '' }}>Magang /
+                                            Internship</option>
+                                    </select>
                                     @error('category')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div>
-                                    <input type="text" id="occupation" name="occupation" value="{{ old('occupation') }}"
-                                        placeholder="Bidang (misal: Information Technology)"
+                                    <select id="occupation" name="occupation"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('occupation') border-rose-500 @enderror"
                                         {{ $offices->isEmpty() ? 'disabled' : '' }} required>
+                                        <option value="" disabled {{ old('occupation') == '' ? 'selected' : '' }}>--
+                                            Pilih Bidang --</option>
+                                        @foreach ($divisions as $division)
+                                            <option value="{{ $division->name }}"
+                                                {{ old('occupation') == $division->name ? 'selected' : '' }}>
+                                                {{ $division->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     @error('occupation')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror
@@ -132,10 +149,20 @@
                             </label>
                             <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <input type="text" id="type" name="type" value="{{ old('type') }}"
-                                        placeholder="Tipe (misal: Full-Time, Part-Time)"
+                                    <select id="type" name="type"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('type') border-rose-500 @enderror"
                                         {{ $offices->isEmpty() ? 'disabled' : '' }} required>
+                                        <option value="" disabled {{ old('type') == '' ? 'selected' : '' }}>-- Pilih
+                                            Tipe Kerja --</option>
+                                        <option value="Full-Time" {{ old('type') == 'Full-Time' ? 'selected' : '' }}>
+                                            Full-Time</option>
+                                        <option value="Part-Time" {{ old('type') == 'Part-Time' ? 'selected' : '' }}>
+                                            Part-Time</option>
+                                        <option value="Freelance" {{ old('type') == 'Freelance' ? 'selected' : '' }}>
+                                            Freelance</option>
+                                        <option value="Kontrak" {{ old('type') == 'Kontrak' ? 'selected' : '' }}>Kontrak
+                                        </option>
+                                    </select>
                                     @error('type')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
                                     @enderror
@@ -211,7 +238,8 @@
                             </label>
                             <div class="sm:col-span-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <label for="opening_date" class="text-[10px] text-slate-500 block">Tanggal Buka</label>
+                                    <label for="opening_date" class="text-[10px] text-slate-500 block">Tanggal
+                                        Buka</label>
                                     <input type="date" id="opening_date" name="opening_date"
                                         value="{{ old('opening_date') }}"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('opening_date') border-rose-500 @enderror"
@@ -221,14 +249,15 @@
                                     @enderror
                                 </div>
                                 <div>
-                                    <label for="closing_date" class="text-[10px] text-slate-500 block">Tanggal Tutup</label>
+                                    <label for="closing_date" class="text-[10px] text-slate-500 block">Tanggal
+                                        Tutup</label>
                                     <input type="date" id="closing_date" name="closing_date"
                                         value="{{ old('closing_date') }}"
                                         class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('closing_date') border-rose-500 @enderror"
                                         {{ $offices->isEmpty() ? 'disabled' : '' }} required>
                                     @error('closing_date')
                                         <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
-                                @enderror
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -243,8 +272,10 @@
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-sans text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 @error('status') border-rose-500 @enderror"
                                     {{ $offices->isEmpty() ? 'disabled' : '' }} required>
                                     <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
-                                    <option value="selesai" {{ old('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>Nonaktif
+                                    </option>
+                                    <option value="selesai" {{ old('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                                    </option>
                                 </select>
                                 @error('status')
                                     <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
