@@ -1,17 +1,17 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ApplicantController;
-use App\Http\Controllers\ApplicantEducationController;
-use App\Http\Controllers\ApplicantFamilyController;
-use App\Http\Controllers\ApplicantWorkExprienceController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DivisionController;
-use App\Http\Controllers\GuestController;
-use App\Http\Controllers\JobController;
-use App\Http\Controllers\OfficeController;
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\DivisionController;
+use App\Http\Controllers\Admin\JobController;
+use App\Http\Controllers\Admin\OfficeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Applicant\ApplicantController;
+use App\Http\Controllers\Applicant\ApplicantEducationController;
+use App\Http\Controllers\Applicant\ApplicantFamilyController;
+use App\Http\Controllers\Applicant\ApplicantWorkExprienceController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Guest\GuestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('guest.index');
@@ -31,10 +31,11 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('division', DivisionController::class);
         Route::resource('job', JobController::class);
         Route::resource('user', UserController::class);
+
     });
 
     Route::group(['middleware' => ['applicant']], function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('applicant.index');
+        Route::get('/dashboard', [ApplicantController::class, 'index'])->name('applicant.index');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');
         Route::get('/biodata/pendidikan', [ApplicantEducationController::class, 'create'])->name('biodata.education.create');
