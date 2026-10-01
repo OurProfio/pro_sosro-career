@@ -93,6 +93,7 @@ class ApplicantController extends Controller
      */
     public function edit(Applicant $applicant)
     {
+        dd($applicant);
         $divisions = Division::all();
 
         return view('auth.applicant.biodata.edit', compact('applicant', 'divisions'));

@@ -17,14 +17,9 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->role === 'superadmin') {
-            $admins = Admin::with('user', 'office')->get();
-        } else {
-            $admins = Admin::where('office_id', auth()->user()->admin->office_id)
-                ->where('user_id', '!=', auth()->user()->id)
-                ->with('user', 'office')
-                ->get();
-        }
+        $admins = Admin::where('user_id', '!=', auth()->user()->id)
+            ->with('user', 'office')
+            ->get();
 
         return view('auth.admin.admin.index', compact('admins'));
     }
@@ -59,7 +54,7 @@ class AdminController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.index')->with('success', 'Berhasil menambahkan data admin baru.');
+        return redirect()->route('admin.index')->with('info', 'Berhasil menambahkan data admin baru.');
     }
 
     /**
@@ -104,7 +99,7 @@ class AdminController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.index')->with('success', 'Berhasil memperbarui data admin.');
+        return redirect()->route('admin.index')->with('info', 'Berhasil memperbarui data admin.');
     }
 
     /**
@@ -117,6 +112,6 @@ class AdminController extends Controller
             $admin->delete();
         });
 
-        return redirect()->route('admin.index')->with('success', 'Berhasil menghapus data admin.');
+        return redirect()->route('admin.index')->with('info', 'Berhasil menghapus data admin.');
     }
 }

@@ -7,9 +7,11 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\OfficeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Applicant\ApplicantController;
+use App\Http\Controllers\Admin\ApplicantController as AdminApplicantController;
 use App\Http\Controllers\Applicant\ApplicantEducationController;
 use App\Http\Controllers\Applicant\ApplicantFamilyController;
 use App\Http\Controllers\Applicant\ApplicantWorkExprienceController;
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Guest\GuestController;
 use Illuminate\Support\Facades\Route;
@@ -25,13 +27,15 @@ Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['admin']], function () {
+        Route::prefix('admin')->group(function () {
+            Route::resource('admin', AdminController::class);
+            Route::resource('office', OfficeController::class);
+            Route::resource('division', DivisionController::class);
+            Route::resource('applicant', AdminApplicantController::class);
+        });
         Route::get('/admin/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
-        Route::resource('office', OfficeController::class);
-        Route::resource('admin', AdminController::class);
-        Route::resource('division', DivisionController::class);
         Route::resource('job', JobController::class);
         Route::resource('user', UserController::class);
-        Route::resource('applicant', ApplicantController::class);
     });
 
     Route::group(['middleware' => ['applicant']], function () {

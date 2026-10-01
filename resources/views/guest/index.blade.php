@@ -202,7 +202,7 @@
                                     </form>
                                 @endif
                             @else
-                                <a href="{{ route('login') }}"
+                                <a href="{{ route('guest.login') }}"
                                     class="bg-[#B11116] hover:bg-red-800 text-white font-semibold px-8 py-2.5 rounded-full transition cursor-pointer inline-block">
                                     Lamar
                                 </a>

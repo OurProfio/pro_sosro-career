@@ -1,63 +1,68 @@
-<header
-    class="fixed top-0 left-0 right-0 h-10 bg-slate-900 text-white px-3 flex items-center justify-between shrink-0 z-30 select-none">
-    <div class="flex items-center gap-3">
-        <button @click="sidebarOpen = !sidebarOpen"
-            class="text-slate-400 hover:cursor-pointer hover:text-white transition-colors">
-            <i data-lucide="menu" class="w-4 h-4"></i>
-        </button>
-        <div class="flex items-center gap-2">
-            <span class="font-semibold text-xs tracking-wide text-slate-200">
-                Dashboard Admin <span
-                    class="text-[10px] bg-slate-800 text-blue-400 px-1 py-0.5 rounded border border-slate-700 font-mono">v1.0.0</span>
-            </span>
-        </div>
-    </div>
+<nav class="fixed top-0 z-50 w-full bg-neutral-primary-soft border-b border-default">
+    <div class="px-3 py-3 lg:px-5 lg:pl-3">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center justify-start rtl:justify-end">
+                <button data-drawer-target="top-bar-sidebar" data-drawer-toggle="top-bar-sidebar"
+                    aria-controls="top-bar-sidebar" type="button"
+                    class="sm:hidden text-heading bg-transparent box-border border border-transparent hover:bg-neutral-secondary-medium focus:ring-4 focus:ring-neutral-tertiary font-medium leading-5 rounded-base text-sm p-2 focus:outline-none">
+                    <span class="sr-only">Open sidebar</span>
+                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+                        height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                            d="M5 7h14M5 12h14M5 17h10" />
+                    </svg>
+                </button>
+                <a href="{{ route('admin.index') }}" class="flex ms-2 md:me-24">
+                    <img src="{{ asset('assets/images/SGS Logo-Color.webp') }}" class="h-8 me-3" alt="FlowBite Logo" />
+                </a>
+            </div>
+            <div class="flex items-center">
+                <button data-tooltip-target="tooltip-email-limit" type="button"
+                    class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors">
+                    <i data-lucide="mail" class="w-3.5 h-3.5 text-slate-500"></i>
+                    <span>Limit Email: 500/500</span>
+                </button>
 
-    <div class="flex items-center gap-3 text-[11px]">
-
-        <div x-data="{ profileOpen: false }" class="relative">
-            <button @click="profileOpen = !profileOpen" @click.away="profileOpen = false"
-                class="flex items-center gap-2 cursor-pointer hover:text-slate-200 transition-colors focus:outline-none">
-                <i data-lucide="user-check" class="w-3.5 h-3.5 text-blue-400"></i>
-                <span class="font-medium text-slate-300">
-                    {{ auth()->user()->name ?? auth()->user()->applicant->name ?? "Welcome" }}
-                    @if (auth()->user() && auth()->user()->admin)
-                        <span class="text-slate-500 text-[10px]">
-                            ({{ auth()->user()->admin->role == 'superadmin' ? 'Super Admin' : 'Admin' }})
-                        </span>
-                    @endif
-                </span>
-                <i data-lucide="chevron-down" class="w-3 h-3 text-slate-500"></i>
-            </button>
-
-            <div x-show="profileOpen" x-cloak x-transition:enter="transition ease-out duration-100"
-                x-transition:enter-start="transform opacity-0 scale-95"
-                x-transition:enter-end="transform opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-75"
-                x-transition:leave-start="transform opacity-100 scale-100"
-                x-transition:leave-end="transform opacity-0 scale-95"
-                class="absolute right-0 mt-1.5 w-48 bg-white text-slate-800 border border-slate-300 rounded shadow-lg overflow-hidden z-50 text-[11px]">
-                <div class="p-2.5 bg-slate-50 border-b border-slate-200">
-                    <p class="font-bold truncate text-slate-900">{{ auth()->user()->name ?? auth()->user()->applicant->name ?? "Welcome" }}</p>
-                    <p class="text-[10px] text-slate-500 font-mono truncate">{{ auth()->user()->email ?? '-' }}</p>
-                    @if (auth()->user() && auth()->user()->admin && auth()->user()->admin->cabang)
-                        <div class="mt-1 flex items-center gap-1 text-[10px] text-blue-600 font-semibold">
-                            <i data-lucide="building-2" class="w-3 h-3"></i>
-                            <span class="truncate">{{ auth()->user()->admin->cabang->name ?? auth()->user()->applicant->name ?? "Welcome" }}</span>
-                        </div>
-                    @endif
+                <div id="tooltip-email-limit" role="tooltip"
+                    class="absolute z-10 invisible inline-block px-3 py-2 text-xs font-medium text-white transition-opacity duration-300 bg-slate-800 rounded-xl shadow-xs opacity-0 tooltip">
+                    Limit harian pengiriman email: <span class="font-bold text-emerald-400">500/500</span> terpakai
+                    <div class="tooltip-arrow" data-popper-arrow></div>
                 </div>
-
-                <div class="p-1">
-                    <form action="{{ route('auth.logout') }}" method="POST" class="w-full">
-                        @csrf
-                        <button type="submit"
-                            class="w-full px-2 py-1.5 text-left text-rose-600 hover:bg-rose-50 rounded font-semibold flex items-center gap-1.5 transition-colors cursor-pointer">
-                            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Logout / Keluar
+                <div class="flex items-center ms-3">
+                    <div>
+                        <button type="button"
+                            class="hover:cursor-pointer flex text-sm bg-gray-800 rounded-full focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            aria-expanded="false" data-dropdown-toggle="dropdown-user">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="w-8 h-8 rounded-full"
+                                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
                         </button>
-                    </form>
+                    </div>
+                    <div class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
+                        id="dropdown-user">
+                        <div class="px-4 py-3 border-b border-default-medium" role="none">
+                            <p class="text-sm font-medium text-heading" role="none">
+                                {{ auth()->user()->admin->name }}
+                            </p>
+                            <p class="text-sm text-body truncate" role="none">
+                                {{ auth()->user()->email }}
+                            </p>
+                        </div>
+                        <ul class="p-2 text-sm text-body font-medium" role="none">
+                            <li>
+                                <form action="{{ route('auth.logout') }}" method="POST" class="w-full">
+                                    @csrf
+                                    <button type="submit"
+                                        class="hover:cursor-pointer inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded text-left transition-colors"
+                                        role="menuitem">
+                                        Sign out
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</header>
+</nav>
