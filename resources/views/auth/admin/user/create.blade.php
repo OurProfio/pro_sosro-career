@@ -3,84 +3,77 @@
 @section('title', 'Tambah Akun User')
 
 @section('content')
-    <div class="bg-white border-b border-slate-300 px-3 py-1.5 flex items-center justify-between shrink-0 select-none">
-        <div class="flex items-center gap-2 text-[11px]">
-            <a href="{{ route('user.index') }}" class="text-slate-500 hover:text-blue-600 flex items-center gap-1">
-                <i data-lucide="users" class="w-3.5 h-3.5"></i>
-                <span>Kelola User</span>
+    <div class="max-w-2xl mx-auto space-y-6 font-sans">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Tambah Akun User</h2>
+                <p class="text-sm text-slate-500">Isi formulir berikut untuk menambahkan akun user ke sistem.</p>
+            </div>
+            <a href="{{ route('user.index') }}"
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                <span>Kembali</span>
             </a>
-            <span class="text-slate-400">/</span>
-            <span class="font-bold text-slate-800">Tambah Akun User Baru</span>
         </div>
 
-        <a href="{{ route('user.index') }}"
-            class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[10px] font-semibold flex items-center gap-1 transition-colors hover:cursor-pointer">
-            <i data-lucide="arrow-left" class="w-3 h-3"></i> Kembali ke Daftar
-        </a>
-    </div>
-
-    <div class="flex-1 p-3 overflow-y-auto">
-        <div class="max-w-4xl mx-auto bg-white border border-slate-300 rounded shadow-sm overflow-hidden">
-            <div class="bg-slate-800 text-white px-3 py-2 border-b border-slate-700 flex items-center gap-2">
-                <i data-lucide="user-plus" class="w-4 h-4 text-blue-400"></i>
-                <h1 class="font-bold text-xs tracking-wide">FORMULIR REGISTRASI AKUN USER BARU</h1>
-            </div>
-
-            <form action="{{ route('user.store') }}" method="POST" class="p-4 space-y-4">
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
+            <form action="{{ route('user.store') }}" method="POST" class="space-y-5">
                 @csrf
 
-                <div class="space-y-3">
-                    <div class="border-b border-slate-200 pb-1 flex items-center justify-between">
-                        <span class="font-bold text-[11px] text-slate-700 uppercase tracking-tight font-mono">
-                            Informasi Akun & Kredensial
-                        </span>
-                        <span class="text-[10px] text-rose-600 font-medium">* Wajib Diisi</span>
-                    </div>
+                <div>
+                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Alamat Email <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="email" name="email" id="email" value="{{ old('email') }}"
+                        placeholder="Contoh: user@perusahaan.com"
+                        class="w-full px-3.5 py-2.5 text-sm bg-white border rounded-xl outline-none transition-all placeholder:text-slate-400
+                {{ $errors->has('email') ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100' }}"
+                        required>
 
-                    <div class="grid grid-cols-1 gap-2 text-[11px]">
-                        <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
-                            <label for="email" class="font-semibold text-slate-700 sm:text-right">
-                                Alamat Email <span class="text-rose-600">*</span>
-                            </label>
-                            <div class="sm:col-span-3">
-                                <input type="email" id="email" name="email" value="{{ old('email') }}"
-                                    placeholder="contoh: user@perusahaan.com"
-                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('email') border-rose-500 @enderror"
-                                    required>
-                                @error('email')
-                                    <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-4 items-center gap-2">
-                            <label for="password" class="font-semibold text-slate-700 sm:text-right">
-                                Password <span class="text-rose-600">*</span>
-                            </label>
-                            <div class="sm:col-span-3">
-                                <input type="password" id="password" name="password" placeholder="Minimal 8 karakter..."
-                                    class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('password') border-rose-500 @enderror"
-                                    required>
-                                @error('password')
-                                    <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
+                    @error('email')
+                        <p class="mt-1.5 text-xs text-rose-500 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                            <span>{{ $message }}</span>
+                        </p>
+                    @enderror
                 </div>
 
-                <div class="pt-3 border-t border-slate-200 flex items-center justify-end gap-2">
+                <div>
+                    <label for="password" class="block text-sm font-medium text-slate-700 mb-1.5">
+                        Kata Sandi <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="password" name="password" id="password" placeholder="Minimal 8 karakter"
+                        class="w-full px-3.5 py-2.5 text-sm bg-white border rounded-xl outline-none transition-all placeholder:text-slate-400
+                {{ $errors->has('password') ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100' }}"
+                        required>
+
+                    @error('password')
+                        <p class="mt-1.5 text-xs text-rose-500 flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                            </svg>
+                            <span>{{ $message }}</span>
+                        </p>
+                    @enderror
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                     <a href="{{ route('user.index') }}"
-                        class="px-3 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[11px] font-semibold transition-colors hover:cursor-pointer">
+                        class="px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">
                         Batal
                     </a>
-                    <button type="reset"
-                        class="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-300 rounded text-[11px] font-semibold transition-colors hover:cursor-pointer">
-                        Reset Form
-                    </button>
                     <button type="submit"
-                        class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-[11px] font-semibold flex items-center gap-1 shadow-sm transition-colors hover:cursor-pointer">
-                        <i data-lucide="save" class="w-3.5 h-3.5"></i> Simpan Akun User
+                        class="hover:cursor-pointer px-5 py-2.5 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-xl shadow-xs transition-colors">
+                        Simpan Data
                     </button>
                 </div>
             </form>
