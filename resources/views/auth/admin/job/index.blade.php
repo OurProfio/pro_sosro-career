@@ -3,160 +3,241 @@
 @section('title', 'Kelola Lowongan Pekerjaan')
 
 @section('content')
-	<div class="p-4 sm:p-6 lg:p-8 space-y-6 font-sans min-h-[calc(100vh-4rem)]">
-		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-			<div>
-				<h1 class="text-xl sm:text-2xl font-bold text-slate-800 tracking-tight">Manajemen Lowongan</h1>
-				<p class="text-xs sm:text-sm text-slate-500 mt-0.5">Kelola dan pantau status publikasi lowongan kerja
-					perusahaan Anda.</p>
-			</div>
-			<div>
-				<a href="{{ route('job.create') }}"
-					class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-xs transition-colors">
-					<i data-lucide="plus" class="w-4 h-4"></i>
-					<span>Buat Lowongan</span>
-				</a>
-			</div>
-		</div>
+    <div class="space-y-4 font-sans">
 
-		<div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
-			<div class="overflow-x-auto">
-				<table class="w-full text-left border-collapse">
-					<thead>
-						<tr
-							class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold text-[11px] uppercase tracking-wider">
-							<th class="py-3 px-4 w-12 text-center">No</th>
-							<th class="py-3 px-4">Informasi Lowongan</th>
-							<th class="py-3 px-4 w-32">Kandidat</th>
-							<th class="py-3 px-4 w-36">Terbuat</th>
-							<th class="py-3 px-4 w-40">Batas Waktu</th>
-							<th class="py-3 px-4 w-32">Status</th>
-							<th class="py-3 px-4 w-28 text-center">Aksi</th>
-						</tr>
-					</thead>
-					<tbody class="divide-y divide-slate-200 text-xs text-slate-700">
-						@forelse ($jobs as $index => $job)
-							@php
-								// Logika helper untuk status & batas waktu
-								$isExpired = \Carbon\Carbon::parse($job->closing_date)->isPast();
-								$status = strtolower($job->status); // aktif, tidak aktif, selesai
-							@endphp
-							<tr class="hover:bg-slate-50/80 transition-colors">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">
+                    Daftar Lowongan
+                </h2>
 
-								<!-- 1. NO -->
-								<td class="py-3.5 px-4 text-center font-medium text-slate-400">
-									{{ $index + 1 }}
-								</td>
+                <p class="text-xs text-slate-500">
+                    Kelola data lowongan pekerjaan yang tersedia dalam sistem.
+                </p>
+            </div>
 
-								<!-- 2. INFORMASI LOWONGAN -->
-								<td class="py-3.5 px-4">
-									<div class="flex flex-col gap-0.5">
-										<a href="{{ route('job.show', $job->id) }}"
-											class="font-bold text-slate-800 hover:text-blue-600 text-sm transition-colors line-clamp-1">
-											{{ $job->title }}
-										</a>
-										<div class="flex items-center gap-1.5 text-[11px] text-slate-500">
-											<span>{{ $job->type ?? 'Management Trainee' }}</span>
-											<span>•</span>
-											<span>{{ $job->occupation ?? 'Administrasi' }}</span>
-										</div>
-									</div>
-								</td>
+            <a href="{{ route('job.create') }}"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors">
 
-								<!-- 3. KANDIDAT / PELAMAR -->
-								<td class="py-3.5 px-4">
-									<a href="{{ route('job.show', $job->id) }}"
-										class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors">
-										<i data-lucide="users" class="w-3.5 h-3.5 text-slate-500"></i>
-										<span>{{ $job->applications->count() ?? 0 }} Pelamar</span>
-									</a>
-								</td>
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
 
-								<!-- 4. TERBUAT (DIBUAT OLEH & TANGGAL) -->
-								<td class="py-3.5 px-4">
-									<div class="flex flex-col">
-										<span
-											class="font-medium text-slate-800">{{ \Carbon\Carbon::parse($job->created_at)->translatedFormat('d M Y') }}</span>
-										<span class="text-[10px] text-slate-400 font-medium truncate max-w-[120px]"
-											title="{{ $job->created_by ?? 'Admin' }}">
-											{{ $job->created_by ?? 'HO' }}
-										</span>
-									</div>
-								</td>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
 
-								<!-- 5. BATAS WAKTU -->
-								<td class="py-3.5 px-4">
-									<div class="flex flex-col">
-										<span
-											class="font-medium text-slate-800">{{ \Carbon\Carbon::parse($job->closing_date)->translatedFormat('d M Y') }}</span>
-										@if ($isExpired)
-											<span class="text-[10px] text-rose-500 font-semibold">Sudah Berakhir</span>
-										@else
-											<span class="text-[10px] text-amber-600 font-semibold">
-												{{ \Carbon\Carbon::parse($job->closing_date)->diffForHumans() }}
-											</span>
-										@endif
-									</div>
-								</td>
+                </svg>
 
-								<!-- 6. STATUS BADGE -->
-								<td class="py-3.5 px-4">
-									@if ($isExpired || $status == 'selesai')
-										<span
-											class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
-											<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-											Selesai
-										</span>
-									@elseif($status == 'aktif')
-										<span
-											class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-											<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-											Aktif
-										</span>
-									@else
-										<span
-											class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
-											<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-											Tidak Aktif
-										</span>
-									@endif
-								</td>
+                <span>Tambah Lowongan</span>
 
-								<!-- 7. AKSI (ACTION BUTTONS) -->
-								<td class="py-3.5 px-4 text-center">
-									<div class="flex items-center justify-center gap-1">
-										<a href="{{ route('job.edit', $job->id) }}" title="Edit"
-											class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-slate-100 rounded-lg transition-colors">
-											<i data-lucide="pencil" class="w-4 h-4"></i>
-										</a>
-										<form action="{{ route('job.destroy', $job->id) }}" method="POST"
-											class="inline">
-											@csrf
-											@method('DELETE')
-											<button type="submit" title="Hapus"
-												onclick="return confirm('Apakah Anda yakin ingin menghapus lowongan ini?')"
-												class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-slate-100 rounded-lg transition-colors">
-												<i data-lucide="trash-2" class="w-4 h-4"></i>
-											</button>
-										</form>
-									</div>
-								</td>
+            </a>
+        </div>
 
-							</tr>
-						@empty
-							<tr>
-								<td colspan="7" class="py-12 text-center text-slate-400">
-									<div class="flex flex-col items-center justify-center gap-2">
-										<i data-lucide="inbox" class="w-8 h-8 text-slate-300"></i>
-										<p class="text-xs font-medium">Belum ada data lowongan pekerjaan yang terdaftar.</p>
-									</div>
-								</td>
-							</tr>
-						@endforelse
-					</tbody>
-				</table>
-			</div>
-		</div>
+        <div class="relative overflow-x-auto bg-white shadow-xs rounded-2xl border border-slate-200">
 
-	</div>
+            <table class="w-full text-xs text-left rtl:text-right text-slate-700 border-collapse">
+
+                <thead>
+                    <tr
+                        class="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+
+                        <th scope="col" class="px-6 py-3.5 w-12 text-center">
+                            No
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Lowongan
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Kategori
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Pekerjaan
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Tipe
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Kantor
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Lokasi
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Periode
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5">
+                            Status
+                        </th>
+
+                        <th scope="col" class="px-6 py-3.5 w-28 text-center">
+                            Aksi
+                        </th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-slate-200">
+
+                    @forelse ($jobs as $index => $job)
+                        <tr class="bg-white hover:bg-slate-50/80 transition-colors">
+
+                            <td class="px-6 py-4 text-center font-medium text-slate-400">
+                                {{ $index + 1 }}
+                            </td>
+
+                            <th scope="row" class="px-6 py-4 font-bold text-slate-800 whitespace-nowrap">
+                                {{ $job->title }}
+                            </th>
+
+                            <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                                {{ ucwords(str_replace('_', ' ', $job->category)) }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                                {{ $job->occupation }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                                {{ $job->type }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                                {{ $job->office->name }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-600 whitespace-nowrap">
+                                {{ $job->location }}
+                            </td>
+
+                            <td class="px-6 py-4 text-slate-500 whitespace-nowrap">
+                                {{ \Carbon\Carbon::parse($job->opening_date)->format('d M Y') }}
+                                -
+                                {{ \Carbon\Carbon::parse($job->closing_date)->format('d M Y') }}
+                            </td>
+
+                            <td class="px-6 py-4">
+
+                                @if ($job->status === 'aktif')
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                        Aktif
+                                    </span>
+                                @elseif ($job->status === 'nonaktif')
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                                        Nonaktif
+                                    </span>
+                                @elseif ($job->status === 'selesai')
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                                        Selesai
+                                    </span>
+                                @elseif ($job->status === 'dihapus')
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-100">
+                                        Dihapus
+                                    </span>
+                                @endif
+
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+
+                                <div class="flex items-center justify-center gap-1">
+
+                                    <a href="{{ route('job.show', $job->id) }}" title="Lihat Detail"
+                                        class="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M2.036 12.322a1.012 1.012 0 010-.644C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.577 3.01 9.964 7.178.07.21.07.434 0 .644C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.577-3.01-9.964-7.178Z" />
+
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0Z" />
+
+                                        </svg>
+
+                                    </a>
+
+                                    <a href="{{ route('job.edit', $job->id) }}" title="Edit"
+                                        class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors">
+                                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                            viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.07a4.5 4.5 0 0 1-1.897 1.13l-2.685.805.805-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M19.5 7.125 16.875 4.5" />
+                                        </svg>
+                                    </a>
+
+                                    <form action="{{ route('job.destroy', $job->id) }}" method="POST" class="inline">
+
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit" title="Hapus"
+                                            onclick="return confirm('Apakah Anda yakin ingin menghapus lowongan ini?')"
+                                            class="hover:cursor-pointer p-1.5 text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors">
+                                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                            </svg>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 01-3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+
+                                            </svg>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    @empty
+
+                        <tr>
+
+                            <td colspan="10" class="px-6 py-12 text-center text-slate-400">
+
+                                <div class="flex flex-col items-center justify-center gap-2">
+
+                                    <svg class="w-8 h-8 text-slate-300" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                        viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M20.25 7.5l-8.25-4.5-8.25 4.5m16.5 0v9l-8.25 4.5m8.25-13.5L12 12m0 0L3.75 7.5M12 12v9" />
+
+                                    </svg>
+
+                                    <p class="text-xs font-medium">
+                                        Belum ada data lowongan yang terdaftar.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    @endforelse
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 @endsection

@@ -8,6 +8,7 @@ use App\Models\Division;
 use App\Http\Requests\Admin\StoreJobRequest;
 use App\Http\Requests\Admin\UpdateJobRequest;
 use App\Models\Office;
+use App\Models\Stage;
 
 class JobController extends Controller
 {
@@ -54,9 +55,19 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        $job->load(['office', 'admin.user']);
+        $job->load([
+            'office',
+            'admin.user',
+            'applications.applicant',
+            'applications.stage',
+        ]);
 
-        return view('auth.admin.job.show', compact('job'));
+        $stages = Stage::where('type', $job->category)
+            ->orderBy('step')
+            ->get();
+
+
+        return view('auth.admin.job.show', compact('job', 'stages'));
     }
 
     /**
@@ -64,9 +75,15 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
-        $offices = Office::all();
+        if (auth()->user()->admin->role === 'superadmin') {
+            $offices = Office::all();
+        } else {
+            $offices = Office::where('id', auth()->user()->admin->office_id)->get();
+        }
 
-        return view('auth.admin.job.edit', compact('job', 'offices'));
+        $divisions = Division::all();
+
+        return view('auth.admin.job.edit', compact('job', 'offices', 'divisions'));
     }
 
     /**

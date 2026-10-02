@@ -11,7 +11,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 tracking-tight">
                     Buat <span class="text-red-600">Akun Baru</span>
                 </h2>
-                <p class="text-gray-500 mt-2 font-medium">Mulai langkah karier Anda bersama Sosro.</p>
+                <p class="text-gray-500 mt-2 font-medium">Mulai langkah karier Anda bersama PT Sinar Sosro Gunung Slamat.</p>
             </div>
 
             @if (session('status'))

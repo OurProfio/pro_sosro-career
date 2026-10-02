@@ -3,150 +3,291 @@
 @section('title', 'Detail Lowongan Pekerjaan')
 
 @section('content')
-    <div class="bg-white border-b border-slate-300 px-3 py-1.5 flex items-center justify-between shrink-0 select-none">
-        <div class="flex items-center gap-2 text-[11px]">
-            <a href="{{ route('job.index') }}" class="text-slate-500 hover:text-blue-600 flex items-center gap-1">
-                <i data-lucide="briefcase" class="w-3.5 h-3.5"></i>
-                <span>Kelola Lowongan</span>
-            </a>
-            <span class="text-slate-400">/</span>
-            <span class="font-bold text-slate-800">Detail Lowongan: {{ $job->title }}</span>
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-slate-800">Detail Lowongan</h2>
+            <p class="text-sm text-slate-500">
+                Informasi lengkap mengenai lowongan pekerjaan.
+            </p>
         </div>
 
-        <div class="flex items-center gap-1.5">
-            <a href="{{ route('job.edit', $job->id) }}"
-                class="px-2 py-0.5 bg-amber-600 hover:bg-amber-700 text-white rounded text-[10px] font-semibold flex items-center gap-1 transition-colors hover:cursor-pointer">
-                <i data-lucide="edit-3" class="w-3 h-3"></i> Edit Data
-            </a>
+        <div class="flex items-center gap-2">
             <a href="{{ route('job.index') }}"
-                class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[10px] font-semibold flex items-center gap-1 transition-colors hover:cursor-pointer">
-                <i data-lucide="arrow-left" class="w-3 h-3"></i> Kembali
+                class="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                </svg>
+                Kembali
+            </a>
+
+            <a href="{{ route('job.edit', $job->id) }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.07a4.5 4.5 0 0 1-1.897 1.13l-2.685.805.805-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125 16.875 4.5" />
+                </svg>
+                Edit Lowongan
             </a>
         </div>
     </div>
 
-    <div class="flex-1 p-3 overflow-y-auto">
-        <div class="max-w-4xl mx-auto space-y-3">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800">
+                        {{ $job->title }}
+                    </h3>
 
-            <!-- HEADER RINGKASAN UTAMA -->
-            <div class="bg-white border border-slate-300 rounded shadow-sm overflow-hidden">
-                <div class="bg-slate-800 text-white px-3 py-2 border-b border-slate-700 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="file-text" class="w-4 h-4 text-blue-400"></i>
-                        <h1 class="font-bold text-xs tracking-wide uppercase">RINCIAN LOWONGAN PEKERJAAN</h1>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] font-mono text-slate-400">ID: #{{ $job->id }}</span>
+                    <p class="text-sm text-slate-500 mt-1">
+                        {{ ucwords(str_replace('_', ' ', $job->category)) }}
+                    </p>
+                </div>
+
+                <div>
+                    @if ($job->status === 'aktif')
                         <span
-                            class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider
-                            {{ $job->status == 'aktif' ? 'bg-emerald-500 text-white' : 'bg-slate-600 text-slate-200' }}">
-                            {{ $job->status }}
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                            Aktif
                         </span>
-                    </div>
-                </div>
-
-                <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] border-b border-slate-200">
-                    <div>
-                        <p class="text-[10px] font-mono uppercase text-slate-500 font-semibold">Judul Lowongan</p>
-                        <p class="text-sm font-bold text-slate-900 mt-0.5">{{ $job->title }}</p>
-                    </div>
-
-                    <div>
-                        <p class="text-[10px] font-mono uppercase text-slate-500 font-semibold">Penempatan Cabang / Kantor
-                        </p>
-                        <p class="text-sm font-semibold text-blue-700 mt-0.5 flex items-center gap-1">
-                            <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
-                            {{ $job->office->name ?? ($job->office->title ?? 'Semua Cabang / Pusat') }}
-                        </p>
-                    </div>
-                </div>
-
-                <!-- METADATA GRID -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 p-3 bg-slate-50 border-b border-slate-200 text-[11px]">
-                    <div>
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Kategori</span>
-                        <span class="font-semibold text-slate-800">{{ $job->category }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Bidang (Occupation)</span>
-                        <span class="font-semibold text-slate-800">{{ $job->occupation }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Tipe Pekerjaan</span>
-                        <span class="font-semibold text-slate-800">{{ $job->type }}</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Lokasi Kerja</span>
-                        <span class="font-semibold text-slate-800">{{ $job->location }}</span>
-                    </div>
+                    @elseif ($job->status === 'nonaktif')
+                        <span
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
+                            Nonaktif
+                        </span>
+                    @elseif ($job->status === 'selesai')
+                        <span
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                            Selesai
+                        </span>
+                    @elseif ($job->status === 'dihapus')
+                        <span
+                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">
+                            Dihapus
+                        </span>
+                    @endif
                 </div>
             </div>
-
-            <!-- DETAIL DESKRIPSI & KUALIFIKASI -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-[11px]">
-                <!-- DESKRIPSI -->
-                <div class="bg-white border border-slate-300 rounded shadow-sm p-3 flex flex-col">
-                    <div
-                        class="border-b border-slate-200 pb-1.5 mb-2 flex items-center gap-1.5 font-bold text-slate-700 uppercase font-mono text-[10px]">
-                        <i data-lucide="align-left" class="w-3.5 h-3.5 text-blue-600"></i>
-                        <span>Deskripsi Pekerjaan</span>
-                    </div>
-                    <div class="text-slate-800 leading-relaxed whitespace-pre-line flex-1">
-                        {{ $job->description }}
-                    </div>
-                </div>
-
-                <!-- KUALIFIKASI -->
-                <div class="bg-white border border-slate-300 rounded shadow-sm p-3 flex flex-col">
-                    <div
-                        class="border-b border-slate-200 pb-1.5 mb-2 flex items-center gap-1.5 font-bold text-slate-700 uppercase font-mono text-[10px]">
-                        <i data-lucide="check-square" class="w-3.5 h-3.5 text-blue-600"></i>
-                        <span>Kualifikasi Pelamar</span>
-                    </div>
-                    <div class="text-slate-800 leading-relaxed whitespace-pre-line flex-1">
-                        {{ $job->qualification }}
-                    </div>
-                </div>
-            </div>
-
-            <!-- JADWAL PERIODE & TIMESTAMPS -->
-            <div class="bg-white border border-slate-300 rounded shadow-sm p-3 text-[11px]">
-                <div class="border-b border-slate-200 pb-1 mb-2 font-bold text-slate-700 uppercase font-mono text-[10px]">
-                    Informasi Periode & Riwayat
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Periode Pendaftaran</span>
-                        <span class="font-mono font-semibold text-slate-800">
-                            {{ \Carbon\Carbon::parse($job->opening_date)->format('d/m/Y') }} –
-                            {{ \Carbon\Carbon::parse($job->closing_date)->format('d/m/Y') }}
-                        </span>
-                    </div>
-
-                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Dibuat Oleh Admin</span>
-                        <span class="font-semibold text-slate-800">
-                            {{ $job->admin->name ?? ($job->admin->user->name ?? 'Admin #' . $job->admin_id) }}
-                        </span>
-                    </div>
-
-                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Tanggal Dibuat</span>
-                        <span class="font-mono text-slate-700">
-                            {{ $job->created_at ? $job->created_at->format('d/m/Y H:i') : '-' }}
-                        </span>
-                    </div>
-
-                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
-                        <span class="text-[10px] text-slate-500 block font-mono uppercase">Terakhir Diperbarui</span>
-                        <span class="font-mono text-slate-700">
-                            {{ $job->updated_at ? $job->updated_at->format('d/m/Y H:i') : '-' }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="p-6 space-y-6">
+            <div>
+                <h4 class="text-sm font-bold text-slate-800 mb-4">
+                    Informasi Lowongan
+                </h4>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Bidang Pekerjaan</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ $job->occupation }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Tipe Pekerjaan</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ $job->type }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Kantor / Cabang</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ $job->office->name ?? '-' }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Lokasi Kerja</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ $job->location }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Tanggal Buka</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ \Carbon\Carbon::parse($job->opening_date)->format('d M Y') }}
+                        </p>
+                    </div>
+
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <p class="text-xs text-slate-400 mb-1">Tanggal Tutup</p>
+                        <p class="text-sm font-semibold text-slate-700">
+                            {{ \Carbon\Carbon::parse($job->closing_date)->format('d M Y') }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-5 border-t border-slate-100">
+                <h4 class="text-sm font-bold text-slate-800 mb-3">
+                    Deskripsi Pekerjaan
+                </h4>
+
+                <div class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                    {{ $job->description }}
+                </div>
+            </div>
+
+            <div class="pt-5 border-t border-slate-100">
+                <h4 class="text-sm font-bold text-slate-800 mb-3">
+                    Kualifikasi Pelamar
+                </h4>
+
+                <div class="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
+                    {{ $job->qualification }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mt-10">
+        <div class="px-6 py-5 border-b border-slate-200">
+            <div>
+                <h2 class="text-lg font-bold text-slate-800">Daftar Applicant</h2>
+                <p class="text-sm text-slate-500 mt-1">
+                    Daftar applicant yang melamar pada lowongan ini.
+                </p>
+            </div>
+        </div>
+
+        @if ($job->applications->isEmpty())
+            <div class="px-6 py-10 text-center">
+                <p class="text-sm text-slate-500">
+                    Belum ada applicant yang melamar pada lowongan ini.
+                </p>
+            </div>
+        @else
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                No
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Applicant
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Email
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Tanggal Melamar
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Stage
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Status
+                            </th>
+                            <th class="px-6 py-3 text-left font-semibold text-slate-600">
+                                Action
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-slate-100">
+                        @foreach ($job->applications as $application)
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4 text-slate-600">
+                                    {{ $loop->iteration }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <div class="font-medium text-slate-800">
+                                        {{ $application->applicant->name ?? '-' }}
+                                    </div>
+                                </td>
+
+                                <td class="px-6 py-4 text-slate-600">
+                                    {{ $application->applicant->email ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4 text-slate-600">
+                                    {{ $application->created_at?->format('d M Y') ?? '-' }}
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    <form action="" method="POST">
+                                        @csrf
+                                        @method('PUT')
+
+                                        <select name="stages_id" onchange="this.form.submit()"
+                                            class="min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+
+                                            <option value="">
+                                                Pilih Stage
+                                            </option>
+
+                                            @foreach ($stages as $stage)
+                                                <option value="{{ $stage->id }}"
+                                                    {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
+                                                    {{ $stage->step }}. {{ $stage->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </form>
+                                </td>
+
+                                <td class="px-6 py-4">
+                                    @if ($application->status === 'pending')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-100">
+                                            Pending
+                                        </span>
+                                    @elseif ($application->status === 'progress')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-100">
+                                            Progress
+                                        </span>
+                                    @elseif ($application->status === 'accepted')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                                            Accepted
+                                        </span>
+                                    @elseif ($application->status === 'rejected')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">
+                                            Rejected
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-2">
+                                        @if ($application->applicant)
+                                            <a href="{{ route('applicant.show', $application->applicant) }}"
+                                                class="w-max inline-flex items-center px-3 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-lg transition-colors">
+                                                Lihat Detail
+                                            </a>
+                                        @endif
+
+                                        @if ($application->status !== 'rejected')
+                                            <form action="" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menolak applicant ini?')">
+                                                @csrf
+
+                                                <button type="submit"
+                                                    class="hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-lg transition-colors">
+                                                    Rejected
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-xs text-slate-400">
+                                                Rejected
+                                            </span>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 @endsection

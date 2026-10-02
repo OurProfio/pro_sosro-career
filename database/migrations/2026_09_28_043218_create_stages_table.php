@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('type', ['internship', 'profesional', 'management_trainee']);
+            $table->enum('type', ['magang', 'profesional', 'management_trainee', 'internship']);
             $table->integer('step');
             $table->timestamps();
         });

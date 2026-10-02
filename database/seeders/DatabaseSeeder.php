@@ -85,14 +85,11 @@ class DatabaseSeeder extends Seeder
 
         $now = now();
         $stages = [
-
-            ['name' => 'interview', 'type' => 'magang', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-
-            ['name' => 'administration', 'type' => 'internship', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'psikotes', 'type' => 'internship', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'interview', 'type' => 'internship', 'step' => 3, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'simulasi', 'type' => 'internship', 'step' => 4, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'offering', 'type' => 'internship', 'step' => 5, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'administration', 'type' => 'magang', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'psikotes', 'type' => 'magang', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'interview', 'type' => 'magang', 'step' => 3, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'simulasi', 'type' => 'magang', 'step' => 4, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'offering', 'type' => 'magang', 'step' => 5, 'created_at' => $now, 'updated_at' => $now],    
 
             ['name' => 'administration', 'type' => 'profesional', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'psikotes', 'type' => 'profesional', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
@@ -109,7 +106,11 @@ class DatabaseSeeder extends Seeder
             ['name' => 'konfirmasi user', 'type' => 'management_trainee', 'step' => 6, 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'offering', 'type' => 'management_trainee', 'step' => 7, 'created_at' => $now, 'updated_at' => $now],
             ['name' => 'mcu', 'type' => 'management_trainee', 'step' => 8, 'created_at' => $now, 'updated_at' => $now],
+
+            ['name' => 'administration', 'type' => 'internship', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
+            ['name' => 'interview', 'type' => 'internship', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
         ];
+
         DB::table('stages')->insert($stages);
     }
 }

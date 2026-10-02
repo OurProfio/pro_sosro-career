@@ -35,7 +35,16 @@ class ApplicationController extends Controller
      */
     public function store(StoreApplicationRequest $request)
     {
+        if (!auth()->user()->applicant) {
+            return redirect()->route('biodata.index')->with('error', 'Anda harus melengkapi profil terlebih dahulu sebelum melamar pekerjaan.');
+        }
+
         $job = Job::findOrFail($request->job_id);
+        
+        if (Application::where('applicant_id', auth()->user()->applicant->id)->count() === 3) {
+            return redirect()->back()->with('error', 'Anda sudah mencapai batas maksimal melamar pekerjaan (3 kali).');
+        };
+
         Application::create([
             'applicant_id' => auth()->user()->applicant->id,
             'job_id' => $job->id,

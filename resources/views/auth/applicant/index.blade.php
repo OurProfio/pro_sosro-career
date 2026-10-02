@@ -7,7 +7,7 @@
         <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
                 <h2 class="text-2xl md:text-3xl font-black text-gray-800 tracking-tight">
-                    Halo, <span class="text-red-600">{{ auth()->user()->applicant->name }}</span>
+                    Halo, <span class="text-red-600">{{ auth()->user()->applicant->name ?? auth()->user()->email }}</span>
                 </h2>
 
                 <p class="text-gray-500 mt-1 font-medium">

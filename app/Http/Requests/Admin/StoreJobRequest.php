@@ -25,7 +25,7 @@ class StoreJobRequest extends FormRequest
         return [
             'office_id' => ['required', 'exists:offices,id'],
             'title' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'max:255'],
+            'category' => ['required', 'in:profesional,management_trainee,internship,magang'],
             'occupation' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
             'location' => ['required', 'string', 'max:255'],
@@ -46,8 +46,7 @@ class StoreJobRequest extends FormRequest
             'title.string' => 'Judul lowongan harus berupa teks.',
             'title.max' => 'Judul lowongan tidak boleh lebih dari 255 karakter.',
             'category.required' => 'Kategori lowongan wajib diisi.',
-            'category.string' => 'Kategori lowongan harus berupa teks.',
-            'category.max' => 'Kategori tidak boleh lebih dari 255 karakter.',
+            'category.in' => 'Kategori lowongan yang dipilih tidak valid.',
             'occupation.required' => 'Bidang pekerjaan (occupation) wajib diisi.',
             'occupation.string' => 'Bidang pekerjaan harus berupa teks.',
             'occupation.max' => 'Bidang pekerjaan tidak boleh lebih dari 255 karakter.',
