@@ -28,14 +28,14 @@ Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['admin']], function () {
         Route::prefix('admin')->group(function () {
+            Route::get('/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
             Route::resource('admin', AdminController::class);
             Route::resource('office', OfficeController::class);
             Route::resource('division', DivisionController::class);
             Route::resource('applicant', AdminApplicantController::class);
+            Route::resource('user', UserController::class);
+            Route::resource('job', JobController::class);
         });
-        Route::get('/admin/dashboard', [AdminDashboardController::class, 'dashboard'])->name('admin.dashboard');
-        Route::resource('job', JobController::class);
-        Route::resource('user', UserController::class);
     });
 
     Route::group(['middleware' => ['applicant']], function () {

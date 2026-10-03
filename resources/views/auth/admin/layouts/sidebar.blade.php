@@ -58,7 +58,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Akun Admin
+                         Data Admin
                      </span>
 
                      @if ($isAdminActive)
@@ -79,7 +79,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Akun Applicant
+                         Data Applicant
                      </span>
 
                      @if ($isApplicantAccountActive)
@@ -125,6 +125,27 @@
                      @if ($isDivisionActive)
                          <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
                      @endif
+                 </a>
+             </li>
+
+             @php
+                 $isJobActive = request()->routeIs('job.*') || request()->routeIs('admin.job.*');
+             @endphp
+             <li>
+                 <a href="{{ route('job.index') }}"
+                     class="flex items-center px-3 py-2 font-semibold rounded-xl transition-all group {{ $isJobActive ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
+
+                     <i data-lucide="briefcase-business"
+                         class="w-4 h-4 shrink-0 transition duration-75 {{ $isJobActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600' }}"></i>
+
+                     <span class="flex-1 ms-3 whitespace-nowrap">
+                         Data Lowongan
+                     </span>
+
+                     @if ($isJobActive)
+                         <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
+                     @endif
+
                  </a>
              </li>
          </ul>
