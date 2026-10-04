@@ -18,10 +18,9 @@
 </head>
 
 <body>
-
-    <div class="mx-auto w-screen max-w-[1900px]">
+    <div class="mx-auto min-w-screen">
         @include('guest.layouts.navbar')
-        <main class="">
+        <main>
             @yield('content')
         </main>
         @include('guest.layouts.footer')

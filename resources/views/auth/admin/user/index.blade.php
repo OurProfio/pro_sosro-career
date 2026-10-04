@@ -28,6 +28,9 @@
                         <th scope="col" class="px-6 py-3.5">
                             Dibuat Pada
                         </th>
+                        <th scope="col" class="px-6 py-3.5 text-center">
+                            Aksi
+                        </th>
                     </tr>
                 </thead>
 
@@ -52,10 +55,18 @@
                             <td class="px-6 py-4 text-slate-500 whitespace-nowrap">
                                 {{ \Carbon\Carbon::parse($user->created_at)->translatedFormat('d M Y H:i') }}
                             </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('user.edit', $user) }}"
+                                    class="inline-flex items-center gap-1 rounded-lg bg-amber-600 px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2">
+                                    <i data-lucide="pencil" class="h-3.5 w-3.5"></i>
+                                    Edit
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <td colspan="5" class="px-6 py-12 text-center text-slate-400">
                                 <div class="flex flex-col items-center justify-center gap-2">
                                     <svg class="w-8 h-8 text-slate-300" xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

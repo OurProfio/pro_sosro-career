@@ -53,7 +53,7 @@
 
                         @foreach ($offices as $office)
                             <option value="{{ $office->id }}" {{ old('office_id') == $office->id ? 'selected' : '' }}>
-                                {{ $office->name ?? $office->title }}
+                                {{ $office->name }}
                             </option>
                         @endforeach
                     </select>
