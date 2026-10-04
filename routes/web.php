@@ -15,6 +15,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Guest\GuestController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Mail\MailController;
 
 Route::get('/', [GuestController::class, 'index'])->name('guest.index');
 Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
@@ -52,5 +53,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/apply', [ApplicationController::class, 'store'])->name('applications.store');
     });
 
+    
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
-});
+    });
+    Route::get('/view', [MailController::class, 'index'])->name('email.index');
+    Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
+
