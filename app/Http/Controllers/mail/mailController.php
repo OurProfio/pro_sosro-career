@@ -26,7 +26,7 @@ class MailController extends Controller
     public function sendEmail(Request $request)
     {
 
-        // dd();
+
         // Kirim email menggunakan Mailable
         $penerima = [
             // 'adiezraanthoni@gmail.com', 
@@ -50,6 +50,5 @@ class MailController extends Controller
             Mail::to($penerima)->send($mailable);
         }
 
-        return redirect()->route('email.index')->with('success', 'Email berhasil dikirim.');
     }
 }

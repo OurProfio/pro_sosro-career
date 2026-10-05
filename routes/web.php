@@ -14,8 +14,8 @@ use App\Http\Controllers\Applicant\ApplicantWorkExprienceController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Guest\GuestController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mail\MailController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('guest.index');
 Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
