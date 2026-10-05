@@ -9,6 +9,9 @@ use App\Mail\InterviewMail;
 use App\Mail\Interview2Mail;
 use App\Mail\MedicalCheckUpMail;
 use App\Mail\OfferingLetterMail;
+use App\Mail\RejectedMail;
+use App\Mail\AcceptedHOMail;
+use App\Mail\AcceptedKpwMail;
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
@@ -26,8 +29,10 @@ class MailController extends Controller
         // dd();
         // Kirim email menggunakan Mailable
         $penerima = [
-            'adiezraanthoni@gmail.com', 
-            'alandriansuryatantra@gmail.com'];
+            // 'adiezraanthoni@gmail.com', 
+            // 'alandriansuryatantra@gmail.com',
+            'jasmine.balaw@sosro.com'
+        ];
 
         $mailables = [
             new psikotesMail(),
@@ -36,6 +41,9 @@ class MailController extends Controller
             new Interview2Mail(),
             new MedicalCheckUpMail(),
             new OfferingLetterMail(),
+            new RejectedMail(),
+            new AcceptedHOMail(),
+            new AcceptedKpwMail()
         ];
 
         foreach ($mailables as $mailable) {
