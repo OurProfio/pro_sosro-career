@@ -7,8 +7,6 @@
     <title>@yield('title', 'Selamat Datang') - Sosro Career</title>
     <link rel="icon" href="{{ asset('assets/images/logo sosro.webp') }}">
 
-    <!-- Alpine.js CDN -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Google Font: Inter -->
