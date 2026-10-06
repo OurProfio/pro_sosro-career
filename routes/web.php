@@ -36,6 +36,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::resource('applicant', AdminApplicantController::class);
             Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);
+            Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
         });
     });
 
@@ -56,4 +57,4 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 Route::get('/view', [MailController::class, 'index'])->name('email.index');
-Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
+// Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
