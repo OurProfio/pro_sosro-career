@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -14,7 +15,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::where('id', '!=', auth()->user()->id)->get();
-
+        
         return view('auth.admin.user.index', compact('users'));
     }
 
@@ -29,11 +30,10 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
         User::create([
-            'email' => $request->email,
-            'password' => $request->password,
+            ...$request->validated(),
             'role' => 'user',
         ]);
 
@@ -55,24 +55,18 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        abort_if($user->role !== 'user', 404);
-
         return view('auth.admin.user.edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        abort_if($user->role !== 'user', 404);
+        $data = $request->validated();
 
-        $data = [
-            'email' => $request->email,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = $request->password;
+        if (blank($data['password'] ?? null)) {
+            unset($data['password']);
         }
 
         $user->update($data);
@@ -87,8 +81,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        abort_if($user->role !== 'user', 404);
-
         $user->delete();
 
         return redirect()

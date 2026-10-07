@@ -1,3 +1,21 @@
+@php
+    $adminName = auth()->user()->admin?->name ?: 'Admin';
+    $adminInitials = collect(explode(' ', trim($adminName)))
+        ->filter()
+        ->take(2)
+        ->map(fn (string $namePart): string => strtoupper(substr($namePart, 0, 1)))
+        ->implode('');
+    $avatarColors = [
+        ['background' => 'bg-rose-100', 'text' => 'text-rose-700'],
+        ['background' => 'bg-amber-100', 'text' => 'text-amber-800'],
+        ['background' => 'bg-emerald-100', 'text' => 'text-emerald-700'],
+        ['background' => 'bg-sky-100', 'text' => 'text-sky-700'],
+        ['background' => 'bg-violet-100', 'text' => 'text-violet-700'],
+        ['background' => 'bg-fuchsia-100', 'text' => 'text-fuchsia-700'],
+    ];
+    $avatarColor = $avatarColors[crc32(strtolower($adminName)) % count($avatarColors)];
+@endphp
+
 <nav class="fixed top-0 z-50 w-full bg-neutral-primary-soft border-b border-default">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
         <div class="flex items-center justify-between">
@@ -34,15 +52,17 @@
                             class="hover:cursor-pointer flex text-sm bg-gray-800 rounded-full focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600"
                             aria-expanded="false" data-dropdown-toggle="dropdown-user">
                             <span class="sr-only">Open user menu</span>
-                            <img class="w-8 h-8 rounded-full"
-                                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" alt="user photo">
+                            <span aria-hidden="true"
+                                class="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold {{ $avatarColor['background'] }} {{ $avatarColor['text'] }}">
+                                {{ $adminInitials ?: 'A' }}
+                            </span>
                         </button>
                     </div>
                     <div class="z-50 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44"
                         id="dropdown-user">
                         <div class="px-4 py-3 border-b border-default-medium" role="none">
                             <p class="text-sm font-medium text-heading" role="none">
-                                {{ auth()->user()->admin->name }}
+                                {{ $adminName }}
                             </p>
                             <p class="text-sm text-body truncate" role="none">
                                 {{ auth()->user()->email }}

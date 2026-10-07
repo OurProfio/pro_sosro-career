@@ -46,7 +46,7 @@ class ApplicantController extends Controller
             'trainings',
             'applications.job',
             'applications.stage',
-        ])->firstOrFail();
+        ]);
 
         return view('auth.admin.applicant.show', compact('applicant'));
     }

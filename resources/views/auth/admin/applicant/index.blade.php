@@ -40,6 +40,9 @@
                         <th scope="col" class="px-6 py-3.5">
                             Dibuat Pada
                         </th>
+                        <th scope="col" class="px-6 py-3.5 text-center">
+                            Aksi
+                        </th>
                     </tr>
                 </thead>
 
@@ -84,6 +87,13 @@
 
                             <td class="px-6 py-4 text-slate-500 whitespace-nowrap">
                                 {{ \Carbon\Carbon::parse($applicant->created_at)->translatedFormat('d M Y H:i') }}
+                            </td>
+
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('applicant.show', $applicant) }}"
+                                    class="inline-flex items-center rounded-lg bg-[#B11116] px-3 py-1.5 text-[11px] font-semibold text-white transition hover:bg-[#8f0e12] focus:outline-none focus:ring-2 focus:ring-[#B11116] focus:ring-offset-2">
+                                    Show
+                                </a>
                             </td>
                         </tr>
                     @empty

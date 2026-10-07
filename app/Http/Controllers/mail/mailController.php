@@ -23,10 +23,10 @@ class MailController extends Controller
     {
         return view('mail.index');
     }
+    
     public function sendEmail(Request $request)
     {
-
-
+        dd($request);
         // Kirim email menggunakan Mailable
         $penerima = [
             // 'adiezraanthoni@gmail.com', 

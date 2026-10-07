@@ -48,7 +48,6 @@ class ApplicationController extends Controller
         Application::create([
             'applicant_id' => auth()->user()->applicant->id,
             'job_id' => $job->id,
-            'stages_id' => 1,
         ]);
 
         return redirect()->route('applications.index')->with('success', 'Berhasil melamar pekerjaan.');

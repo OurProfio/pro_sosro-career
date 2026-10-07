@@ -5,33 +5,37 @@
 
     <div class="flex items-center space-x-4">
         @if (auth()->check())
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" @click.away="open = false"
+            @php
+                $accountName = auth()->user()->admin?->name ?? auth()->user()->applicant?->name;
+                $accountRole = auth()->user()->admin ? 'Admin' : (auth()->user()->applicant ? 'Pelamar' : 'Pengguna');
+                $accountDisplayName = filled($accountName) ? $accountName : $accountRole;
+            @endphp
+
+            <div class="relative" data-account-menu-root>
+                <button type="button" data-account-menu-toggle aria-haspopup="true" aria-expanded="false" aria-controls="account-menu"
                     class="flex items-center space-x-3 bg-black/20 hover:bg-black/30 backdrop-blur-md border border-white/10 p-1.5 pl-4 pr-1.5 rounded-full transition-all duration-300 focus:outline-none group shadow-sm hover:cursor-pointer">
 
                     <div class="text-right hidden sm:block">
                         <p class="text-[11px] font-bold text-white tracking-wide leading-none mb-1 drop-shadow-sm">
-                            {{ Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome" }}
+                            {{ $accountDisplayName }}
                         </p>
                         <p
                             class="text-[9px] font-medium text-gray-200/80 leading-none truncate max-w-[130px] drop-shadow-sm">
-                            {{ Auth::user()->email }}
+                            {{ $accountRole }}
                         </p>
                     </div>
 
                     <div
                         class="h-8 w-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold shadow-md border border-white/20 transition group-hover:scale-105 group-active:scale-95">
-                        {{ substr(Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome", 0, 1) }}
+                        {{ substr($accountDisplayName, 0, 1) }}
                     </div>
                 </button>
 
-                <div x-show="open" x-transition:enter="transition ease-out duration-200"
-                    x-transition:enter-start="opacity-0 translate-y-2 scale-95"
-                    x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-cloak
+                <div id="account-menu" data-account-menu hidden
                     class="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-2xl py-2 z-[70] border border-gray-100 overflow-hidden">
 
-                    <div class="px-4 py-3 border-b border-gray-50 mb-1 sm:hidden">
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ Auth::user()->admin->name ?? Auth::user()->applicant->name ?? "Welcome" }}</p>
+                    <div class="px-4 py-3 border-b border-gray-50 mb-1">
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ $accountDisplayName }}</p>
                         <p class="text-[10px] text-gray-500 truncate">{{ Auth::user()->email }}</p>
                     </div>
 
@@ -83,39 +87,38 @@
                 </a>
             @endif
         @endif
-
-        <div class="relative inline-block text-left" x-data="{ open: false, lang: 'ID', flag: 'id' }">
-            <button type="button" @click="open = !open" @click.away="open = false"
-                class="flex items-center space-x-2 py-2 focus:outline-none hover:cursor-pointer">
-                <div class="w-6 h-6 rounded-full overflow-hidden border border-white/50 shadow-sm flex-shrink-0">
-                    <img :src="`https://flagcdn.com/w40/${flag}.png`" :alt="lang"
-                        class="w-full h-full object-cover">
-                </div>
-                <span class="text-white font-bold text-sm tracking-tight" x-text="lang">ID</span>
-
-                <svg :class="{ 'rotate-180': open }" class="w-4 h-4 text-white transition-transform duration-300"
-                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
-                </svg>
-            </button>
-
-            <div x-show="open" x-cloak x-transition:enter="transition ease-out duration-150 transform"
-                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="transition ease-in duration-100 transform"
-                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
-                class="absolute right-0 mt-2 w-32 bg-white rounded-2xl shadow-2xl py-2 z-[70] border border-gray-100 overflow-hidden">
-                <button type="button" @click="lang = 'ID'; flag = 'id'; open = false"
-                    class="flex items-center space-x-3 px-4 py-2 w-full text-left hover:bg-red-50 hover:cursor-pointer transition">
-                    <img src="https://flagcdn.com/w40/id.png" class="w-5 h-5 rounded-full object-cover" alt="ID">
-                    <span class="text-gray-800 text-sm font-semibold">Indonesia</span>
-                </button>
-
-                <button type="button" @click="lang = 'EN'; flag = 'gb'; open = false"
-                    class="flex items-center space-x-3 px-4 py-2 w-full text-left hover:bg-red-50 hover:cursor-pointer transition border-t border-gray-50">
-                    <img src="https://flagcdn.com/w40/gb.png" class="w-5 h-5 rounded-full object-cover" alt="EN">
-                    <span class="text-gray-800 text-sm font-semibold">English</span>
-                </button>
-            </div>
-        </div>
     </div>
 </nav>
+
+<script>
+    document.querySelectorAll('[data-account-menu-root]').forEach((root) => {
+        const toggle = root.querySelector('[data-account-menu-toggle]');
+        const menu = root.querySelector('[data-account-menu]');
+
+        if (!toggle || !menu) {
+            return;
+        }
+
+        const setMenuOpen = (isOpen) => {
+            menu.hidden = !isOpen;
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        toggle.addEventListener('click', () => {
+            setMenuOpen(toggle.getAttribute('aria-expanded') !== 'true');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!root.contains(event.target)) {
+                setMenuOpen(false);
+            }
+        });
+
+        root.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !menu.hidden) {
+                setMenuOpen(false);
+                toggle.focus();
+            }
+        });
+    });
+</script>

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ApplicantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Applicant extends Model
 {
-    /** @use HasFactory<\Database\Factories\ApplicantFactory> */
+    /** @use HasFactory<ApplicantFactory> */
     use HasFactory;
 
     protected $casts = [

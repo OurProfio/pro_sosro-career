@@ -217,15 +217,17 @@
                                         @csrf
                                         @method('PUT')
 
-                                        <select name="stages_id" onchange="this.form.submit()"
-                                            class="min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-
+                                        <select name="stages_id"
+                                            class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            data-application-id="{{ $application->id }}"
+                                            data-applicant-name="{{ $application->applicant->name ?? '-' }}"
+                                            data-applicant-email="{{ $application->applicant->email ?? '-' }}">
                                             <option value="">
                                                 Pilih Stage
                                             </option>
 
                                             @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}"
+                                                <option value="{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
                                                     {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
                                                     {{ $stage->step }}. {{ $stage->name }}
                                                 </option>
@@ -290,4 +292,92 @@
             </div>
         @endif
     </div>
+
+    <x-application.modal-email />
+
+    <script>
+        document.querySelectorAll('.stage-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+
+                if (!this.value) {
+                    return;
+                }
+
+                const applicationId = this.dataset.applicationId;
+                const applicantName = this.dataset.applicantName;
+                const applicantEmail = this.dataset.applicantEmail;
+                const stageId = this.value;
+                const stageName = selectedOption.dataset.stageName;
+
+                document.getElementById('modal-application-id').value = applicationId;
+                document.getElementById('modal-stage-id').value = stageId;
+
+                document.getElementById('modal-applicant-name').textContent = applicantName;
+                document.getElementById('modal-applicant-email').textContent = applicantEmail;
+                document.getElementById('modal-stage-name').value = stageName;
+
+                document.querySelectorAll('.stage-fields').forEach(field => {
+                    field.classList.add('hidden');
+                });
+
+                switch (stageName) {
+                    case 'psikotes':
+                        document.getElementById('fields-psikotes').classList.remove('hidden');
+                        break;
+
+                    case 'interview':
+                        document.getElementById('fields-interview').classList.remove('hidden');
+                        break;
+
+                    case 'mcu':
+                        document.getElementById('fields-mcu').classList.remove('hidden');
+                        break;
+
+                    case 'study case':
+                        document.getElementById('fields-study-case').classList.remove('hidden');
+                        break;
+
+                    case 'panel bod':
+                        document.getElementById('fields-panel-bod').classList.remove('hidden');
+                        break;
+
+                    default:
+                        document.getElementById('fields-none').classList.remove('hidden');
+                        break;
+                }
+
+                const modal = document.getElementById('stage-email-modal');
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            });
+        });
+
+        document.getElementById('interview_type')?.addEventListener('change', function() {
+            const virtualField = document.getElementById('interview-virtual-field');
+            const offlineField = document.getElementById('interview-offline-field');
+
+            if (this.value === 'virtual') {
+                virtualField.classList.remove('hidden');
+                offlineField.classList.add('hidden');
+            } else {
+                virtualField.classList.add('hidden');
+                offlineField.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('panel_bod_type')?.addEventListener('change', function() {
+            const virtualField = document.getElementById('panel-bod-virtual-field');
+            const offlineField = document.getElementById('panel-bod-offline-field');
+
+            if (this.value === 'virtual') {
+                virtualField.classList.remove('hidden');
+                offlineField.classList.add('hidden');
+            } else {
+                virtualField.classList.add('hidden');
+                offlineField.classList.remove('hidden');
+            }
+        });
+    </script>
 @endsection
