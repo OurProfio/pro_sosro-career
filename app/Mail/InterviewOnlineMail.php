@@ -10,16 +10,23 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InterviewMail extends Mailable
+class InterviewOnlineMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(
+        public string $name,
+        public string $email,
+        public string $date,
+        public string $time,
+        public string $link
+
+    )
     {
-        //
+        
     }
 
     /**
@@ -38,7 +45,7 @@ class InterviewMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.interview-mail',
+            view: 'mail.interview-online-mail',
         );
     }
 

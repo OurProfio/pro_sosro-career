@@ -36,7 +36,13 @@ Route::group(['middleware' => ['auth']], function () {
             Route::resource('applicant', AdminApplicantController::class);
             Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);
+
+            // Mail Routes
+            // routes/web.php
+            Route::get('/view', [MailController::class, 'index'])->name('email.index');
             Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
+
+
         });
     });
 
