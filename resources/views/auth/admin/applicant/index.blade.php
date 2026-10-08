@@ -48,7 +48,10 @@
 
                 <tbody class="divide-y divide-slate-200">
                     @forelse ($applicants as $index => $applicant)
-                        <tr class="bg-white hover:bg-slate-50/80 transition-colors">
+                        <tr class="cursor-pointer bg-white transition-colors hover:bg-slate-50/80 focus:bg-slate-50/80 focus:outline-none"
+                            role="link" tabindex="0"
+                            onclick="window.location.href='{{ route('applicant.show', $applicant) }}'"
+                            onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href='{{ route('applicant.show', $applicant) }}'; }">
                             <td class="px-6 py-4 text-center font-medium text-slate-400">
                                 {{ $index + 1 }}
                             </td>

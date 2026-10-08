@@ -85,7 +85,10 @@
                 <tbody class="divide-y divide-slate-200">
 
                     @forelse ($jobs as $index => $job)
-                        <tr class="bg-white hover:bg-slate-50/80 transition-colors">
+                        <tr class="cursor-pointer bg-white transition-colors hover:bg-slate-50/80 focus:bg-slate-50/80 focus:outline-none"
+                            role="link" tabindex="0"
+                            onclick="window.location.href='{{ route('job.show', $job) }}'"
+                            onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); window.location.href='{{ route('job.show', $job) }}'; }">
 
                             <td class="px-6 py-4 text-center font-medium text-slate-400">
                                 {{ $index + 1 }}
@@ -147,7 +150,7 @@
 
                             </td>
 
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
 
                                 <div class="flex items-center justify-center gap-1">
 

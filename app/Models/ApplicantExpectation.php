@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ApplicantExpectationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 )]
 class ApplicantExpectation extends Model
 {
-    /** @use HasFactory<\Database\Factories\ApplicantExpectationFactory> */
+    /** @use HasFactory<ApplicantExpectationFactory> */
     use HasFactory;
+
+    public function applicant()
+    {
+        return $this->belongsTo(Applicant::class);
+    }
 }

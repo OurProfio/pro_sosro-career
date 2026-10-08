@@ -68,4 +68,14 @@ class Applicant extends Model
     {
         return $this->hasMany(Application::class);
     }
+
+    public function interest()
+    {
+        return $this->hasOne(ApplicantInterest::class);
+    }
+
+    public function expectation()
+    {
+        return $this->hasOne(ApplicantExpectation::class);
+    }
 }

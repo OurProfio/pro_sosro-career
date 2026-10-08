@@ -86,9 +86,6 @@
                                 {{ $applicant->name }}
                             </h2>
 
-                            <p class="mt-1 text-sm text-slate-500">
-                                Applicant #{{ str_pad($applicant->id, 5, '0', STR_PAD_LEFT) }}
-                            </p>
                         </div>
 
                         {{-- Contact --}}
@@ -325,6 +322,33 @@
                                 </div>
 
                             </div>
+                        </div>
+
+                        {{-- Job Interests --}}
+                        <div class="mt-8 border-t border-slate-200 pt-6">
+                            <h3 class="mb-4 text-xs font-bold uppercase tracking-wider text-slate-400">
+                                Minat Pekerjaan
+                            </h3>
+
+                            @php
+                                $interests = $applicant->interest?->interests;
+                                $interests = is_array($interests) ? array_slice($interests, 0, 5) : (filled($interests) ? [$interests] : []);
+                            @endphp
+
+                            @if (count($interests))
+                                <ol class="space-y-2">
+                                    @foreach ($interests as $interestIndex => $interest)
+                                        <li class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                                            <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-50 text-xs font-bold text-[#B11116]">
+                                                {{ $interestIndex + 1 }}
+                                            </span>
+                                            <span>{{ is_array($interest) ? ($interest['name'] ?? '-') : ($interestNames->get((int) $interest, $interest)) }}</span>
+                                        </li>
+                                    @endforeach
+                                </ol>
+                            @else
+                                <p class="text-sm text-slate-400">Belum ada minat pekerjaan yang dipilih.</p>
+                            @endif
                         </div>
 
                     </aside>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
+use App\Models\Division;
 use Illuminate\Http\Request;
 
 class ApplicantController extends Controller
@@ -44,11 +45,21 @@ class ApplicantController extends Controller
             'educations',
             'families',
             'trainings',
+            'expectation',
+            'interest',
             'applications.job',
             'applications.stage',
         ]);
 
-        return view('auth.admin.applicant.show', compact('applicant'));
+        $interestIds = collect($applicant->interest?->interests ?? [])
+            ->filter(fn ($interest) => is_scalar($interest) && is_numeric($interest))
+            ->map(fn ($interest) => (int) $interest)
+            ->values();
+        $interestNames = Division::query()
+            ->whereIn('id', $interestIds)
+            ->pluck('name', 'id');
+
+        return view('auth.admin.applicant.show', compact('applicant', 'interestNames'));
     }
 
     /**
