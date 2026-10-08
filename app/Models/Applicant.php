@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ApplicantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 ])]
 class Applicant extends Model
 {
-    /** @use HasFactory<\Database\Factories\ApplicantFactory> */
+    /** @use HasFactory<ApplicantFactory> */
     use HasFactory;
 
     protected $casts = [
@@ -66,5 +67,21 @@ class Applicant extends Model
     public function applications()
     {
         return $this->hasMany(Application::class);
+    }
+
+    /**
+     * Data untuk formulir biodata (HC-ODR.FRM.001.00) yang dicetak.
+     *
+     * @return array<string, mixed>
+     */
+    public function biodataPrintData(): array
+    {
+        return [
+            'applicant' => $this->load(['workExperiences', 'educations', 'families', 'trainings']),
+            'expectation' => ApplicantExpectation::where('applicant_id', $this->id)->first(),
+            'expectationInterests' => ApplicantInterest::where('applicant_id', $this->id)->value('interests'),
+            'jobTitle' => Application::with('job')->where('applicant_id', $this->id)->latest()->first()?->job?->title,
+            'divisions' => Division::all(),
+        ];
     }
 }

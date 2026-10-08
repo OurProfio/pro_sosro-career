@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=794">
+<title>Formulir Biodata Calon Karyawan - {{ $applicant->name }}</title>
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+body{margin:0;background:#d9d9d9;font:12.5px/1.2 Carlito,Calibri,Arial,sans-serif;color:#000;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pg{width:210mm;height:296.6mm;margin:14px auto;background:#fff;position:relative;overflow:hidden;padding:118px 74px 0 72px;box-shadow:0 0 6px #0004}
+.fn{position:absolute;left:569px;top:12px;width:178px;height:25px;border:1px solid #000;box-shadow:1px 1px 0 #000;font-weight:bold;font-size:11px;line-height:23px;text-align:center}
+.lg{position:absolute;left:105px;top:38px;font:600 21px/18px Georgia,'Times New Roman',serif;color:#9a2a30;letter-spacing:.3px}
+.lg small{display:block;font-size:11px;font-weight:400;color:#444;letter-spacing:0;margin-top:2px}
+.rl{position:absolute;left:653px;top:48px;width:50px;height:50px;border-radius:50%;background:#b01c2e;color:#fff;font:italic 700 34px/50px Georgia,serif;text-align:center}
+.pn{position:absolute;right:46px;bottom:22px;font-size:10px}
+.ttl{text-align:center;font-weight:bold;font-size:15px;line-height:20px;margin-top:-4px}
+.hr{border-top:1px solid #000;margin-top:5px}
+input[type=text],textarea{font:inherit;color:#000;border:0;border-bottom:1px solid #000;background:none;height:16px;padding:0 2px;outline:0;border-radius:0;min-width:0}
+input[type=checkbox]{margin:0 4px 0 0;width:11px;height:11px;vertical-align:-1px}
+.r{display:flex;align-items:flex-end;height:18px;margin:0 40px 0 30px}
+.r>.l{width:131px;flex:none}.r>.c{width:8px;flex:none}
+.f{flex:1}
+.w{flex:none}
+.g{display:flex;align-items:flex-end}
+.s.x{text-decoration:line-through}
+i.sm{font-size:10px}
+table{border-collapse:collapse;table-layout:fixed;width:692px;margin-left:-18px}
+td,th{border:1px solid #000;padding:0;height:14.5px;font-size:11.5px;text-align:left;overflow:hidden}
+th{text-align:center;font-weight:bold;padding:2px 0}
+td{padding:0 3px}
+td input{width:100%;border:0;height:13px;padding:0;font-size:11.5px;background:none}
+.t2{width:606px;margin-left:19px}
+.jr{display:flex;align-items:flex-end;height:18px;margin:0 5px 0 36px;position:relative}
+.jr .n{position:absolute;left:-26px}
+.jr .l{width:143px;flex:none}.jr .c{width:8px;flex:none}
+.jy{display:flex;align-items:flex-end;height:18px;margin-left:19px;position:relative}
+.jy .t{position:absolute;left:-24px}
+.jy .l{width:178px;flex:none}.jy .c{width:8px;flex:none}
+.q{display:flex;align-items:flex-end;height:19px;margin-left:30px}
+.q input{flex:1;margin-left:3px}
+.np{position:fixed;right:10px;top:10px;font:12px Arial;padding:5px 10px;cursor:pointer;z-index:9}
+@media print{body{background:#fff}.pg{margin:0;box-shadow:none;break-after:page}.np{display:none}}
+</style>
+</head>
+<body>
+@php
+    $fmtDate = fn ($d) => $d ? \Carbon\Carbon::parse($d)->format('d/m/Y') : '';
+    $esc = fn ($v) => e((string) ($v ?? ''));
+    // $I(lebar|null, nilai): kolom isian bergaris bawah
+    $I = fn ($w = null, $v = '') => '<input type="text" class="' . ($w ? 'w' : 'f') . '"' . ($w ? ' style="width:' . $w . 'px"' : '') . ' value="' . e((string) $v) . '">';
+    $R = fn ($l, $f, $s = '') => '<div class="r" style="' . $s . '"><span class="l">' . $l . '</span><span class="c">:</span>' . $f . '</div>';
+    $cell = fn ($v) => '<td><input type="text" value="' . e((string) $v) . '">';
+
+    $genderLabel = ['l' => 'Laki-laki', 'p' => 'Perempuan'][$applicant->gender] ?? '';
+    $licenses = $applicant->driver_licenses ?? [];
+    $licenseHeld = [
+        'A' => in_array('A', $licenses), 'C' => in_array('C', $licenses),
+        'B1' => in_array('B1', $licenses), 'B Umum' => in_array('B2', $licenses),
+    ];
+    $sim = collect($licenseHeld)->map(fn ($held, $k) => '<span class="s' . ($held ? '' : ' x') . '">' . $k . '</span>')->implode(' / ');
+    $marital = $applicant->marital_status;
+
+    $job = $applicant->workExperiences->first();
+    $expectation = $expectation ?? null;
+    $yesNo = fn ($b) => $b ? 'Ya' : 'Tidak';
+
+    $famRows = function ($rows) use ($fmtDate, $cell) {
+        $out = '';
+        foreach ($rows as [$label, $f]) {
+            $out .= '<tr><td>' . $label
+                . $cell($f?->name) . $cell('') . $cell('')
+                . $cell($f ? trim($f->place_of_birth . ', ' . $fmtDate($f->date_of_birth), ' ,') : '')
+                . $cell($f?->education) . $cell($f?->work) . '</tr>';
+        }
+        return $out;
+    };
+    $famHead = '<tr><th style="width:82px">Hubungan<th style="width:169px">Nama<th style="width:42px">L / P<th style="width:85px">Status Kawin<th style="width:144px">Tempat / Tgl. Lahir<th style="width:79px">Pendidikan<th style="width:91px">Pekerjaan</tr>';
+
+    $byRel = fn ($rel) => $applicant->families->where('relationship', $rel)->values();
+    $nuclear = [['Suami /Istri', $byRel('spouse')->first()]];
+    foreach (range(0, 4) as $i) { $nuclear[] = ['Anak ' . ($i + 1), $byRel('child')->get($i)]; }
+    $biological = [['Ayah', $byRel('father')->first()], ['Ibu', $byRel('mother')->first()], ['Ayah Mertua', null], ['Ibu Mertua', null]];
+    foreach (range(0, 4) as $i) { $biological[] = ['Saudara ' . ($i + 1), $byRel('sibling')->get($i)]; }
+
+    $jobRows = [['Nama Perusahaan', 'company_name'], ['Alamat Perusahaan', null, 'a'], ['No. Telp Perusahaan', null], ['Bidang Industri', null], ['Jabatan Terakhir', 'position'], ['Divisi / Departemen', 'division'], ['Periode Bekerja', null, 'p'], ['Gaji', 'salary'], ['Fasilitas / Tunjangan', 'facility'], ['Alasan Keluar', 'reason_for_leaving'], ['Nama Atasan Langsung', 'reference_name'], ['Jabatan', null], ['Nomor HP Atasan', null]];
+    $jobHtml = function ($no, $a, $b) use ($jobRows, $applicant, $I, $fmtDate) {
+        $w = $applicant->workExperiences->get($no - 1);
+        $out = '';
+        foreach (array_slice($jobRows, $a, $b - $a, true) as $idx => $row) {
+            [$label, $key, $kind] = $row + [null, null, null];
+            $num = $idx === 0 ? '<span class="n">' . $no . '.</span>' : '';
+            $val = $key && $w ? ($key === 'salary' && $w->salary ? number_format($w->salary, 0, ',', '.') : $w->$key) : '';
+            if ($kind === 'p') {
+                $field = $I(120, $w ? $fmtDate($w->start_date) : '') . '<span style="width:50px;text-align:center" class="w">sampai</span>' . $I(120, $w ? $fmtDate($w->end_date) : '');
+            } else {
+                $field = $I(0, $val);
+            }
+            $out .= '<div class="jr">' . $num . '<span class="l">' . $label . '</span><span class="c">:</span>' . $field . '</div>';
+            if ($kind === 'a') {
+                $out .= '<div class="jr" style="padding-left:151px">' . $I(0) . '</div>';
+            }
+        }
+        return $out;
+    };
+
+    $ranks = collect($expectationInterests ?? [])->values()->flip()->map(fn ($i) => $i + 1);
+    $divisionList = $divisions->values();
+    $half = (int) ceil($divisionList->count() / 2);
+    $interestRows = '';
+    foreach (range(0, max($half - 1, 0)) as $i) {
+        $l = $divisionList->get($i);
+        $r = $divisionList->get($i + $half);
+        $interestRows .= '<tr><td>' . e($l?->name) . '<td>' . ($l ? '<input type="text" style="text-align:center" value="' . ($ranks[$l->id] ?? '') . '">' : '')
+            . '<td>' . e($r?->name) . '<td>' . ($r ? '<input type="text" style="text-align:center" value="' . ($ranks[$r->id] ?? '') . '">' : '') . '</tr>';
+    }
+    $jy = function ($no) use ($I) {
+        $out = '';
+        foreach ([['Nama PT'], ['Kota'], ['Jabatan'], ['Departemen'], ['Periode Bekerja', 'p']] as $i => $row) {
+            [$l, $k] = $row + [null, null];
+            $field = $k === 'p' ? $I(120) . '<span class="w" style="width:50px;text-align:center">sampai</span>' . $I(120) : $I(0);
+            $label = $i === 0 ? $no . '. ' . $l : $l;
+            $pad = ($i === 0 || $i === 1) ? '' : 'padding-left:18px;';
+            $out .= '<div class="jy">' . ($no === 1 && $i === 0 ? '<span class="t">Jika Ya,</span>' : '') . '<span class="l" style="' . $pad . ($k ? 'width:135px' : '') . '">' . $label . '</span><span class="c">:</span>' . $field . '</div>';
+        }
+        return $out;
+    };
+@endphp
+
+<button class="np" onclick="print()">Cetak</button>
+
+<div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg">SINAR SOSRO<br>GUNUNG SLAMAT<small>a REKSO Company</small></div><div class="rl">R</div><div class="pn">1</div>
+<div class="ttl">FORMULIR BIODATA CALON KARYAWAN</div><div class="hr"></div>
+<div class="g" style="margin-top:12px;height:18px"><b style="font-size:12.5px;margin-left:11px;white-space:nowrap">Jabatan yang dilamar :&nbsp;</b>{!! $I(0, $jobTitle ?? '') !!}</div><div class="hr" style="margin-top:9px"></div>
+<div style="margin:10px 0 2px 8px"><b><u>A.&nbsp;&nbsp; IDENTITAS DIRI</u></b></div>
+{!! $R('Nama Lengkap', $I(0, $applicant->name)) !!}
+{!! $R('Jenis Kelamin', $I(0, $genderLabel)) !!}
+{!! $R('Tempat / Tgl Lahir', $I(0, $applicant->place_of_birth . ', ' . $fmtDate($applicant->date_of_birth))) !!}
+<div class="r"><span class="l">Tinggi badan</span><span class="c">:</span>{!! $I(40, $applicant->height) !!}&nbsp;cm<span style="width:178px" class="w"></span><span style="width:70px" class="w">Berat Badan</span><span class="c">:</span>{!! $I(40, $applicant->weight) !!}&nbsp;kg</div>
+{!! $R('Golongan Darah', '<span><span class="s">A</span> / <span class="s">B</span> / <span class="s">AB</span> / <span class="s">O</span> <i class="sm"><b>(coret yang tidak perlu)</b></i></span>') !!}
+{!! $R('Alamat sesuai KTP', $I(0, $applicant->address_ktp)) !!}
+<div class="r" style="margin-left:170px">{!! $I(0) !!}<span style="margin-left:6px">Kode Pos :</span>{!! $I(60) !!}</div>
+{!! $R('Alamat Domisili', $I(0, $applicant->address_domisili), 'margin-top:6px') !!}
+<div class="r" style="margin-left:170px">{!! $I(0) !!}<span style="margin-left:6px">Kode Pos :</span>{!! $I(60) !!}</div>
+{!! $R('No. Telepon', $I(163) . '<span class="w" style="margin-left:8px;width:50px">No. HP :</span>' . $I(0, $applicant->phone_number)) !!}
+{!! $R('Email', $I(0, $applicant->email)) !!}
+{!! $R('Facebook', $I(163) . '<span class="w" style="margin-left:8px;width:60px">LinkedIn :</span>' . $I(0, $applicant->linkedin)) !!}
+{!! $R('Instagram', $I(163, $applicant->instagram) . '<span class="w" style="margin-left:8px;width:60px">Tiktok &nbsp;:</span>' . $I(0)) !!}
+{!! $R('Agama', $I(163, $applicant->religion)) !!}
+<div class="r" style="height:19px"><span class="l">Status Perkawinan<sup>*)</sup></span><span class="c">:</span><label class="w" style="width:200px"><input type="checkbox" @checked($marital === 'single')>single/bertunangan</label><label class="w" style="width:100px"><input type="checkbox" @checked($marital === 'married')>menikah, sejak</label><span class="c">:</span>{!! $I(100) !!}</div>
+<div class="r" style="height:17px"><span class="l"></span><span class="c"></span><i class="sm w" style="width:200px;margin-left:3px"><sup>*)</sup> pilih (v) salah satu</i><label class="w" style="width:100px"><input type="checkbox" @checked(in_array($marital, ['divorced', 'widowed']))>bercerai, sejak</label><span class="c">:</span>{!! $I(100) !!}</div>
+{!! $R('No. KTP', $I(192, $applicant->nik)) !!}
+{!! $R('No. SIM', $I(300) . '<span class="w" style="margin-left:50px">Jenis<sup>*)</sup> : ' . $sim . '</span>') !!}
+<div class="r"><span class="l"></span><span class="c"></span><span class="w" style="margin-left:36px">Masa Berlaku s/d : </span>{!! $I(160) !!}<i class="sm w" style="margin-left:8px"><sup>*)</sup>coret yang tidak perlu</i></div>
+{!! $R('No. NPWP', $I(192)) !!}{!! $R('No. BPJS Kesehatan', $I(192)) !!}{!! $R('No. BPJS TK', $I(192)) !!}
+<div class="r" style="margin-top:14px"><b>Emergency Contacts</b></div>
+{!! $R('Nama Lengkap', $I(306)) !!}{!! $R('Hubungan', $I(306)) !!}{!! $R('No. HP', $I(306)) !!}
+<div style="margin:16px 0 2px 6px"><b>B. 1. LINGKUNGAN KELUARGA INTI</b></div>
+<table>{!! $famHead . $famRows($nuclear) !!}</table>
+<div style="margin-left:12px;font-size:10.5px"><b><i>* Bagi anggota keluarga yang sudah meninggal, harap tetap dicantumkan pada kolom nama dan diberi tanda (+)</i></b></div>
+<div style="margin:12px 0 2px 12px"><b>2.LINGKUNGAN KELUARGA KANDUNG (Termasuk diri Anda)</b></div>
+<table>{!! $famHead . $famRows($biological) !!}</table>
+</div>
+
+<div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg">SINAR SOSRO<br>GUNUNG SLAMAT<small>a REKSO Company</small></div><div class="rl">R</div><div class="pn">2</div>
+<div style="margin-left:12px;font-size:10.5px"><b><i>* Bagi anggota keluarga yang sudah meninggal, harap tetap dicantumkan pada kolom nama dan diberi tanda (+)</i></b></div>
+<div style="margin:0 0 3px 6px"><b>C. 1. RIWAYAT PENDIDIKAN FORMAL</b></div>
+<table style="width:692px;margin-left:-18px"><tr><th style="width:10%">Jenjang<th style="width:32%">Nama Sekolah<th style="width:9%">Kota<th style="width:6%">Th.<br>Masuk<th style="width:6%">Th.<br>Lulus<th style="width:18%">Fakultas / Jurusan<th style="width:19%">Keterangan / IPK</tr>
+@for ($i = 0; $i < 4; $i++)
+@php $edu = $applicant->educations->get($i); @endphp
+<tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell('') . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
+@endfor
+</table>
+<div style="margin:22px 0 3px 12px"><b>2. RIWAYAT PENDIDIKAN INFORMAL (TRAINING / KURSUS)</b></div>
+<table class="t2"><tr><th style="width:24%">Nama Lembaga<th style="width:40%">Jenis Training / Kursus<th style="width:13%">Tahun<th style="width:23%">Lamanya</tr>
+@for ($i = 0; $i < 5; $i++)
+@php $tr = $applicant->trainings->get($i); @endphp
+<tr>{!! $cell($tr?->organizer) . $cell($tr?->training_name) . $cell($tr ? \Carbon\Carbon::parse($tr->finished)->format('Y') : '') . $cell('') !!}</tr>
+@endfor
+</table>
+<div style="margin:26px 0 4px 6px"><b>D. RIWAYAT PEKERJAAN (Sebutkan 3 perusahaan terakhir)</b></div>
+{!! $jobHtml(1, 0, 13) !!}<div style="height:14px"></div>{!! $jobHtml(2, 0, 13) !!}<div style="height:14px"></div>{!! $jobHtml(3, 0, 3) !!}
+</div>
+
+<div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg">SINAR SOSRO<br>GUNUNG SLAMAT<small>a REKSO Company</small></div><div class="rl">R</div><div class="pn">3</div>
+{!! $jobHtml(3, 3, 13) !!}
+<div style="margin:26px 0 6px 6px"><b>Gambarkan Struktur Organisasi Perusahaan Anda (terakhir) dan posisi Anda di dalamnya !</b></div>
+<textarea style="width:718px;margin-left:-18px;height:212px;border:1px solid #000;resize:none;display:block;padding:4px"></textarea>
+<div style="margin:22px 0 4px 6px">Pernahkah Anda melamar di Perusahaan / Group ini sebelumnya? Kapan? Untuk posisi jabatan apa?</div>
+<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end">{!! $I(0) !!}</div>
+<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end"><span class="w">Pernahkah Anda bekerja di Perusahaan / Group ini sebelumnya?&nbsp;</span>{!! $I(0) !!}</div>
+{!! $jy(1) !!}{!! $jy(2) !!}
+<div style="margin:22px 0 6px 6px">Buatlah urutan minat Anda dalam bekerja. (Nomor 1 – {{ $divisions->count() }})</div>
+<table class="t2" style="width:610px;margin-left:19px"><tr><th style="width:35%">Jenis Pekerjaan<th style="width:11%">No. Urut<th style="width:41%">Jenis Pekerjaan<th style="width:13%">No. Urut</tr>{!! $interestRows !!}</table>
+</div>
+
+<div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg">SINAR SOSRO<br>GUNUNG SLAMAT<small>a REKSO Company</small></div><div class="rl">R</div><div class="pn">4</div>
+<div style="margin:0 0 4px 6px"><b>E. LAIN-LAIN</b></div>
+<div class="q">1. Berapa gaji yang Anda harapkan ?{!! $I(0, $expectation?->salary_expectation ? 'Rp ' . number_format($expectation->salary_expectation, 0, ',', '.') : '') !!}</div>
+<div class="q">2. Fasilitas apa saja yang Anda harapkan ?{!! $I(0, $expectation?->facility_expectation) !!}</div>
+<div class="q">3. Apakah Anda bersedia dinas keluar kota ?{!! $I(0, $expectation ? $yesNo($expectation->ready_to_travel) : '') !!}</div>
+<div class="q">4. Apakah Anda bersedia untuk ditempatkan di luar kota ?{!! $I(0, $expectation ? $yesNo($expectation->ready_to_relocate) : '') !!}</div>
+<div class="q">5. Kapan Anda dapat bergabung dengan perusahaan kami ?{!! $I(0) !!}</div>
+<div class="q">6. Darimana Anda mendapatkan informasi mengenai lowongan di perusahaan ini?{!! $I(0) !!}</div>
+<div class="q" style="height:18px">7. Sebutkan nama kenalan / referensi Anda di perusahaan ini.</div>
+<div class="q" style="margin-left:30px;height:19px">{!! $I(0, $expectation?->reference_by) !!}</div>
+<div style="margin:24px 0 4px 6px"><b>F. INFO KESEHATAN</b></div>
+<div class="q">1. Apakah Anda memiliki riwayat penyakit kronis ?{!! $I(0, $applicant->medical_history) !!}</div>
+<div class="q">2. Apakah Anda pernah mengalami kecelakaan parah ?{!! $I(0) !!}</div>
+<div class="q" style="height:18px">3. Pernahkah Anda dirawat / opname dirumah sakit dalam 2 tahun terakhir ini ? Karena apa dan Berapa lama ?</div>
+<div class="q" style="height:19px">{!! $I(0) !!}</div>
+<div class="q" style="margin-top:6px">4. Apakah Anda merokok ?{!! $I(150, $yesNo($applicant->is_smoker === 'y')) !!}<span class="w" style="margin-left:60px">Berapa batang sehari ?</span>{!! $I(0) !!}</div>
+<div class="q">5. Apakah Anda memiliki tato?{!! $I(0, $yesNo($applicant->has_tattoo === 'y')) !!}</div>
+<div class="q" style="height:18px">6. Apakah Anda sudah menerima vaksin COVID-19 ?</div>
+<div class="q" style="margin-left:46px;height:19px;gap:0"><span style="width:150px"><label><input type="checkbox">Sudah 1 dosis</label></span><label><input type="checkbox">Belum vaksin</label></div>
+<div class="q" style="margin-left:46px;height:19px"><span style="width:150px"><label><input type="checkbox">Sudah 2 dosis</label></span><label class="w"><input type="checkbox">Tidak bisa vaksin, karena</label>{!! $I(0) !!}</div>
+<div class="q" style="margin-left:46px;height:19px"><span style="width:150px"><label><input type="checkbox">Sudah 3 dosis</label></span><i class="sm" style="margin-left:10px"><sup>*)</sup> pilih (v) salah satu</i></div>
+<p style="margin:32px 0 0;text-align:justify;font-weight:bold;line-height:1.45;font-size:12.5px">Dengan ini saya menyatakan bahwa semua data dan informasi yang saya kemukakan dan tuliskan selama proses rekrutmen berlangsung adalah benar adanya. Apabila di kemudian hari hal tersebut terbukti tidak benar, maka saya bersedia diberikan sanksi berupa pengakhiran hubungan kerja tanpa diberikan uang pesangon / uang pisah / kompensasi dalam bentuk apapun dari dan atas nama perusahaan.</p>
+<p style="margin:14px 0 0;font-weight:bold">Demikian pernyataan ini saya buat dengan sebenar-benarnya dan dalam kondisi tanpa tekanan/paksaan.</p>
+<div style="display:flex;justify-content:flex-end;align-items:flex-end;margin:22px 34px 0 0;height:18px">{!! $I(45) !!}<span class="w">&nbsp;,&nbsp;</span>{!! $I(90) !!}</div>
+<div style="display:flex;justify-content:flex-end;align-items:flex-end;margin:56px 0 0;height:18px"><span class="w">(&nbsp;</span>{!! $I(160, $applicant->name) !!}<span class="w">&nbsp;)</span></div>
+</div>
+</body>
+</html>

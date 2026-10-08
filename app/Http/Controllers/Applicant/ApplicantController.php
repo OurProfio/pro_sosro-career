@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\Applicant;
 use App\Http\Requests\Applicant\StoreApplicantRequest;
 use App\Http\Requests\Applicant\UpdateApplicantRequest;
+use App\Models\Applicant;
 use App\Models\ApplicantExpectation;
 use App\Models\ApplicantInterest;
 use App\Models\ApplicantWorkExprience;
@@ -19,7 +19,7 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        if (!auth()->user()->applicant) {
+        if (! auth()->user()->applicant) {
             return redirect()->route('biodata.create');
         }
 
@@ -27,10 +27,20 @@ class ApplicantController extends Controller
             'workExperiences',
             'educations',
             'families',
-            'trainings'
+            'trainings',
         ])->where('user_id', auth()->id())->firstOrFail();
 
         return view('auth.applicant.biodata.index', compact('applicant'));
+    }
+
+    /**
+     * Tampilkan formulir biodata (HC-ODR.FRM.001.00) yang sudah terisi untuk dicetak.
+     */
+    public function print()
+    {
+        $applicant = Applicant::where('user_id', auth()->id())->firstOrFail();
+
+        return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
     }
 
     /**
