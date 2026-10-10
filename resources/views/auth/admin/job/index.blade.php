@@ -1,4 +1,4 @@
-@extends('auth.admin.layouts.index')
+        @extends('auth.admin.layouts.index')
 
 @section('title', 'Kelola Lowongan Pekerjaan')
 

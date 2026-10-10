@@ -74,7 +74,13 @@ class ApplicationController extends Controller
      */
     public function update(UpdateApplicationRequest $request, Application $application)
     {
-        //
+        $application->update([
+            'status' => $request->status,
+            'stages_id' => $request->stages_id,
+            'notes' => $request->notes,
+        ]);
+
+        return redirect()->back()->with('success', 'Status lamaran berhasil diperbarui.');
     }
 
     /**

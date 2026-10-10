@@ -23,7 +23,9 @@ class UpdateApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'status' => ['required', 'in:pending,accepted,rejected'],
+            'job_id' => ['required', 'exists:jobs,id'],
+            'notes' => ['nullable', 'string'],
         ];
     }
 }

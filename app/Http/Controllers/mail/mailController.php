@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 
 use App\Mail\InterviewOnlineMail;
 use App\Mail\InterviewOfflineMail;
-
 use App\Mail\psikotesMail;
 use App\Mail\tesKepribadianMail;
 use App\Mail\MedicalCheckUpMail;
@@ -16,9 +15,13 @@ use App\Mail\RejectedMail;
 use App\Mail\AcceptedHOMail;
 use App\Mail\AcceptedKpwMail;
 
+
+
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
+
+use App\Models\User;
 
 class MailController extends Controller
 {
@@ -29,23 +32,26 @@ class MailController extends Controller
 
     public function sendEmail(Request $request)
     {
-        $data = (object) $request->all();
-        $emailType = $data->emailType;
 
-        switch ($emailType) {
-            case 'interviewOnline':
-                return $this->interviewOnlineMail($data);
-            case 'interviewOffline':
-                return $this->interviewOfflineMail($data);
-            case 'rejected':
-                return $this->rejectedMail($data);
-            case 'acceptedHO':
-                return $this->acceptedHOMail($data);
-            case 'acceptedKpw':
-                return $this->acceptedKpwMail($data);
-            default:
-                return response()->json(['message' => 'Invalid email type'], 400);
-        }
+
+        $data = user::where('id', $request->user_id);
+        dd($data);
+        // $emailType = $data->emailType;
+
+        // switch ($emailType) {
+        //     case 'interviewOnline':
+        //         return $this->interviewOnlineMail($data);
+        //     case 'interviewOffline':
+        //         return $this->interviewOfflineMail($data);
+        //     case 'rejected':
+        //         return $this->rejectedMail($data);
+        //     case 'acceptedHO':
+        //         return $this->acceptedHOMail($data);
+        //     case 'acceptedKpw':
+        //         return $this->acceptedKpwMail($data);
+        //     default:
+        //         return response()->json(['message' => 'Invalid email type'], 400);
+        // }
     }
     
 
