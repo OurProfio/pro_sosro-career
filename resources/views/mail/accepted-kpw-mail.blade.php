@@ -1,14 +1,14 @@
 <div>
-    <p>Selamat Pagi [Nama Kandidat],</p>
+    <p>Selamat Pagi {{ $application->applicant->name }},</p>
 
     <p>Dengan ini kami mengucapkan Selamat Bergabung di PT Sinar Sosro Gunung Slamat untuk posisi :</p>
 
-    <p><strong>Jabatan : [Nama Jabatan]</strong></p>
-    <p><strong>Lokasi Kerja : [Lokasi Kerja]</strong></p>
+    <p><strong>Jabatan : {{ $application->job->title }}</strong></p>
+    <p><strong>Lokasi Kerja : {{ $application->job->location }}</strong></p>
 
     <p>Hari pertama kerja Anda akan dimulai pada:</p>
 
-    <p><strong>Tanggal : [Hari, tanggal, bulan, tahun]</strong></p>
+    <p><strong>Tanggal : {{ \Carbon\Carbon::parse($startDate)->locale('id')->translatedFormat('l, d F Y') }}</strong></p>
 
     <p>Mengenai jam kerja dan ketentuan lain diantaranya sebagai berikut :</p>
 
@@ -19,7 +19,7 @@
     <p><strong>Sabtu : Memakai kemeja bebas, celana kain/jeans, dan sepatu tertutup</strong></p>
 
     <p>
-        Pada hari pertama ke kantor. Silakan hadir <strong>sebelum</strong> pukul <strong>08.00</strong> di <strong>[Insert alamat lokasi]</strong> mengenakan pakaian kemeja batik dan menginformasikan ke satpam untuk hari pertama kerja dan akan bertemu dengan Tim Rekrutment PT.Sinar Sosro Gunung Slamat
+        Pada hari pertama ke kantor. Silakan hadir <strong>sebelum</strong> pukul <strong>08.00</strong> di <strong>{{ $workAddress }}</strong> mengenakan pakaian kemeja batik dan menginformasikan ke satpam untuk hari pertama kerja dan akan bertemu dengan Tim Rekrutment PT.Sinar Sosro Gunung Slamat
     </p>
 
     <p>Demikian informasi ini kami sampaikan. Atas perhatian dan kerja samanya kami ucapkan terima kasih</p>

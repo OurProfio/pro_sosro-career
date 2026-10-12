@@ -83,8 +83,12 @@
                             Management Trainee
                         </option>
 
-                        <option value="internship" {{ old('category', $job->category) == 'internship' ? 'selected' : '' }}>
-                            Magang / Internship
+                        <option value="internship" {{ old('category') == 'internship' ? 'selected' : '' }}>
+                            Internship / PKL
+                        </option>
+
+                        <option value="magang" {{ old('category') == 'magang' ? 'selected' : '' }}>
+                            Magang
                         </option>
                     </select>
 

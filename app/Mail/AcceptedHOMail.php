@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -18,12 +18,10 @@ class AcceptedHOMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public string $name,
-        public string $email
-    )
-    {
-        
-    }
+        public Application $application,
+        public string $startDate,
+        public string $workAddress,
+    ) {}
 
     /**
      * Get the message envelope.

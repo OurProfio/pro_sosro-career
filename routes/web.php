@@ -37,11 +37,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);
 
-            // Mail Routes
-            // routes/web.php
-            Route::get('/view', [MailController::class, 'index'])->name('email.index');
-            Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');
+            Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
+            Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
 
+            Route::get('/view', [MailController::class, 'index'])->name('email.index');
 
         });
     });
@@ -62,5 +61,3 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
-Route::get('/view', [MailController::class, 'index'])->name('email.index');
-// Route::post('/send-email', [MailController::class, 'sendEmail'])->name('sendEmail');

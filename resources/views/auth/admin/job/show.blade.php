@@ -213,27 +213,24 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <form action="" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                    <select
+                                        class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                                        data-update-url="{{ route('application.updateStage', $application) }}"
+                                        data-current="{{ $application->stages_id }}"
+                                        data-applicant-name="{{ $application->applicant->name ?? '-' }}"
+                                        data-applicant-email="{{ $application->applicant->email ?? '-' }}"
+                                        @disabled(in_array($application->status, ['accepted', 'rejected']))>
+                                        <option value="">
+                                            Pilih Stage
+                                        </option>
 
-                                        <select name="stages_id"
-                                            class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            data-application-id="{{ $application->id }}"
-                                            data-applicant-name="{{ $application->applicant->name ?? '-' }}"
-                                            data-applicant-email="{{ $application->applicant->email ?? '-' }}">
-                                            <option value="">
-                                                Pilih Stage
+                                        @foreach ($stages as $stage)
+                                            <option value="{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
+                                                {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
+                                                {{ $stage->step }}. {{ $stage->name }}
                                             </option>
-
-                                            @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
-                                                    {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
-                                                    {{ $stage->step }}. {{ $stage->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
+                                        @endforeach
+                                    </select>
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -268,20 +265,28 @@
                                             </a>
                                         @endif
 
-                                        @if ($application->status !== 'rejected')
-                                            <form action="" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menolak applicant ini?')">
+                                        @if (! in_array($application->status, ['accepted', 'rejected']))
+                                            <button type="button"
+                                                class="accept-button hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-lg transition-colors"
+                                                data-update-url="{{ route('application.updateStatus', $application) }}"
+                                                data-applicant-name="{{ $application->applicant->name ?? '-' }}"
+                                                data-applicant-email="{{ $application->applicant->email ?? '-' }}"
+                                                data-office-type="{{ $job->office->type ?? '-' }}">
+                                                Accepted
+                                            </button>
+
+                                            <form action="{{ route('application.updateStatus', $application) }}" method="POST"
+                                                onsubmit="return confirm('Yakin ingin menolak applicant ini? Email penolakan akan dikirim.')">
                                                 @csrf
+                                                @method('PATCH')
+
+                                                <input type="hidden" name="status" value="rejected">
 
                                                 <button type="submit"
                                                     class="hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-lg transition-colors">
                                                     Rejected
                                                 </button>
                                             </form>
-                                        @else
-                                            <span class="text-xs text-slate-400">
-                                                Rejected
-                                            </span>
                                         @endif
                                     </div>
                                 </td>
@@ -296,88 +301,122 @@
     <x-application.modal-email />
 
     <script>
+        const stageModal = document.getElementById('stage-email-modal');
+        const stageForm = document.getElementById('stage-email-form');
+        const stageIdInput = document.getElementById('modal-stage-id');
+        const statusInput = document.getElementById('modal-status');
+        let activeStageSelect = null;
+
+        function showFields(fieldId) {
+            document.querySelectorAll('.stage-fields').forEach(field => {
+                field.classList.add('hidden');
+            });
+
+            document.getElementById(fieldId).classList.remove('hidden');
+        }
+
+        function openStageModal(trigger, title) {
+            stageForm.reset();
+            stageForm.action = trigger.dataset.updateUrl;
+
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-applicant-name').textContent = trigger.dataset.applicantName;
+            document.getElementById('modal-applicant-email').textContent = trigger.dataset.applicantEmail;
+
+            stageModal.classList.remove('hidden');
+            stageModal.classList.add('flex');
+        }
+
+        function closeStageModal() {
+            if (activeStageSelect) {
+                activeStageSelect.value = activeStageSelect.dataset.current;
+                activeStageSelect = null;
+            }
+
+            stageModal.classList.add('hidden');
+            stageModal.classList.remove('flex');
+        }
+
         document.querySelectorAll('.stage-select').forEach(select => {
             select.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
-
                 if (!this.value) {
+                    this.value = this.dataset.current;
                     return;
                 }
 
-                const applicationId = this.dataset.applicationId;
-                const applicantName = this.dataset.applicantName;
-                const applicantEmail = this.dataset.applicantEmail;
-                const stageId = this.value;
-                const stageName = selectedOption.dataset.stageName;
+                const stageName = this.options[this.selectedIndex].dataset.stageName;
 
-                document.getElementById('modal-application-id').value = applicationId;
-                document.getElementById('modal-stage-id').value = stageId;
+                activeStageSelect = this;
+                openStageModal(this, 'Data Tahapan Applicant');
 
-                document.getElementById('modal-applicant-name').textContent = applicantName;
-                document.getElementById('modal-applicant-email').textContent = applicantEmail;
+                stageIdInput.disabled = false;
+                stageIdInput.value = this.value;
+                statusInput.disabled = true;
+                document.getElementById('modal-stage-wrapper').classList.remove('hidden');
                 document.getElementById('modal-stage-name').value = stageName;
 
-                document.querySelectorAll('.stage-fields').forEach(field => {
-                    field.classList.add('hidden');
-                });
-
-                switch (stageName) {
+                switch (stageName.startsWith('interview') ? 'interview' : stageName) {
                     case 'psikotes':
-                        document.getElementById('fields-psikotes').classList.remove('hidden');
+                        showFields('fields-psikotes');
                         break;
 
                     case 'interview':
-                        document.getElementById('fields-interview').classList.remove('hidden');
+                        showFields('fields-interview');
                         break;
 
                     case 'mcu':
-                        document.getElementById('fields-mcu').classList.remove('hidden');
+                        showFields('fields-mcu');
                         break;
 
                     case 'study case':
-                        document.getElementById('fields-study-case').classList.remove('hidden');
+                        showFields('fields-study-case');
                         break;
 
                     case 'panel bod':
-                        document.getElementById('fields-panel-bod').classList.remove('hidden');
+                        showFields('fields-panel-bod');
                         break;
 
                     default:
-                        document.getElementById('fields-none').classList.remove('hidden');
+                        showFields('fields-none');
                         break;
                 }
 
-                const modal = document.getElementById('stage-email-modal');
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+                toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
             });
         });
 
-        document.getElementById('interview_type')?.addEventListener('change', function() {
-            const virtualField = document.getElementById('interview-virtual-field');
-            const offlineField = document.getElementById('interview-offline-field');
+        document.querySelectorAll('.accept-button').forEach(button => {
+            button.addEventListener('click', function() {
+                activeStageSelect = null;
+                openStageModal(this, 'Terima Applicant');
 
-            if (this.value === 'virtual') {
-                virtualField.classList.remove('hidden');
-                offlineField.classList.add('hidden');
-            } else {
-                virtualField.classList.add('hidden');
-                offlineField.classList.remove('hidden');
-            }
+                stageIdInput.disabled = true;
+                statusInput.disabled = false;
+                document.getElementById('modal-stage-wrapper').classList.add('hidden');
+                document.getElementById('modal-office-type').textContent = this.dataset.officeType;
+
+                showFields('fields-accept');
+            });
         });
 
-        document.getElementById('panel_bod_type')?.addEventListener('change', function() {
-            const virtualField = document.getElementById('panel-bod-virtual-field');
-            const offlineField = document.getElementById('panel-bod-offline-field');
+        stageModal.querySelectorAll('[data-modal-hide]').forEach(button => {
+            button.addEventListener('click', closeStageModal);
+        });
 
-            if (this.value === 'virtual') {
-                virtualField.classList.remove('hidden');
-                offlineField.classList.add('hidden');
-            } else {
-                virtualField.classList.add('hidden');
-                offlineField.classList.remove('hidden');
-            }
+        function toggleMethodFields(selectId, virtualFieldId, offlineFieldId) {
+            const isVirtual = document.getElementById(selectId).value === 'virtual';
+
+            document.getElementById(virtualFieldId).classList.toggle('hidden', !isVirtual);
+            document.getElementById(offlineFieldId).classList.toggle('hidden', isVirtual);
+        }
+
+        document.getElementById('interview_type').addEventListener('change', () => {
+            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+        });
+
+        document.getElementById('panel_bod_type').addEventListener('change', () => {
+            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
         });
     </script>
 @endsection

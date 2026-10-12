@@ -1,5 +1,5 @@
 <div>
-    <p><strong>Yth. [Nama Kandidat]</strong></p>
+    <p><strong>Yth. {{ $application->applicant->name }}</strong></p>
 
     <p>
         Terima kasih atas keikutsertaan Anda dalam proses seleksi calon karyawan di PT Sinar Sosro Gunung Slamat yang telah dilaksanakan beberapa waktu yang lalu.

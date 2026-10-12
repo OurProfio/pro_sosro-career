@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -18,16 +18,11 @@ class InterviewOnlineMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public string $name,
-        public string $email,
+        public Application $application,
         public string $date,
         public string $time,
-        public string $link
-
-    )
-    {
-        
-    }
+        public string $link,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -35,7 +30,7 @@ class InterviewOnlineMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Undangan Interview PT Sinar Sosro Gunung Slamat',
+            subject: 'Undangan '.ucwords($this->application->stage?->name ?? 'interview').' PT Sinar Sosro Gunung Slamat',
         );
     }
 

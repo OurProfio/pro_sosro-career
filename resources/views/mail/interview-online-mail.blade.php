@@ -1,15 +1,17 @@
 <div>
-    <p>Selamat Pagi [Nama Kandidat],</p>
+    <p>Selamat Pagi {{ $application->applicant->name }},</p>
 
     <p>
         Melanjutkan proses rekrutmen yang sudah anda laksanakan sebelumnya, melalui pemberitahuan ini kami mengundang Anda untuk dapat mengikuti proses interview dengan PT Sinar Sosro Gunung Slamat pada:
     </p>
 
-    <p><strong>Tanggal : [Hari, tanggal, bulan, tahun]</strong></p>
-    <p><strong>Waktu : [Jam]</strong></p>
+    <p><strong>Tanggal : {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}</strong></p>
+    <p><strong>Waktu : {{ $time }} WIB</strong></p>
+
+    <p><strong>Link Interview : <a href="{{ $link }}">{{ $link }}</a></strong></p>
 
     <p>
-        Adapun proses interview dilaksanakan secara virtual (Zoom/Google Meet), untuk id akan kami informasikan sebelum pelaksanaan interview (melalui Whatsapp). Pada saat proses interview, baik pria/wanita mengenakan pakaian rapi dan sopan.
+        Adapun proses interview dilaksanakan secara virtual (Zoom/Google Meet) melalui link di atas. Pada saat proses interview, baik pria/wanita mengenakan pakaian rapi dan sopan.
     </p>
 
     <p>Demikian informasi ini kami sampaikan. Atas perhatian dan kerja samanya kami ucapkan terima kasih</p>
