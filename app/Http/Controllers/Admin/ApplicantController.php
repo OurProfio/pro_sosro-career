@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Division;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ApplicantController extends Controller
@@ -60,6 +61,23 @@ class ApplicantController extends Controller
             ->pluck('name', 'id');
 
         return view('auth.admin.applicant.show', compact('applicant', 'interestNames'));
+    }
+
+    public function pdf(Applicant $applicant)
+    {
+        $applicant->load([
+            'workExperiences',
+            'educations',
+            'families',
+            'trainings',
+            'expectation',
+            'interest',
+            'applications.job',
+        ]);
+
+        return Pdf::loadView('auth.admin.applicant.pdf', compact('applicant'))
+            ->setPaper('a4')
+            ->stream('form-biodata-'.str()->slug($applicant->name).'.pdf');
     }
 
     /**

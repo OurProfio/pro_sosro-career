@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::resource('admin', AdminController::class);
             Route::resource('office', OfficeController::class);
             Route::resource('division', DivisionController::class);
+            Route::get('/applicant/{applicant}/pdf', [AdminApplicantController::class, 'pdf'])->name('applicant.pdf');
             Route::resource('applicant', AdminApplicantController::class);
             Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);

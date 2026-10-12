@@ -74,7 +74,7 @@
                                 <div class="w-32 h-40 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 bg-white flex items-center justify-center shadow-inner relative"
                                     id="photoPreviewContainer">
                                     <img id="photoPreview" src="{{ $savedPhoto ? asset('storage/' . $savedPhoto) : '' }}"
-                                        alt="Preview Foto"
+                                        alt="Pratinjau Foto"
                                         class="w-full h-full object-cover {{ $savedPhoto ? '' : 'hidden' }}">
 
                                     <div id="photoPlaceholder"
@@ -731,7 +731,7 @@
                     <div class="pt-8 border-t border-gray-100 flex justify-end mt-8">
                         <button type="submit" id="btnSubmit"
                             class="w-full sm:w-auto px-8 py-3 bg-[#B11116] hover:bg-red-800 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer focus:ring-4 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
-                            <span id="btnText">Simpan & Lanjut ke Step 2</span>
+                            <span id="btnText">Simpan & Lanjut ke Langkah 2</span>
                             <span id="btnLoadingText" class="hidden flex items-center gap-2">
                                 <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24">

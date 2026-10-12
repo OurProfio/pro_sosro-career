@@ -11,7 +11,7 @@
                     Riwayat <span class="text-[#B11116]">Lamaran Saya</span>
                 </h2>
                 <p class="text-gray-500 mt-1 font-medium text-sm">
-                    Pantau status dan perkembangan lamaran pekerjaan Anda secara *real-time*.
+                    Pantau status dan perkembangan lamaran pekerjaan Anda secara langsung.
                 </p>
             </div>
 
@@ -128,8 +128,18 @@
                                 };
                             @endphp
 
-                            <span class="px-3.5 py-1.5 border rounded-xl text-xs font-bold capitalize {{ $statusClasses }}">
-                                Status: {{ $app->status ?? 'Dalam Peninjauan' }}
+                            @php
+                                $statusLabels = [
+                                    'pending' => 'Dalam Peninjauan',
+                                    'progress' => 'Sedang Diproses',
+                                    'accepted' => 'Diterima',
+                                    'hired' => 'Diterima',
+                                    'rejected' => 'Ditolak',
+                                ];
+                                $status = strtolower($app->status ?? 'pending');
+                            @endphp
+                            <span class="px-3.5 py-1.5 border rounded-xl text-xs font-bold {{ $statusClasses }}">
+                                Status: {{ $statusLabels[$status] ?? 'Dalam Peninjauan' }}
                             </span>
                         </div>
                     </div>

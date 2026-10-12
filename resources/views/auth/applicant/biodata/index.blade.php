@@ -1,6 +1,6 @@
 @extends('auth.applicant.layouts.index')
 
-@section('title', 'Biodata Pelamar (Preview)')
+@section('title', 'Pratinjau Biodata Pelamar')
 
 @section('content')
     <style>
@@ -79,7 +79,7 @@
                     </svg>
                 </a>
                 <div>
-                    <h2 class="text-base font-bold text-slate-800">Preview Biodata</h2>
+                    <h2 class="text-base font-bold text-slate-800">Pratinjau Biodata</h2>
                     <p class="text-xs text-slate-500">Periksa kembali kelengkapan data sebelum mengunduh atau mencetak</p>
                 </div>
             </div>
@@ -192,7 +192,7 @@
                                 <p class="font-semibold text-slate-700">{{ ucfirst($applicant->religion) }}</p>
                             </div>
                             <div class="mt-2">
-                                <p class="text-[9px] text-slate-400 font-semibold uppercase">Gender</p>
+                                <p class="text-[9px] text-slate-400 font-semibold uppercase">Jenis Kelamin</p>
                                 <p class="font-semibold text-slate-700">
                                     {{ $applicant->gender == 'l' ? 'Laki-laki' : 'Perempuan' }}</p>
                             </div>
@@ -228,7 +228,7 @@
                                 <span class="text-slate-500">TTL</span>
                                 <span class="font-medium text-slate-800">
                                     {{ $applicant->place_of_birth }},
-                                    {{ \Carbon\Carbon::parse($applicant->date_of_birth)->translatedFormat('d M Y') }}
+                                    {{ \Carbon\Carbon::parse($applicant->date_of_birth)->locale('id')->translatedFormat('d M Y') }}
                                 </span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
@@ -311,9 +311,9 @@
                                         </div>
                                         <span
                                             class="px-2.5 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold">
-                                            {{ $exp->start_date ? \Carbon\Carbon::parse($exp->start_date)->translatedFormat('M Y') : '-' }}
+                                            {{ $exp->start_date ? \Carbon\Carbon::parse($exp->start_date)->locale('id')->translatedFormat('M Y') : '-' }}
                                             -
-                                            {{ $exp->end_date ? \Carbon\Carbon::parse($exp->end_date)->translatedFormat('M Y') : 'Saat Ini' }}
+                                            {{ $exp->end_date ? \Carbon\Carbon::parse($exp->end_date)->locale('id')->translatedFormat('M Y') : 'Saat Ini' }}
                                         </span>
                                     </div>
 
@@ -468,7 +468,7 @@
                                         <p class="font-bold text-slate-800">{{ $train->training_name }}</p>
                                         <p class="text-[10px] text-slate-500">
                                             {{ $train->organizer }} •
-                                            {{ \Carbon\Carbon::parse($train->finished)->translatedFormat('Y') }}
+                                            {{ \Carbon\Carbon::parse($train->finished)->locale('id')->translatedFormat('Y') }}
                                         </p>
                                     </div>
                                 @endforeach

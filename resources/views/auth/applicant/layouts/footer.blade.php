@@ -62,8 +62,8 @@
     <div class="pt-8 mt-4">
         <div class="bg-white h-0.5"></div>
         <div class=" px-3 text-center text-[16px] py-4 -mx-6 md:-mx-16 -mb-8 text-sm">
-            <p>© Copyright {{ date('Y') }}. <span class="font-semibold">PT Sinar Sosro Gunung Slamat.</span> All
-                Rights Reserved</p>
+            <p>© Hak Cipta {{ date('Y') }}. <span class="font-semibold">PT Sinar Sosro Gunung Slamat.</span> Seluruh
+                Hak Dilindungi</p>
         </div>
     </div>
 </footer>

@@ -480,12 +480,12 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                             </svg>
-                            Kembali ke Step 1
+                            Kembali ke Langkah 1
                         </a>
 
                         <button type="submit" id="btnSubmit"
                             class="w-full sm:w-auto px-8 py-3 bg-[#B11116] hover:bg-red-800 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer focus:ring-4 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
-                            <span id="btnText">Simpan & Lanjut ke Step 3</span>
+                            <span id="btnText">Simpan & Lanjut ke Langkah 3</span>
                             <span id="btnLoadingText" class="hidden flex items-center gap-2">
                                 <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg"
                                     fill="none" viewBox="0 0 24 24">
