@@ -118,9 +118,16 @@
                                     </span>
                                     <h3 class="mt-3 text-xl font-bold leading-7 text-slate-900 sm:text-2xl">{{ $job->title }}</h3>
                                 </div>
-                                <div class="shrink-0 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 sm:text-right">
-                                    <p class="text-[11px] font-semibold uppercase tracking-wide text-amber-800">Batas lamaran</p>
-                                    <p class="mt-0.5 text-sm font-bold text-amber-950">{{ \Carbon\Carbon::parse($job->closing_date)->translatedFormat('d F Y') }}</p>
+                                @php
+                                    $cardExpired = $job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday();
+                                @endphp
+                                <div class="shrink-0 rounded-xl border {{ $cardExpired ? 'border-rose-200 bg-rose-50 text-rose-800' : 'border-amber-200 bg-amber-50 text-amber-800' }} px-3.5 py-2.5 sm:text-right">
+                                    <p class="text-[11px] font-semibold uppercase tracking-wide {{ $cardExpired ? 'text-rose-800' : 'text-amber-800' }}">
+                                        {{ $cardExpired ? 'Lamaran Ditutup' : 'Batas lamaran' }}
+                                    </p>
+                                    <p class="mt-0.5 text-sm font-bold {{ $cardExpired ? 'text-rose-950' : 'text-amber-950' }}">
+                                        {{ \Carbon\Carbon::parse($job->closing_date)->translatedFormat('d F Y') }}
+                                    </p>
                                 </div>
                             </div>
 
@@ -159,38 +166,51 @@
 
                         <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                             <p class="text-xs leading-5 text-slate-500">Periksa kualifikasi sebelum mengirim lamaran.</p>
-                            @auth
-                                @php
-                                    $applicant = auth()->user()->applicant;
-                                    $sudahMelamar = $applicant
-                                        ? \App\Models\Application::where('applicant_id', $applicant->id)
-                                            ->where('job_id', $job->id)
-                                            ->exists()
-                                        : false;
-                                @endphp
+                            @php
+                                $isExpired = $job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday();
+                                $isClosed = $isExpired || $job->status !== 'aktif';
+                            @endphp
 
-                                @if ($sudahMelamar)
-                                    <button disabled aria-disabled="true"
-                                        class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
-                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
-                                        Sudah dilamar
-                                    </button>
-                                @else
-                                    <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
-                                        @csrf
-                                        <input type="hidden" name="job_id" value="{{ $job->id }}">
-                                        <button type="button" onclick="konfirmasiLamar(this)" data-title="{{ $job->title }}"
-                                            class="hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
-                                            Lamar posisi ini
-                                        </button>
-                                    </form>
-                                @endif
+                            @if ($isClosed)
+                                <button disabled aria-disabled="true"
+                                    class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    Lowongan Ditutup
+                                </button>
                             @else
-                                <a href="{{ route('guest.login') }}"
-                                    class="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2">
-                                    Masuk untuk melamar
-                                </a>
-                            @endauth
+                                @auth
+                                    @php
+                                        $applicant = auth()->user()->applicant;
+                                        $sudahMelamar = $applicant
+                                            ? \App\Models\Application::where('applicant_id', $applicant->id)
+                                                ->where('job_id', $job->id)
+                                                ->exists()
+                                            : false;
+                                    @endphp
+
+                                    @if ($sudahMelamar)
+                                        <button disabled aria-disabled="true"
+                                            class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
+                                            Sudah dilamar
+                                        </button>
+                                    @else
+                                        <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
+                                            @csrf
+                                            <input type="hidden" name="job_id" value="{{ $job->id }}">
+                                            <button type="button" onclick="konfirmasiLamar(this)" data-title="{{ $job->title }}"
+                                                class="hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
+                                                Lamar posisi ini
+                                            </button>
+                                        </form>
+                                    @endif
+                                @else
+                                    <a href="{{ route('guest.login') }}"
+                                        class="inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2">
+                                        Masuk untuk melamar
+                                    </a>
+                                @endauth
+                            @endif
                         </div>
                     </article>
                 @empty

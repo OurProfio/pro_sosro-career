@@ -254,14 +254,20 @@
 
                         </div>
 
-                        <div id="fields-none" class="stage-fields hidden">
+                        <div id="fields-reject" class="stage-fields hidden space-y-4">
+                            <div class="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3">
+                                <p class="text-sm text-rose-700">
+                                    Email penolakan akan dikirimkan secara otomatis kepada kandidat.
+                                </p>
+                            </div>
+                        </div>
 
+                        <div id="fields-none" class="stage-fields hidden">
                             <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
                                 <p class="text-sm text-slate-600">
                                     Tahapan ini tidak membutuhkan input tambahan.
                                 </p>
                             </div>
-
                         </div>
 
                     </div>
@@ -275,9 +281,9 @@
                         Batal
                     </button>
 
-                    <button type="submit"
-                        class="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition">
-                        Lanjutkan
+                    <button type="submit" id="modal-submit-btn"
+                        class="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <span>Lanjutkan</span>
                     </button>
 
                 </div>

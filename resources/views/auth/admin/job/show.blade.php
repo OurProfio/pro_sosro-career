@@ -213,23 +213,42 @@
                                 </td>
 
                                 <td class="px-6 py-4">
+                                    @php
+                                        $currentStage = $stages->firstWhere('id', $application->stages_id);
+                                        $currentStep = $currentStage?->step ?? 0;
+                                    @endphp
+
                                     <select
                                         class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed"
-                                        data-update-url="{{ route('application.updateStage', $application) }}"
-                                        data-current="{{ $application->stages_id }}"
+                                        data-stage-url="{{ route('application.updateStage', $application) }}"
+                                        data-status-url="{{ route('application.updateStatus', $application) }}"
+                                        data-current="{{ $application->status === 'accepted' ? 'status:accepted' : ($application->status === 'rejected' ? 'status:rejected' : ($application->stages_id ? 'stage:' . $application->stages_id : '')) }}"
                                         data-applicant-name="{{ $application->applicant->name ?? '-' }}"
                                         data-applicant-email="{{ $application->applicant->email ?? '-' }}"
+                                        data-office-type="{{ $job->office->type ?? '-' }}"
                                         @disabled(in_array($application->status, ['accepted', 'rejected']))>
                                         <option value="">
                                             Pilih Stage
                                         </option>
 
                                         @foreach ($stages as $stage)
-                                            <option value="{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
-                                                {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
-                                                {{ $stage->step }}. {{ $stage->name }}
-                                            </option>
+                                            {{-- Tahapan sebelumnya disembunyikan/tidak dapat dipilih --}}
+                                            @if ($stage->step >= $currentStep)
+                                                <option value="stage:{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
+                                                    {{ $application->status !== 'accepted' && $application->status !== 'rejected' && $application->stages_id == $stage->id ? 'selected' : '' }}>
+                                                    {{ $stage->step }}. {{ $stage->name }}
+                                                </option>
+                                            @endif
                                         @endforeach
+
+                                        <optgroup label="Keputusan Akhir">
+                                            <option value="status:accepted" {{ $application->status === 'accepted' ? 'selected' : '' }}>
+                                                Accepted
+                                            </option>
+                                            <option value="status:rejected" {{ $application->status === 'rejected' ? 'selected' : '' }}>
+                                                Rejected
+                                            </option>
+                                        </optgroup>
                                     </select>
                                 </td>
 
@@ -254,6 +273,11 @@
                                             class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">
                                             Rejected
                                         </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 capitalize">
+                                            {{ $application->status }}
+                                        </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -263,30 +287,6 @@
                                                 class="w-max inline-flex items-center px-3 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-lg transition-colors">
                                                 Lihat Detail
                                             </a>
-                                        @endif
-
-                                        @if (! in_array($application->status, ['accepted', 'rejected']))
-                                            <button type="button"
-                                                class="accept-button hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 border border-emerald-100 rounded-lg transition-colors"
-                                                data-update-url="{{ route('application.updateStatus', $application) }}"
-                                                data-applicant-name="{{ $application->applicant->name ?? '-' }}"
-                                                data-applicant-email="{{ $application->applicant->email ?? '-' }}"
-                                                data-office-type="{{ $job->office->type ?? '-' }}">
-                                                Accepted
-                                            </button>
-
-                                            <form action="{{ route('application.updateStatus', $application) }}" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menolak applicant ini? Email penolakan akan dikirim.')">
-                                                @csrf
-                                                @method('PATCH')
-
-                                                <input type="hidden" name="status" value="rejected">
-
-                                                <button type="submit"
-                                                    class="hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-lg transition-colors">
-                                                    Rejected
-                                                </button>
-                                            </form>
                                         @endif
                                     </div>
                                 </td>
@@ -307,6 +307,15 @@
         const statusInput = document.getElementById('modal-status');
         let activeStageSelect = null;
 
+        const submitBtn = document.getElementById('modal-submit-btn');
+
+        function resetSubmitButton() {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Lanjutkan</span>';
+            }
+        }
+
         function showFields(fieldId) {
             document.querySelectorAll('.stage-fields').forEach(field => {
                 field.classList.add('hidden');
@@ -317,6 +326,7 @@
 
         function openStageModal(trigger, title) {
             stageForm.reset();
+            resetSubmitButton();
             stageForm.action = trigger.dataset.updateUrl;
 
             document.getElementById('modal-title').textContent = title;
@@ -333,9 +343,27 @@
                 activeStageSelect = null;
             }
 
+            resetSubmitButton();
             stageModal.classList.add('hidden');
             stageModal.classList.remove('flex');
         }
+
+        stageForm?.addEventListener('submit', function(e) {
+            if (submitBtn) {
+                if (submitBtn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Memproses...</span>
+                `;
+            }
+        });
 
         document.querySelectorAll('.stage-select').forEach(select => {
             select.addEventListener('change', function() {
@@ -344,13 +372,44 @@
                     return;
                 }
 
+                activeStageSelect = this;
+
+                if (this.value === 'status:accepted') {
+                    openStageModal(this, 'Terima Applicant');
+                    stageForm.action = this.dataset.statusUrl;
+
+                    stageIdInput.disabled = true;
+                    statusInput.disabled = false;
+                    statusInput.value = 'accepted';
+                    document.getElementById('modal-stage-wrapper').classList.add('hidden');
+                    document.getElementById('modal-office-type').textContent = this.dataset.officeType;
+
+                    showFields('fields-accept');
+                    return;
+                }
+
+                if (this.value === 'status:rejected') {
+                    openStageModal(this, 'Tolak Applicant');
+                    stageForm.action = this.dataset.statusUrl;
+
+                    stageIdInput.disabled = true;
+                    statusInput.disabled = false;
+                    statusInput.value = 'rejected';
+                    document.getElementById('modal-stage-wrapper').classList.add('hidden');
+
+                    showFields('fields-reject');
+                    return;
+                }
+
+                // Pilihan stage (format value: stage:123)
+                const rawStageId = this.value.replace('stage:', '');
                 const stageName = this.options[this.selectedIndex].dataset.stageName;
 
-                activeStageSelect = this;
                 openStageModal(this, 'Data Tahapan Applicant');
+                stageForm.action = this.dataset.stageUrl;
 
                 stageIdInput.disabled = false;
-                stageIdInput.value = this.value;
+                stageIdInput.value = rawStageId;
                 statusInput.disabled = true;
                 document.getElementById('modal-stage-wrapper').classList.remove('hidden');
                 document.getElementById('modal-stage-name').value = stageName;
@@ -383,20 +442,6 @@
 
                 toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
                 toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
-            });
-        });
-
-        document.querySelectorAll('.accept-button').forEach(button => {
-            button.addEventListener('click', function() {
-                activeStageSelect = null;
-                openStageModal(this, 'Terima Applicant');
-
-                stageIdInput.disabled = true;
-                statusInput.disabled = false;
-                document.getElementById('modal-stage-wrapper').classList.add('hidden');
-                document.getElementById('modal-office-type').textContent = this.dataset.officeType;
-
-                showFields('fields-accept');
             });
         });
 

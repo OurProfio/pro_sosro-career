@@ -52,6 +52,18 @@ class ApplicationController extends Controller
 
         $job = Job::findOrFail($request->job_id);
 
+        if ($job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday()) {
+            if ($job->status === 'aktif') {
+                $job->update(['status' => 'nonaktif']);
+            }
+
+            return redirect()->back()->with('error', 'Lowongan pekerjaan ini sudah ditutup (melewati batas tanggal).');
+        }
+
+        if ($job->status !== 'aktif') {
+            return redirect()->back()->with('error', 'Lowongan pekerjaan ini sudah tidak aktif.');
+        }
+
         if (Application::where('applicant_id', auth()->user()->applicant->id)->count() === 3) {
             return redirect()->back()->with('error', 'Anda sudah mencapai batas maksimal melamar pekerjaan (3 kali).');
         }
