@@ -81,6 +81,14 @@ class ApplicantController extends Controller
     }
 
     /**
+     * Tampilkan formulir biodata (HC-ODR.FRM.001.00) pelamar untuk dicetak.
+     */
+    public function print(Applicant $applicant)
+    {
+        return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Applicant $applicant)

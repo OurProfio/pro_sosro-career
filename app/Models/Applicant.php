@@ -78,4 +78,20 @@ class Applicant extends Model
     {
         return $this->hasOne(ApplicantExpectation::class);
     }
+
+    /**
+     * Data untuk formulir biodata (HC-ODR.FRM.001.00) yang dicetak.
+     *
+     * @return array<string, mixed>
+     */
+    public function biodataPrintData(): array
+    {
+        return [
+            'applicant' => $this->load(['workExperiences', 'educations', 'families', 'trainings']),
+            'expectation' => ApplicantExpectation::where('applicant_id', $this->id)->first(),
+            'expectationInterests' => ApplicantInterest::where('applicant_id', $this->id)->value('interests'),
+            'jobTitle' => Application::with('job')->where('applicant_id', $this->id)->latest()->first()?->job?->title,
+            'divisions' => Division::all(),
+        ];
+    }
 }

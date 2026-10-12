@@ -34,6 +34,16 @@ class ApplicantController extends Controller
     }
 
     /**
+     * Tampilkan formulir biodata (HC-ODR.FRM.001.00) yang sudah terisi untuk dicetak.
+     */
+    public function print()
+    {
+        $applicant = Applicant::where('user_id', auth()->id())->firstOrFail();
+
+        return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
