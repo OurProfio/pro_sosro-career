@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Division;
 use App\Http\Requests\Admin\StoreDivisionRequest;
 use App\Http\Requests\Admin\UpdateDivisionRequest;
+use App\Models\Division;
 
 class DivisionController extends Controller
 {
@@ -33,8 +33,8 @@ class DivisionController extends Controller
     public function store(StoreDivisionRequest $request)
     {
         $data = [
-            "name" => $request->name,
-            "type" => "open"
+            'name' => $request->name,
+            'type' => 'open',
         ];
         Division::create($data);
 

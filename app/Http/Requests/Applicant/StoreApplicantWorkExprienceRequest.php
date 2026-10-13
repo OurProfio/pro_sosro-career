@@ -16,6 +16,23 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('experiences') && is_array($this->input('experiences'))) {
+            $experiences = $this->input('experiences');
+            foreach ($experiences as $key => $exp) {
+                if (isset($exp['salary']) && is_string($exp['salary'])) {
+                    $cleaned = preg_replace('/[^0-9]/', '', $exp['salary']);
+                    $experiences[$key]['salary'] = $cleaned !== '' ? (int) $cleaned : null;
+                }
+            }
+            $this->merge(['experiences' => $experiences]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -33,6 +50,7 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.facility' => ['nullable', 'string', 'max:255'],
             'experiences.*.reference_name' => ['nullable', 'string', 'max:255'],
             'experiences.*.reason_for_leaving' => ['nullable', 'string', 'max:255'],
+            'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
         ];
     }
 

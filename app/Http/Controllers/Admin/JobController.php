@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Job;
-use App\Models\Division;
 use App\Http\Requests\Admin\StoreJobRequest;
 use App\Http\Requests\Admin\UpdateJobRequest;
+use App\Models\Division;
+use App\Models\Job;
 use App\Models\Office;
 use App\Models\Stage;
+use Carbon\Carbon;
 
 class JobController extends Controller
 {
@@ -48,7 +49,7 @@ class JobController extends Controller
     public function store(StoreJobRequest $request)
     {
         Job::create($request->validated() + [
-            "admin_id" => auth()->user()->admin->id,
+            'admin_id' => auth()->user()->admin->id,
         ]);
 
         return redirect()->route('job.index');
@@ -59,7 +60,7 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
-        if ($job->status === 'aktif' && $job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday()) {
+        if ($job->status === 'aktif' && $job->closing_date && Carbon::parse($job->closing_date)->isPast() && ! Carbon::parse($job->closing_date)->isToday()) {
             $job->update(['status' => 'nonaktif']);
         }
 
@@ -73,7 +74,6 @@ class JobController extends Controller
         $stages = Stage::where('type', $job->category)
             ->orderBy('step')
             ->get();
-
 
         return view('auth.admin.job.show', compact('job', 'stages'));
     }

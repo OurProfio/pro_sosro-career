@@ -39,11 +39,13 @@ td input{width:100%;border:0;height:13px;padding:0;font-size:11.5px;background:n
 .jy .l{width:178px;flex:none}.jy .c{width:8px;flex:none}
 .q{display:flex;align-items:flex-end;height:19px;margin-left:30px}
 .q input{flex:1;margin-left:3px}
-.np{position:fixed;right:10px;top:10px;font:12px Arial;padding:5px 10px;cursor:pointer;z-index:9}
+.np{position:fixed;right:20px;top:20px;background:#B11116;color:#fff;border:0;border-radius:8px;padding:8px 16px;font:bold 13px sans-serif;cursor:pointer;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:background .2s}
+.np:hover{background:#940e13}
 @media print{body{background:#fff}.pg{margin:0;box-shadow:none;break-after:page}.np{display:none}}
 </style>
 </head>
 <body>
+<button type="button" class="np" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
 @php
     $fmtDate = fn ($d) => $d ? \Carbon\Carbon::parse($d)->format('d/m/Y') : '';
     $esc = fn ($v) => e((string) ($v ?? ''));

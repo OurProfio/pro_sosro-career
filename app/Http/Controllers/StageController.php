@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Stage;
 use App\Http\Requests\StoreStageRequest;
 use App\Http\Requests\UpdateStageRequest;
+use App\Models\Stage;
 
 class StageController extends Controller
 {

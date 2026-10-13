@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantTraining;
 use App\Http\Requests\Applicant\StoreApplicantTrainingRequest;
 use App\Http\Requests\Applicant\UpdateApplicantTrainingRequest;
+use App\Models\ApplicantTraining;
 
 class ApplicantTrainingController extends Controller
 {

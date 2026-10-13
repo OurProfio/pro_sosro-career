@@ -4,6 +4,17 @@
 
 @section('content')
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-figtree">
+        <div class="mb-6 flex items-center justify-between">
+            <a href="{{ route('biodata.index') }}"
+                class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Pratinjau Biodata
+            </a>
+            <span class="text-xs font-medium text-gray-400">Langkah 1 dari 4</span>
+        </div>
+
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
                 <!-- Step 1: Data Personal (AKTIF) -->
@@ -17,35 +28,44 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 2: Keluarga (BELUM) -->
-                <li class="flex items-center transition-colors text-gray-400">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
-                        <span>2</span>
-                    </span>
-                    <span class="hidden sm:inline">Keluarga</span>
+                <!-- Step 2: Keluarga (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & lanjut ke Data Keluarga"
+                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
+                            <span>2</span>
+                        </span>
+                        <span class="hidden sm:inline group-hover:font-bold">Keluarga</span>
+                    </button>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 3: Pendidikan (BELUM) -->
-                <li class="flex items-center transition-colors text-gray-400">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
-                        <span>3</span>
-                    </span>
-                    <span class="hidden sm:inline">Pendidikan</span>
+                <!-- Step 3: Pendidikan (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & lanjut ke Data Pendidikan"
+                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
+                            <span>3</span>
+                        </span>
+                        <span class="hidden sm:inline group-hover:font-bold">Pendidikan</span>
+                    </button>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 4: Pengalaman (BELUM) -->
-                <li class="flex items-center transition-colors text-gray-400">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
-                        <span>4</span>
-                    </span>
-                    <span class="hidden sm:inline">Pengalaman</span>
+                <!-- Step 4: Pengalaman (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('workExperience')" title="Simpan data saat ini & lanjut ke Data Pengalaman"
+                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
+                            <span>4</span>
+                        </span>
+                        <span class="hidden sm:inline group-hover:font-bold">Pengalaman</span>
+                    </button>
                 </li>
             </ol>
         </div>
@@ -53,6 +73,7 @@
         <form action="{{ route('biodata.update', $applicant->id) }}" method="POST" id="biodataForm" novalidate>
             @csrf
             @method('PUT')
+            <input type="hidden" name="redirect_step" id="redirect_step" value="family">
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-6 sm:p-10">
@@ -526,7 +547,16 @@
                         }
                     </script>
 
-                    <div class="pt-8 border-t border-gray-100 flex justify-end mt-8">
+                    <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+                        <a href="{{ route('biodata.index') }}"
+                            class="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Kembali ke Pratinjau Biodata
+                        </a>
+
                         <button type="submit" id="btnSubmit"
                             class="w-full sm:w-auto px-8 py-3 bg-[#B11116] hover:bg-red-800 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer focus:ring-4 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
                             <span id="btnText">Perbarui & Lanjut ke Langkah 2</span>
@@ -554,29 +584,58 @@
     </div>
 
     <script>
+        function goToStep(step) {
+            const redirectInput = document.getElementById('redirect_step');
+            if (redirectInput) {
+                redirectInput.value = step;
+            }
+
+            const biodataForm = document.getElementById('biodataForm');
+            if (biodataForm) {
+                if (biodataForm.reportValidity && !biodataForm.reportValidity()) {
+                    return;
+                }
+                biodataForm.submit();
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const sameAddressCheckbox = document.getElementById('sameAddressCheckbox');
             const addressKtp = document.getElementById('address_ktp');
             const addressDomisili = document.getElementById('address_domisili');
 
+            function syncSameAddress() {
+                if (!sameAddressCheckbox || !addressKtp || !addressDomisili) return;
+
+                if (sameAddressCheckbox.checked) {
+                    addressDomisili.value = addressKtp.value;
+                    addressDomisili.readOnly = true;
+                    addressDomisili.setAttribute('readonly', 'readonly');
+                    addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                } else {
+                    addressDomisili.readOnly = false;
+                    addressDomisili.removeAttribute('readonly');
+                    addressDomisili.classList.remove('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                }
+            }
+
             if (sameAddressCheckbox && addressKtp && addressDomisili) {
-                sameAddressCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        addressDomisili.value = addressKtp.value;
-                        addressDomisili.readOnly = true;
-                        addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
-                    } else {
-                        addressDomisili.readOnly = false;
-                        addressDomisili.classList.remove('bg-gray-100', 'text-gray-500',
-                            'cursor-not-allowed');
-                    }
-                });
+                sameAddressCheckbox.addEventListener('change', syncSameAddress);
 
                 addressKtp.addEventListener('input', function() {
                     if (sameAddressCheckbox.checked) {
                         addressDomisili.value = this.value;
                     }
                 });
+
+                addressDomisili.addEventListener('keydown', function(e) {
+                    if (sameAddressCheckbox.checked) {
+                        e.preventDefault();
+                    }
+                });
+
+                // Inisialisasi saat halaman pertama kali dimuat
+                syncSameAddress();
             }
 
             const biodataForm = document.getElementById('biodataForm');

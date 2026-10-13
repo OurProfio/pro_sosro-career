@@ -30,12 +30,13 @@ class StoreApplicantEducationRequest extends FormRequest
             'educations.*.degree_level' => ['required', 'string', 'in:SMA/SMK,D3,D4/S1,S2,S3'],
             'educations.*.major' => ['required', 'string', 'max:150'],
             'educations.*.gpa' => ['required', 'numeric', 'between:0,100.00'],
-            'educations.*.entry_year' => ['required', 'digits:4', 'integer', 'min:1970', 'max:' . $currentYear],
+            'educations.*.entry_year' => ['required', 'digits:4', 'integer', 'min:1970', 'max:'.$currentYear],
             'educations.*.graduation_year' => ['required', 'digits:4', 'integer', 'min:1970', 'gte:educations.*.entry_year'],
             'trainings' => ['nullable', 'array'],
             'trainings.*.training_name' => ['required_with:trainings', 'string', 'max:255'],
             'trainings.*.organizer' => ['required_with:trainings', 'string', 'max:255'],
             'trainings.*.finished' => ['required_with:trainings', 'date', 'before_or_equal:today'],
+            'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
         ];
     }
 

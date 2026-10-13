@@ -18,7 +18,7 @@ class IsApplicant
         if (auth()->user()->role !== 'user') {
             abort(403, 'Unauthorized action.');
         }
-        
+
         return $next($request);
     }
 }

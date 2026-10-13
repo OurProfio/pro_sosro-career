@@ -71,7 +71,7 @@
         <div
             class="mb-6 flex flex-wrap justify-between items-center gap-4 no-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center gap-3">
-                <a href="{{ route('biodata.workExperience.create') }}"
+                <a href="{{ route('applicant.dashboard') }}"
                     class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition" title="Kembali">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

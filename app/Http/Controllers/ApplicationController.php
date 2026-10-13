@@ -12,6 +12,7 @@ use App\Mail\InterviewOnlineMail;
 use App\Mail\RejectedMail;
 use App\Models\Application;
 use App\Models\Job;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
@@ -52,7 +53,7 @@ class ApplicationController extends Controller
 
         $job = Job::findOrFail($request->job_id);
 
-        if ($job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday()) {
+        if ($job->closing_date && Carbon::parse($job->closing_date)->isPast() && ! Carbon::parse($job->closing_date)->isToday()) {
             if ($job->status === 'aktif') {
                 $job->update(['status' => 'nonaktif']);
             }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Office;
 use App\Http\Requests\Admin\StoreOfficeRequest;
 use App\Http\Requests\Admin\UpdateOfficeRequest;
+use App\Models\Office;
 
 class OfficeController extends Controller
 {
@@ -68,7 +68,7 @@ class OfficeController extends Controller
      */
     public function destroy(Office $office)
     {
-         $office->delete();
+        $office->delete();
 
         return redirect()->route('office.index')->with('info', 'Berhasil menghapus data kantor cabang.');
     }

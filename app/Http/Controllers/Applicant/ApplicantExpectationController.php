@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantExpectation;
 use App\Http\Requests\Applicant\StoreApplicantExpectationRequest;
 use App\Http\Requests\Applicant\UpdateApplicantExpectationRequest;
+use App\Models\ApplicantExpectation;
 
 class ApplicantExpectationController extends Controller
 {

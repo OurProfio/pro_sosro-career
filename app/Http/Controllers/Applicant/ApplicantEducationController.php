@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantEducation;
 use App\Http\Requests\Applicant\StoreApplicantEducationRequest;
 use App\Http\Requests\Applicant\UpdateApplicantEducationRequest;
+use App\Models\ApplicantEducation;
 use App\Models\ApplicantTraining;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +24,11 @@ class ApplicantEducationController extends Controller
      */
     public function create()
     {
-        return view('auth.applicant.biodata.create.education');
+        $applicant = auth()->user()->applicant;
+        $educations = $applicant?->educations ?? collect();
+        $trainings = $applicant?->trainings ?? collect();
+
+        return view('auth.applicant.biodata.create.education', compact('applicant', 'educations', 'trainings'));
     }
 
     /**
@@ -32,19 +36,33 @@ class ApplicantEducationController extends Controller
      */
     public function store(StoreApplicantEducationRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $applicant = auth()->user()->applicant;
+
+        DB::transaction(function () use ($request, $applicant) {
+            ApplicantEducation::where('applicant_id', $applicant->id)->delete();
+            ApplicantTraining::where('applicant_id', $applicant->id)->delete();
+
             foreach ($request->validated('educations') as $education) {
-                ApplicantEducation::create($education + ['applicant_id' => auth()->user()->applicant->id]);
+                ApplicantEducation::create($education + ['applicant_id' => $applicant->id]);
             }
 
             if ($request->has('trainings')) {
                 foreach ($request->validated('trainings') as $training) {
-                    ApplicantTraining::create($training + ['applicant_id' => auth()->user()->applicant->id]);
+                    ApplicantTraining::create($training + ['applicant_id' => $applicant->id]);
                 }
             }
         });
 
-        return redirect()->route('biodata.workExperience.create', auth()->user()->applicant->id)->with('success', 'Education data saved successfully.');
+        $redirectStep = $request->input('redirect_step', 'workExperience');
+        $targetRoute = match ($redirectStep) {
+            'personal' => route('biodata.edit', $applicant->id),
+            'family' => route('biodata.family.create'),
+            'education' => route('biodata.education.create'),
+            'index' => route('biodata.index'),
+            default => route('biodata.workExperience.create'),
+        };
+
+        return redirect($targetRoute)->with('success', 'Data pendidikan & pelatihan berhasil disimpan.');
     }
 
     /**

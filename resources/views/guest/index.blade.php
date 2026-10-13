@@ -114,6 +114,7 @@
                         data-location="{{ strtolower($job->location) }}"
                         data-category="{{ strtolower($job->category) }}"
                         data-bidang="{{ strtolower($job->occupation) }}"
+                        data-bidang-name="{{ $job->occupation }}"
                         data-search="{{ strtolower($job->title . ' ' . $job->location . ' ' . ($job->office->name ?? '') . ' ' . str_replace('_', ' ', $job->category) . ' ' . $job->occupation . ' ' . $job->type . ' ' . strip_tags($job->qualification) . ' ' . strip_tags($job->description)) }}">
                         <div class="flex-1 p-5 sm:p-6">
                             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -238,6 +239,50 @@
             const btnResetFilter = document.getElementById('btnResetFilter');
             const jobCards = document.querySelectorAll('.job-card');
 
+            function updateBidangOptions() {
+                if (!filterBidang) return;
+
+                const searchVal = (jobSearch ? jobSearch.value : '').trim().toLowerCase();
+                const locVal = (filterLocation ? filterLocation.value : '').trim().toLowerCase();
+                const catVal = (filterCategory ? filterCategory.value : '').trim().toLowerCase();
+
+                const prevSelectedVal = filterBidang.value;
+                const availableBidangs = new Map();
+
+                jobCards.forEach(card => {
+                    const cardLoc = (card.dataset.location || '').toLowerCase();
+                    const cardCat = (card.dataset.category || '').toLowerCase();
+                    const cardSearch = (card.dataset.search || '').toLowerCase();
+                    const cardBidName = card.dataset.bidangName || '';
+
+                    const matchesLoc = !locVal || cardLoc === locVal;
+                    const matchesCat = !catVal || cardCat === catVal;
+                    const matchesSearch = !searchVal || cardSearch.includes(searchVal);
+
+                    if (matchesLoc && matchesCat && matchesSearch && cardBidName.trim() !== '') {
+                        availableBidangs.set(cardBidName.toLowerCase(), cardBidName);
+                    }
+                });
+
+                filterBidang.innerHTML = '<option value="">Semua Bidang</option>';
+                let stillHasSelected = false;
+
+                availableBidangs.forEach((origName, lowerVal) => {
+                    const opt = document.createElement('option');
+                    opt.value = origName;
+                    opt.textContent = origName;
+                    if (prevSelectedVal && prevSelectedVal.toLowerCase() === lowerVal) {
+                        opt.selected = true;
+                        stillHasSelected = true;
+                    }
+                    filterBidang.appendChild(opt);
+                });
+
+                if (!stillHasSelected && prevSelectedVal !== '') {
+                    filterBidang.value = '';
+                }
+            }
+
             function filterJobs() {
                 const searchVal = (jobSearch ? jobSearch.value : '').trim().toLowerCase();
                 const locVal = (filterLocation ? filterLocation.value : '').trim().toLowerCase();
@@ -279,25 +324,38 @@
             }
 
             if (jobSearch) {
-                jobSearch.addEventListener('input', filterJobs);
+                jobSearch.addEventListener('input', function() {
+                    updateBidangOptions();
+                    filterJobs();
+                });
                 jobSearch.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter') {
                         e.preventDefault();
+                        updateBidangOptions();
                         filterJobs();
                     }
                 });
             }
 
             if (btnSearch) {
-                btnSearch.addEventListener('click', filterJobs);
+                btnSearch.addEventListener('click', function() {
+                    updateBidangOptions();
+                    filterJobs();
+                });
             }
 
             if (filterLocation) {
-                filterLocation.addEventListener('change', filterJobs);
+                filterLocation.addEventListener('change', function() {
+                    updateBidangOptions();
+                    filterJobs();
+                });
             }
 
             if (filterCategory) {
-                filterCategory.addEventListener('change', filterJobs);
+                filterCategory.addEventListener('change', function() {
+                    updateBidangOptions();
+                    filterJobs();
+                });
             }
 
             if (filterBidang) {
@@ -310,6 +368,7 @@
                     if (filterLocation) filterLocation.value = '';
                     if (filterCategory) filterCategory.value = '';
                     if (filterBidang) filterBidang.value = '';
+                    updateBidangOptions();
                     filterJobs();
                 });
             }
@@ -329,13 +388,12 @@
                 filterCategory.value = urlParams.get('category');
                 hasParams = true;
             }
+            updateBidangOptions();
             if (urlParams.get('bidang') && filterBidang) {
                 filterBidang.value = urlParams.get('bidang');
                 hasParams = true;
             }
-            if (hasParams) {
-                filterJobs();
-            }
+            filterJobs();
         });
 
         function konfirmasiLamar(button) {

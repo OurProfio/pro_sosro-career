@@ -583,9 +583,11 @@
                     if (sameAddressCheckbox.checked) {
                         addressDomisili.value = addressKtp.value;
                         addressDomisili.readOnly = true;
+                        addressDomisili.setAttribute('readonly', 'readonly');
                         addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
                     } else {
                         addressDomisili.readOnly = false;
+                        addressDomisili.removeAttribute('readonly');
                         addressDomisili.classList.remove('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
                     }
                 };
@@ -597,6 +599,12 @@
                 addressKtp.addEventListener('input', function() {
                     if (sameAddressCheckbox.checked) {
                         addressDomisili.value = this.value;
+                    }
+                });
+
+                addressDomisili.addEventListener('keydown', function(e) {
+                    if (sameAddressCheckbox.checked) {
+                        e.preventDefault();
                     }
                 });
 

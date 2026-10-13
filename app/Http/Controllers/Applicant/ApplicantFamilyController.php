@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantFamily;
 use App\Http\Requests\Applicant\StoreApplicantFamilyRequest;
 use App\Http\Requests\Applicant\UpdateApplicantFamilyRequest;
+use App\Models\ApplicantFamily;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantFamilyController extends Controller
 {
@@ -22,7 +23,10 @@ class ApplicantFamilyController extends Controller
      */
     public function create()
     {
-        return view('auth.applicant.biodata.create.family');
+        $applicant = auth()->user()->applicant;
+        $families = $applicant?->families ?? collect();
+
+        return view('auth.applicant.biodata.create.family', compact('applicant', 'families'));
     }
 
     /**
@@ -30,24 +34,39 @@ class ApplicantFamilyController extends Controller
      */
     public function store(StoreApplicantFamilyRequest $request)
     {
-        foreach ($request->validated('families') as $member => $data) {
-            if ($member === 'children') {
-                foreach ($data as $children) {
-                    $children['applicant_id'] = auth()->user()->applicant->id;
-                    ApplicantFamily::create($children);
-                }
-            } else if ($member === 'siblings') {
-                foreach ($data as $sibling) {
-                    $sibling['applicant_id'] = auth()->user()->applicant->id;
-                    ApplicantFamily::create($sibling);
-                }
-            } else {
-                $data['applicant_id'] = auth()->user()->applicant->id;
-                ApplicantFamily::create($data);
-            }
-        }
+        $applicant = auth()->user()->applicant;
 
-        return redirect()->route('biodata.education.create')->with('success', 'Berhasil menambahkan data keluarga.');
+        DB::transaction(function () use ($request, $applicant) {
+            ApplicantFamily::where('applicant_id', $applicant->id)->delete();
+
+            foreach ($request->validated('families') as $member => $data) {
+                if ($member === 'children') {
+                    foreach ($data as $children) {
+                        $children['applicant_id'] = $applicant->id;
+                        ApplicantFamily::create($children);
+                    }
+                } elseif ($member === 'siblings') {
+                    foreach ($data as $sibling) {
+                        $sibling['applicant_id'] = $applicant->id;
+                        ApplicantFamily::create($sibling);
+                    }
+                } else {
+                    $data['applicant_id'] = $applicant->id;
+                    ApplicantFamily::create($data);
+                }
+            }
+        });
+
+        $redirectStep = $request->input('redirect_step', 'education');
+        $targetRoute = match ($redirectStep) {
+            'personal' => route('biodata.edit', $applicant->id),
+            'family' => route('biodata.family.create'),
+            'workExperience' => route('biodata.workExperience.create'),
+            'index' => route('biodata.index'),
+            default => route('biodata.education.create'),
+        };
+
+        return redirect($targetRoute)->with('success', 'Data keluarga berhasil disimpan.');
     }
 
     /**

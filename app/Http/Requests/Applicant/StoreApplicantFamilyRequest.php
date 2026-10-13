@@ -48,6 +48,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             'families.siblings.*.phone_number' => ['required', 'numeric', 'digits_between:1,15'],
             'families.siblings.*.relationship' => ['required', 'in:sibling'],
             'families.siblings.*.family_type' => ['required', 'in:biological'],
+            'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
         ];
 
         $maritalStatus = auth()->user()->applicant->marital_status ?? 'single';

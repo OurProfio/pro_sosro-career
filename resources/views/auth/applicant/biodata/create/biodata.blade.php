@@ -807,24 +807,37 @@
             const addressKtp = document.getElementById('address_ktp');
             const addressDomisili = document.getElementById('address_domisili');
 
+            function syncSameAddress() {
+                if (!sameAddressCheckbox || !addressKtp || !addressDomisili) return;
+
+                if (sameAddressCheckbox.checked) {
+                    addressDomisili.value = addressKtp.value;
+                    addressDomisili.readOnly = true;
+                    addressDomisili.setAttribute('readonly', 'readonly');
+                    addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                } else {
+                    addressDomisili.readOnly = false;
+                    addressDomisili.removeAttribute('readonly');
+                    addressDomisili.classList.remove('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                }
+            }
+
             if (sameAddressCheckbox && addressKtp && addressDomisili) {
-                sameAddressCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        addressDomisili.value = addressKtp.value;
-                        addressDomisili.readOnly = true;
-                        addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
-                    } else {
-                        addressDomisili.readOnly = false;
-                        addressDomisili.classList.remove('bg-gray-100', 'text-gray-500',
-                            'cursor-not-allowed');
-                    }
-                });
+                sameAddressCheckbox.addEventListener('change', syncSameAddress);
 
                 addressKtp.addEventListener('input', function() {
                     if (sameAddressCheckbox.checked) {
                         addressDomisili.value = this.value;
                     }
                 });
+
+                addressDomisili.addEventListener('keydown', function(e) {
+                    if (sameAddressCheckbox.checked) {
+                        e.preventDefault();
+                    }
+                });
+
+                syncSameAddress();
             }
 
             const salaryInput = document.getElementById('salary_expectation');

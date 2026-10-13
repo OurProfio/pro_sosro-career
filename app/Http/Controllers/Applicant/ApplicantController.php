@@ -95,7 +95,7 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
-        //
+        return redirect()->route('biodata.index');
     }
 
     /**
@@ -103,7 +103,6 @@ class ApplicantController extends Controller
      */
     public function edit(Applicant $applicant)
     {
-        dd($applicant);
         $divisions = Division::all();
 
         return view('auth.applicant.biodata.edit', compact('applicant', 'divisions'));
@@ -114,7 +113,27 @@ class ApplicantController extends Controller
      */
     public function update(UpdateApplicantRequest $request, Applicant $applicant)
     {
-        //
+        DB::transaction(function () use ($request, $applicant) {
+            $validated = $request->validated();
+            $applicant->update($validated);
+
+            if ($request->has('division_preferences')) {
+                ApplicantInterest::updateOrCreate(
+                    ['applicant_id' => $applicant->id],
+                    ['interests' => $request->validated('division_preferences')]
+                );
+            }
+        });
+
+        $redirectStep = $request->input('redirect_step', 'family');
+        $targetRoute = match ($redirectStep) {
+            'education' => route('biodata.education.create'),
+            'workExperience' => route('biodata.workExperience.create'),
+            'index' => route('biodata.index'),
+            default => route('biodata.family.create'),
+        };
+
+        return redirect($targetRoute)->with('success', 'Data personal berhasil diperbarui.');
     }
 
     /**

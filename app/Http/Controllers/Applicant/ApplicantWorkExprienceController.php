@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantWorkExprience;
 use App\Http\Requests\Applicant\StoreApplicantWorkExprienceRequest;
 use App\Http\Requests\Applicant\UpdateApplicantWorkExprienceRequest;
+use App\Models\ApplicantWorkExprience;
+use Illuminate\Support\Facades\DB;
 
 class ApplicantWorkExprienceController extends Controller
 {
@@ -22,7 +23,10 @@ class ApplicantWorkExprienceController extends Controller
      */
     public function create()
     {
-        return view('auth.applicant.biodata.create.workExperience');
+        $applicant = auth()->user()->applicant;
+        $workExperiences = $applicant?->workExperiences ?? collect();
+
+        return view('auth.applicant.biodata.create.workExperience', compact('applicant', 'workExperiences'));
     }
 
     /**
@@ -30,13 +34,30 @@ class ApplicantWorkExprienceController extends Controller
      */
     public function store(StoreApplicantWorkExprienceRequest $request)
     {
-        if ($request->validated()) {
-            foreach ($request->validated('experiences') as $exp) {
-                ApplicantWorkExprience::create($exp + ['applicant_id' => auth()->user()->applicant->id]);
-            }
-        }
+        $applicant = auth()->user()->applicant;
 
-        return redirect()->route('biodata.index')->with('success', 'Pengalaman kerja berhasil disimpan.');
+        DB::transaction(function () use ($request, $applicant) {
+            ApplicantWorkExprience::where('applicant_id', $applicant->id)->delete();
+
+            if ($request->has('experiences')) {
+                foreach ($request->validated('experiences') as $exp) {
+                    if (! empty($exp['company_name']) || ! empty($exp['position'])) {
+                        ApplicantWorkExprience::create($exp + ['applicant_id' => $applicant->id]);
+                    }
+                }
+            }
+        });
+
+        $redirectStep = $request->input('redirect_step', 'index');
+        $targetRoute = match ($redirectStep) {
+            'personal' => route('biodata.edit', $applicant->id),
+            'family' => route('biodata.family.create'),
+            'education' => route('biodata.education.create'),
+            'workExperience' => route('biodata.workExperience.create'),
+            default => route('biodata.index'),
+        };
+
+        return redirect($targetRoute)->with('success', 'Data pengalaman kerja berhasil disimpan.');
     }
 
     /**

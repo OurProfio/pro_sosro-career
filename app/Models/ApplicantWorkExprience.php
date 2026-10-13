@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ApplicantWorkExprienceFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 )]
 class ApplicantWorkExprience extends Model
 {
-    /** @use HasFactory<\Database\Factories\ApplicantWorkExprienceFactory> */
+    /** @use HasFactory<ApplicantWorkExprienceFactory> */
     use HasFactory;
 
     public function applicant()

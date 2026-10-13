@@ -134,7 +134,7 @@ class StoreApplicantRequest extends FormRequest
             'reference_by.max' => 'Nama referensi maksimal 255 karakter.',
             'photo.image' => 'Berkas yang diunggah harus berupa gambar.',
             'photo.mimes' => 'Format pas foto harus berupa JPEG, PNG, atau JPG.',
-            'photo.max'   => 'Ukuran pas foto tidak boleh melebihi 2MB.',
+            'photo.max' => 'Ukuran pas foto tidak boleh melebihi 2MB.',
         ];
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantInterest;
 use App\Http\Requests\Applicant\StoreApplicantInterestRequest;
 use App\Http\Requests\Applicant\UpdateApplicantInterestRequest;
+use App\Models\ApplicantInterest;
 
 class ApplicantInterestController extends Controller
 {

@@ -4,44 +4,64 @@
 
 @section('content')
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-figtree">
+        <div class="mb-6 flex items-center justify-between">
+            <a href="{{ route('biodata.index') }}"
+                class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Kembali ke Pratinjau Biodata
+            </a>
+            <span class="text-xs font-medium text-gray-400">Langkah 4 dari 4</span>
+        </div>
+
         <!-- Wizard Progress Bar -->
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
-                <!-- Step 1: Data Personal (SELESAI) -->
-                <li class="flex items-center transition-colors text-[#B11116]">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </span>
-                    <span class="hidden sm:inline">Data Personal</span>
+                <!-- Step 1: Data Personal (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
+                        class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="hidden sm:inline font-bold">Data Personal</span>
+                    </button>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 2: Keluarga (SELESAI) -->
-                <li class="flex items-center transition-colors text-[#B11116]">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </span>
-                    <span class="hidden sm:inline">Keluarga</span>
+                <!-- Step 2: Keluarga (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & kembali ke Data Keluarga"
+                        class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="hidden sm:inline font-bold">Keluarga</span>
+                    </button>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 3: Pendidikan (SELESAI) -->
-                <li class="flex items-center transition-colors text-[#B11116]">
-                    <span
-                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                        </svg>
-                    </span>
-                    <span class="hidden sm:inline">Pendidikan</span>
+                <!-- Step 3: Pendidikan (Dapat diklik, simpan dulu) -->
+                <li>
+                    <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & kembali ke Data Pendidikan"
+                        class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
+                        <span
+                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </span>
+                        <span class="hidden sm:inline font-bold">Pendidikan</span>
+                    </button>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
@@ -59,6 +79,7 @@
 
         <form action="{{ route('biodata.workExperience.store') }}" method="POST" id="experienceForm" novalidate>
             @csrf
+            <input type="hidden" name="redirect_step" id="redirect_step" value="index">
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-6 sm:p-10 space-y-8">
@@ -210,20 +231,38 @@
                                 unset($oldExperiences[0]);
                             }
                             if (empty($oldExperiences)) {
-                                $oldExperiences = [
-                                    1 => [
-                                        'company_name' => '',
-                                        'position' => '',
-                                        'division' => '',
-                                        'salary' => '',
-                                        'start_date' => '',
-                                        'end_date' => '',
-                                        'facility' => '',
-                                        'reference_name' => '',
-                                        'reason_for_leaving' => '',
-                                        'is_current' => '',
-                                    ],
-                                ];
+                                if (isset($workExperiences) && $workExperiences->isNotEmpty()) {
+                                    $oldExperiences = [];
+                                    foreach ($workExperiences as $idx => $we) {
+                                        $oldExperiences[$idx + 1] = [
+                                            'company_name' => $we->company_name,
+                                            'position' => $we->position,
+                                            'division' => $we->division,
+                                            'salary' => $we->salary ? number_format($we->salary, 0, ',', '.') : '',
+                                            'start_date' => $we->start_date ? \Carbon\Carbon::parse($we->start_date)->format('Y-m-d') : '',
+                                            'end_date' => $we->end_date ? \Carbon\Carbon::parse($we->end_date)->format('Y-m-d') : '',
+                                            'facility' => $we->facility,
+                                            'reference_name' => $we->reference_name,
+                                            'reason_for_leaving' => $we->reason_for_leaving,
+                                            'is_current' => empty($we->end_date) && !empty($we->start_date) ? '1' : '',
+                                        ];
+                                    }
+                                } else {
+                                    $oldExperiences = [
+                                        1 => [
+                                            'company_name' => '',
+                                            'position' => '',
+                                            'division' => '',
+                                            'salary' => '',
+                                            'start_date' => '',
+                                            'end_date' => '',
+                                            'facility' => '',
+                                            'reference_name' => '',
+                                            'reason_for_leaving' => '',
+                                            'is_current' => '',
+                                        ],
+                                    ];
+                                }
                             }
                         @endphp
 
@@ -412,15 +451,21 @@
                     </div>
 
                     <!-- Actions Bottom -->
-                    <div class="pt-8 border-t border-gray-100 flex items-center justify-between mt-8">
-                        <a href="{{ route('biodata.education.create') }}"
-                            class="px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center gap-2 cursor-pointer">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                            </svg>
-                            Kembali ke Langkah 3
-                        </a>
+                    <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <a href="{{ route('biodata.index') }}"
+                                class="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                                </svg>
+                                Kembali ke Pratinjau
+                            </a>
+                            <a href="{{ route('biodata.education.create') }}"
+                                class="w-full sm:w-auto px-6 py-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
+                                Kembali ke Langkah 3
+                            </a>
+                        </div>
 
                         <button type="submit" id="btnSubmit"
                             class="w-full sm:w-auto px-8 py-3 bg-[#B11116] hover:bg-red-800 text-white font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer focus:ring-4 focus:ring-red-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
@@ -558,6 +603,24 @@
     </template>
 
     <script>
+        function goToStep(step) {
+            const redirectInput = document.getElementById('redirect_step');
+            if (redirectInput) {
+                redirectInput.value = step;
+            }
+
+            const experienceForm = document.getElementById('experienceForm');
+            if (experienceForm) {
+                if (experienceForm.reportValidity && !experienceForm.reportValidity()) {
+                    return;
+                }
+                document.querySelectorAll('.salary-input').forEach(input => {
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                });
+                experienceForm.submit();
+            }
+        }
+
         /* Format Rupiah Input */
         function formatRupiahInput(input) {
             let value = input.value.replace(/[^0-9]/g, '');
