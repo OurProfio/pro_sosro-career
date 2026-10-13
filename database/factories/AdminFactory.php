@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Admin;
+use App\Models\Office;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +20,10 @@ class AdminFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'user_id' => User::factory()->admin(),
+            'office_id' => Office::factory(),
+            'role' => 'admin',
         ];
     }
 }

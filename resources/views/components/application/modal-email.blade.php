@@ -6,7 +6,7 @@
 
             <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200">
                 <div>
-                    <h3 class="text-lg font-bold text-slate-800">
+                    <h3 id="modal-title" class="text-lg font-bold text-slate-800">
                         Data Tahapan Applicant
                     </h3>
 
@@ -24,12 +24,13 @@
                 </button>
             </div>
 
-            <form action="{{ route('sendEmail') }}" method="POST" enctype="multipart/form-data">
+            <form id="stage-email-form" action="" method="POST" enctype="multipart/form-data">
 
                 @csrf
+                @method('PATCH')
 
-                <input type="hidden" name="application_id" id="modal-application-id">
                 <input type="hidden" name="stages_id" id="modal-stage-id">
+                <input type="hidden" name="status" id="modal-status" value="accepted" disabled>
 
                 <div class="px-6 py-6 space-y-5">
 
@@ -47,7 +48,7 @@
                         </p>
                     </div>
 
-                    <div>
+                    <div id="modal-stage-wrapper">
                         <label for="modal-stage-name" class="block mb-2 text-sm font-semibold text-slate-700">
                             Stage
                         </label>
@@ -83,6 +84,26 @@
                         </div>
 
                         <div id="fields-interview" class="stage-fields hidden space-y-4">
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="interview_date" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Tanggal Interview
+                                    </label>
+
+                                    <input type="date" name="interview_date" id="interview_date"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+
+                                <div>
+                                    <label for="interview_time" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Jam Interview
+                                    </label>
+
+                                    <input type="time" name="interview_time" id="interview_time"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                            </div>
 
                             <div>
                                 <label for="interview_type" class="block mb-2 text-sm font-semibold text-slate-700">
@@ -205,14 +226,48 @@
 
                         </div>
 
-                        <div id="fields-none" class="stage-fields hidden">
+                        <div id="fields-accept" class="stage-fields hidden space-y-4">
 
+                            <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
+                                <p class="text-sm text-emerald-700">
+                                    Template email: <strong id="modal-office-type">-</strong>
+                                </p>
+                            </div>
+
+                            <div>
+                                <label for="start_date" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Tanggal Mulai Kerja
+                                </label>
+
+                                <input type="date" name="start_date" id="start_date"
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                            </div>
+
+                            <div>
+                                <label for="work_address" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Alamat Lokasi Hari Pertama
+                                </label>
+
+                                <textarea name="work_address" id="work_address" rows="3" placeholder="Masukkan alamat lokasi"
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
+                            </div>
+
+                        </div>
+
+                        <div id="fields-reject" class="stage-fields hidden space-y-4">
+                            <div class="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3">
+                                <p class="text-sm text-rose-700">
+                                    Email penolakan akan dikirimkan secara otomatis kepada kandidat.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="fields-none" class="stage-fields hidden">
                             <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
                                 <p class="text-sm text-slate-600">
                                     Tahapan ini tidak membutuhkan input tambahan.
                                 </p>
                             </div>
-
                         </div>
 
                     </div>
@@ -226,9 +281,9 @@
                         Batal
                     </button>
 
-                    <button type="submit"
-                        class="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition">
-                        Lanjutkan
+                    <button type="submit" id="modal-submit-btn"
+                        class="px-4 py-2.5 text-sm font-semibold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+                        <span>Lanjutkan</span>
                     </button>
 
                 </div>

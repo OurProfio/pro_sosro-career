@@ -8,7 +8,6 @@ use App\Models\Office;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -47,7 +46,7 @@ class DatabaseSeeder extends Seeder
         foreach ($offices as $office) {
             Office::create([
                 'name' => $office['name'],
-                'type' => $office['type']
+                'type' => $office['type'],
             ]);
         }
 
@@ -83,34 +82,6 @@ class DatabaseSeeder extends Seeder
             Division::firstOrCreate(['name' => $name]);
         }
 
-        $now = now();
-        $stages = [
-            ['name' => 'administration', 'type' => 'magang', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'psikotes', 'type' => 'magang', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'interview', 'type' => 'magang', 'step' => 3, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'simulasi', 'type' => 'magang', 'step' => 4, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'offering', 'type' => 'magang', 'step' => 5, 'created_at' => $now, 'updated_at' => $now],    
-
-            ['name' => 'administration', 'type' => 'profesional', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'psikotes', 'type' => 'profesional', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'interview', 'type' => 'profesional', 'step' => 3, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'konfirmasi user', 'type' => 'profesional', 'step' => 4, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'offering', 'type' => 'profesional', 'step' => 5, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'mcu', 'type' => 'profesional', 'step' => 6, 'created_at' => $now, 'updated_at' => $now],
-
-            ['name' => 'administration', 'type' => 'management_trainee', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'psikotes', 'type' => 'management_trainee', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'interview', 'type' => 'management_trainee', 'step' => 3, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'study case', 'type' => 'management_trainee', 'step' => 4, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'panel bod', 'type' => 'management_trainee', 'step' => 5, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'konfirmasi user', 'type' => 'management_trainee', 'step' => 6, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'offering', 'type' => 'management_trainee', 'step' => 7, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'mcu', 'type' => 'management_trainee', 'step' => 8, 'created_at' => $now, 'updated_at' => $now],
-
-            ['name' => 'administration', 'type' => 'internship', 'step' => 1, 'created_at' => $now, 'updated_at' => $now],
-            ['name' => 'interview', 'type' => 'internship', 'step' => 2, 'created_at' => $now, 'updated_at' => $now],
-        ];
-
-        DB::table('stages')->insert($stages);
+        $this->call(StageSeeder::class);
     }
 }

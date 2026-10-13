@@ -2,25 +2,26 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class InterviewMail extends Mailable
+class AcceptedKpwMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public Application $application,
+        public string $startDate,
+        public string $workAddress,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -28,7 +29,7 @@ class InterviewMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Undangan Interview PT Sinar Sosro Gunung Slamat',
+            subject: 'Informasi Hari Pertama Karyawan Baru PT Sinar Sosro Gunung Slamat',
         );
     }
 
@@ -38,7 +39,7 @@ class InterviewMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.interview-mail',
+            view: 'mail.accepted-kpw-mail',
         );
     }
 

@@ -17,6 +17,10 @@ class JobController extends Controller
      */
     public function index()
     {
+        Job::where('status', 'aktif')
+            ->whereDate('closing_date', '<', today())
+            ->update(['status' => 'nonaktif']);
+
         $jobs = Job::all();
 
         return view('auth.admin.job.index', compact('jobs'));
@@ -55,6 +59,10 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
+        if ($job->status === 'aktif' && $job->closing_date && \Carbon\Carbon::parse($job->closing_date)->isPast() && !\Carbon\Carbon::parse($job->closing_date)->isToday()) {
+            $job->update(['status' => 'nonaktif']);
+        }
+
         $job->load([
             'office',
             'admin.user',

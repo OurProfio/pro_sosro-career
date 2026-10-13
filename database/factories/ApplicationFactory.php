@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Applicant;
 use App\Models\Application;
+use App\Models\Job;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +20,9 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'applicant_id' => Applicant::factory(),
+            'job_id' => Job::factory(),
+            'status' => 'pending',
         ];
     }
 }

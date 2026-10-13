@@ -213,27 +213,43 @@
                                 </td>
 
                                 <td class="px-6 py-4">
-                                    <form action="" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                    @php
+                                        $currentStage = $stages->firstWhere('id', $application->stages_id);
+                                        $currentStep = $currentStage?->step ?? 0;
+                                    @endphp
 
-                                        <select name="stages_id"
-                                            class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                            data-application-id="{{ $application->id }}"
-                                            data-applicant-name="{{ $application->applicant->name ?? '-' }}"
-                                            data-applicant-email="{{ $application->applicant->email ?? '-' }}">
-                                            <option value="">
-                                                Pilih Stage
-                                            </option>
+                                    <select
+                                        class="stage-select min-w-[180px] px-3 py-2 text-sm text-slate-700 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-slate-100 disabled:cursor-not-allowed"
+                                        data-stage-url="{{ route('application.updateStage', $application) }}"
+                                        data-status-url="{{ route('application.updateStatus', $application) }}"
+                                        data-current="{{ $application->status === 'accepted' ? 'status:accepted' : ($application->status === 'rejected' ? 'status:rejected' : ($application->stages_id ? 'stage:' . $application->stages_id : '')) }}"
+                                        data-applicant-name="{{ $application->applicant->name ?? '-' }}"
+                                        data-applicant-email="{{ $application->applicant->email ?? '-' }}"
+                                        data-office-type="{{ $job->office->type ?? '-' }}"
+                                        @disabled(in_array($application->status, ['accepted', 'rejected']))>
+                                        <option value="">
+                                            Pilih Stage
+                                        </option>
 
-                                            @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
-                                                    {{ $application->stages_id == $stage->id ? 'selected' : '' }}>
+                                        @foreach ($stages as $stage)
+                                            {{-- Tahapan sebelumnya disembunyikan/tidak dapat dipilih --}}
+                                            @if ($stage->step >= $currentStep)
+                                                <option value="stage:{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
+                                                    {{ $application->status !== 'accepted' && $application->status !== 'rejected' && $application->stages_id == $stage->id ? 'selected' : '' }}>
                                                     {{ $stage->step }}. {{ $stage->name }}
                                                 </option>
-                                            @endforeach
-                                        </select>
-                                    </form>
+                                            @endif
+                                        @endforeach
+
+                                        <optgroup label="Keputusan Akhir">
+                                            <option value="status:accepted" {{ $application->status === 'accepted' ? 'selected' : '' }}>
+                                                Accepted
+                                            </option>
+                                            <option value="status:rejected" {{ $application->status === 'rejected' ? 'selected' : '' }}>
+                                                Rejected
+                                            </option>
+                                        </optgroup>
+                                    </select>
                                 </td>
 
                                 <td class="px-6 py-4">
@@ -257,6 +273,11 @@
                                             class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">
                                             Rejected
                                         </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-slate-50 text-slate-700 border border-slate-200 capitalize">
+                                            {{ $application->status }}
+                                        </span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -266,22 +287,6 @@
                                                 class="w-max inline-flex items-center px-3 py-2 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-lg transition-colors">
                                                 Lihat Detail
                                             </a>
-                                        @endif
-
-                                        @if ($application->status !== 'rejected')
-                                            <form action="" method="POST"
-                                                onsubmit="return confirm('Yakin ingin menolak applicant ini?')">
-                                                @csrf
-
-                                                <button type="submit"
-                                                    class="hover:cursor-pointer inline-flex items-center px-3 py-2 text-xs font-semibold text-rose-600 bg-rose-50 hover:bg-rose-100 border border-rose-100 rounded-lg transition-colors">
-                                                    Rejected
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="text-xs text-slate-400">
-                                                Rejected
-                                            </span>
                                         @endif
                                     </div>
                                 </td>
@@ -296,88 +301,167 @@
     <x-application.modal-email />
 
     <script>
+        const stageModal = document.getElementById('stage-email-modal');
+        const stageForm = document.getElementById('stage-email-form');
+        const stageIdInput = document.getElementById('modal-stage-id');
+        const statusInput = document.getElementById('modal-status');
+        let activeStageSelect = null;
+
+        const submitBtn = document.getElementById('modal-submit-btn');
+
+        function resetSubmitButton() {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<span>Lanjutkan</span>';
+            }
+        }
+
+        function showFields(fieldId) {
+            document.querySelectorAll('.stage-fields').forEach(field => {
+                field.classList.add('hidden');
+            });
+
+            document.getElementById(fieldId).classList.remove('hidden');
+        }
+
+        function openStageModal(trigger, title) {
+            stageForm.reset();
+            resetSubmitButton();
+            stageForm.action = trigger.dataset.updateUrl;
+
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-applicant-name').textContent = trigger.dataset.applicantName;
+            document.getElementById('modal-applicant-email').textContent = trigger.dataset.applicantEmail;
+
+            stageModal.classList.remove('hidden');
+            stageModal.classList.add('flex');
+        }
+
+        function closeStageModal() {
+            if (activeStageSelect) {
+                activeStageSelect.value = activeStageSelect.dataset.current;
+                activeStageSelect = null;
+            }
+
+            resetSubmitButton();
+            stageModal.classList.add('hidden');
+            stageModal.classList.remove('flex');
+        }
+
+        stageForm?.addEventListener('submit', function(e) {
+            if (submitBtn) {
+                if (submitBtn.disabled) {
+                    e.preventDefault();
+                    return;
+                }
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    <span>Memproses...</span>
+                `;
+            }
+        });
+
         document.querySelectorAll('.stage-select').forEach(select => {
             select.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
-
                 if (!this.value) {
+                    this.value = this.dataset.current;
                     return;
                 }
 
-                const applicationId = this.dataset.applicationId;
-                const applicantName = this.dataset.applicantName;
-                const applicantEmail = this.dataset.applicantEmail;
-                const stageId = this.value;
-                const stageName = selectedOption.dataset.stageName;
+                activeStageSelect = this;
 
-                document.getElementById('modal-application-id').value = applicationId;
-                document.getElementById('modal-stage-id').value = stageId;
+                if (this.value === 'status:accepted') {
+                    openStageModal(this, 'Terima Applicant');
+                    stageForm.action = this.dataset.statusUrl;
 
-                document.getElementById('modal-applicant-name').textContent = applicantName;
-                document.getElementById('modal-applicant-email').textContent = applicantEmail;
+                    stageIdInput.disabled = true;
+                    statusInput.disabled = false;
+                    statusInput.value = 'accepted';
+                    document.getElementById('modal-stage-wrapper').classList.add('hidden');
+                    document.getElementById('modal-office-type').textContent = this.dataset.officeType;
+
+                    showFields('fields-accept');
+                    return;
+                }
+
+                if (this.value === 'status:rejected') {
+                    openStageModal(this, 'Tolak Applicant');
+                    stageForm.action = this.dataset.statusUrl;
+
+                    stageIdInput.disabled = true;
+                    statusInput.disabled = false;
+                    statusInput.value = 'rejected';
+                    document.getElementById('modal-stage-wrapper').classList.add('hidden');
+
+                    showFields('fields-reject');
+                    return;
+                }
+
+                // Pilihan stage (format value: stage:123)
+                const rawStageId = this.value.replace('stage:', '');
+                const stageName = this.options[this.selectedIndex].dataset.stageName;
+
+                openStageModal(this, 'Data Tahapan Applicant');
+                stageForm.action = this.dataset.stageUrl;
+
+                stageIdInput.disabled = false;
+                stageIdInput.value = rawStageId;
+                statusInput.disabled = true;
+                document.getElementById('modal-stage-wrapper').classList.remove('hidden');
                 document.getElementById('modal-stage-name').value = stageName;
 
-                document.querySelectorAll('.stage-fields').forEach(field => {
-                    field.classList.add('hidden');
-                });
-
-                switch (stageName) {
+                switch (stageName.startsWith('interview') ? 'interview' : stageName) {
                     case 'psikotes':
-                        document.getElementById('fields-psikotes').classList.remove('hidden');
+                        showFields('fields-psikotes');
                         break;
 
                     case 'interview':
-                        document.getElementById('fields-interview').classList.remove('hidden');
+                        showFields('fields-interview');
                         break;
 
                     case 'mcu':
-                        document.getElementById('fields-mcu').classList.remove('hidden');
+                        showFields('fields-mcu');
                         break;
 
                     case 'study case':
-                        document.getElementById('fields-study-case').classList.remove('hidden');
+                        showFields('fields-study-case');
                         break;
 
                     case 'panel bod':
-                        document.getElementById('fields-panel-bod').classList.remove('hidden');
+                        showFields('fields-panel-bod');
                         break;
 
                     default:
-                        document.getElementById('fields-none').classList.remove('hidden');
+                        showFields('fields-none');
                         break;
                 }
 
-                const modal = document.getElementById('stage-email-modal');
-
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
+                toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+                toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
             });
         });
 
-        document.getElementById('interview_type')?.addEventListener('change', function() {
-            const virtualField = document.getElementById('interview-virtual-field');
-            const offlineField = document.getElementById('interview-offline-field');
-
-            if (this.value === 'virtual') {
-                virtualField.classList.remove('hidden');
-                offlineField.classList.add('hidden');
-            } else {
-                virtualField.classList.add('hidden');
-                offlineField.classList.remove('hidden');
-            }
+        stageModal.querySelectorAll('[data-modal-hide]').forEach(button => {
+            button.addEventListener('click', closeStageModal);
         });
 
-        document.getElementById('panel_bod_type')?.addEventListener('change', function() {
-            const virtualField = document.getElementById('panel-bod-virtual-field');
-            const offlineField = document.getElementById('panel-bod-offline-field');
+        function toggleMethodFields(selectId, virtualFieldId, offlineFieldId) {
+            const isVirtual = document.getElementById(selectId).value === 'virtual';
 
-            if (this.value === 'virtual') {
-                virtualField.classList.remove('hidden');
-                offlineField.classList.add('hidden');
-            } else {
-                virtualField.classList.add('hidden');
-                offlineField.classList.remove('hidden');
-            }
+            document.getElementById(virtualFieldId).classList.toggle('hidden', !isVirtual);
+            document.getElementById(offlineFieldId).classList.toggle('hidden', isVirtual);
+        }
+
+        document.getElementById('interview_type').addEventListener('change', () => {
+            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+        });
+
+        document.getElementById('panel_bod_type').addEventListener('change', () => {
+            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
         });
     </script>
 @endsection
