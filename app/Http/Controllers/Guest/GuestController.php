@@ -7,12 +7,18 @@ use App\Models\Job;
 
 class GuestController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         Job::where('status', 'aktif')
             ->whereDate('closing_date', '<', today())
             ->update(['status' => 'nonaktif']);
 
-        $jobs = Job::all();
+        // Hanya tampilkan lowongan yang aktif dan belum melewati batas tanggal tutup
+        $jobs = Job::where('status', 'aktif')
+            ->whereDate('closing_date', '>=', today())
+            ->with('office')
+            ->latest()
+            ->get();
 
         return view('guest.index', compact('jobs'));
     }
