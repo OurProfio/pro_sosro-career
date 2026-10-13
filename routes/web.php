@@ -33,6 +33,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::resource('admin', AdminController::class);
             Route::resource('office', OfficeController::class);
             Route::resource('division', DivisionController::class);
+            Route::get('applicant/{applicant}/cetak', [AdminApplicantController::class, 'print'])->name('applicant.print');
             Route::resource('applicant', AdminApplicantController::class);
             Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);
@@ -53,6 +54,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/biodata/pendidikan', [ApplicantEducationController::class, 'store'])->name('biodata.education.store');
         Route::get('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'create'])->name('biodata.workExperience.create');
         Route::post('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'store'])->name('biodata.workExperience.store');
+        Route::get('/biodata/cetak', [ApplicantController::class, 'print'])->name('biodata.print');
         Route::resource('biodata', ApplicantController::class)->parameters(['biodata' => 'applicant']);
 
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
