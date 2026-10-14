@@ -8,8 +8,10 @@ use App\Http\Requests\UpdateApplicationStatusRequest;
 use App\Models\Application;
 use App\Models\Job;
 use App\Services\ApplicationNotificationService;
+use App\Services\HrisTransferService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
 {
@@ -118,15 +120,29 @@ class ApplicationController extends Controller
     public function updateStatus(
         UpdateApplicationStatusRequest $request,
         Application $application,
-        ApplicationNotificationService $notificationService
+        ApplicationNotificationService $notificationService,
+        HrisTransferService $hrisTransferService
     ): RedirectResponse {
-        $application->update(['status' => $request->status]);
+        $validatedData = $request->validated();
+        $newStatus = $validatedData['status'] ?? $request->status;
+        $mailable = null;
 
-        $application->load(['stage', 'applicant', 'job.office']);
+        DB::transaction(function () use ($application, $newStatus, $validatedData, $notificationService, $hrisTransferService, &$mailable) {
+            if ($newStatus === 'accepted') {
+                $hrisTransferService->transferAcceptedApplicant($application, $validatedData);
+            }
 
-        $mailable = $notificationService->sendStatusNotification($application, $request->validated());
+            $application->update(['status' => $newStatus]);
+
+            $application->load(['stage', 'applicant', 'job.office']);
+
+            $mailable = $notificationService->sendStatusNotification($application, $validatedData);
+        });
 
         $message = 'Status lamaran berhasil diperbarui.';
+        if ($newStatus === 'accepted') {
+            $message .= ' Data pelamar berhasil disinkronkan ke tabel HRIS.';
+        }
         if ($mailable) {
             $message .= ' Email notifikasi telah dikirim ke applicant.';
         }
