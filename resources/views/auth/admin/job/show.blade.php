@@ -435,6 +435,10 @@
                         showFields('fields-panel-bod');
                         break;
 
+                    case 'offering':
+                        showFields('fields-offering');
+                        break;
+
                     default:
                         showFields('fields-none');
                         break;

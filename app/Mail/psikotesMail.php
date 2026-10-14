@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -17,13 +18,12 @@ class psikotesMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public string $name,
-        public string $email,
-        public string $date,
-        public string $time
-    ) {
-        //
-    }
+        public Application $application,
+        public ?string $link = null,
+        public ?string $code = null,
+        public ?string $date = null,
+        public ?string $time = null,
+    ) {}
 
     /**
      * Get the message envelope.
@@ -31,7 +31,7 @@ class psikotesMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Psikotes Sinar Sosro Gunung Slamat',
+            subject: 'Undangan Seleksi Psikotes Online PT Sinar Sosro Gunung Slamat',
         );
     }
 

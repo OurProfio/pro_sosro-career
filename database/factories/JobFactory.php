@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Admin;
 use App\Models\Job;
+use App\Models\Office;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +20,18 @@ class JobFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'admin_id' => Admin::factory(),
+            'office_id' => Office::factory(),
+            'title' => fake()->jobTitle(),
+            'category' => 'magang',
+            'occupation' => fake()->word(),
+            'type' => 'magang',
+            'location' => fake()->city(),
+            'opening_date' => now()->subDay()->toDateString(),
+            'closing_date' => now()->addMonth()->toDateString(),
+            'description' => fake()->sentence(),
+            'qualification' => fake()->sentence(),
+            'status' => 'aktif',
         ];
     }
 }

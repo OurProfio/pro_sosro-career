@@ -61,12 +61,27 @@
                     <div id="stage-fields">
 
                         <div id="fields-psikotes" class="stage-fields hidden space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="psikotes_date" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Tanggal Pelaksanaan
+                                    </label>
+                                    <input type="date" name="psikotes_date" id="psikotes_date"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                                <div>
+                                    <label for="psikotes_time" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Batas Waktu / Jam
+                                    </label>
+                                    <input type="text" name="psikotes_time" id="psikotes_time" placeholder="Contoh: 08:00 - 17:00 WIB"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                            </div>
 
                             <div>
                                 <label for="psikotes_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link Psikotes
                                 </label>
-
                                 <input type="url" name="psikotes_link" id="psikotes_link" placeholder="https://..."
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                             </div>
@@ -75,31 +90,25 @@
                                 <label for="psikotes_code" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Kode Psikotes
                                 </label>
-
                                 <input type="text" name="psikotes_code" id="psikotes_code"
                                     placeholder="Masukkan kode psikotes"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                             </div>
-
                         </div>
 
                         <div id="fields-interview" class="stage-fields hidden space-y-4">
-
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div>
                                     <label for="interview_date" class="block mb-2 text-sm font-semibold text-slate-700">
                                         Tanggal Interview
                                     </label>
-
                                     <input type="date" name="interview_date" id="interview_date"
                                         class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                                 </div>
-
                                 <div>
                                     <label for="interview_time" class="block mb-2 text-sm font-semibold text-slate-700">
                                         Jam Interview
                                     </label>
-
                                     <input type="time" name="interview_time" id="interview_time"
                                         class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                                 </div>
@@ -109,62 +118,79 @@
                                 <label for="interview_type" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Metode Interview
                                 </label>
-
                                 <select name="interview_type" id="interview_type"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-                                    <option value="virtual">
-                                        Virtual
-                                    </option>
-
-                                    <option value="offline">
-                                        Offline
-                                    </option>
+                                    <option value="virtual">Virtual</option>
+                                    <option value="offline">Offline</option>
                                 </select>
                             </div>
 
                             <div id="interview-virtual-field">
-
                                 <label for="interview_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link GMeet / Zoom
                                 </label>
-
                                 <input type="url" name="interview_link" id="interview_link"
                                     placeholder="https://meet.google.com/..."
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-
                             </div>
 
                             <div id="interview-offline-field" class="hidden">
-
                                 <label for="interview_address" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Alamat Interview
                                 </label>
-
                                 <textarea name="interview_address" id="interview_address" rows="3" placeholder="Masukkan alamat interview"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
-
                             </div>
-
                         </div>
 
-                        <div id="fields-mcu" class="stage-fields hidden">
+                        <div id="fields-mcu" class="stage-fields hidden space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="mcu_date" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Tanggal MCU
+                                    </label>
+                                    <input type="date" name="mcu_date" id="mcu_date"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                                <div>
+                                    <label for="mcu_time" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Jam MCU
+                                    </label>
+                                    <input type="time" name="mcu_time" id="mcu_time"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                            </div>
 
-                            <label for="mcu_address" class="block mb-2 text-sm font-semibold text-slate-700">
-                                Alamat RS / Klinik
-                            </label>
+                            <div>
+                                <label for="mcu_location" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Nama Rumah Sakit / Klinik
+                                </label>
+                                <input type="text" name="mcu_location" id="mcu_location" placeholder="Contoh: RS Siloam / Klinik Kimia Farma"
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                            </div>
 
-                            <textarea name="mcu_address" id="mcu_address" rows="3" placeholder="Masukkan alamat RS / Klinik"
-                                class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
+                            <div>
+                                <label for="mcu_address" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Alamat Lengkap RS / Klinik
+                                </label>
+                                <textarea name="mcu_address" id="mcu_address" rows="3" placeholder="Masukkan alamat lengkap RS / Klinik"
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
+                            </div>
+                        </div>
 
+                        <div id="fields-offering" class="stage-fields hidden space-y-4">
+                            <div class="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
+                                <p class="text-sm text-amber-700">
+                                    Email pemberitahuan tahap <strong>Offering Letter</strong> akan dikirimkan secara otomatis kepada kandidat.
+                                </p>
+                            </div>
                         </div>
 
                         <div id="fields-study-case" class="stage-fields hidden space-y-4">
-
                             <div>
                                 <label for="study_case_file" class="block mb-2 text-sm font-semibold text-slate-700">
-                                    File Materi Study Case
+                                    File Materi Study Case (PDF)
                                 </label>
-
                                 <input type="file" name="study_case_file" id="study_case_file" accept=".pdf"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-600">
                             </div>
@@ -173,57 +199,65 @@
                                 <label for="study_case_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link Google Drive
                                 </label>
-
                                 <input type="url" name="study_case_link" id="study_case_link"
                                     placeholder="https://drive.google.com/..."
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                             </div>
-
                         </div>
 
                         <div id="fields-panel-bod" class="stage-fields hidden space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="panel_bod_date" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Tanggal Interview BOD
+                                    </label>
+                                    <input type="date" name="panel_bod_date" id="panel_bod_date"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                                <div>
+                                    <label for="panel_bod_time" class="block mb-2 text-sm font-semibold text-slate-700">
+                                        Jam Interview BOD
+                                    </label>
+                                    <input type="time" name="panel_bod_time" id="panel_bod_time"
+                                        class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                </div>
+                            </div>
 
                             <div>
                                 <label for="panel_bod_type" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Metode Interview
                                 </label>
-
                                 <select name="panel_bod_type" id="panel_bod_type"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-                                    <option value="virtual">
-                                        Virtual
-                                    </option>
-
-                                    <option value="offline">
-                                        Offline
-                                    </option>
+                                    <option value="virtual">Virtual</option>
+                                    <option value="offline">Offline</option>
                                 </select>
                             </div>
 
                             <div id="panel-bod-virtual-field">
-
                                 <label for="panel_bod_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link GMeet / Zoom
                                 </label>
-
                                 <input type="url" name="panel_bod_link" id="panel_bod_link"
                                     placeholder="https://meet.google.com/..."
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-
                             </div>
 
                             <div id="panel-bod-offline-field" class="hidden">
-
-                                <label for="panel_bod_address"
-                                    class="block mb-2 text-sm font-semibold text-slate-700">
+                                <label for="panel_bod_address" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Alamat Interview
                                 </label>
-
                                 <textarea name="panel_bod_address" id="panel_bod_address" rows="3" placeholder="Masukkan alamat interview"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
-
                             </div>
+                        </div>
 
+                        <div id="fields-offering" class="stage-fields hidden space-y-4">
+                            <div class="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
+                                <p class="text-sm text-blue-700">
+                                    Email Offering Letter akan dikirimkan secara otomatis kepada kandidat untuk mengonfirmasi penawaran kerja.
+                                </p>
+                            </div>
                         </div>
 
                         <div id="fields-accept" class="stage-fields hidden space-y-4">

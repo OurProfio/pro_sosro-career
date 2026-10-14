@@ -18,7 +18,16 @@ class OfficeFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->company(),
+            'type' => 'KPW',
         ];
+    }
+
+    public function headOffice(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'Head Office',
+            'type' => 'HO',
+        ]);
     }
 }

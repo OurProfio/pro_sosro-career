@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Application;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
@@ -16,10 +17,13 @@ class MedicalCheckUpMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(
+        public Application $application,
+        public ?string $date = null,
+        public ?string $time = null,
+        public ?string $location = null,
+        public ?string $address = null,
+    ) {}
 
     /**
      * Get the message envelope.
