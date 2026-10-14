@@ -21,7 +21,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('guest.register') }}" onsubmit="return disableButton(this)"
+            <form method="POST" action="{{ route('guest.register.post') }}" onsubmit="return disableButton(this)"
                 class="space-y-5">
                 @csrf
                 <div>

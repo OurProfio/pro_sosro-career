@@ -44,24 +44,28 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($offices as $office) {
-            Office::create([
-                'name' => $office['name'],
-                'type' => $office['type'],
-            ]);
+            Office::firstOrCreate(
+                ['name' => $office['name']],
+                ['type' => $office['type']]
+            );
         }
 
-        $user = User::create([
-            'email' => 'admin@admin.admin',
-            'password' => 'admin',
-            'role' => 'admin',
-        ]);
+        $user = User::firstOrCreate(
+            ['email' => 'admin@admin.admin'],
+            [
+                'password' => 'admin',
+                'role' => 'admin',
+            ]
+        );
 
-        Admin::create([
-            'user_id' => $user->id,
-            'office_id' => 1,
-            'role' => 'superadmin',
-            'name' => 'Admin',
-        ]);
+        Admin::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'office_id' => 1,
+                'role' => 'superadmin',
+                'name' => 'Admin',
+            ]
+        );
 
         $divisions = [
             'Administrasi',

@@ -2174,7 +2174,7 @@
         </div>
 
         <!-- Form Login -->
-        <form action="{{ route('guest.login') }}" method="POST" class="p-5 space-y-4">
+        <form action="{{ route('guest.login.post') }}" method="POST" class="p-5 space-y-4">
             @csrf
 
             <div>

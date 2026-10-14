@@ -40,6 +40,7 @@ RUN apk add --no-cache \
     curl \
     git \
     unzip \
+    icu-libs \
     libpng \
     libpng-dev \
     libjpeg-turbo \
