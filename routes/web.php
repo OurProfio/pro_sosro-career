@@ -13,6 +13,7 @@ use App\Http\Controllers\Applicant\ApplicantFamilyController;
 use App\Http\Controllers\Applicant\ApplicantWorkExprienceController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\Mail\MailController;
 use Illuminate\Support\Facades\Route;
@@ -63,3 +64,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
+
+// Fitur Sementara: Feedback (Kritik & Saran)
+Route::get('/feedback', [Controller::class, 'feedback'])->name('feedback.index');
+Route::post('/feedback', [Controller::class, 'storeFeedback'])->name('feedback.store');

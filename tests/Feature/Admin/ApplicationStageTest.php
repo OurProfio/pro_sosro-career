@@ -144,6 +144,14 @@ it('sends the head office acceptance email for HO jobs', function () {
         ->assertSessionHasNoErrors();
 
     expect($application->fresh()->status)->toBe('accepted');
+    $this->assertDatabaseHas('thrm_app_personal_data', [
+        'EMAIL' => $application->applicant->email,
+        'STATUSAPP' => 'ACCEPTED',
+    ]);
+    $this->assertDatabaseHas('thrm_app_history', [
+        'REQUEST_CODE' => (string) $job->id,
+        'APPSTS' => 1,
+    ]);
     Mail::assertSent(AcceptedHOMail::class);
     Mail::assertNotSent(AcceptedKpwMail::class);
 });
