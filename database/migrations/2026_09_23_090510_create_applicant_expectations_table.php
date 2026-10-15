@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('facility_expectation')->nullable();
             $table->boolean('ready_to_relocate')->default(false);
             $table->boolean('ready_to_travel')->default(false);
+            $table->string('job_source')->nullable();
             $table->string('reference_by')->nullable();
             $table->timestamps();
         });

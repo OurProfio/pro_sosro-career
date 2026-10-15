@@ -48,8 +48,12 @@ class JobController extends Controller
      */
     public function store(StoreJobRequest $request)
     {
+        $openingDate = Carbon::parse($request->opening_date)->startOfDay();
+        $status = $openingDate->isToday() ? 'aktif' : 'nonaktif';
+
         Job::create($request->validated() + [
             'admin_id' => auth()->user()->admin->id,
+            'status' => $status,
         ]);
 
         return redirect()->route('job.index');
@@ -109,6 +113,7 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
+        $job->update(['status' => 'dihapus']);
         $job->delete();
 
         return redirect()->route('job.index')->with('success', 'Berhasil menghapus data lowongan.');

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->unsignedSmallInteger('height');
             $table->unsignedSmallInteger('weight');
+            $table->enum('blood_type', ['A', 'B', 'AB', 'O'])->nullable();
             $table->string('phone_number');
             $table->string('religion');
             $table->text('medical_history')->nullable();

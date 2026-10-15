@@ -76,6 +76,7 @@ class ApplicantController extends Controller
                 'facility_expectation' => $request['facility_expectation'] ?? null,
                 'ready_to_relocate' => $request['ready_to_relocate'],
                 'ready_to_travel' => $request['ready_to_travel'],
+                'job_source' => $request['job_source'],
                 'reference_by' => $request['reference_by'] ?? null,
             ]);
             if ($request->validated('has_worked_in_sosro')) {
@@ -115,6 +116,11 @@ class ApplicantController extends Controller
     {
         DB::transaction(function () use ($request, $applicant) {
             $validated = $request->validated();
+
+            if ($request->hasFile('photo')) {
+                $validated['photo_url'] = $request->file('photo')->store('applicants', 'public');
+            }
+
             $applicant->update($validated);
 
             if ($request->has('division_preferences')) {
@@ -123,6 +129,18 @@ class ApplicantController extends Controller
                     ['interests' => $request->validated('division_preferences')]
                 );
             }
+
+            ApplicantExpectation::updateOrCreate(
+                ['applicant_id' => $applicant->id],
+                [
+                    'salary_expectation' => $request->validated('salary_expectation'),
+                    'facility_expectation' => $request->validated('facility_expectation'),
+                    'ready_to_relocate' => $request->validated('ready_to_relocate'),
+                    'ready_to_travel' => $request->validated('ready_to_travel'),
+                    'job_source' => $request->validated('job_source'),
+                    'reference_by' => $request->validated('reference_by'),
+                ]
+            );
         });
 
         $redirectStep = $request->input('redirect_step', 'family');

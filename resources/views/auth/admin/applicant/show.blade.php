@@ -262,6 +262,13 @@
                                 </div>
 
                                 <div>
+                                    <p class="text-xs text-slate-400">Golongan Darah</p>
+                                    <p class="mt-1 text-sm font-medium text-slate-700">
+                                        {{ $applicant->blood_type ? 'Golongan ' . $applicant->blood_type : '-' }}
+                                    </p>
+                                </div>
+
+                                <div>
                                     <p class="text-xs text-slate-400">SIM</p>
                                     <p class="mt-1 text-sm font-medium text-slate-700">
                                         @if (is_array($applicant->driver_licenses))
@@ -772,7 +779,14 @@
                                                     <tr class="transition hover:bg-slate-50/70">
 
                                                         <td class="px-5 py-4 text-sm font-semibold text-slate-800">
-                                                            {{ $family->name ?? '-' }}
+                                                            <div class="flex items-center gap-2">
+                                                                <span>{{ $family->name ?? '-' }}</span>
+                                                                @if ($family->status === 'deceased')
+                                                                    <span class="inline-flex rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-600">Meninggal (+)</span>
+                                                                @elseif ($family->status === 'divorced')
+                                                                    <span class="inline-flex rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700">Cerai</span>
+                                                                @endif
+                                                            </div>
                                                         </td>
 
                                                         <td class="px-5 py-4 text-sm text-slate-600">
@@ -933,6 +947,68 @@
                             </div>
 
                         </section>
+
+                        {{-- Ekspektasi & Informasi Tambahan --}}
+                        @if ($applicant->expectation)
+                            <section class="mt-8 border-t border-slate-200 pt-8">
+                                <div class="mb-5">
+                                    <h2 class="text-lg font-bold text-slate-900">
+                                        Ekspektasi & Informasi Tambahan
+                                    </h2>
+                                    <p class="mt-1 text-sm text-slate-500">
+                                        Ekspektasi gaji, fasilitas, kesiapan, dan sumber informasi kandidat.
+                                    </p>
+                                </div>
+
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                        <p class="text-xs text-slate-400">Ekspektasi Gaji</p>
+                                        <p class="mt-1 text-sm font-semibold text-slate-800">
+                                            {{ $applicant->expectation->salary_expectation ? 'Rp ' . number_format($applicant->expectation->salary_expectation, 0, ',', '.') : '-' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                        <p class="text-xs text-slate-400">Sumber Informasi Lowongan</p>
+                                        <p class="mt-1 text-sm font-semibold text-slate-800">
+                                            {{ $applicant->expectation->job_source ?? '-' }}
+                                        </p>
+                                    </div>
+
+                                    @if ($applicant->expectation->reference_by)
+                                        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:col-span-2">
+                                            <p class="text-xs text-slate-400">Referensi Karyawan (Referral)</p>
+                                            <p class="mt-1 text-sm font-semibold text-slate-800">
+                                                {{ $applicant->expectation->reference_by }}
+                                            </p>
+                                        </div>
+                                    @endif
+
+                                    <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                        <p class="text-xs text-slate-400">Kesiapan Relokasi</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700">
+                                            {{ $applicant->expectation->ready_to_relocate ? 'Bersedia' : 'Tidak Bersedia' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="rounded-xl border border-slate-200 bg-white p-4">
+                                        <p class="text-xs text-slate-400">Kesiapan Dinas Luar Kota</p>
+                                        <p class="mt-1 text-sm font-medium text-slate-700">
+                                            {{ $applicant->expectation->ready_to_travel ? 'Bersedia' : 'Tidak Bersedia' }}
+                                        </p>
+                                    </div>
+
+                                    @if ($applicant->expectation->facility_expectation)
+                                        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:col-span-2">
+                                            <p class="text-xs text-slate-400">Ekspektasi Fasilitas</p>
+                                            <p class="mt-1 text-sm font-medium text-slate-700">
+                                                {{ $applicant->expectation->facility_expectation }}
+                                            </p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </section>
+                        @endif
 
                     </main>
 

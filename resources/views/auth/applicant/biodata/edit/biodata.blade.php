@@ -259,6 +259,24 @@
                         </div>
 
                         <div class="space-y-1.5">
+                            <label for="blood_type" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Golongan Darah <span class="text-[#B11116]">*</span>
+                            </label>
+                            <select id="blood_type" name="blood_type" required
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('blood_type') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                <option value="" disabled {{ old('blood_type', $applicant->blood_type) ? '' : 'selected' }}>Pilih Golongan Darah</option>
+                                @foreach (['A', 'B', 'AB', 'O'] as $blood)
+                                    <option value="{{ $blood }}" {{ old('blood_type', $applicant->blood_type) == $blood ? 'selected' : '' }}>
+                                        Golongan {{ $blood }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('blood_type')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="space-y-1.5">
                             <label for="is_smoker" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Perokok? <span class="text-[#B11116]">*</span>
                             </label>

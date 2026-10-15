@@ -150,13 +150,28 @@
                             <input type="hidden" name="families[father][relationship]" value="father">
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="space-y-1.5 md:col-span-2">
+                                <div class="space-y-1.5">
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama
                                         Lengkap Ayah <span class="text-[#B11116]">*</span></label>
                                     <input type="text" name="families[father][name]" required
                                         value="{{ old('families.father.name', $father?->name) }}" placeholder="Nama Lengkap Ayah Kandung"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.name')
+                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Kondisi / Status <span class="text-[#B11116]">*</span></label>
+                                    @php
+                                        $fatherStatus = old('families.father.status', $father?->status ?? 'alive');
+                                    @endphp
+                                    <select name="families[father][status]" required
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.status') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        <option value="alive" {{ $fatherStatus === 'alive' ? 'selected' : '' }}>Masih Hidup</option>
+                                        <option value="deceased" {{ $fatherStatus === 'deceased' ? 'selected' : '' }}>Sudah Meninggal (+)</option>
+                                        <option value="divorced" {{ $fatherStatus === 'divorced' ? 'selected' : '' }}>Bercerai</option>
+                                    </select>
+                                    @error('families.father.status')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -233,13 +248,28 @@
                             <input type="hidden" name="families[mother][relationship]" value="mother">
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="space-y-1.5 md:col-span-2">
-                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama
-                                        Lengkap Ibu <span class="text-[#B11116]">*</span></label>
-                                    <input type="text" name="families[mother][name]" required
-                                        value="{{ old('families.mother.name', $mother?->name) }}" placeholder="Nama Lengkap Ibu Kandung"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                    @error('families.mother.name')
+                                <div class="space-y-1.5">
+                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama
+                                         Lengkap Ibu <span class="text-[#B11116]">*</span></label>
+                                     <input type="text" name="families[mother][name]" required
+                                         value="{{ old('families.mother.name', $mother?->name) }}" placeholder="Nama Lengkap Ibu Kandung"
+                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                     @error('families.mother.name')
+                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                     @enderror
+                                 </div>
+                                 <div class="space-y-1.5">
+                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Kondisi / Status <span class="text-[#B11116]">*</span></label>
+                                     @php
+                                         $motherStatus = old('families.mother.status', $mother?->status ?? 'alive');
+                                     @endphp
+                                     <select name="families[mother][status]" required
+                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.status') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        <option value="alive" {{ $motherStatus === 'alive' ? 'selected' : '' }}>Masih Hidup</option>
+                                        <option value="deceased" {{ $motherStatus === 'deceased' ? 'selected' : '' }}>Sudah Meninggal (+)</option>
+                                        <option value="divorced" {{ $motherStatus === 'divorced' ? 'selected' : '' }}>Bercerai</option>
+                                    </select>
+                                    @error('families.mother.status')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
                                 </div>

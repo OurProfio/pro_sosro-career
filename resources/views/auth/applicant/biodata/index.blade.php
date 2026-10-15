@@ -237,6 +237,10 @@
                                     {{ $applicant->weight }} kg</span>
                             </div>
                             <div class="flex justify-between py-1 border-b border-slate-200/60">
+                                <span class="text-slate-500">Gol. Darah</span>
+                                <span class="font-medium text-slate-800">{{ $applicant->blood_type ? 'Golongan ' . $applicant->blood_type : '-' }}</span>
+                            </div>
+                            <div class="flex justify-between py-1 border-b border-slate-200/60">
                                 <span class="text-slate-500">SIM</span>
                                 <span class="font-medium text-slate-800">
                                     @php
@@ -407,7 +411,14 @@
                             @foreach ($applicant->families as $fam)
                                 <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
                                     <div class="flex justify-between items-center">
-                                        <span class="font-bold text-slate-900">{{ $fam->name }}</span>
+                                        <div class="flex items-center gap-1.5 flex-wrap">
+                                            <span class="font-bold text-slate-900">{{ $fam->name }}</span>
+                                            @if ($fam->status === 'deceased')
+                                                <span class="px-1.5 py-0.5 bg-slate-200 text-slate-700 font-bold text-[9px] rounded">Meninggal (+)</span>
+                                            @elseif ($fam->status === 'divorced')
+                                                <span class="px-1.5 py-0.5 bg-amber-100 text-amber-700 font-bold text-[9px] rounded">Cerai</span>
+                                            @endif
+                                        </div>
                                         <span
                                             class="px-2 py-0.5 bg-red-100 text-red-700 font-bold text-[9px] rounded uppercase">
                                             @switch($fam->relationship)

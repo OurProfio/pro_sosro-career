@@ -5,6 +5,7 @@ use App\Mail\AcceptedKpwMail;
 use App\Mail\InterviewOfflineMail;
 use App\Mail\InterviewOnlineMail;
 use App\Mail\RejectedMail;
+use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\Job;
 use App\Models\Office;
@@ -178,4 +179,45 @@ it('forbids applicants from updating applications', function () {
         ->assertForbidden();
 
     expect($this->application->fresh()->status)->toBe('pending');
+});
+
+it('releases quota when an application is rejected so applicant can apply to another job', function () {
+    $applicantUser = User::factory()->create();
+    $applicant = Applicant::factory()->create(['user_id' => $applicantUser->id]);
+
+    $jobs = Job::factory()->count(4)->create([
+        'status' => 'aktif',
+        'opening_date' => now()->subDay()->toDateString(),
+        'closing_date' => now()->addMonth()->toDateString(),
+    ]);
+
+    // Create 3 active applications
+    $app1 = Application::create(['applicant_id' => $applicant->id, 'job_id' => $jobs[0]->id, 'status' => 'pending']);
+    $app2 = Application::create(['applicant_id' => $applicant->id, 'job_id' => $jobs[1]->id, 'status' => 'pending']);
+    $app3 = Application::create(['applicant_id' => $applicant->id, 'job_id' => $jobs[2]->id, 'status' => 'pending']);
+
+    // Attempting to apply to 4th job should fail due to quota
+    $this->actingAs($applicantUser)
+        ->post(route('applications.store'), ['job_id' => $jobs[3]->id])
+        ->assertSessionHas('error', 'Anda sudah mencapai batas maksimal 3 lamaran aktif yang sedang berjalan.');
+
+    // Admin rejects application 1
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStatus', $app1), [
+            'status' => 'rejected',
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($app1->fresh()->status)->toBe('rejected');
+    expect(Application::where('applicant_id', $applicant->id)->count())->toBe(3); // Tetap tersimpan sebagai history
+
+    // Applicant should now be able to apply to the 4th job
+    $this->actingAs($applicantUser)
+        ->post(route('applications.store'), ['job_id' => $jobs[3]->id])
+        ->assertRedirect(route('applications.index'))
+        ->assertSessionHas('success', 'Berhasil melamar pekerjaan.');
+
+    // Total history is now 4, but only 3 are active
+    expect(Application::where('applicant_id', $applicant->id)->count())->toBe(4);
+    expect(Application::where('applicant_id', $applicant->id)->where('status', '!=', 'rejected')->count())->toBe(3);
 });

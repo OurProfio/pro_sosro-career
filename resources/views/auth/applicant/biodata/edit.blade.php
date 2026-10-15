@@ -70,7 +70,7 @@
             </ol>
         </div>
 
-        <form action="{{ route('biodata.update', $applicant->id) }}" method="POST" id="biodataForm" novalidate>
+        <form action="{{ route('biodata.update', $applicant->id) }}" method="POST" id="biodataForm" enctype="multipart/form-data" novalidate>
             @csrf
             @method('PUT')
             <input type="hidden" name="redirect_step" id="redirect_step" value="family">
@@ -85,6 +85,69 @@
                             Perbarui informasi identitas diri Anda secara akurat sesuai dengan dokumen resmi (KTP).
                         </p>
                     </header>
+
+                    <!-- SEKSI UPLOAD FOTO PROFIL -->
+                    <div class="mb-8 p-6 bg-gray-50/80 rounded-2xl border border-gray-200/80">
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">
+                            Pas Foto Terbaru
+                        </label>
+                        <div class="flex flex-col sm:flex-row items-center gap-6">
+                            <!-- Preview Image Container -->
+                            <div class="relative group shrink-0">
+                                @php
+                                    $savedPhoto = $applicant->photo_url ?? null;
+                                @endphp
+                                <div class="w-32 h-40 rounded-xl overflow-hidden border-2 border-dashed border-gray-300 bg-white flex items-center justify-center shadow-inner relative"
+                                    id="photoPreviewContainer">
+                                    <img id="photoPreview" src="{{ $savedPhoto ? asset('storage/' . $savedPhoto) : '' }}"
+                                        alt="Pratinjau Foto"
+                                        class="w-full h-full object-cover {{ $savedPhoto ? '' : 'hidden' }}">
+
+                                    <div id="photoPlaceholder"
+                                        class="flex flex-col items-center justify-center p-3 text-center text-gray-400 {{ $savedPhoto ? 'hidden' : '' }}">
+                                        <svg class="w-10 h-10 mb-1" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        <span class="text-[10px] font-semibold uppercase tracking-wider">Foto Pelamar</span>
+                                    </div>
+                                </div>
+                                <button type="button" id="btnRemovePhoto" title="Hapus foto"
+                                    class="hidden absolute -top-2 -right-2 bg-red-600 hover:bg-red-700 text-white p-1.5 rounded-full shadow-md transition-all cursor-pointer">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                            d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- File Upload Inputs & Requirements -->
+                            <div class="flex-1 space-y-3 text-center sm:text-left">
+                                <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
+                                    <label for="photo"
+                                        class="px-4 py-2.5 bg-white hover:bg-gray-100 text-gray-700 font-bold text-xs rounded-xl border border-gray-300 transition-all cursor-pointer inline-flex items-center gap-2 shadow-sm active:scale-95">
+                                        <svg class="w-4 h-4 text-[#B11116]" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        Pilih Berkas Foto
+                                    </label>
+                                    <input id="photo" name="photo" type="file"
+                                        accept="image/png, image/jpeg, image/jpg" class="hidden">
+                                </div>
+                                <p class="text-xs text-gray-500 leading-relaxed">
+                                    Unggah pas foto formal berpakaian rapi dengan latar belakang polos. Kosongkan jika tidak ingin mengubah foto.<br>
+                                    Format: <strong class="text-gray-700">JPG, JPEG, PNG</strong> (Maksimal: <strong
+                                        class="text-gray-700">2MB</strong>).
+                                </p>
+                                @error('photo')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1.5">
@@ -270,6 +333,24 @@
                         </div>
 
                         <div class="space-y-1.5">
+                            <label for="blood_type" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Golongan Darah <span class="text-[#B11116]">*</span>
+                            </label>
+                            <select id="blood_type" name="blood_type" required
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('blood_type') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                <option value="" disabled {{ old('blood_type', $applicant->blood_type) ? '' : 'selected' }}>Pilih Golongan Darah</option>
+                                @foreach (['A', 'B', 'AB', 'O'] as $blood)
+                                    <option value="{{ $blood }}" {{ old('blood_type', $applicant->blood_type) == $blood ? 'selected' : '' }}>
+                                        Golongan {{ $blood }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('blood_type')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="space-y-1.5">
                             <label for="is_smoker" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Perokok? <span class="text-[#B11116]">*</span>
                             </label>
@@ -405,6 +486,155 @@
                             @error('medical_history')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
+                        </div>
+                    </div>
+
+                    <div class="pt-7 border-t border-gray-100">
+                        <div class="mb-6">
+                            <h2 class="text-base font-bold text-gray-900">Ekspektasi & Informasi Tambahan</h2>
+                            <p class="text-xs text-gray-500 mt-0.5">Berikan gambaran mengenai ekspektasi kerja dan referensi Anda.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Salary Expectation -->
+                            <div class="space-y-1.5">
+                                <label for="salary_expectation"
+                                    class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Ekspektasi Gaji (Rp/Bulan) <span class="text-[#B11116]">*</span>
+                                </label>
+                                <div class="relative">
+                                    <span
+                                        class="absolute inset-y-0 left-0 flex items-center pl-4 text-xs font-bold text-gray-400">Rp</span>
+                                    <input id="salary_expectation" name="salary_expectation" type="text"
+                                        inputmode="numeric" required
+                                        value="{{ old('salary_expectation', $applicant->expectation->salary_expectation ?? '') }}"
+                                        oninput="formatRupiahInput(this)" placeholder="0"
+                                        class="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border @error('salary_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                </div>
+                                @error('salary_expectation')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Job Source (Sumber Informasi Lowongan) -->
+                            <div class="space-y-1.5">
+                                <label for="job_source"
+                                    class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Sumber Informasi Lowongan <span class="text-[#B11116]">*</span>
+                                </label>
+                                @php
+                                    $jobSources = [
+                                        'Career Page',
+                                        'Jobfair',
+                                        'Jobstreet',
+                                        'KitaLulus',
+                                        'LinkedIn',
+                                        'Approach by HR',
+                                        'Social Media',
+                                        'Instagram Career',
+                                        'University Job Portal',
+                                        'Referral',
+                                    ];
+                                    $selectedJobSource = old('job_source', $applicant->expectation->job_source ?? '');
+                                @endphp
+                                <select id="job_source" name="job_source" required onchange="toggleReferralInput(this.value)"
+                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('job_source') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    <option value="" disabled {{ $selectedJobSource ? '' : 'selected' }}>Pilih Sumber Informasi</option>
+                                    @foreach ($jobSources as $source)
+                                        <option value="{{ $source }}" {{ $selectedJobSource == $source ? 'selected' : '' }}>
+                                            {{ $source }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('job_source')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Reference By (Tampil Jika Memilih Referral) -->
+                            <div id="referralWrapper" class="space-y-1.5 {{ $selectedJobSource === 'Referral' ? '' : 'hidden' }}">
+                                <label for="reference_by"
+                                    class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Nama Lengkap Karyawan (Pemberi Referensi) <span class="text-[#B11116]">*</span>
+                                </label>
+                                <input id="reference_by" name="reference_by" type="text"
+                                    value="{{ old('reference_by', $applicant->expectation->reference_by ?? '') }}"
+                                    placeholder="Masukkan Nama Lengkap Karyawan"
+                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('reference_by') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                @error('reference_by')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Facility Expectation -->
+                            <div class="space-y-1.5 md:col-span-2">
+                                <label for="facility_expectation"
+                                    class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Ekspektasi Fasilitas (Opsional)
+                                </label>
+                                <textarea id="facility_expectation" name="facility_expectation" rows="2"
+                                    placeholder="Tuliskan ekspektasi fasilitas seperti tunjangan kesehatan, mess, laptop kantor, dll."
+                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('facility_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('facility_expectation', $applicant->expectation->facility_expectation ?? '') }}</textarea>
+                                @error('facility_expectation')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Ready to Relocate -->
+                            <div class="space-y-1.5">
+                                <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Bersedia Tempatkan/Relokasi? <span class="text-[#B11116]">*</span>
+                                </span>
+                                <div class="flex items-center gap-6 py-2">
+                                    <label for="relocate_yes" class="inline-flex items-center cursor-pointer group py-1">
+                                        <input id="relocate_yes" type="radio" name="ready_to_relocate" value="1"
+                                            required
+                                            {{ old('ready_to_relocate', (string) ($applicant->expectation->ready_to_relocate ?? '')) === '1' ? 'checked' : '' }}
+                                            class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                        <span
+                                            class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Ya</span>
+                                    </label>
+                                    <label for="relocate_no" class="inline-flex items-center cursor-pointer group py-1">
+                                        <input id="relocate_no" type="radio" name="ready_to_relocate" value="0"
+                                            required
+                                            {{ old('ready_to_relocate', (string) ($applicant->expectation->ready_to_relocate ?? '')) === '0' ? 'checked' : '' }}
+                                            class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                        <span
+                                            class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Tidak</span>
+                                    </label>
+                                </div>
+                                @error('ready_to_relocate')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <!-- Ready to Travel -->
+                            <div class="space-y-1.5">
+                                <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Bersedia Perjalanan Dinas? <span class="text-[#B11116]">*</span>
+                                </span>
+                                <div class="flex items-center gap-6 py-2">
+                                    <label for="travel_yes" class="inline-flex items-center cursor-pointer group py-1">
+                                        <input id="travel_yes" type="radio" name="ready_to_travel" value="1"
+                                            required
+                                            {{ old('ready_to_travel', (string) ($applicant->expectation->ready_to_travel ?? '')) === '1' ? 'checked' : '' }}
+                                            class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                        <span
+                                            class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Ya</span>
+                                    </label>
+                                    <label for="travel_no" class="inline-flex items-center cursor-pointer group py-1">
+                                        <input id="travel_no" type="radio" name="ready_to_travel" value="0"
+                                            required
+                                            {{ old('ready_to_travel', (string) ($applicant->expectation->ready_to_travel ?? '')) === '0' ? 'checked' : '' }}
+                                            class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                        <span
+                                            class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Tidak</span>
+                                    </label>
+                                </div>
+                                @error('ready_to_travel')
+                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
                         </div>
                     </div>
 
@@ -584,6 +814,33 @@
     </div>
 
     <script>
+        function formatRupiahInput(input) {
+            let value = input.value.replace(/[^0-9]/g, '');
+            if (value) {
+                input.value = new Intl.NumberFormat('id-ID').format(value);
+            } else {
+                input.value = '';
+            }
+        }
+
+        function toggleReferralInput(value) {
+            const referralWrapper = document.getElementById('referralWrapper');
+            const referenceInput = document.getElementById('reference_by');
+            if (!referralWrapper) return;
+            if (value === 'Referral') {
+                referralWrapper.classList.remove('hidden');
+                if (referenceInput) {
+                    referenceInput.setAttribute('required', 'required');
+                    referenceInput.focus();
+                }
+            } else {
+                referralWrapper.classList.add('hidden');
+                if (referenceInput) {
+                    referenceInput.removeAttribute('required');
+                }
+            }
+        }
+
         function goToStep(step) {
             const redirectInput = document.getElementById('redirect_step');
             if (redirectInput) {
@@ -595,11 +852,52 @@
                 if (biodataForm.reportValidity && !biodataForm.reportValidity()) {
                     return;
                 }
+                const salaryInput = document.getElementById('salary_expectation');
+                if (salaryInput) {
+                    salaryInput.value = salaryInput.value.replace(/[^0-9]/g, '');
+                }
                 biodataForm.submit();
             }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // PHOTO PREVIEW LOGIC
+            const photoInput = document.getElementById('photo');
+            const photoPreview = document.getElementById('photoPreview');
+            const photoPlaceholder = document.getElementById('photoPlaceholder');
+            const btnRemovePhoto = document.getElementById('btnRemovePhoto');
+
+            if (photoPreview && photoPreview.getAttribute('src') !== '') {
+                if (btnRemovePhoto) btnRemovePhoto.classList.remove('hidden');
+            }
+
+            if (photoInput) {
+                photoInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            photoPreview.src = e.target.result;
+                            photoPreview.classList.remove('hidden');
+                            if (photoPlaceholder) photoPlaceholder.classList.add('hidden');
+                            if (btnRemovePhoto) btnRemovePhoto.classList.remove('hidden');
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            if (btnRemovePhoto) {
+                btnRemovePhoto.addEventListener('click', function() {
+                    if (photoInput) photoInput.value = '';
+                    photoPreview.src = '';
+                    photoPreview.classList.add('hidden');
+                    if (photoPlaceholder) photoPlaceholder.classList.remove('hidden');
+                    btnRemovePhoto.classList.add('hidden');
+                });
+            }
+
+            // SAME ADDRESS CHECKBOX
             const sameAddressCheckbox = document.getElementById('sameAddressCheckbox');
             const addressKtp = document.getElementById('address_ktp');
             const addressDomisili = document.getElementById('address_domisili');
@@ -638,6 +936,11 @@
                 syncSameAddress();
             }
 
+            const salaryInput = document.getElementById('salary_expectation');
+            if (salaryInput && salaryInput.value) {
+                formatRupiahInput(salaryInput);
+            }
+
             const biodataForm = document.getElementById('biodataForm');
             const btnSubmit = document.getElementById('btnSubmit');
             const btnText = document.getElementById('btnText');
@@ -646,6 +949,9 @@
 
             if (biodataForm && btnSubmit) {
                 biodataForm.addEventListener('submit', function() {
+                    if (salaryInput) {
+                        salaryInput.value = salaryInput.value.replace(/[^0-9]/g, '');
+                    }
                     btnSubmit.disabled = true;
                     if (btnText) btnText.classList.add('hidden');
                     if (btnArrow) btnArrow.classList.add('hidden');

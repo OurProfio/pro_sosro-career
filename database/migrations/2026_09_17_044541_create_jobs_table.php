@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('description');
             $table->string('qualification');
             $table->enum('status', ['aktif', 'nonaktif', 'dihapus', 'selesai'])->default('aktif');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

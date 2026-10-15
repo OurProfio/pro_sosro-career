@@ -6,12 +6,13 @@ use Database\Factories\JobFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable('office_id', 'admin_id', 'title', 'category', 'occupation', 'type', 'location', 'description', 'qualification', 'opening_date', 'closing_date', 'status')]
 class Job extends Model
 {
     /** @use HasFactory<JobFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     public function office()
     {

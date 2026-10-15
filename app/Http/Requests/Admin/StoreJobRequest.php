@@ -31,9 +31,8 @@ class StoreJobRequest extends FormRequest
             'location' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
-            'opening_date' => ['required', 'date'],
+            'opening_date' => ['required', 'date', 'after_or_equal:today'],
             'closing_date' => ['required', 'date', 'after_or_equal:opening_date'],
-            'status' => ['required', 'in:aktif,nonaktif,dihapus,selesai'],
         ];
     }
 
@@ -62,11 +61,10 @@ class StoreJobRequest extends FormRequest
             'qualification.string' => 'Kualifikasi pelamar harus berupa teks.',
             'opening_date.required' => 'Tanggal buka lowongan wajib diisi.',
             'opening_date.date' => 'Format tanggal buka lowongan tidak valid.',
+            'opening_date.after_or_equal' => 'Tanggal buka lowongan harus hari ini atau tanggal yang akan datang.',
             'closing_date.required' => 'Tanggal tutup lowongan wajib diisi.',
             'closing_date.date' => 'Format tanggal tutup lowongan tidak valid.',
             'closing_date.after_or_equal' => 'Tanggal tutup tidak boleh sebelum tanggal buka.',
-            'status.required' => 'Status lowongan wajib dipilih.',
-            'status.in' => 'Status lowongan yang dipilih tidak valid.',
         ];
     }
 }

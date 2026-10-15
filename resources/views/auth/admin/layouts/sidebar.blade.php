@@ -39,7 +39,7 @@
                      <i data-lucide="building-2"
                          class="w-4 h-4 shrink-0 transition duration-75 {{ $isOfficeActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600' }}"></i>
 
-                     <span class="flex-1 ms-3 whitespace-nowrap">Data Kantor</span>
+                     <span class="flex-1 ms-3 whitespace-nowrap">Kantor</span>
 
                      @if ($isOfficeActive)
                          <span class="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
@@ -58,7 +58,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Admin
+                         Admin
                      </span>
 
                      @if ($isAdminActive)
@@ -79,7 +79,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Applicant
+                         Applicant
                      </span>
 
                      @if ($isApplicantAccountActive)
@@ -99,7 +99,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Users
+                         Users
                      </span>
 
                      @if ($isUserActive)
@@ -119,7 +119,7 @@
                      </i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Divisi
+                         Divisi
                      </span>
 
                      @if ($isDivisionActive)
@@ -139,7 +139,7 @@
                          class="w-4 h-4 shrink-0 transition duration-75 {{ $isJobActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600' }}"></i>
 
                      <span class="flex-1 ms-3 whitespace-nowrap">
-                         Data Lowongan
+                         Lowongan
                      </span>
 
                      @if ($isJobActive)

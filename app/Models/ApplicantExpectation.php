@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
     'facility_expectation',
     'ready_to_relocate',
     'ready_to_travel',
+    'job_source',
     'reference_by',
 )]
 class ApplicantExpectation extends Model

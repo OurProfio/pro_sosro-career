@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
     'date_of_birth',
     'height',
     'weight',
+    'blood_type',
     'phone_number',
     'religion',
     'medical_history',

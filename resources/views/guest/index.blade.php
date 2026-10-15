@@ -172,19 +172,27 @@
                             @auth
                                 @php
                                     $applicant = auth()->user()->applicant;
-                                    $sudahMelamar = $applicant
+                                    $applicationExisting = $applicant
                                         ? \App\Models\Application::where('applicant_id', $applicant->id)
                                             ->where('job_id', $job->id)
-                                            ->exists()
-                                        : false;
+                                            ->first()
+                                        : null;
                                 @endphp
 
-                                @if ($sudahMelamar)
-                                    <button disabled aria-disabled="true"
-                                        class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
-                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
-                                        Sudah dilamar
-                                    </button>
+                                @if ($applicationExisting)
+                                    @if ($applicationExisting->status === 'rejected')
+                                        <button disabled aria-disabled="true"
+                                            class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-rose-50 px-5 py-2.5 text-sm font-semibold text-rose-800 ring-1 ring-inset ring-rose-200">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                                            Lamaran Tidak Terpilih
+                                        </button>
+                                    @else
+                                        <button disabled aria-disabled="true"
+                                            class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
+                                            Sudah dilamar
+                                        </button>
+                                    @endif
                                 @else
                                     <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
                                         @csrf

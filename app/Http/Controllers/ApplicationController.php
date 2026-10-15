@@ -59,8 +59,24 @@ class ApplicationController extends Controller
             return redirect()->back()->with('error', 'Lowongan pekerjaan ini sudah tidak aktif.');
         }
 
-        if (Application::where('applicant_id', auth()->user()->applicant->id)->count() === 3) {
-            return redirect()->back()->with('error', 'Anda sudah mencapai batas maksimal melamar pekerjaan (3 kali).');
+        $existingApplication = Application::where('applicant_id', auth()->user()->applicant->id)
+            ->where('job_id', $job->id)
+            ->first();
+
+        if ($existingApplication) {
+            if ($existingApplication->status === 'rejected') {
+                return redirect()->back()->with('error', 'Anda sebelumnya telah melamar posisi ini dan tidak terpilih.');
+            }
+
+            return redirect()->back()->with('error', 'Anda sudah melamar posisi pekerjaan ini.');
+        }
+
+        $activeApplicationsCount = Application::where('applicant_id', auth()->user()->applicant->id)
+            ->where('status', '!=', 'rejected')
+            ->count();
+
+        if ($activeApplicationsCount >= 3) {
+            return redirect()->back()->with('error', 'Anda sudah mencapai batas maksimal 3 lamaran aktif yang sedang berjalan.');
         }
 
         Application::create([

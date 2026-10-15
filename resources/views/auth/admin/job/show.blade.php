@@ -146,7 +146,75 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mt-10">
+    @php
+        $totalApplicants = $job->applications->count();
+        $acceptedApplicants = $job->applications->where('status', 'accepted')->count();
+        $rejectedApplicants = $job->applications->where('status', 'rejected')->count();
+        $inProgressApplicants = $job->applications->whereNotIn('status', ['accepted', 'rejected'])->count();
+    @endphp
+
+    <div class="mt-8">
+        <div class="mb-4">
+            <h3 class="text-base font-bold text-slate-800">Statistik Pelamar Lowongan</h3>
+            <p class="text-xs text-slate-500">Ringkasan kandidat yang telah mendaftar pada lowongan ini.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pelamar</p>
+                    <p class="mt-1.5 text-2xl font-extrabold text-slate-900">{{ number_format($totalApplicants, 0, ',', '.') }}</p>
+                    <p class="mt-1 text-[11px] text-slate-400">Total lamaran masuk</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-amber-200/80 p-5 shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-amber-600 uppercase tracking-wider">Dalam Proses</p>
+                    <p class="mt-1.5 text-2xl font-extrabold text-slate-900">{{ number_format($inProgressApplicants, 0, ',', '.') }}</p>
+                    <p class="mt-1 text-[11px] text-slate-400">Sedang seleksi / review</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-emerald-200/80 p-5 shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Diterima (Accepted)</p>
+                    <p class="mt-1.5 text-2xl font-extrabold text-slate-900">{{ number_format($acceptedApplicants, 0, ',', '.') }}</p>
+                    <p class="mt-1 text-[11px] text-slate-400">Lolos seleksi akhir</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-rose-200/80 p-5 shadow-xs flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Ditolak (Rejected)</p>
+                    <p class="mt-1.5 text-2xl font-extrabold text-slate-900">{{ number_format($rejectedApplicants, 0, ',', '.') }}</p>
+                    <p class="mt-1 text-[11px] text-slate-400">Tidak lolos kualifikasi</p>
+                </div>
+                <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mt-8">
         <div class="px-6 py-5 border-b border-slate-200">
             <div>
                 <h2 class="text-lg font-bold text-slate-800">Daftar Applicant</h2>

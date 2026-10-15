@@ -9,14 +9,6 @@
                 <h2 class="text-lg font-bold text-slate-800">Daftar Pengguna System (Users)</h2>
                 <p class="text-xs text-slate-500">Kelola semua kredensial akun pengguna baik Admin maupun Applicant.</p>
             </div>
-            <a href="{{ route('user.create') }}"
-                class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors">
-                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                <span>Tambah Akun Applicant</span>
-            </a>
         </div>
 
         <div class="relative overflow-x-auto bg-white shadow-xs rounded-2xl border border-slate-200">
@@ -56,7 +48,7 @@
                             <td class="px-6 py-4">
                                 <span
                                     class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold uppercase {{ $user->role == 'admin' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200' }}">
-                                    {{ $user->role }}
+                                    {{ $user->role == 'admin' ? 'Admin' : 'Pelamar' }}
                                 </span>
                             </td>
 
