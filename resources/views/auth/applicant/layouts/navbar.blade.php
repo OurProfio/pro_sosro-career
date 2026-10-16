@@ -53,6 +53,18 @@
                         Dashboard Pelamar
                     </a>
 
+                    <a href="{{ route('applications.index') }}"
+                        class="group flex items-center px-4 py-2.5 text-sm font-semibold text-gray-700 hover:bg-red-50 transition">
+                        <div
+                            class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center mr-3 group-hover:bg-gray-200 transition">
+                            <svg class="size-4 text-[#B11116]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                        </div>
+                        Riwayat Lamaran
+                    </a>
+
                     <hr class="my-1 border-gray-50">
 
                     <form method="POST" action="{{ route('auth.logout') }}">

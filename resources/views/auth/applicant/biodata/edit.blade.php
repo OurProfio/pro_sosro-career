@@ -156,9 +156,9 @@
                             </label>
                             <input id="nik" name="nik" type="text" inputmode="numeric" required
                                 pattern="[0-9]{16}" maxlength="16" value="{{ old('nik', $applicant->nik) }}"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="16 digit angka KTP"
+                                placeholder="16 digit angka KTP"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('nik') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span class="text-[11px] text-gray-400 block">Harus berisi 16 digit angka.</span>
+                            <span id="msg_nik" class="text-[11px] text-gray-400 block transition-colors">Harus berisi 16 digit angka.</span>
                             @error('nik')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -177,12 +177,17 @@
                         </div>
 
                         <div class="space-y-1.5">
-                            <label for="email" class="block text-xs font-bold text-gray-400 uppercase tracking-wider">
-                                Alamat Email
+                            <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Alamat Email Resmi <span class="text-[#B11116]">*</span>
                             </label>
-                            <input id="email" name="email" type="email"
-                                value="{{ old('email', $applicant->email) }}" readonly
-                                class="w-full px-4 py-2.5 bg-gray-50 text-gray-500 rounded-xl border border-gray-200 font-semibold text-sm cursor-not-allowed outline-none select-none">
+                            <input id="email" name="email" type="email" required
+                                value="{{ old('email', $applicant->email) }}"
+                                placeholder="nama@email.com"
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('email') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <span id="msg_email" class="text-[11px] text-gray-400 block transition-colors">Gunakan alamat email resmi aktif (contoh: nama@domain.com).</span>
+                            @error('email')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="space-y-1.5">
@@ -191,29 +196,46 @@
                                 No. Telepon / WA <span class="text-[#B11116]">*</span>
                             </label>
                             <input id="phone_number" name="phone_number" type="tel" inputmode="numeric" required
-                                pattern="[0-9]{10,15}" value="{{ old('phone_number', $applicant->phone_number) }}"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Contoh: 081234567890"
+                                maxlength="15" value="{{ old('phone_number', $applicant->phone_number) }}"
+                                placeholder="Contoh: 081234567890"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('phone_number') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <span id="msg_phone_number" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif WhatsApp (10-15 digit).</span>
                             @error('phone_number')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="space-y-4 md:col-span-2 pt-2 border-t border-gray-100">
-                            <div class="space-y-1.5">
-                                <label for="address_ktp"
-                                    class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                    Alamat Lengkap (Sesuai KTP) <span class="text-[#B11116]">*</span>
-                                </label>
-                                <textarea id="address_ktp" name="address_ktp" rows="3" required
-                                    placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
-                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', $applicant->address_ktp) }}</textarea>
-                                @error('address_ktp')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                                @enderror
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label for="address_ktp"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Alamat Lengkap (Sesuai KTP) <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <textarea id="address_ktp" name="address_ktp" rows="3" required
+                                        placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', $applicant->address_ktp) }}</textarea>
+                                    @error('address_ktp')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="postal_code_ktp"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Kode Pos KTP
+                                    </label>
+                                    <input id="postal_code_ktp" name="postal_code_ktp" type="text" inputmode="numeric" maxlength="5"
+                                        value="{{ old('postal_code_ktp', $applicant->postal_code_ktp ?? '') }}"
+                                        placeholder="Contoh: 12345"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('postal_code_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    <span id="msg_postal_code_ktp" class="text-[11px] text-gray-400 block transition-colors">5 digit kode pos.</span>
+                                    @error('postal_code_ktp')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
                             </div>
 
-                            <div class="space-y-2 pt-2">
+                            <div class="space-y-2 pt-2 border-t border-gray-100/60">
                                 <div class="flex items-center justify-between">
                                     <label for="address_domisili"
                                         class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -227,12 +249,30 @@
                                         <span class="ml-2 text-xs font-semibold text-gray-600">Sama dengan KTP</span>
                                     </label>
                                 </div>
-                                <textarea id="address_domisili" name="address_domisili" rows="2" required
-                                    placeholder="Alamat Domisili Tempat Tinggal Saat Ini"
-                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', $applicant->address_domisili) }}</textarea>
-                                @error('address_domisili')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                                @enderror
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <textarea id="address_domisili" name="address_domisili" rows="2" required
+                                            placeholder="Alamat Domisili Tempat Tinggal Saat Ini"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', $applicant->address_domisili) }}</textarea>
+                                        @error('address_domisili')
+                                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label for="postal_code_domisili"
+                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Kode Pos Domisili
+                                        </label>
+                                        <input id="postal_code_domisili" name="postal_code_domisili" type="text" inputmode="numeric" maxlength="5"
+                                            value="{{ old('postal_code_domisili', $applicant->postal_code_domisili ?? '') }}"
+                                            placeholder="Contoh: 12345"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('postal_code_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        <span id="msg_postal_code_domisili" class="text-[11px] text-gray-400 block transition-colors">5 digit kode pos.</span>
+                                        @error('postal_code_domisili')
+                                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -393,42 +433,63 @@
                             @enderror
                         </div>
 
-                        <div class="space-y-1.5 md:col-span-2 pt-2 border-t border-gray-100">
-                            <label for="marital_status"
-                                class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Status Pernikahan <span class="text-[#B11116]">*</span>
-                            </label>
-                            <select id="marital_status" name="marital_status" required
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_status') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                <option value="" disabled
-                                    {{ old('marital_status', $applicant->marital_status) ? '' : 'selected' }}>Pilih
-                                    Status</option>
-                                <option value="single"
-                                    {{ old('marital_status', $applicant->marital_status) == 'single' ? 'selected' : '' }}>
-                                    Belum Menikah</option>
-                                <option value="married"
-                                    {{ old('marital_status', $applicant->marital_status) == 'married' ? 'selected' : '' }}>
-                                    Sudah Menikah</option>
-                                <option value="divorced"
-                                    {{ old('marital_status', $applicant->marital_status) == 'divorced' ? 'selected' : '' }}>
-                                    Cerai Hidup</option>
-                                <option value="widowed"
-                                    {{ old('marital_status', $applicant->marital_status) == 'widowed' ? 'selected' : '' }}>
-                                    Cerai Mati</option>
-                            </select>
-                            @error('marital_status')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                            @enderror
+                        <div class="space-y-4 md:col-span-2 pt-2 border-t border-gray-100">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1.5">
+                                    <label for="marital_status"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Status Pernikahan <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <select id="marital_status" name="marital_status" required onchange="toggleMaritalDate(this.value)"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_status') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        <option value="" disabled
+                                            {{ old('marital_status', $applicant->marital_status) ? '' : 'selected' }}>Pilih Status</option>
+                                        <option value="single"
+                                            {{ old('marital_status', $applicant->marital_status) == 'single' ? 'selected' : '' }}>
+                                            Belum Menikah</option>
+                                        <option value="married"
+                                            {{ old('marital_status', $applicant->marital_status) == 'married' ? 'selected' : '' }}>
+                                            Sudah Menikah</option>
+                                        <option value="divorced"
+                                            {{ old('marital_status', $applicant->marital_status) == 'divorced' ? 'selected' : '' }}>
+                                            Cerai Hidup</option>
+                                        <option value="widowed"
+                                            {{ old('marital_status', $applicant->marital_status) == 'widowed' ? 'selected' : '' }}>
+                                            Cerai Mati</option>
+                                    </select>
+                                    @error('marital_status')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div id="maritalDateWrapper" class="space-y-1.5 {{ in_array(old('marital_status', $applicant->marital_status), ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
+                                    <label for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Tahun Menikah / Bercerai (Sejak Tahun)
+                                    </label>
+                                    <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
+                                        placeholder="Contoh: 2020"
+                                        value="{{ old('marital_date', $applicant->marital_date ? (strlen($applicant->marital_date) > 4 ? \Carbon\Carbon::parse($applicant->marital_date)->format('Y') : $applicant->marital_date) : '') }}"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    <span class="text-[11px] text-gray-400 block">Masukkan tahun (4 digit, contoh: 2020).</span>
+                                    @error('marital_date')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <div class="space-y-1.5">
                             <label for="instagram" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                URL Instagram
+                                Akun Instagram
                             </label>
-                            <input id="instagram" name="instagram" type="url"
-                                value="{{ old('instagram', $applicant->instagram) }}"
-                                placeholder="https://instagram.com/username"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('instagram') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-xs font-bold text-gray-400">@</span>
+                                <input id="instagram" name="instagram" type="text"
+                                    value="{{ old('instagram', $applicant->instagram) }}"
+                                    placeholder="username_anda"
+                                    class="w-full pl-9 pr-4 py-2.5 bg-white rounded-xl border @error('instagram') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            </div>
+                            <span class="text-[11px] text-gray-400 block">Cukup tulis username saja (tanpa link / URL).</span>
                             @error('instagram')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -436,15 +497,77 @@
 
                         <div class="space-y-1.5">
                             <label for="linkedin" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                URL LinkedIn
+                                Nama di LinkedIn
                             </label>
-                            <input id="linkedin" name="linkedin" type="url"
+                            <input id="linkedin" name="linkedin" type="text"
                                 value="{{ old('linkedin', $applicant->linkedin) }}"
-                                placeholder="https://linkedin.com/in/username"
+                                placeholder="Contoh: Budi Santoso"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('linkedin') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <span class="text-[11px] text-gray-400 block">Tulis nama akun Anda di LinkedIn (jangan gunakan link/URL).</span>
                             @error('linkedin')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
+                        </div>
+
+                        <!-- SEKSI KONTAK DARURAT (EMERGENCY CONTACT) -->
+                        <div class="md:col-span-2 p-5 bg-gray-50/90 rounded-2xl border border-gray-200/80 space-y-4">
+                            <div class="flex items-center gap-2">
+                                <div class="p-1.5 bg-red-100 text-[#B11116] rounded-lg">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs font-black uppercase tracking-wider text-gray-800">
+                                        Kontak Darurat (Emergency Contact) <span class="text-[#B11116]">*</span>
+                                    </h3>
+                                    <p class="text-[11px] text-gray-500">Wajib diisi: Keluarga atau kerabat terdekat yang dapat dihubungi saat situasi darurat.</p>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Nama Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_name" name="emergency_contact_name" type="text" required
+                                        value="{{ old('emergency_contact_name', $applicant->emergency_contact_name ?? '') }}"
+                                        placeholder="Nama Lengkap Kerabat"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('emergency_contact_name')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_relationship" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Hubungan <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <select id="emergency_contact_relationship" name="emergency_contact_relationship" required
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_relationship') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        <option value="" {{ old('emergency_contact_relationship', $applicant->emergency_contact_relationship ?? '') ? '' : 'selected' }}>Pilih Hubungan</option>
+                                        @foreach (['Orang Tua', 'Pasangan (Suami/Istri)', 'Saudara Kandung', 'Kerabat/Keluarga Besar'] as $rel)
+                                            <option value="{{ $rel }}" {{ old('emergency_contact_relationship', $applicant->emergency_contact_relationship ?? '') == $rel ? 'selected' : '' }}>{{ $rel }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('emergency_contact_relationship')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_phone" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        No. Telepon / WA <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_phone" name="emergency_contact_phone" type="tel" inputmode="numeric" required
+                                        maxlength="15"
+                                        value="{{ old('emergency_contact_phone', $applicant->emergency_contact_phone ?? '') }}"
+                                        placeholder="Contoh: 081234567890"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    <span id="msg_emergency_contact_phone" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif kerabat (10-15 digit).</span>
+                                    @error('emergency_contact_phone')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         @php
@@ -583,7 +706,7 @@
                             <!-- Ready to Relocate -->
                             <div class="space-y-1.5">
                                 <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                    Bersedia Tempatkan/Relokasi? <span class="text-[#B11116]">*</span>
+                                    Bersedia Ditempatkan Dimana Saja <span class="text-[#B11116]">*</span>
                                 </span>
                                 <div class="flex items-center gap-6 py-2">
                                     <label for="relocate_yes" class="inline-flex items-center cursor-pointer group py-1">
@@ -901,6 +1024,8 @@
             const sameAddressCheckbox = document.getElementById('sameAddressCheckbox');
             const addressKtp = document.getElementById('address_ktp');
             const addressDomisili = document.getElementById('address_domisili');
+            const postalKtp = document.getElementById('postal_code_ktp');
+            const postalDomisili = document.getElementById('postal_code_domisili');
 
             function syncSameAddress() {
                 if (!sameAddressCheckbox || !addressKtp || !addressDomisili) return;
@@ -910,10 +1035,24 @@
                     addressDomisili.readOnly = true;
                     addressDomisili.setAttribute('readonly', 'readonly');
                     addressDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+
+                    if (postalKtp && postalDomisili) {
+                        postalDomisili.value = postalKtp.value;
+                        postalDomisili.readOnly = true;
+                        postalDomisili.setAttribute('readonly', 'readonly');
+                        postalDomisili.classList.add('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                        validatePostal(postalDomisili, 'msg_postal_code_domisili');
+                    }
                 } else {
                     addressDomisili.readOnly = false;
                     addressDomisili.removeAttribute('readonly');
                     addressDomisili.classList.remove('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+
+                    if (postalDomisili) {
+                        postalDomisili.readOnly = false;
+                        postalDomisili.removeAttribute('readonly');
+                        postalDomisili.classList.remove('bg-gray-100', 'text-gray-500', 'cursor-not-allowed');
+                    }
                 }
             }
 
@@ -926,14 +1065,176 @@
                     }
                 });
 
-                addressDomisili.addEventListener('keydown', function(e) {
-                    if (sameAddressCheckbox.checked) {
-                        e.preventDefault();
+                if (postalKtp && postalDomisili) {
+                    postalKtp.addEventListener('input', function() {
+                        if (sameAddressCheckbox.checked) {
+                            postalDomisili.value = this.value;
+                            validatePostal(postalDomisili, 'msg_postal_code_domisili');
+                        }
+                    });
+                }
+
+                syncSameAddress();
+            }
+
+            // ================= REAL-TIME VALIDATION =================
+            function setFieldStatus(input, msgEl, isValid, message, isNeutral = false) {
+                if (!input || !msgEl) return;
+                msgEl.textContent = message;
+
+                input.classList.remove('border-red-500', 'ring-red-500', 'border-emerald-500', 'ring-emerald-500', 'border-amber-500', 'ring-amber-500');
+                msgEl.classList.remove('text-red-600', 'text-emerald-600', 'text-amber-600', 'text-gray-400');
+
+                if (isNeutral) {
+                    msgEl.classList.add('text-gray-400');
+                } else if (isValid) {
+                    input.classList.add('border-emerald-500');
+                    msgEl.classList.add('text-emerald-600');
+                } else {
+                    input.classList.add('border-red-500');
+                    msgEl.classList.add('text-red-600');
+                }
+            }
+
+            // 1. NIK Real-time (16 digits)
+            const nikInput = document.getElementById('nik');
+            const msgNik = document.getElementById('msg_nik');
+            function validateNik() {
+                if (!nikInput || !msgNik) return;
+                nikInput.value = nikInput.value.replace(/[^0-9]/g, '');
+                const len = nikInput.value.length;
+                if (len === 0) {
+                    setFieldStatus(nikInput, msgNik, false, 'Wajib diisi (tepat 16 digit angka KTP).', true);
+                } else if (len < 16) {
+                    setFieldStatus(nikInput, msgNik, false, `Masih kurang ${16 - len} digit lagi (${len}/16 digit).`);
+                } else if (len === 16) {
+                    setFieldStatus(nikInput, msgNik, true, '✓ NIK lengkap dan valid (16 digit).');
+                }
+            }
+            if (nikInput) {
+                nikInput.addEventListener('input', validateNik);
+                if (nikInput.value) validateNik();
+            }
+
+            // Email Real-time
+            const emailInput = document.getElementById('email');
+            const msgEmail = document.getElementById('msg_email');
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            function validateEmail() {
+                if (!emailInput || !msgEmail) return;
+                const val = emailInput.value.trim();
+                if (val.length === 0) {
+                    setFieldStatus(emailInput, msgEmail, false, 'Alamat email wajib diisi.', true);
+                } else if (!emailRegex.test(val)) {
+                    setFieldStatus(emailInput, msgEmail, false, 'Format email harus resmi & valid (contoh: nama@domain.com).');
+                } else {
+                    setFieldStatus(emailInput, msgEmail, true, '✓ Format email resmi valid.');
+                }
+            }
+            if (emailInput) {
+                emailInput.addEventListener('input', validateEmail);
+                if (emailInput.value) validateEmail();
+            }
+
+            // 2. Phone Number Real-time (10-15 digits)
+            const phoneInput = document.getElementById('phone_number');
+            const msgPhone = document.getElementById('msg_phone_number');
+            function validatePhone(input, msgEl, required = true) {
+                if (!input || !msgEl) return;
+                input.value = input.value.replace(/[^0-9]/g, '');
+                const len = input.value.length;
+                if (len === 0) {
+                    if (required) {
+                        setFieldStatus(input, msgEl, false, 'Wajib diisi (10 - 15 digit angka).', true);
+                    } else {
+                        setFieldStatus(input, msgEl, true, 'Nomor aktif WhatsApp (10-15 digit).', true);
+                    }
+                } else if (len < 10) {
+                    setFieldStatus(input, msgEl, false, `Masih kurang ${10 - len} digit lagi (minimal 10 digit, saat ini ${len}).`);
+                } else if (len <= 15) {
+                    setFieldStatus(input, msgEl, true, `✓ Nomor telepon valid (${len} digit).`);
+                } else {
+                    setFieldStatus(input, msgEl, false, `Nomor terlalu panjang (maksimal 15 digit, saat ini ${len}).`);
+                }
+            }
+            if (phoneInput) {
+                phoneInput.addEventListener('input', () => validatePhone(phoneInput, msgPhone, true));
+                if (phoneInput.value) validatePhone(phoneInput, msgPhone, true);
+            }
+
+            // 3. Emergency Contact Phone Real-time
+            const emgPhoneInput = document.getElementById('emergency_contact_phone');
+            const msgEmgPhone = document.getElementById('msg_emergency_contact_phone');
+            if (emgPhoneInput) {
+                emgPhoneInput.addEventListener('input', () => validatePhone(emgPhoneInput, msgEmgPhone, true));
+                if (emgPhoneInput.value) validatePhone(emgPhoneInput, msgEmgPhone, true);
+            }
+
+            // 4. Postal Code Real-time (5 digits)
+            function validatePostal(input, msgId) {
+                const msgEl = document.getElementById(msgId);
+                if (!input || !msgEl) return;
+                input.value = input.value.replace(/[^0-9]/g, '');
+                const len = input.value.length;
+                if (len === 0) {
+                    setFieldStatus(input, msgEl, true, '5 digit kode pos.', true);
+                } else if (len < 5) {
+                    setFieldStatus(input, msgEl, false, `Masih kurang ${5 - len} digit lagi (${len}/5 digit).`);
+                } else if (len === 5) {
+                    setFieldStatus(input, msgEl, true, '✓ Kode pos valid (5 digit).');
+                }
+            }
+            if (postalKtp) {
+                postalKtp.addEventListener('input', () => validatePostal(postalKtp, 'msg_postal_code_ktp'));
+                if (postalKtp.value) validatePostal(postalKtp, 'msg_postal_code_ktp');
+            }
+            if (postalDomisili) {
+                postalDomisili.addEventListener('input', () => validatePostal(postalDomisili, 'msg_postal_code_domisili'));
+                if (postalDomisili.value) validatePostal(postalDomisili, 'msg_postal_code_domisili');
+            }
+
+            // 5. Height & Weight Real-time
+            const heightInput = document.getElementById('height');
+            const weightInput = document.getElementById('weight');
+            if (heightInput) {
+                heightInput.addEventListener('input', function() {
+                    const val = parseInt(this.value, 10);
+                    if (this.value && (val < 100 || val > 250)) {
+                        this.classList.add('border-red-500');
+                    } else {
+                        this.classList.remove('border-red-500');
                     }
                 });
+            }
+            if (weightInput) {
+                weightInput.addEventListener('input', function() {
+                    const val = parseInt(this.value, 10);
+                    if (this.value && (val < 30 || val > 250)) {
+                        this.classList.add('border-red-500');
+                    } else {
+                        this.classList.remove('border-red-500');
+                    }
+                });
+            }
 
-                // Inisialisasi saat halaman pertama kali dimuat
-                syncSameAddress();
+            // 6. Social Media Username Real-time sanitize
+            const igInput = document.getElementById('instagram');
+            const liInput = document.getElementById('linkedin');
+            if (igInput) {
+                igInput.addEventListener('input', function() {
+                    let v = this.value.trim();
+                    v = v.replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@+/, '').replace(/\/$/, '');
+                    if (v !== this.value) this.value = v;
+                });
+            }
+            if (liInput) {
+                liInput.addEventListener('input', function() {
+                    let v = this.value;
+                    if (/^https?:\/\//i.test(v)) {
+                        v = v.replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, '').replace(/^https?:\/\/(www\.)?linkedin\.com\//i, '').replace(/^@+/, '').replace(/\/$/, '');
+                    }
+                    if (v !== this.value) this.value = v;
+                });
             }
 
             const salaryInput = document.getElementById('salary_expectation');
@@ -948,7 +1249,21 @@
             const btnArrow = document.getElementById('btnArrow');
 
             if (biodataForm && btnSubmit) {
-                biodataForm.addEventListener('submit', function() {
+                biodataForm.addEventListener('submit', function(e) {
+                    if (nikInput && nikInput.value.length !== 16) {
+                        e.preventDefault();
+                        nikInput.focus();
+                        validateNik();
+                        alert('NIK harus terdiri dari tepat 16 digit angka.');
+                        return false;
+                    }
+                    if (phoneInput && (phoneInput.value.length < 10 || phoneInput.value.length > 15)) {
+                        e.preventDefault();
+                        phoneInput.focus();
+                        validatePhone(phoneInput, msgPhone, true);
+                        alert('Nomor telepon harus antara 10 sampai 15 digit angka.');
+                        return false;
+                    }
                     if (salaryInput) {
                         salaryInput.value = salaryInput.value.replace(/[^0-9]/g, '');
                     }
@@ -959,5 +1274,17 @@
                 });
             }
         });
+
+        function toggleMaritalDate(status) {
+            const wrapper = document.getElementById('maritalDateWrapper');
+            const input = document.getElementById('marital_date');
+            if (!wrapper) return;
+            if (['married', 'divorced', 'widowed'].includes(status)) {
+                wrapper.classList.remove('hidden');
+            } else {
+                wrapper.classList.add('hidden');
+                if (input) input.value = '';
+            }
+        }
     </script>
 @endsection

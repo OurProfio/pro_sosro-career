@@ -138,23 +138,40 @@
                                 $statusClasses = match (strtolower($app->status ?? 'pending')) {
                                     'accepted', 'hired' => 'bg-emerald-50 text-emerald-700 border-emerald-200',
                                     'rejected' => 'bg-rose-50 text-rose-700 border-rose-200',
+                                    'cancelled' => 'bg-gray-100 text-gray-600 border-gray-200',
                                     default => 'bg-amber-50 text-amber-700 border-amber-200',
                                 };
-                            @endphp
 
-                            @php
                                 $statusLabels = [
                                     'pending' => 'Dalam Peninjauan',
                                     'progress' => 'Sedang Diproses',
                                     'accepted' => 'Diterima',
                                     'hired' => 'Diterima',
                                     'rejected' => 'Ditolak',
+                                    'cancelled' => 'Dibatalkan',
                                 ];
                                 $status = strtolower($app->status ?? 'pending');
+                                $canCancel = in_array($status, ['pending', 'progress']);
                             @endphp
                             <span class="px-3.5 py-1.5 border rounded-xl text-xs font-bold {{ $statusClasses }}">
                                 Status: {{ $statusLabels[$status] ?? 'Dalam Peninjauan' }}
                             </span>
+
+                            @if ($canCancel)
+                                <form action="{{ route('applications.cancel', $app->id) }}" method="POST"
+                                    onsubmit="return confirm('Apakah Anda yakin ingin membatalkan lamaran pekerjaan ini? Tindakan ini tidak dapat dibatalkan kembali.');">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit"
+                                        class="px-3.5 py-1.5 bg-white border border-gray-200 hover:border-red-300 hover:bg-red-50 text-gray-500 hover:text-[#B11116] text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+                                        title="Batalkan Lamaran Ini">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Batalkan Lamaran
+                                    </button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 @endforeach

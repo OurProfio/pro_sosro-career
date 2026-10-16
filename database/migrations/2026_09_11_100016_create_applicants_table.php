@@ -34,6 +34,12 @@ return new class extends Migration
             $table->string('linkedin')->nullable();
             $table->json('driver_licenses')->nullable();
             $table->enum('marital_status', ['single', 'married', 'divorced', 'widowed']);
+            $table->string('marital_date', 10)->nullable();
+            $table->string('postal_code_ktp', 10)->nullable();
+            $table->string('postal_code_domisili', 10)->nullable();
+            $table->string('emergency_contact_name')->nullable();
+            $table->string('emergency_contact_relationship')->nullable();
+            $table->string('emergency_contact_phone')->nullable();
             $table->string('photo_url');
             $table->timestamps();
         });

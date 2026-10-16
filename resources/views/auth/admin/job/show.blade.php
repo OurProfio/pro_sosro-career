@@ -294,7 +294,7 @@
                                         data-applicant-name="{{ $application->applicant->name ?? '-' }}"
                                         data-applicant-email="{{ $application->applicant->email ?? '-' }}"
                                         data-office-type="{{ $job->office->type ?? '-' }}"
-                                        @disabled(in_array($application->status, ['accepted', 'rejected']))>
+                                        @disabled(in_array($application->status, ['accepted', 'rejected', 'cancelled']))>
                                         <option value="">
                                             Pilih Stage
                                         </option>
@@ -303,7 +303,7 @@
                                             {{-- Tahapan sebelumnya disembunyikan/tidak dapat dipilih --}}
                                             @if ($stage->step >= $currentStep)
                                                 <option value="stage:{{ $stage->id }}" data-stage-name="{{ $stage->name }}"
-                                                    {{ $application->status !== 'accepted' && $application->status !== 'rejected' && $application->stages_id == $stage->id ? 'selected' : '' }}>
+                                                    {{ $application->status !== 'accepted' && $application->status !== 'rejected' && $application->status !== 'cancelled' && $application->stages_id == $stage->id ? 'selected' : '' }}>
                                                     {{ $stage->step }}. {{ $stage->name }}
                                                 </option>
                                             @endif
@@ -340,6 +340,11 @@
                                         <span
                                             class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">
                                             Rejected
+                                        </span>
+                                    @elseif ($application->status === 'cancelled')
+                                        <span
+                                            class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+                                            Dibatalkan
                                         </span>
                                     @else
                                         <span

@@ -17,6 +17,39 @@ class StoreApplicantRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+
+        if ($this->has('salary_expectation') && is_string($this->input('salary_expectation'))) {
+            $cleanedSalary = preg_replace('/[^0-9]/', '', $this->input('salary_expectation'));
+            $merge['salary_expectation'] = $cleanedSalary !== '' ? (int) $cleanedSalary : null;
+        }
+
+        if ($this->has('instagram')) {
+            $ig = trim((string) $this->input('instagram'));
+            $ig = preg_replace('#^https?://(www\.)?instagram\.com/#i', '', $ig);
+            $ig = ltrim($ig, '@/');
+            $ig = rtrim($ig, '/');
+            $merge['instagram'] = $ig !== '' ? $ig : null;
+        }
+
+        if ($this->has('linkedin')) {
+            $li = trim((string) $this->input('linkedin'));
+            $li = preg_replace('#^https?://(www\.)?linkedin\.com/in/#i', '', $li);
+            $li = ltrim($li, '@/');
+            $li = rtrim($li, '/');
+            $merge['linkedin'] = $li !== '' ? $li : null;
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -29,7 +62,8 @@ class StoreApplicantRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
-                'email',
+                'email:rfc',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
                 'max:255',
                 Rule::unique('applicants', 'email')->ignore($applicantId),
             ],
@@ -39,7 +73,9 @@ class StoreApplicantRequest extends FormRequest
                 Rule::unique('applicants', 'nik')->ignore($applicantId),
             ],
             'address_ktp' => ['required', 'string'],
+            'postal_code_ktp' => ['nullable', 'string', 'max:10'],
             'address_domisili' => ['required', 'string'],
+            'postal_code_domisili' => ['nullable', 'string', 'max:10'],
             'gender' => ['required', 'in:l,p'],
             'place_of_birth' => ['required', 'string', 'max:255'],
             'date_of_birth' => ['required', 'date', 'before:today'],
@@ -52,8 +88,12 @@ class StoreApplicantRequest extends FormRequest
             'is_smoker' => ['required', 'in:y,n'],
             'has_tattoo' => ['required', 'in:y,n'],
             'marital_status' => ['required', 'in:single,married,divorced,widowed'],
-            'instagram' => ['nullable', 'url', 'max:255'],
-            'linkedin' => ['nullable', 'url', 'max:255'],
+            'marital_date' => ['nullable', 'integer', 'digits:4', 'min:1950', 'max:'.(int) date('Y')],
+            'emergency_contact_name' => ['required', 'string', 'max:255'],
+            'emergency_contact_relationship' => ['required', 'string', 'in:Orang Tua,Pasangan (Suami/Istri),Saudara Kandung,Kerabat/Keluarga Besar'],
+            'emergency_contact_phone' => ['required', 'string', 'between:10,15'],
+            'instagram' => ['nullable', 'string', 'max:100'],
+            'linkedin' => ['nullable', 'string', 'max:100'],
             'driver_licenses' => ['nullable', 'array'],
             'driver_licenses.*' => ['string', 'in:A,B1,B2,C,D'],
             'division_preferences' => ['required', 'array', 'min:1'],
@@ -76,6 +116,7 @@ class StoreApplicantRequest extends FormRequest
             'name.max' => 'Nama lengkap maksimal 255 karakter.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
+            'email.regex' => 'Format email harus resmi dan valid (contoh: nama@domain.com atau nama@perusahaan.co.id).',
             'email.max' => 'Email maksimal 255 karakter.',
             'email.unique' => 'Email ini sudah terdaftar oleh pelamar lain.',
             'nik.required' => 'NIK wajib diisi.',
@@ -142,6 +183,11 @@ class StoreApplicantRequest extends FormRequest
             'photo.image' => 'Berkas yang diunggah harus berupa gambar.',
             'photo.mimes' => 'Format pas foto harus berupa JPEG, PNG, atau JPG.',
             'photo.max' => 'Ukuran pas foto tidak boleh melebihi 2MB.',
+            'emergency_contact_name.required' => 'Nama kontak darurat wajib diisi.',
+            'emergency_contact_relationship.required' => 'Hubungan kontak darurat wajib dipilih.',
+            'emergency_contact_relationship.in' => 'Hubungan kontak darurat yang dipilih tidak valid.',
+            'emergency_contact_phone.required' => 'Nomor telepon kontak darurat wajib diisi.',
+            'emergency_contact_phone.between' => 'Nomor telepon kontak darurat harus antara 10 sampai 15 digit.',
         ];
     }
 }

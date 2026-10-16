@@ -42,14 +42,17 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
         return [
             'experiences' => ['nullable', 'array'],
             'experiences.*.company_name' => ['nullable', 'string', 'max:255'],
+            'experiences.*.company_phone' => ['nullable', 'string', 'max:20'],
             'experiences.*.position' => ['nullable', 'string', 'max:255'],
             'experiences.*.division' => ['nullable', 'string', 'max:255'],
             'experiences.*.salary' => ['nullable', 'numeric', 'min:0'],
             'experiences.*.start_date' => ['nullable', 'date', 'before_or_equal:today'],
             'experiences.*.end_date' => ['nullable', 'date', 'after_or_equal:experiences.*.start_date'],
             'experiences.*.facility' => ['nullable', 'string', 'max:255'],
-            'experiences.*.reference_name' => ['nullable', 'string', 'max:255'],
             'experiences.*.reason_for_leaving' => ['nullable', 'string', 'max:255'],
+            'experiences.*.reference_name' => ['nullable', 'string', 'max:255'],
+            'experiences.*.reference_position' => ['nullable', 'string', 'max:255'],
+            'experiences.*.reference_phone' => ['nullable', 'string', 'max:20'],
             'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
         ];
     }

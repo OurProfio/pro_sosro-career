@@ -23,7 +23,14 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => [
+                'required',
+                'string',
+                'email:rfc',
+                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+                'max:255',
+                'unique:users',
+            ],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
@@ -34,6 +41,7 @@ class RegisterRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.string' => 'Email harus berupa teks.',
             'email.email' => 'Format email tidak valid.',
+            'email.regex' => 'Format email harus resmi dan valid (contoh: nama@domain.com atau nama@perusahaan.co.id).',
             'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
             'email.unique' => 'Email sudah terdaftar.',
             'password.required' => 'Password wajib diisi.',

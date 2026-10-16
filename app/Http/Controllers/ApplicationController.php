@@ -68,11 +68,15 @@ class ApplicationController extends Controller
                 return redirect()->back()->with('error', 'Anda sebelumnya telah melamar posisi ini dan tidak terpilih.');
             }
 
+            if ($existingApplication->status === 'cancelled') {
+                return redirect()->back()->with('error', 'Anda sebelumnya telah membatalkan lamaran untuk posisi ini.');
+            }
+
             return redirect()->back()->with('error', 'Anda sudah melamar posisi pekerjaan ini.');
         }
 
         $activeApplicationsCount = Application::where('applicant_id', auth()->user()->applicant->id)
-            ->where('status', '!=', 'rejected')
+            ->whereNotIn('status', ['rejected', 'cancelled'])
             ->count();
 
         if ($activeApplicationsCount >= 3) {
@@ -164,6 +168,29 @@ class ApplicationController extends Controller
         }
 
         return redirect()->back()->with('info', $message);
+    }
+
+    /**
+     * Cancel an ongoing application by the applicant.
+     */
+    public function cancel(Application $application): RedirectResponse
+    {
+        $applicantId = auth()->user()->applicant?->id;
+
+        if (! $applicantId || $application->applicant_id !== $applicantId) {
+            abort(403, 'Akses tidak diizinkan.');
+        }
+
+        if (in_array($application->status, ['accepted', 'rejected', 'cancelled'])) {
+            return redirect()->back()->with('error', 'Lamaran ini sudah tidak dapat dibatalkan.');
+        }
+
+        $application->update([
+            'status' => 'cancelled',
+            'notes' => trim(($application->notes ? $application->notes."\n" : '').'Dibatalkan oleh pelamar pada '.now()->format('d/m/Y H:i')),
+        ]);
+
+        return redirect()->back()->with('success', 'Lamaran pekerjaan berhasil dibatalkan.');
     }
 
     /**

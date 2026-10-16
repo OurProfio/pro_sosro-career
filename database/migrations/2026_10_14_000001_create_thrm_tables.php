@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,7 +12,32 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement('SET SESSION innodb_strict_mode = 0');
+        }
+
+        if (Schema::hasTable('applicants') && ! Schema::hasColumn('applicants', 'postal_code_ktp')) {
+            Schema::table('applicants', function (Blueprint $table) {
+                $table->string('postal_code_ktp', 10)->nullable()->after('address_ktp');
+                $table->string('postal_code_domisili', 10)->nullable()->after('address_domisili');
+                $table->string('emergency_contact_name')->nullable()->after('postal_code_domisili');
+                $table->string('emergency_contact_relationship')->nullable()->after('emergency_contact_name');
+                $table->string('emergency_contact_phone')->nullable()->after('emergency_contact_relationship');
+                $table->date('marital_date')->nullable()->after('marital_status');
+            });
+        }
+
+        if (Schema::hasTable('applicant_work_expriences') && ! Schema::hasColumn('applicant_work_expriences', 'company_phone')) {
+            Schema::table('applicant_work_expriences', function (Blueprint $table) {
+                $table->string('company_phone')->nullable()->after('company_name');
+                $table->string('reference_position')->nullable()->after('reference_name');
+                $table->string('reference_phone')->nullable()->after('reference_position');
+            });
+        }
+
         Schema::create('thrm_app_personal_data', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
+
             $table->string('APPLICANT_ID', 50)->primary();
             $table->string('FIRST_NAME', 100)->nullable();
             $table->string('MIDDLE_NAME', 100)->nullable();
@@ -25,172 +51,57 @@ return new class extends Migration
             $table->string('STATE1', 100)->nullable();
             $table->string('COUNTRY1', 100)->nullable();
             $table->string('CITY1', 100)->nullable();
-            $table->string('ZIPCODE1', 10)->nullable();
+            $table->string('ZIPCODE1', 20)->nullable();
             $table->text('ADDRESS2')->nullable();
             $table->string('STATE2', 100)->nullable();
             $table->string('COUNTRY2', 100)->nullable();
             $table->string('CITY2', 100)->nullable();
-            $table->string('ZIPCODE2', 10)->nullable();
-            $table->string('NRIC', 255)->nullable();
-            $table->string('PHONE', 100)->nullable();
-            $table->string('MOBILE_PHONE', 100)->nullable();
-            $table->string('EMAIL', 255)->nullable();
-            $table->text('INTEREST')->nullable();
-            $table->text('SKILL')->nullable();
-            $table->string('HEIGHT', 100)->nullable();
-            $table->string('WEIGHT', 100)->nullable();
-            $table->text('ID_CARD')->nullable();
+            $table->string('ZIPCODE2', 20)->nullable();
+            $table->string('NRIC', 50)->nullable();
+            $table->string('PHONE', 50)->nullable();
+            $table->string('MOBILE_PHONE', 50)->nullable();
+            $table->string('EMAIL', 100)->nullable();
+            $table->string('HEIGHT', 20)->nullable();
+            $table->string('WEIGHT', 20)->nullable();
+            $table->string('BLOOD_TYPE', 10)->nullable();
+            $table->string('ID_CARD', 100)->nullable();
             $table->dateTime('ID_EXPIRY')->nullable();
-            $table->text('ID_ISSUED')->nullable();
-            $table->text('IMAGE_FILE')->nullable();
+            $table->string('ID_ISSUED', 100)->nullable();
+            $table->string('IMAGE_FILE', 255)->nullable();
             $table->text('MEDICAL_AWARE')->nullable();
-            $table->text('REASON_HOSPITAL')->nullable();
-            $table->text('TITLE')->nullable();
-            $table->string('FAX', 255)->nullable();
-            $table->string('REQUEST_CODE', 50)->nullable();
-            $table->text('PSYCOTEST')->nullable();
-            $table->text('MEDICALTEST')->nullable();
             $table->string('NATIONALITY_ID', 50)->nullable();
-            $table->integer('APPSTEP_STATUS')->nullable();
-            $table->string('EXPECTED_POSITION', 10)->nullable();
-            $table->integer('COMPANY_ID')->nullable();
-            $table->text('OTHERS')->nullable();
-            $table->string('SPECTACLED', 50)->nullable();
-            $table->string('CURRENT_SALARY', 255)->nullable();
-            $table->string('TEST', 50)->nullable();
-            $table->string('NPWP', 100)->nullable();
-            $table->text('EXPECTED_BENEFIT')->nullable();
-            $table->dateTime('UPDATEDDATE')->nullable();
-            $table->string('UPDATEDBY', 255)->nullable();
-            $table->dateTime('CREATEDDATE')->nullable();
-            $table->string('CREATEDBY', 255)->nullable();
-            $table->string('BLOOD_TYPE', 5)->nullable();
-            $table->string('DISABILITYCODE', 255)->nullable();
-            $table->string('REFERRAL_EMPID', 50)->nullable();
-            $table->text('REFERRAL_NAME')->nullable();
-            $table->integer('REFERRAL_URGENCY')->nullable();
-            $table->string('EMP_ID', 50)->nullable();
+            $table->string('NPWP', 50)->nullable();
+            $table->string('BPJS', 100)->nullable();
+            $table->string('FASKES', 100)->nullable();
             $table->string('STATUSAPP', 50)->nullable();
-            $table->string('PHONE1', 50)->nullable();
-            $table->string('PHONE2', 50)->nullable();
-            $table->text('EMERGENCY_CONTACT_NAME')->nullable();
-            $table->text('EMERGENCY_CONTACT_RELATIONSHIP')->nullable();
-            $table->text('EMERGENCY_CONTACT_PHONE')->nullable();
-            $table->text('EMERGENCY_CONTACT_OTHER_PHONE')->nullable();
-            $table->text('EMERGENCY_CONTACT_ADDRESS')->nullable();
-            $table->text('EMERGENCY_CONTACT_STATE')->nullable();
-            $table->text('EMERGENCY_CONTACT_COUNTRY')->nullable();
-            $table->text('EMERGENCY_CONTACT_CITY')->nullable();
-            $table->text('EMERGENCY_CONTACT_ZIPCODE')->nullable();
-            $table->text('EMERGENCY_CONTACT_RELATIONS2')->nullable();
-            $table->text('STRONG_POINT')->nullable();
-            $table->text('WEAK_POINT')->nullable();
-            $table->string('SPARE_TIME', 255)->nullable();
-            $table->string('REASON', 255)->nullable();
-            $table->dateTime('NRICDATE')->nullable();
-            $table->string('IS_INTERNAL', 50)->nullable();
-            $table->string('IS_ACTIVE', 50)->nullable();
-            $table->string('IS_ONLINE', 50)->nullable();
-            $table->text('WORKINTEREST')->nullable();
-            $table->integer('MEDIUM_ID')->nullable();
-            $table->dateTime('APPLIED_DATE')->nullable();
+            $table->string('IS_ACTIVE', 20)->nullable();
+            $table->string('EXPECTED_POSITION', 100)->nullable();
             $table->decimal('EXPECTED_SALARY', 15, 2)->nullable();
-            $table->string('CURRENCY_ID', 50)->nullable();
-            $table->tinyInteger('APPSTS')->nullable();
-            $table->text('REMARK')->nullable();
-            $table->string('PAYMENTTYPECODE', 30)->nullable();
-            $table->integer('APPLIED_POSITION')->nullable();
-            $table->string('APPLIED_GRADE', 50)->nullable();
-            $table->string('OFFERED_SALARY', 255)->nullable();
-            $table->string('DEALT_SALARY', 255)->nullable();
-            $table->string('MEDIUM_CODE', 50)->nullable();
-            $table->dateTime('OFFEREDSALARY_DATE')->nullable();
-            $table->dateTime('DEALTSALARY_DATE')->nullable();
-            $table->string('OFFEREDSALARY_REVIEWER', 50)->nullable();
-            $table->string('DEALTSALARY_REVIEWER', 50)->nullable();
-            $table->string('APPLIED_JOBTITLE', 255)->nullable();
-            $table->string('EXPECTED_JOBTITLE', 255)->nullable();
-            $table->string('EMPLOYMENT_STATUS', 50)->nullable();
-            $table->integer('OWN_HOUSE')->nullable();
-            $table->integer('OWN_LAND')->nullable();
-            $table->integer('OWN_CAR')->nullable();
-            $table->integer('OWN_MOTORCYCLE')->nullable();
-            $table->integer('USING_COMPANY_HOUSE')->nullable();
-            $table->integer('USING_COMPANY_VEHICLE')->nullable();
-            $table->string('EMERG_CONTACT_NAME', 50)->nullable();
-            $table->text('EMERG_CONTACT_ADDRESS')->nullable();
-            $table->string('EMERG_CONTACT_PHONE', 20)->nullable();
-            $table->string('EMERG_STATE', 50)->nullable();
-            $table->string('EMERG_COUNTRY', 50)->nullable();
-            $table->string('EMERG_CITY', 50)->nullable();
-            $table->string('EMERG_ZIP_CODE', 10)->nullable();
-            $table->integer('EMERG_RELATION_ID')->nullable();
-            $table->integer('DATA_BANK_ACTIVE')->nullable();
-            $table->dateTime('DATA_BANK_DATE')->nullable();
-            $table->dateTime('LAST_UPDATE_STATUS')->nullable();
-            $table->dateTime('EFECTIVE_DATE')->nullable();
-            $table->string('LEVEL_APPLIED', 50)->nullable();
-            $table->string('LEVEL_EXPECTED', 50)->nullable();
-            $table->string('EMP_TYPE', 50)->nullable();
-            $table->dateTime('PROB_DATE')->nullable();
-            $table->string('LOCATION', 50)->nullable();
-            $table->string('ADDRESS3', 255)->nullable();
-            $table->string('PHONE3', 15)->nullable();
-            $table->string('STATE3', 50)->nullable();
-            $table->string('COUNTRY3', 50)->nullable();
-            $table->string('CITY3', 50)->nullable();
-            $table->string('ZIPCODE3', 10)->nullable();
-            $table->string('NICK_NAME', 255)->nullable();
-            $table->dateTime('DATE_OF_MARRIED')->nullable();
-            $table->integer('PLACED_ANY')->nullable();
-            $table->integer('OBEY_RULES')->nullable();
-            $table->string('EXPECTED_GRADE', 50)->nullable();
-            $table->dateTime('END_CONTRACT_DATE')->nullable();
-            $table->char('IS_CLOSED', 1)->nullable();
-            $table->string('USER_INPUT', 255)->nullable();
-            $table->integer('FLAG')->nullable();
-            $table->integer('VACANT')->nullable();
-            $table->dateTime('END_PROBATION')->nullable();
-            $table->double('TUNJANGAN')->nullable();
-            $table->string('FLAG_APPROVAL_LTR', 50)->nullable();
+            $table->string('OFFERED_SALARY', 100)->nullable();
+            $table->string('DEALT_SALARY', 100)->nullable();
             $table->dateTime('HIRE_DATE')->nullable();
-            $table->string('SALUTATION', 50)->nullable();
-            $table->string('RACE_CODE', 255)->nullable();
-            $table->string('DIALECT_CODE', 255)->nullable();
-            $table->dateTime('DRIVINGDATE')->nullable();
-            $table->string('RESIDENCE1', 255)->nullable();
-            $table->string('RESIDENCE2', 255)->nullable();
-            $table->string('RESIDENCE3', 255)->nullable();
-            $table->string('MAIL_ADDRESS', 255)->nullable();
+            $table->string('WORKLOCATION_CODE', 50)->nullable();
+            $table->string('BANK_CODE', 50)->nullable();
+            $table->string('BANK_ACCOUNT', 50)->nullable();
+            $table->string('ACCOUNT_NAME', 150)->nullable();
+            $table->string('EMERGENCY_CONTACT_NAME', 150)->nullable();
+            $table->string('EMERGENCY_CONTACT_RELATIONSHIP', 100)->nullable();
+            $table->string('EMERGENCY_CONTACT_PHONE', 50)->nullable();
+            $table->text('EMERGENCY_CONTACT_ADDRESS')->nullable();
+            $table->string('REFERRAL_EMPID', 50)->nullable();
+            $table->string('REFERRAL_NAME', 150)->nullable();
+            $table->string('CV_FILE', 255)->nullable();
             $table->string('CV_DOCFILE', 255)->nullable();
-            $table->string('EXPECTED_FACILITIES', 255)->nullable();
-            $table->dateTime('AVAILABLE_DATE')->nullable();
-            $table->string('REAPPLY', 255)->nullable();
-            $table->dateTime('MARITAL_DATE')->nullable();
-            $table->string('MARITAL_PLACE', 255)->nullable();
-            $table->integer('COMPLETETEST')->nullable();
-            $table->string('REPLACED_EMPID', 50)->nullable();
-            $table->string('username', 50)->nullable();
-            $table->string('Skill_Level', 50)->nullable();
-            $table->text('CV_FILE')->nullable();
-            $table->text('POH')->nullable();
-            $table->string('WORKLOCATION_CODE', 255)->nullable();
-            $table->string('SSS_DEPENDENT', 255)->nullable();
-            $table->string('HMO_DEPENDENT', 255)->nullable();
-            $table->string('PHILHEALTH_DEPENDENT', 255)->nullable();
-            $table->string('BIR_DEPENDENT', 255)->nullable();
-            $table->string('BPJS', 255)->nullable();
-            $table->string('Faskes', 255)->nullable();
-            $table->string('BANK_CODE', 255)->nullable();
-            $table->string('BANK_ACCOUNT', 255)->nullable();
-            $table->string('ACCOUNT_NAME', 255)->nullable();
-            $table->string('FAMILY_NAME', 255)->nullable();
-            $table->string('CONFIRMBY', 50)->nullable();
-            $table->dateTime('CONFIRMDATE')->nullable();
+            $table->string('USER_INPUT', 100)->nullable();
+            $table->string('CREATEDBY', 100)->nullable();
+            $table->string('UPDATEDBY', 100)->nullable();
+            $table->text('EXTRA_DATA')->nullable();
             $table->timestamps();
         });
 
         Schema::create('thrm_app_job_exp', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
+
             $table->id('APPJOBEXP_ID');
             $table->string('JOB_POSITION', 255)->nullable();
             $table->string('COMPANY_NAME', 255)->nullable();
@@ -333,6 +244,8 @@ return new class extends Migration
         });
 
         Schema::create('thrm_app_history', function (Blueprint $table) {
+            $table->engine = 'InnoDB ROW_FORMAT=DYNAMIC';
+
             $table->id('APPHISTORY_ID');
             $table->string('APPLICANT_ID', 50)->nullable();
             $table->integer('MEDIUM_ID')->nullable();

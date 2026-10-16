@@ -29,6 +29,12 @@ use Illuminate\Database\Eloquent\Model;
     'linkedin',
     'driver_licenses',
     'marital_status',
+    'marital_date',
+    'postal_code_ktp',
+    'postal_code_domisili',
+    'emergency_contact_name',
+    'emergency_contact_relationship',
+    'emergency_contact_phone',
     'photo_url',
 ])]
 class Applicant extends Model

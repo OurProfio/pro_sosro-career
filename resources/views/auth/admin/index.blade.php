@@ -144,6 +144,9 @@
                                                 @case('rejected')
                                                     <span class="mt-1 inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-semibold text-rose-700">Ditolak</span>
                                                 @break
+                                                @case('cancelled')
+                                                    <span class="mt-1 inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-semibold text-gray-700">Dibatalkan</span>
+                                                @break
                                             @endswitch
                                         </td>
                                         <td class="whitespace-nowrap px-5 py-4 text-xs text-slate-500">

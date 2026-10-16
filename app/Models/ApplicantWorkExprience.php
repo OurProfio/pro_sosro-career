@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Model;
     'facility',
     'reason_for_leaving',
     'reference_name',
+    'company_phone',
+    'reference_position',
+    'reference_phone',
 )]
 class ApplicantWorkExprience extends Model
 {

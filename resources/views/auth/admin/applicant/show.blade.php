@@ -458,6 +458,9 @@
                                                             @case('rejected')
                                                                 <span class="inline-flex rounded-full bg-red-50 px-3 py-1.5 text-xs font-bold text-red-700">Rejected</span>
                                                             @break
+                                                            @case('cancelled')
+                                                                <span class="inline-flex rounded-full bg-gray-100 px-3 py-1.5 text-xs font-bold text-gray-700">Dibatalkan</span>
+                                                            @break
                                                             @default
                                                                 <span class="inline-flex rounded-full bg-slate-100 px-3 py-1.5 text-xs font-bold text-slate-600">{{ ucfirst($application->status ?? '-') }}</span>
                                                         @endswitch

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('applicant_id')->constrained('applicants')->cascadeOnDelete();
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
             $table->foreignId('stages_id')->nullable()->constrained('stages')->cascadeOnDelete();
-            $table->enum('status', ['pending', 'progress', 'accepted', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'progress', 'accepted', 'rejected', 'cancelled'])->default('pending');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

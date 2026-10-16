@@ -97,7 +97,7 @@
                     <div class="space-y-4 border-b border-gray-100 pb-6">
                         <div class="space-y-1.5">
                             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Pernah Bekerja di Rekso Group / PT Sinar Sosro? <span class="text-[#B11116]">*</span>
+                                Pernah Bekerja di PT SINAR SOSRO GUNUNG SLAMAT? <span class="text-[#B11116]">*</span>
                             </span>
                             <div class="flex items-center gap-6 py-2">
                                 <label for="worked_sosro_yes" class="inline-flex items-center cursor-pointer group py-1">
@@ -130,8 +130,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                <h4 class="text-xs font-bold uppercase tracking-wide">Detail Pengalaman di Rekso Group / PT
-                                    Sinar Sosro</h4>
+                                <h4 class="text-xs font-bold uppercase tracking-wide">Detail Pengalaman di PT SINAR SOSRO GUNUNG SLAMAT</h4>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -141,10 +140,24 @@
                                         Nama Perusahaan / Unit Kerja <span class="text-[#B11116]">*</span>
                                     </label>
                                     <input id="previous_sosro_company" name="experiences[0][company_name]" type="text"
-                                        value="{{ old('experiences.0.company_name', auth()->user()->applicant->previous_sosro_company ?? '') }}"
-                                        placeholder="Contoh: PT Sinar Sosro - KBT Jakarta"
+                                        value="{{ old('experiences.0.company_name', auth()->user()->applicant->previous_sosro_company ?? 'PT SINAR SOSRO GUNUNG SLAMAT') }}"
+                                        placeholder="Contoh: PT SINAR SOSRO GUNUNG SLAMAT - KBT Jakarta"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_name')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label for="previous_sosro_company_phone"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        No. Telepon Perusahaan / Kantor
+                                    </label>
+                                    <input id="previous_sosro_company_phone" name="experiences[0][company_phone]" type="tel"
+                                        value="{{ old('experiences.0.company_phone', auth()->user()->applicant->previous_sosro_company_phone ?? '') }}"
+                                        placeholder="Contoh: (021) 1234567 atau 0812345678"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('experiences.0.company_phone')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -179,7 +192,7 @@
                                 </div>
 
                                 <!-- Tanggal Selesai Bekerja Sosro -->
-                                <div class="space-y-1.5">
+                                <div class="space-y-1.5 md:col-span-2">
                                     <div class="flex items-center justify-between">
                                         <label for="previous_sosro_end_date"
                                             class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -203,20 +216,52 @@
                                     @enderror
                                 </div>
 
-                                <!-- Nama & Telepon Referensi Sosro -->
-                                <div class="space-y-1.5 md:col-span-2">
-                                    <label for="previous_sosro_reference_name"
-                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        Nama & Telepon Referensi
-                                    </label>
-                                    <input id="previous_sosro_reference_name" name="experiences[0][reference_name]"
-                                        type="text"
-                                        value="{{ old('experiences.0.reference_name', auth()->user()->applicant->previous_sosro_reference_name ?? '') }}"
-                                        placeholder="Contoh: Bpk. Budi (Atasan Direct - 0812345678)"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                    @error('experiences.0.reference_name')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                                    @enderror
+                                <!-- Bagian Referensi Sosro Terpisah -->
+                                <div class="md:col-span-2 pt-2 border-t border-red-200/60">
+                                    <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                                        Kontak Referensi (Atasan / HRD Sosro)
+                                    </span>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        <div class="space-y-1">
+                                            <label for="previous_sosro_reference_name" class="block text-[11px] font-semibold text-gray-600">
+                                                Nama Lengkap Referensi
+                                            </label>
+                                            <input id="previous_sosro_reference_name" name="experiences[0][reference_name]"
+                                                type="text"
+                                                value="{{ old('experiences.0.reference_name', auth()->user()->applicant->previous_sosro_reference_name ?? '') }}"
+                                                placeholder="Contoh: Bpk. Budi Santoso"
+                                                class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            @error('experiences.0.reference_name')
+                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="previous_sosro_reference_position" class="block text-[11px] font-semibold text-gray-600">
+                                                Jabatan Referensi
+                                            </label>
+                                            <input id="previous_sosro_reference_position" name="experiences[0][reference_position]"
+                                                type="text"
+                                                value="{{ old('experiences.0.reference_position', auth()->user()->applicant->previous_sosro_reference_position ?? '') }}"
+                                                placeholder="Contoh: Manager Area Sales"
+                                                class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            @error('experiences.0.reference_position')
+                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="previous_sosro_reference_phone" class="block text-[11px] font-semibold text-gray-600">
+                                                No. Telepon / WA Referensi
+                                            </label>
+                                            <input id="previous_sosro_reference_phone" name="experiences[0][reference_phone]"
+                                                type="tel" inputmode="numeric"
+                                                value="{{ old('experiences.0.reference_phone', auth()->user()->applicant->previous_sosro_reference_phone ?? '') }}"
+                                                placeholder="Contoh: 081234567890"
+                                                class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            @error('experiences.0.reference_phone')
+                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -236,6 +281,7 @@
                                     foreach ($workExperiences as $idx => $we) {
                                         $oldExperiences[$idx + 1] = [
                                             'company_name' => $we->company_name,
+                                            'company_phone' => $we->company_phone,
                                             'position' => $we->position,
                                             'division' => $we->division,
                                             'salary' => $we->salary ? number_format($we->salary, 0, ',', '.') : '',
@@ -243,6 +289,8 @@
                                             'end_date' => $we->end_date ? \Carbon\Carbon::parse($we->end_date)->format('Y-m-d') : '',
                                             'facility' => $we->facility,
                                             'reference_name' => $we->reference_name,
+                                            'reference_position' => $we->reference_position,
+                                            'reference_phone' => $we->reference_phone,
                                             'reason_for_leaving' => $we->reason_for_leaving,
                                             'is_current' => empty($we->end_date) && !empty($we->start_date) ? '1' : '',
                                         ];
@@ -251,6 +299,7 @@
                                     $oldExperiences = [
                                         1 => [
                                             'company_name' => '',
+                                            'company_phone' => '',
                                             'position' => '',
                                             'division' => '',
                                             'salary' => '',
@@ -258,6 +307,8 @@
                                             'end_date' => '',
                                             'facility' => '',
                                             'reference_name' => '',
+                                            'reference_position' => '',
+                                            'reference_phone' => '',
                                             'reason_for_leaving' => '',
                                             'is_current' => '',
                                         ],
@@ -302,9 +353,23 @@
                                         </label>
                                         <input type="text" name="experiences[{{ $index }}][company_name]"
                                             value="{{ $exp['company_name'] ?? '' }}"
-                                            placeholder="Contoh: PT. Sinar Sosro"
+                                            placeholder="Contoh: PT. Maju Bersama"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_name")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- No. Telepon Perusahaan -->
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            No. Telepon Perusahaan
+                                        </label>
+                                        <input type="tel" name="experiences[{{ $index }}][company_phone]"
+                                            value="{{ $exp['company_phone'] ?? '' }}"
+                                            placeholder="Contoh: (021) 1234567 atau 0812345678"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error("experiences.{$index}.company_phone")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -369,7 +434,7 @@
                                     </div>
 
                                     <!-- Tanggal Selesai -->
-                                    <div class="space-y-1.5">
+                                    <div class="space-y-1.5 md:col-span-2">
                                         <div class="flex items-center justify-between">
                                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                                 Tanggal Selesai Bekerja
@@ -393,7 +458,7 @@
                                     </div>
 
                                     <!-- Fasilitas -->
-                                    <div class="space-y-1.5">
+                                    <div class="space-y-1.5 md:col-span-2">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Fasilitas yang Diterima
                                         </label>
@@ -406,18 +471,49 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Kontak Referensi -->
-                                    <div class="space-y-1.5">
-                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                            Nama & Telepon Referensi
-                                        </label>
-                                        <input type="text" name="experiences[{{ $index }}][reference_name]"
-                                            value="{{ $exp['reference_name'] ?? '' }}"
-                                            placeholder="Contoh: Bpk. Budi (Atasan Direct - 0812345678)"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.reference_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error("experiences.{$index}.reference_name")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
+                                    <!-- Kontak Referensi Terpisah -->
+                                    <div class="md:col-span-2 pt-2 border-t border-gray-200/80">
+                                        <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                                            Kontak Referensi (Atasan / HRD Perusahaan Ini)
+                                        </span>
+                                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                            <div class="space-y-1">
+                                                <label class="block text-[11px] font-semibold text-gray-600">
+                                                    Nama Lengkap Referensi
+                                                </label>
+                                                <input type="text" name="experiences[{{ $index }}][reference_name]"
+                                                    value="{{ $exp['reference_name'] ?? '' }}"
+                                                    placeholder="Contoh: Bpk. Hendra Gunawan"
+                                                    class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                @error("experiences.{$index}.reference_name")
+                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            <div class="space-y-1">
+                                                <label class="block text-[11px] font-semibold text-gray-600">
+                                                    Jabatan Referensi
+                                                </label>
+                                                <input type="text" name="experiences[{{ $index }}][reference_position]"
+                                                    value="{{ $exp['reference_position'] ?? '' }}"
+                                                    placeholder="Contoh: Manager Operasional"
+                                                    class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                @error("experiences.{$index}.reference_position")
+                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                            <div class="space-y-1">
+                                                <label class="block text-[11px] font-semibold text-gray-600">
+                                                    No. Telepon / WA Referensi
+                                                </label>
+                                                <input type="tel" inputmode="numeric" name="experiences[{{ $index }}][reference_phone]"
+                                                    value="{{ $exp['reference_phone'] ?? '' }}"
+                                                    placeholder="Contoh: 081234567890"
+                                                    class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                @error("experiences.{$index}.reference_phone")
+                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <!-- Alasan Berhenti -->
@@ -529,6 +625,12 @@
                 </div>
 
                 <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon Perusahaan</label>
+                    <input type="tel" name="experiences[{INDEX}][company_phone]" placeholder="Contoh: (021) 1234567 atau 0812345678"
+                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                </div>
+
+                <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jabatan / Posisi</label>
                     <input type="text" name="experiences[{INDEX}][position]" placeholder="Contoh: Staff IT Support"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -542,7 +644,7 @@
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <div class="space-y-1.5">
+                <div class="space-y-1.5 md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Gaji Terakhir
                         (Rp)</label>
                     <div class="relative">
@@ -561,7 +663,7 @@
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <div class="space-y-1.5">
+                <div class="space-y-1.5 md:col-span-2">
                     <div class="flex items-center justify-between">
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Selesai
                             Bekerja</label>
@@ -576,7 +678,7 @@
                         class="end-date-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <div class="space-y-1.5">
+                <div class="space-y-1.5 md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Fasilitas yang
                         Diterima</label>
                     <input type="text" name="experiences[{INDEX}][facility]"
@@ -584,12 +686,37 @@
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama & Telepon
-                        Referensi</label>
-                    <input type="text" name="experiences[{INDEX}][reference_name]"
-                        placeholder="Contoh: Bpk. Budi (Atasan Direct - 0812345678)"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                <!-- Kontak Referensi Terpisah -->
+                <div class="md:col-span-2 pt-2 border-t border-gray-200/80">
+                    <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
+                        Kontak Referensi (Atasan / HRD Perusahaan Ini)
+                    </span>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-semibold text-gray-600">
+                                Nama Lengkap Referensi
+                            </label>
+                            <input type="text" name="experiences[{INDEX}][reference_name]"
+                                placeholder="Contoh: Bpk. Hendra Gunawan"
+                                class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-semibold text-gray-600">
+                                Jabatan Referensi
+                            </label>
+                            <input type="text" name="experiences[{INDEX}][reference_position]"
+                                placeholder="Contoh: Manager Operasional"
+                                class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="block text-[11px] font-semibold text-gray-600">
+                                No. Telepon / WA Referensi
+                            </label>
+                            <input type="tel" inputmode="numeric" name="experiences[{INDEX}][reference_phone]"
+                                placeholder="Contoh: 081234567890"
+                                class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                    </div>
                 </div>
 
                 <div class="space-y-1.5 md:col-span-2">

@@ -60,6 +60,7 @@ Route::group(['middleware' => ['auth']], function () {
 
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');
         Route::post('/apply', [ApplicationController::class, 'store'])->name('applications.store');
+        Route::patch('/applications/{application}/cancel', [ApplicationController::class, 'cancel'])->name('applications.cancel');
     });
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');

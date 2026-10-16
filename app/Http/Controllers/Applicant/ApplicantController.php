@@ -66,6 +66,11 @@ class ApplicantController extends Controller
             $applicant = Applicant::create($validated + [
                 'photo_url' => $request->file('photo') ? $request->file('photo')->store('applicants', 'public') : null,
             ]);
+
+            if (! empty($validated['email']) && auth()->user()->email !== $validated['email']) {
+                auth()->user()->update(['email' => $validated['email']]);
+            }
+
             ApplicantInterest::updateOrCreate(
                 ['applicant_id' => $applicant->id],
                 ['interests' => $request->validated('division_preferences')],
@@ -122,6 +127,10 @@ class ApplicantController extends Controller
             }
 
             $applicant->update($validated);
+
+            if (! empty($validated['email']) && $applicant->user && $applicant->user->email !== $validated['email']) {
+                $applicant->user->update(['email' => $validated['email']]);
+            }
 
             if ($request->has('division_preferences')) {
                 ApplicantInterest::updateOrCreate(
