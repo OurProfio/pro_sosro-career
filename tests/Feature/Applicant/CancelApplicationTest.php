@@ -80,3 +80,18 @@ it('prevents cancelling an already accepted or rejected or cancelled application
 
     expect($acceptedApp->fresh()->status)->toBe('accepted');
 });
+
+it('does not count cancelled or rejected applications in the active quota', function () {
+    foreach (['cancelled', 'rejected', 'progress'] as $status) {
+        Application::factory()->create([
+            'applicant_id' => $this->applicant->id,
+            'job_id' => Job::factory()->create()->id,
+            'status' => $status,
+        ]);
+    }
+
+    $this->actingAs($this->user)
+        ->get(route('applications.index'))
+        ->assertOk()
+        ->assertSeeText('1 / 3 Posisi');
+});

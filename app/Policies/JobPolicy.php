@@ -40,6 +40,14 @@ class JobPolicy
     }
 
     /**
+     * Determine whether the user can approve or reject a job posting.
+     */
+    public function approve(User $user, Job $job): bool
+    {
+        return $user->admin?->role === 'superadmin';
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Job $job): bool
