@@ -254,5 +254,3 @@
 
     </div>
 @endsection
-    </div>
-@endsection
