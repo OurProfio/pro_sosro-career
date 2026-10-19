@@ -34,6 +34,48 @@
         </div>
     </div>
 
+    @if ($job->approval_status === 'rejected' && $job->rejection_reason)
+        <div class="px-4 py-3 text-sm text-rose-700 bg-rose-50 border border-rose-100 rounded-xl">
+            <span class="font-semibold">Ditolak oleh HO:</span> {{ $job->rejection_reason }}
+        </div>
+    @endif
+
+    @can('approve', $job)
+        @if ($job->approval_status === 'pending')
+            <div class="p-4 bg-amber-50 border border-amber-100 rounded-2xl space-y-3">
+                <p class="text-sm font-semibold text-amber-800">Lowongan ini menunggu persetujuan Anda.</p>
+
+                <div class="flex flex-wrap items-start gap-3">
+                    <form method="POST" action="{{ route('job.approve', $job) }}">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors">
+                            Setujui
+                        </button>
+                    </form>
+
+                    <form method="POST" action="{{ route('job.reject', $job) }}" class="flex flex-1 gap-2">
+                        @csrf
+                        @method('PATCH')
+                        <div class="flex-1">
+                            <input type="text" name="rejection_reason" value="{{ old('rejection_reason') }}"
+                                placeholder="Alasan penolakan" required
+                                class="w-full px-3 py-2 text-sm border border-slate-200 rounded-xl">
+                            @error('rejection_reason')
+                                <p class="mt-1 text-xs text-rose-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <button type="submit"
+                            class="px-4 py-2 text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-colors">
+                            Tolak
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @endif
+    @endcan
+
     <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100">
             <div class="flex items-start justify-between gap-4">
@@ -69,6 +111,16 @@
                             Dihapus
                         </span>
                     @endif
+
+                <div class="mt-1">
+                    @if ($job->approval_status === 'pending')
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-100">Menunggu Persetujuan</span>
+                    @elseif ($job->approval_status === 'rejected')
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-100">Ditolak</span>
+                    @else
+                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">Disetujui</span>
+                    @endif
+                </div>
                 </div>
             </div>
         </div>

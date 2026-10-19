@@ -55,7 +55,7 @@ class ApplicationController extends Controller
             return redirect()->back()->with('error', 'Lowongan pekerjaan ini sudah ditutup (melewati batas tanggal).');
         }
 
-        if ($job->status !== 'aktif') {
+        if ($job->status !== 'aktif' || ! $job->isApproved()) {
             return redirect()->back()->with('error', 'Lowongan pekerjaan ini sudah tidak aktif.');
         }
 

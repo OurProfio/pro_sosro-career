@@ -14,7 +14,8 @@ class GuestController extends Controller
             ->update(['status' => 'nonaktif']);
 
         // Hanya tampilkan lowongan yang aktif dan belum melewati batas tanggal tutup
-        $jobs = Job::where('status', 'aktif')
+        $jobs = Job::approved()
+            ->where('status', 'aktif')
             ->whereDate('closing_date', '>=', today())
             ->with('office')
             ->latest()
