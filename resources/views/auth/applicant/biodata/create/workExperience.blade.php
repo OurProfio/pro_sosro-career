@@ -254,6 +254,7 @@
                                             </label>
                                             <input id="previous_sosro_reference_phone" name="experiences[0][reference_phone]"
                                                 type="tel" inputmode="numeric"
+                                                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                                 value="{{ old('experiences.0.reference_phone', auth()->user()->applicant->previous_sosro_reference_phone ?? '') }}"
                                                 placeholder="Contoh: 081234567890"
                                                 class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -505,7 +506,7 @@
                                                 <label class="block text-[11px] font-semibold text-gray-600">
                                                     No. Telepon / WA Referensi
                                                 </label>
-                                                <input type="tel" inputmode="numeric" name="experiences[{{ $index }}][reference_phone]"
+                                                <input type="tel" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="experiences[{{ $index }}][reference_phone]"
                                                     value="{{ $exp['reference_phone'] ?? '' }}"
                                                     placeholder="Contoh: 081234567890"
                                                     class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -712,7 +713,7 @@
                             <label class="block text-[11px] font-semibold text-gray-600">
                                 No. Telepon / WA Referensi
                             </label>
-                            <input type="tel" inputmode="numeric" name="experiences[{INDEX}][reference_phone]"
+                            <input type="tel" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" name="experiences[{INDEX}][reference_phone]"
                                 placeholder="Contoh: 081234567890"
                                 class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
@@ -799,24 +800,11 @@
                     endDateInput.disabled = true;
                     endDateInput.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
                 }
-                if (reasonInput) {
-                    reasonInput.dataset.previousValue = reasonInput.value;
-                    reasonInput.value = '';
-                    reasonInput.disabled = true;
-                    reasonInput.placeholder = 'Tidak perlu diisi karena masih bekerja';
-                    reasonInput.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
-                }
             } else {
                 if (endDateInput) {
                     endDateInput.value = endDateInput.dataset.previousValue || '';
                     endDateInput.disabled = false;
                     endDateInput.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
-                }
-                if (reasonInput) {
-                    reasonInput.value = reasonInput.dataset.previousValue || '';
-                    reasonInput.disabled = false;
-                    reasonInput.placeholder = 'Contoh: Kontrak kerja berakhir / Ingin mengembangkan karir';
-                    reasonInput.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
                 }
             }
 

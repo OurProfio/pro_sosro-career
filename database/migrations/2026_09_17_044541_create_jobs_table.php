@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('description');
             $table->string('qualification');
             $table->enum('status', ['aktif', 'nonaktif', 'dihapus', 'selesai'])->default('aktif');
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->foreignId('approved_by')->nullable()->constrained('admins')->nullOnDelete();
+            $table->timestamp('approved_at')->nullable();
+            $table->text('rejection_reason')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

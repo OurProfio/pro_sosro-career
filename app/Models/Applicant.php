@@ -93,11 +93,19 @@ class Applicant extends Model
      */
     public function biodataPrintData(): array
     {
+        $jobTitle = null;
+        if (request()->filled('job_id')) {
+            $jobTitle = Job::find(request('job_id'))?->title;
+        }
+        if (! $jobTitle) {
+            $jobTitle = Application::with('job')->where('applicant_id', $this->id)->latest()->first()?->job?->title;
+        }
+
         return [
             'applicant' => $this->load(['workExperiences', 'educations', 'families', 'trainings']),
             'expectation' => ApplicantExpectation::where('applicant_id', $this->id)->first(),
             'expectationInterests' => ApplicantInterest::where('applicant_id', $this->id)->value('interests'),
-            'jobTitle' => Application::with('job')->where('applicant_id', $this->id)->latest()->first()?->job?->title,
+            'jobTitle' => $jobTitle,
             'divisions' => Division::all(),
         ];
     }

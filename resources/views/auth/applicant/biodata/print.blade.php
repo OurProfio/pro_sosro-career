@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=794">
-<title>Formulir Biodata Calon Karyawan - {{ mb_strtoupper($applicant->name, 'UTF-8') }}</title>
+<title>{{ trim(implode(' - ', array_filter(['Formulir Biodata Calon Karyawan', mb_strtoupper($applicant->name, 'UTF-8'), !empty($jobTitle) ? mb_strtoupper($jobTitle, 'UTF-8') : '']))) }}</title>
 <style>
 @page{size:A4;margin:0}
 *{box-sizing:border-box}
@@ -25,7 +25,7 @@ input[type=checkbox]{margin:0 4px 0 0;width:11px;height:11px;vertical-align:-1px
 .s.x{text-decoration:line-through}
 i.sm{font-size:10px}
 table{border-collapse:collapse;table-layout:fixed;width:692px;margin-left:-18px}
-td,th{border:1px solid #000;padding:2px 3px;font-size:11px;text-align:left;vertical-align:middle;word-break:break-word;overflow-wrap:anywhere;white-space:normal;height:auto}
+td,th{border:1px solid #000;padding:1px 3px;font-size:10.5px;text-align:left;vertical-align:middle;word-break:break-word;overflow-wrap:anywhere;white-space:normal;height:auto}
 th{text-align:center;font-weight:bold;padding:2px 0}
 td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:anywhere;white-space:normal;line-height:1.2;text-transform:uppercase;pointer-events:none}
 .t2{width:606px;margin-left:19px}
@@ -34,7 +34,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 .jr .l{width:143px;flex:none}.jr .c{width:8px;flex:none}
 .jy{display:flex;align-items:flex-end;height:18px;margin-left:19px}
 .jy .t{width:46px;flex:none;font-size:12px}
-.jy .l{width:150px;flex:none}.jy .c{width:8px;flex:none}
+.jy .l{width:150px;flex:none;box-sizing:border-box}.jy .c{width:8px;flex:none}
 .q{display:flex;align-items:flex-end;height:19px;margin-left:30px}
 .q input{flex:1;margin-left:3px;pointer-events:none}
 .np{position:fixed;right:20px;top:20px;background:#B11116;color:#fff;border:0;border-radius:8px;padding:8px 16px;font:bold 13px sans-serif;cursor:pointer;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:background .2s;pointer-events:auto}
@@ -108,7 +108,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
             $displayName = $f?->name ?? '';
             $statusKawin = '';
             if ($f && !empty($f->name)) {
-                $lp = $genderFixed ?? '';
+                $lp = !empty($f->gender) ? strtoupper($f->gender) : ($genderFixed ?? '');
                 if (($f->status ?? '') === 'deceased') {
                     $displayName .= ' (+)';
                 }
@@ -160,11 +160,25 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
     ];
     foreach (range(0, 4) as $i) { $biological[] = ['Saudara ' . ($i + 1), $byRel('sibling')->get($i), null]; }
 
-    $jobRows = [['Nama Perusahaan', 'company_name'], ['Alamat Perusahaan', null, 'a'], ['No. Telp Perusahaan', 'company_phone'], ['Bidang Industri', null], ['Jabatan Terakhir', 'position'], ['Divisi / Departemen', 'division'], ['Periode Bekerja', null, 'p'], ['Gaji', 'salary'], ['Fasilitas / Tunjangan', 'facility'], ['Alasan Keluar', 'reason_for_leaving'], ['Nama Atasan Langsung', 'reference_name'], ['Jabatan', 'reference_position'], ['Nomor HP Atasan', 'reference_phone']];
-    $jobHtml = function ($no, $a, $b) use ($jobRows, $applicant, $I, $fmtDate, $u) {
+    $jobRows = [
+        ['Nama Perusahaan', 'company_name'],
+        ['Alamat Perusahaan', null, 'a'],
+        ['No. Telp Perusahaan', 'company_phone'],
+        ['Jabatan Terakhir', 'position'],
+        ['Divisi / Departemen', 'division'],
+        ['Periode Bekerja', null, 'p'],
+        ['Gaji', 'salary'],
+        ['Fasilitas / Tunjangan', 'facility'],
+        ['Alasan Keluar', 'reason_for_leaving'],
+        ['Nama Atasan Langsung', 'reference_name'],
+        ['Jabatan', 'reference_position'],
+        ['Nomor HP Atasan', 'reference_phone'],
+    ];
+    $jobHtml = function ($no, $a = 0, $b = null) use ($jobRows, $applicant, $I, $fmtDate, $u) {
         $w = $applicant->workExperiences->get($no - 1);
         $out = '';
-        foreach (array_slice($jobRows, $a, $b - $a, true) as $idx => $row) {
+        $slice = $b === null ? array_slice($jobRows, $a) : array_slice($jobRows, $a, $b - $a, true);
+        foreach ($slice as $idx => $row) {
             [$label, $key, $kind] = $row + [null, null, null];
             $num = $idx === 0 ? '<span class="n">' . $no . '.</span>' : '';
             $val = $key && $w ? ($key === 'salary' && $w->salary ? number_format($w->salary, 0, ',', '.') : $w->$key) : '';
@@ -191,15 +205,34 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
         $interestRows .= '<tr><td><div class="cell-data">' . e($u($l?->name)) . '</div></td><td>' . ($l ? '<div class="cell-data" style="text-align:center">' . ($ranks[$l->id] ?? '') . '</div>' : '&nbsp;') . '</td>'
             . '<td><div class="cell-data">' . e($u($r?->name)) . '</div></td><td>' . ($r ? '<div class="cell-data" style="text-align:center">' . ($ranks[$r->id] ?? '') . '</div>' : '&nbsp;') . '</td></tr>';
     }
-    $jy = function ($no) use ($I) {
+    $sosroExps = $applicant->workExperiences->filter(function ($exp) {
+        $cn = strtolower((string) ($exp->company_name ?? ''));
+        return str_contains($cn, 'sosro') || str_contains($cn, 'gunung slamat') || str_contains($cn, 'rekso');
+    })->values();
+    $hasWorkedSosro = $sosroExps->isNotEmpty();
+
+    $jy = function ($no) use ($I, $sosroExps, $fmtDate) {
+        $exp = $sosroExps->get($no - 1);
         $out = '';
-        foreach ([['Nama PT'], ['Kota'], ['Jabatan'], ['Departemen'], ['Periode Bekerja', 'p']] as $i => $row) {
-            [$l, $k] = $row + [null, null];
-            $field = $k === 'p' ? $I(130) . '<span class="w" style="width:50px;text-align:center">sampai</span>' . $I(130) : $I(0);
+        $rows = [
+            ['Nama PT', $exp?->company_name],
+            ['Kota', ''],
+            ['Jabatan', $exp?->position],
+            ['Departemen', $exp?->division],
+            ['Periode Bekerja', 'p', $exp && $exp->start_date ? $fmtDate($exp->start_date) : '', $exp ? ($exp->end_date ? $fmtDate($exp->end_date) : 'SEKARANG') : ''],
+        ];
+        foreach ($rows as $i => $row) {
+            $l = $row[0];
+            $val = $row[1] ?? null;
+            if ($val === 'p') {
+                $field = $I(130, $row[2] ?? '') . '<span class="w" style="width:50px;text-align:center">sampai</span>' . $I(130, $row[3] ?? '');
+            } else {
+                $field = $I(0, $val ?? '');
+            }
             $label = $i === 0 ? $no . '. ' . $l : $l;
-            $pad = ($i === 0 || $i === 1) ? '' : 'padding-left:18px;';
+            $pad = $i === 0 ? '' : 'padding-left:18px;';
             $tTag = ($no === 1 && $i === 0) ? '<span class="t">Jika Ya,</span>' : '<span class="t"></span>';
-            $out .= '<div class="jy">' . $tTag . '<span class="l" style="' . $pad . ($k ? 'width:135px' : '') . '">' . $label . '</span><span class="c">:</span>' . $field . '</div>';
+            $out .= '<div class="jy">' . $tTag . '<span class="l" style="' . $pad . '">' . $label . '</span><span class="c">:</span>' . $field . '</div>';
         }
         return $out;
     };
@@ -223,15 +256,26 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 @if ($isAdmin)
 <div class="g" style="margin-top:12px;height:18px"><b style="font-size:12.5px;margin-left:11px;white-space:nowrap">Jabatan yang dilamar :&nbsp;</b>{!! $I(0, $jobTitle ?? '') !!}</div><div class="hr" style="margin-top:9px"></div>
 @endif
-<div style="margin:10px 0 2px 8px"><b><u>A.&nbsp;&nbsp; IDENTITAS DIRI</u></b></div>
-{!! $R('Nama Lengkap', $I(0, $applicant->name)) !!}
-{!! $R('Jenis Kelamin', $I(0, $genderLabel)) !!}
-{!! $R('Tempat / Tgl Lahir', $I(0, $applicant->place_of_birth . ', ' . $fmtDate($applicant->date_of_birth))) !!}
-<div class="r"><span class="l">Tinggi badan</span><span class="c">:</span>{!! $I(40, $applicant->height) !!}&nbsp;cm<span style="width:178px" class="w"></span><span style="width:70px" class="w">Berat Badan</span><span class="c">:</span>{!! $I(40, $applicant->weight) !!}&nbsp;kg</div>
-{!! $R('Golongan Darah', '<span>' . $bloodHtml . ' <i class="sm"><b>(coret yang tidak perlu)</b></i></span>') !!}
-{!! $R('Alamat sesuai KTP', $I(0, $applicant->address_ktp)) !!}
+<div style="margin:10px 0 6px 8px"><b><u>A.&nbsp;&nbsp; IDENTITAS DIRI</u></b></div>
+<div style="display:flex;margin:0 40px 0 30px;gap:20px;align-items:flex-start">
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">
+        <div class="r" style="margin:0">{!! '<span class="l">Nama Lengkap</span><span class="c">:</span>' . $I(0, $applicant->name) !!}</div>
+        <div class="r" style="margin:0">{!! '<span class="l">Jenis Kelamin</span><span class="c">:</span>' . $I(0, $genderLabel) !!}</div>
+        <div class="r" style="margin:0">{!! '<span class="l">Tempat / Tgl Lahir</span><span class="c">:</span>' . $I(0, $applicant->place_of_birth . ', ' . $fmtDate($applicant->date_of_birth)) !!}</div>
+        <div class="r" style="margin:0"><span class="l">Tinggi badan</span><span class="c">:</span>{!! $I(40, $applicant->height) !!}&nbsp;cm<span style="width:20px" class="w"></span><span class="w">Berat Badan</span><span class="c">:</span>{!! $I(40, $applicant->weight) !!}&nbsp;kg</div>
+        <div class="r" style="margin:0"><span class="l">Golongan Darah</span><span class="c">:</span><span>{!! $bloodHtml !!} <i class="sm"><b>(coret yang tidak perlu)</b></i></span></div>
+    </div>
+    <div style="width:108px;height:144px;border:1.5px solid #000;padding:3px;box-sizing:border-box;flex:none;display:flex;align-items:center;justify-content:center;background:#fff;overflow:hidden;margin-top:2px">
+        @if ($applicant->photo_url)
+            <img src="{{ asset('storage/' . $applicant->photo_url) }}" alt="Foto {{ $applicant->name }}" style="width:100%;height:100%;object-fit:cover;display:block;border:1px solid #222">
+        @else
+            <div style="width:100%;height:100%;border:1px dashed #777;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;color:#777;text-align:center;line-height:1.4">PAS FOTO<br>3 x 4</div>
+        @endif
+    </div>
+</div>
+{!! $R('Alamat sesuai KTP', $I(0, $applicant->address_ktp), 'margin-top:8px') !!}
 <div class="r" style="margin-left:170px">{!! $I(0) !!}<span style="margin-left:6px">Kode Pos :</span>{!! $I(60, $applicant->postal_code_ktp ?? '') !!}</div>
-{!! $R('Alamat Domisili', $I(0, $applicant->address_domisili), 'margin-top:6px') !!}
+{!! $R('Alamat Domisili', $I(0, $applicant->address_domisili), 'margin-top:5px') !!}
 <div class="r" style="margin-left:170px">{!! $I(0) !!}<span style="margin-left:6px">Kode Pos :</span>{!! $I(60, $applicant->postal_code_domisili ?? '') !!}</div>
 {!! $R('No. Handphone', $I(0, $applicant->phone_number)) !!}
 {!! $R('Email', $I(0, $applicant->email)) !!}
@@ -240,12 +284,11 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <div class="r" style="height:19px"><span class="l">Status Perkawinan<sup>*)</sup></span><span class="c">:</span><label class="w" style="width:200px"><input type="checkbox" disabled @checked($marital === 'single')>single/bertunangan</label><label class="w" style="width:100px"><input type="checkbox" disabled @checked($marital === 'married')>menikah, sejak</label><span class="c">:</span>{!! $I(100, $marital === 'married' ? $maritalYear : '') !!}</div>
 <div class="r" style="height:17px"><span class="l"></span><span class="c"></span><i class="sm w" style="width:200px;margin-left:3px"><sup>*)</sup> pilih (v) salah satu</i><label class="w" style="width:100px"><input type="checkbox" disabled @checked(in_array($marital, ['divorced', 'widowed']))>bercerai, sejak</label><span class="c">:</span>{!! $I(100, in_array($marital, ['divorced', 'widowed']) ? $maritalYear : '') !!}</div>
 {!! $R('No. KTP', $I(192, $applicant->nik)) !!}
-<div class="r" style="margin-top:14px"><b>Emergency Contacts</b></div>
+<div class="r" style="margin-top:8px"><b>Emergency Contacts</b></div>
 {!! $R('Nama Lengkap', $I(306, $applicant->emergency_contact_name ?? '')) !!}{!! $R('Hubungan', $I(306, $applicant->emergency_contact_relationship ?? '')) !!}{!! $R('No. HP', $I(306, $applicant->emergency_contact_phone ?? '')) !!}
-<div style="margin:16px 0 2px 6px"><b>B. 1. LINGKUNGAN KELUARGA INTI</b></div>
+<div style="margin:10px 0 2px 6px"><b>B. 1. LINGKUNGAN KELUARGA INTI</b></div>
 <table>{!! $famHead . $famRows($nuclear) !!}</table>
-<div style="margin-left:12px;font-size:10.5px"><b><i>* Bagi anggota keluarga yang sudah meninggal, harap tetap dicantumkan pada kolom nama dan diberi tanda (+)</i></b></div>
-<div style="margin:12px 0 2px 12px"><b>2.LINGKUNGAN KELUARGA KANDUNG (Termasuk diri Anda)</b></div>
+<div style="margin:10px 0 2px 6px"><b>2. LINGKUNGAN KELUARGA KANDUNG (Termasuk diri Anda)</b></div>
 <table>{!! $famHead . $famRows($biological) !!}</table>
 <div style="margin-left:12px;font-size:10.5px"><b><i>* Bagi anggota keluarga yang sudah meninggal, harap tetap dicantumkan pada kolom nama dan diberi tanda (+)</i></b></div>
 </div>
@@ -258,26 +301,26 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell('') . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
 @endfor
 </table>
-<div style="margin:22px 0 3px 12px"><b>2. RIWAYAT PENDIDIKAN INFORMAL (TRAINING / KURSUS)</b></div>
-<table class="t2"><tr><th style="width:24%">Nama Lembaga<th style="width:40%">Jenis Training / Kursus<th style="width:13%">Tahun<th style="width:23%">Lamanya</tr>
+<div style="margin:14px 0 3px 6px"><b>2. RIWAYAT PENDIDIKAN INFORMAL (TRAINING / KURSUS)</b></div>
+<table class="t2"><tr><th style="width:35%">Nama Lembaga<th style="width:50%">Jenis Training / Kursus<th style="width:15%">Tahun</tr>
 @for ($i = 0; $i < 5; $i++)
 @php $tr = $applicant->trainings->get($i); @endphp
-<tr>{!! $cell($tr?->organizer) . $cell($tr?->training_name) . $cell($tr ? \Carbon\Carbon::parse($tr->finished)->format('Y') : '') . $cell('') !!}</tr>
+<tr>{!! $cell($tr?->organizer) . $cell($tr?->training_name) . $cell($tr ? \Carbon\Carbon::parse($tr->finished)->format('Y') : '') !!}</tr>
 @endfor
 </table>
-<div style="margin:26px 0 4px 6px"><b>D. RIWAYAT PEKERJAAN (Sebutkan 3 perusahaan terakhir)</b></div>
-{!! $jobHtml(1, 0, 13) !!}<div style="height:14px"></div>{!! $jobHtml(2, 0, 13) !!}<div style="height:14px"></div>{!! $jobHtml(3, 0, 3) !!}
+<div style="margin:16px 0 4px 6px"><b>D. RIWAYAT PEKERJAAN (Sebutkan 3 perusahaan terakhir)</b></div>
+{!! $jobHtml(1) !!}<div style="height:10px"></div>{!! $jobHtml(2) !!}
 </div>
 
 <div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg"><img src="{{ asset('assets/images/header-sosro-rekso.png') }}" alt="Sinar Sosro Rekso"></div><div class="pn">3</div>
-{!! $jobHtml(3, 3, 13) !!}
-<div style="margin:26px 0 6px 6px"><b>Gambarkan Struktur Organisasi Perusahaan Anda (terakhir) dan posisi Anda di dalamnya !</b></div>
-<textarea style="width:718px;margin-left:-18px;height:212px;border:1px solid #000;resize:none;display:block;padding:4px" readonly tabindex="-1"></textarea>
-<div style="margin:22px 0 4px 6px">Pernahkah Anda melamar di Perusahaan / Group ini sebelumnya? Kapan? Untuk posisi jabatan apa?</div>
+{!! $jobHtml(3) !!}
+<div style="margin:14px 0 6px 6px"><b>Gambarkan Struktur Organisasi Perusahaan Anda (terakhir) dan posisi Anda di dalamnya !</b></div>
+<textarea style="width:718px;margin-left:-18px;height:180px;border:1px solid #000;resize:none;display:block;padding:4px" readonly tabindex="-1"></textarea>
+<div style="margin:14px 0 4px 6px">Pernahkah Anda melamar di Perusahaan / Group ini sebelumnya? Kapan? Untuk posisi jabatan apa?</div>
 <div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end">{!! $I(0) !!}</div>
-<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end"><span class="w">Pernahkah Anda bekerja di Perusahaan / Group ini sebelumnya?&nbsp;</span>{!! $I(0) !!}</div>
+<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end"><span class="w">Pernahkah Anda bekerja di Perusahaan / Group ini sebelumnya?&nbsp;</span>{!! $I(0, $hasWorkedSosro ? 'YA' : 'TIDAK') !!}</div>
 {!! $jy(1) !!}{!! $jy(2) !!}
-<div style="margin:22px 0 6px 6px">Buatlah urutan minat Anda dalam bekerja. (Nomor 1 – {{ $divisions->count() }})</div>
+<div style="margin:14px 0 6px 6px">Buatlah urutan minat Anda dalam bekerja. (Nomor 1 – {{ $divisions->count() }})</div>
 <table class="t2" style="width:610px;margin-left:19px"><tr><th style="width:35%">Jenis Pekerjaan<th style="width:11%">No. Urut<th style="width:41%">Jenis Pekerjaan<th style="width:13%">No. Urut</tr>{!! $interestRows !!}</table>
 </div>
 
@@ -292,11 +335,8 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <div class="q" style="margin-left:30px;height:19px">{!! $I(0, $expectation?->reference_by) !!}</div>
 <div style="margin:24px 0 4px 6px"><b>F. INFO KESEHATAN</b></div>
 <div class="q">1. Apakah Anda memiliki riwayat penyakit kronis ?{!! $I(0, $applicant->medical_history ?: 'TIDAK ADA') !!}</div>
-<div class="q">2. Apakah Anda pernah mengalami kecelakaan parah ?{!! $I(0) !!}</div>
-<div class="q" style="height:18px">3. Pernahkah Anda dirawat / opname dirumah sakit dalam 2 tahun terakhir ini ? Karena apa dan Berapa lama ?</div>
-<div class="q" style="height:19px">{!! $I(0) !!}</div>
-<div class="q" style="margin-top:6px">4. Apakah Anda merokok ?{!! $I(150, $yesNo($applicant->is_smoker === 'y')) !!}</div>
-<div class="q">5. Apakah Anda memiliki tato?{!! $I(0, $yesNo($applicant->has_tattoo === 'y')) !!}</div>
+<div class="q" style="margin-top:6px">2. Apakah Anda merokok ?{!! $I(150, $yesNo($applicant->is_smoker === 'y')) !!}</div>
+<div class="q">3. Apakah Anda memiliki tato?{!! $I(0, $yesNo($applicant->has_tattoo === 'y')) !!}</div>
 <p style="margin:32px 0 0;text-align:justify;font-weight:bold;line-height:1.45;font-size:12.5px">Dengan ini saya menyatakan bahwa semua data dan informasi yang saya kemukakan dan tuliskan selama proses rekrutmen berlangsung adalah benar adanya. Apabila di kemudian hari hal tersebut terbukti tidak benar, maka saya bersedia diberikan sanksi berupa pengakhiran hubungan kerja tanpa diberikan uang pesangon / uang pisah / kompensasi dalam bentuk apapun dari dan atas nama perusahaan.</p>
 <p style="margin:14px 0 0;font-weight:bold">Demikian pernyataan ini saya buat dengan sebenar-benarnya dan dalam kondisi tanpa tekanan/paksaan.</p>
 <div style="display:flex;justify-content:flex-end;margin-top:35px">
