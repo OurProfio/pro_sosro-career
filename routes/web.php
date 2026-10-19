@@ -28,7 +28,7 @@ Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
-    Route::group(['middleware' => ['admin']], function () {
+    Route::group(['middleware' => ['role:admin']], function () {
         Route::prefix('admin')->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
             Route::resource('admin', AdminController::class);
@@ -47,7 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    Route::group(['middleware' => ['applicant']], function () {
+    Route::group(['middleware' => ['role:applicant']], function () {
         Route::get('/dashboard', fn () => view('auth.applicant.index'))->name('applicant.dashboard');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');

@@ -179,12 +179,12 @@ it('requires a start date and address when accepting', function () {
     Mail::assertNothingSent();
 });
 
-it('forbids applicants from updating applications', function () {
+it('redirects applicants to applicant dashboard when attempting to update applications', function () {
     $this->actingAs(User::factory()->create())
         ->patch(route('application.updateStatus', $this->application), [
             'status' => 'rejected',
         ])
-        ->assertForbidden();
+        ->assertRedirect(route('applicant.dashboard'));
 
     expect($this->application->fresh()->status)->toBe('pending');
 });
