@@ -86,6 +86,17 @@ class DatabaseSeeder extends Seeder
             Division::firstOrCreate(['name' => $name]);
         }
 
-        $this->call(StageSeeder::class);
+        $this->call([
+            StageSeeder::class,
+            JobSeeder::class,
+            ApplicantSeeder::class,
+            ApplicantEducationSeeder::class,
+            ApplicantFamilySeeder::class,
+            ApplicantWorkExprienceSeeder::class,
+            ApplicantTrainingSeeder::class,
+            ApplicantInterestSeeder::class,
+            ApplicantExpectationSeeder::class,
+            ApplicationSeeder::class,
+        ]);
     }
 }

@@ -17,7 +17,7 @@
 
             {{-- Counter Badge --}}
             @php
-                $activeCount = $applications->where('status', '!=', 'rejected')->count();
+                $activeCount = $applications->whereNotIn('status', ['rejected', 'cancelled'])->count();
             @endphp
             <div
                 class="inline-flex items-center px-5 py-2.5 bg-white border border-gray-100 rounded-2xl shadow-sm self-start md:self-auto gap-4">
