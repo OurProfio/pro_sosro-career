@@ -2,17 +2,49 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreApplicantFamilyRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->uppercaseInput([
+            'families.father.name',
+            'families.father.place_of_birth',
+            'families.father.education',
+            'families.father.work',
+            'families.mother.name',
+            'families.mother.place_of_birth',
+            'families.mother.education',
+            'families.mother.work',
+            'families.siblings.*.name',
+            'families.siblings.*.place_of_birth',
+            'families.siblings.*.education',
+            'families.siblings.*.work',
+            'families.spouse.name',
+            'families.spouse.place_of_birth',
+            'families.spouse.education',
+            'families.spouse.work',
+            'families.children.*.name',
+            'families.children.*.place_of_birth',
+            'families.children.*.education',
+            'families.children.*.work',
+        ]);
     }
 
     /**

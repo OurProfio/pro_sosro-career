@@ -201,7 +201,7 @@
                                             <input type="text" name="educations[{{ $index }}][institution_name]"
                                                 required value="{{ $edu['institution_name'] ?? '' }}"
                                                 placeholder="Contoh: Universitas Indonesia / SMAN 1 Jakarta"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.institution_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.institution_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("educations.{$index}.institution_name")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -215,7 +215,7 @@
                                             <input type="text" name="educations[{{ $index }}][major]" required
                                                 value="{{ $edu['major'] ?? '' }}"
                                                 placeholder="Contoh: Teknik Informatika / IPA / Rekayasa Perangkat Lunak"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.major") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.major") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("educations.{$index}.major")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -356,7 +356,7 @@
                                             <input type="text" name="trainings[{{ $tIndex }}][training_name]"
                                                 required value="{{ $train['training_name'] ?? '' }}"
                                                 placeholder="Contoh: Fullstack Web Development"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.training_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.training_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("trainings.{$tIndex}.training_name")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -370,7 +370,7 @@
                                             <input type="text" name="trainings[{{ $tIndex }}][organizer]"
                                                 required value="{{ $train['organizer'] ?? '' }}"
                                                 placeholder="Contoh: Dicoding Indonesia / BNSP"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("trainings.{$tIndex}.organizer")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -499,7 +499,7 @@
                     </label>
                     <input type="text" name="educations[{INDEX}][institution_name]" required
                         placeholder="Contoh: Universitas Indonesia / SMAN 1 Jakarta"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
@@ -508,7 +508,7 @@
                     </label>
                     <input type="text" name="educations[{INDEX}][major]" required
                         placeholder="Contoh: Teknik Informatika / IPA / Rekayasa Perangkat Lunak"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
@@ -584,7 +584,7 @@
                     </label>
                     <input type="text" name="trainings[{INDEX}][training_name]" required
                         placeholder="Contoh: Fullstack Web Development"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
@@ -593,7 +593,7 @@
                     </label>
                     <input type="text" name="trainings[{INDEX}][organizer]" required
                         placeholder="Contoh: Dicoding Indonesia / BNSP"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">

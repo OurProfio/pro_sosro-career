@@ -142,7 +142,7 @@
                                     <input id="previous_sosro_company" name="experiences[0][company_name]" type="text"
                                         value="{{ old('experiences.0.company_name', auth()->user()->applicant->previous_sosro_company ?? 'PT SINAR SOSRO GUNUNG SLAMAT') }}"
                                         placeholder="Contoh: PT SINAR SOSRO GUNUNG SLAMAT - KBT Jakarta"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_name')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
@@ -170,7 +170,7 @@
                                     <input id="previous_sosro_position" name="experiences[0][position]" type="text"
                                         value="{{ old('experiences.0.position', auth()->user()->applicant->previous_sosro_position ?? '') }}"
                                         placeholder="Contoh: Sales Officer"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.position')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
@@ -230,7 +230,7 @@
                                                 type="text"
                                                 value="{{ old('experiences.0.reference_name', auth()->user()->applicant->previous_sosro_reference_name ?? '') }}"
                                                 placeholder="Contoh: Bpk. Budi Santoso"
-                                                class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_name')
                                                 <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -243,7 +243,7 @@
                                                 type="text"
                                                 value="{{ old('experiences.0.reference_position', auth()->user()->applicant->previous_sosro_reference_position ?? '') }}"
                                                 placeholder="Contoh: Manager Area Sales"
-                                                class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_position')
                                                 <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -355,7 +355,7 @@
                                         <input type="text" name="experiences[{{ $index }}][company_name]"
                                             value="{{ $exp['company_name'] ?? '' }}"
                                             placeholder="Contoh: PT. Maju Bersama"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_name")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -382,7 +382,7 @@
                                         </label>
                                         <input type="text" name="experiences[{{ $index }}][position]"
                                             value="{{ $exp['position'] ?? '' }}" placeholder="Contoh: Staff IT Support"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.position")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -396,7 +396,7 @@
                                         <input type="text" name="experiences[{{ $index }}][division]"
                                             value="{{ $exp['division'] ?? '' }}"
                                             placeholder="Contoh: Information Technology"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.division") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.division") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.division")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -466,7 +466,7 @@
                                         <input type="text" name="experiences[{{ $index }}][facility]"
                                             value="{{ $exp['facility'] ?? '' }}"
                                             placeholder="Contoh: BPJS Kesehatan, Tunjangan Makan"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.facility") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.facility") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.facility")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -485,7 +485,7 @@
                                                 <input type="text" name="experiences[{{ $index }}][reference_name]"
                                                     value="{{ $exp['reference_name'] ?? '' }}"
                                                     placeholder="Contoh: Bpk. Hendra Gunawan"
-                                                    class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 @error("experiences.{$index}.reference_name")
                                                     <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
                                                 @enderror
@@ -497,7 +497,7 @@
                                                 <input type="text" name="experiences[{{ $index }}][reference_position]"
                                                     value="{{ $exp['reference_position'] ?? '' }}"
                                                     placeholder="Contoh: Manager Operasional"
-                                                    class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 @error("experiences.{$index}.reference_position")
                                                     <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
                                                 @enderror
@@ -525,7 +525,7 @@
                                         <input type="text" name="experiences[{{ $index }}][reason_for_leaving]"
                                             value="{{ $exp['reason_for_leaving'] ?? '' }}"
                                             placeholder="Contoh: Kontrak kerja berakhir / Ingin mengembangkan karir"
-                                            class="reason-leaving-input w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.reason_for_leaving") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case reason-leaving-input w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.reason_for_leaving") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.reason_for_leaving")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -622,7 +622,7 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Perusahaan</label>
                     <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT. Sinar Sosro"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
@@ -634,7 +634,7 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jabatan / Posisi</label>
                     <input type="text" name="experiences[{INDEX}][position]" placeholder="Contoh: Staff IT Support"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
@@ -642,7 +642,7 @@
                         Departemen</label>
                     <input type="text" name="experiences[{INDEX}][division]"
                         placeholder="Contoh: Information Technology"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5 md:col-span-2">
@@ -684,7 +684,7 @@
                         Diterima</label>
                     <input type="text" name="experiences[{INDEX}][facility]"
                         placeholder="Contoh: BPJS Kesehatan, Tunjangan Makan"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <!-- Kontak Referensi Terpisah -->
@@ -699,7 +699,7 @@
                             </label>
                             <input type="text" name="experiences[{INDEX}][reference_name]"
                                 placeholder="Contoh: Bpk. Hendra Gunawan"
-                                class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1">
                             <label class="block text-[11px] font-semibold text-gray-600">
@@ -707,7 +707,7 @@
                             </label>
                             <input type="text" name="experiences[{INDEX}][reference_position]"
                                 placeholder="Contoh: Manager Operasional"
-                                class="w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border border-gray-300 text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1">
                             <label class="block text-[11px] font-semibold text-gray-600">
@@ -724,7 +724,7 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alasan Berhenti</label>
                     <input type="text" name="experiences[{INDEX}][reason_for_leaving]"
                         placeholder="Contoh: Kontrak kerja berakhir / Ingin mengembangkan karir"
-                        class="reason-leaving-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        class="uppercase placeholder:normal-case reason-leaving-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
             </div>
         </div>
