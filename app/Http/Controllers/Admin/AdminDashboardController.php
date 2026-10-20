@@ -38,7 +38,6 @@ class AdminDashboardController extends Controller
             ->count();
 
         $activeJobsCount = (clone $jobsQuery())
-            ->approved()
             ->where('status', 'aktif')
             ->whereDate('opening_date', '<=', $today)
             ->whereDate('closing_date', '>=', $today)
@@ -62,7 +61,6 @@ class AdminDashboardController extends Controller
 
         $closingSoonJobs = $jobsQuery()
             ->withCount('applications')
-            ->approved()
             ->where('status', 'aktif')
             ->whereDate('opening_date', '<=', $today)
             ->whereDate('closing_date', '>=', $today)

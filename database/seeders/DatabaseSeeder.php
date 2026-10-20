@@ -50,22 +50,27 @@ class DatabaseSeeder extends Seeder
             );
         }
 
-        $user = User::firstOrCreate(
-            ['email' => 'admin@admin.admin'],
-            [
-                'password' => 'admin',
-                'role' => 'admin',
-            ]
-        );
+        $admins = [
+            ['email' => 'admin1@admin.test', 'name' => 'Admin HO', 'role' => 'superadmin', 'office' => 'Kantor Pusat'],
+            ['email' => 'admin2@admin.test', 'name' => 'Admin KPW', 'role' => 'admin', 'office' => 'KPW Jakarta Banten'],
+            ['email' => 'admin@admin.admin', 'name' => 'Admin', 'role' => 'superadmin', 'office' => 'Kantor Pusat'],
+        ];
 
-        Admin::firstOrCreate(
-            ['user_id' => $user->id],
-            [
-                'office_id' => 1,
-                'role' => 'superadmin',
-                'name' => 'Admin',
-            ]
-        );
+        foreach ($admins as $admin) {
+            $user = User::firstOrCreate(
+                ['email' => $admin['email']],
+                ['password' => 'password', 'role' => 'admin', 'email_verified_at' => now()],
+            );
+
+            Admin::firstOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'office_id' => Office::where('name', $admin['office'])->value('id'),
+                    'role' => $admin['role'],
+                    'name' => $admin['name'],
+                ],
+            );
+        }
 
         $divisions = [
             'Administrasi',

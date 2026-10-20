@@ -11,9 +11,9 @@ uses(RefreshDatabase::class);
 it('seeds jobs and applicants with complete biodata', function () {
     $this->seed(DatabaseSeeder::class);
 
-    expect(Job::count())->toBe(8)
-        ->and(Applicant::count())->toBe(10)
-        ->and(Application::count())->toBe(10);
+    expect(Job::count())->toBe(3)
+        ->and(Applicant::count())->toBe(3)
+        ->and(Application::count())->toBe(3);
 
     Applicant::with(['user', 'educations', 'families', 'trainings', 'interest', 'expectation'])->get()
         ->each(function (Applicant $applicant) {
@@ -30,7 +30,7 @@ it('can be run twice without duplicating data', function () {
     $this->seed(DatabaseSeeder::class);
     $this->seed(DatabaseSeeder::class);
 
-    expect(Job::count())->toBe(8)
-        ->and(Applicant::count())->toBe(10)
+    expect(Job::count())->toBe(3)
+        ->and(Applicant::count())->toBe(3)
         ->and(Applicant::first()->educations)->toHaveCount(2);
 });

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\RejectJobRequest;
 use App\Http\Requests\Admin\StoreJobRequest;
 use App\Http\Requests\Admin\UpdateJobRequest;
 use App\Models\Division;
@@ -11,7 +10,6 @@ use App\Models\Job;
 use App\Models\Office;
 use App\Models\Stage;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Gate;
 
 class JobController extends Controller
 {
@@ -53,26 +51,12 @@ class JobController extends Controller
         $openingDate = Carbon::parse($request->opening_date)->startOfDay();
         $status = $openingDate->isToday() ? 'aktif' : 'nonaktif';
 
-        $admin = auth()->user()->admin;
-        $isSuperAdmin = $admin->role === 'superadmin';
-
-        $data = $request->validated();
-
-        if (! $isSuperAdmin) {
-            $data['office_id'] = $admin->office_id;
-        }
-
-        Job::create($data + [
-            'admin_id' => $admin->id,
+        Job::create($request->validated() + [
+            'admin_id' => auth()->user()->admin->id,
             'status' => $status,
-            'approval_status' => $isSuperAdmin ? 'approved' : 'pending',
-            'approved_by' => $isSuperAdmin ? $admin->id : null,
-            'approved_at' => $isSuperAdmin ? now() : null,
         ]);
 
-        return redirect()->route('job.index')->with('success', $isSuperAdmin
-            ? 'Berhasil membuat lowongan.'
-            : 'Lowongan berhasil dibuat dan menunggu persetujuan HO.');
+        return redirect()->route('job.index');
     }
 
     /**
@@ -119,56 +103,9 @@ class JobController extends Controller
      */
     public function update(UpdateJobRequest $request, Job $job)
     {
-        $admin = auth()->user()->admin;
-        $data = $request->validated();
-
-        if ($admin->role !== 'superadmin') {
-            $data['office_id'] = $admin->office_id;
-            $data += [
-                'approval_status' => 'pending',
-                'approved_by' => null,
-                'approved_at' => null,
-                'rejection_reason' => null,
-            ];
-        }
-
-        $job->update($data);
+        $job->update($request->validated());
 
         return redirect()->route('job.index');
-    }
-
-    /**
-     * Approve a job posting (superadmin only).
-     */
-    public function approve(Job $job)
-    {
-        Gate::authorize('approve', $job);
-
-        $job->update([
-            'approval_status' => 'approved',
-            'approved_by' => auth()->user()->admin->id,
-            'approved_at' => now(),
-            'rejection_reason' => null,
-        ]);
-
-        return redirect()->back()->with('success', 'Lowongan berhasil disetujui.');
-    }
-
-    /**
-     * Reject a job posting with a reason (superadmin only).
-     */
-    public function reject(RejectJobRequest $request, Job $job)
-    {
-        Gate::authorize('approve', $job);
-
-        $job->update([
-            'approval_status' => 'rejected',
-            'approved_by' => auth()->user()->admin->id,
-            'approved_at' => now(),
-            'rejection_reason' => $request->validated('rejection_reason'),
-        ]);
-
-        return redirect()->back()->with('success', 'Lowongan ditolak.');
     }
 
     /**

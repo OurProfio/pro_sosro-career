@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,12 +33,16 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        User::create([
+        $user = User::create([
             'email' => $request->email,
             'password' => $request->password,
         ]);
 
-        return redirect()->route('guest.login')->with('success', 'Pendaftaran berhasil. Silakan masuk dengan akun Anda.');
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect()->route('verification.notice')->with('success', 'Pendaftaran berhasil. Silakan cek email Anda untuk verifikasi akun.');
     }
 
     public function logout(Request $request)

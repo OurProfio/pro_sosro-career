@@ -1,30 +1,21 @@
 <div>
-    <p>Selamat Pagi {{ $application->applicant?->name ?? 'Kandidat' }},</p>
+    <p>Selamat pagi {{ $application->applicant?->name ?? 'Kandidat' }},</p>
+
+    <p>Melanjutkan proses seleksi untuk posisi {{ $application->job->title }}, kami mengundang Anda untuk mengikuti Medical Check Up (MCU) pada:</p>
 
     <p>
-        Melanjutkan proses rekrutmen yang sudah Anda laksanakan sebelumnya, melalui pemberitahuan ini kami mengundang Anda untuk dapat mengikuti proses Medical Check Up dengan PT Sinar Sosro Gunung Slamat pada:
+        <strong>Hari/tanggal:</strong> {{ $date ? \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') : 'Akan diinformasikan lebih lanjut' }}<br>
+        <strong>Waktu:</strong> {{ $time ?? '08:00' }} WIB<br>
+        <strong>Tempat:</strong> {{ $location ?? 'RS / Klinik Rekanan PT Sinar Sosro' }}<br>
+        <strong>Alamat:</strong> {{ $address ?? '-' }}
     </p>
 
-    <p><strong>Tanggal : {{ $date ? \Carbon\Carbon::parse($date)->locale('id')->isoFormat('dddd, D MMMM Y') : 'Akan diinformasikan lebih lanjut' }}</strong></p>
-    <p><strong>Waktu : {{ $time ?? '08:00 WIB' }}</strong></p>
-    <p><strong>Tempat : {{ $location ?? 'RS / Klinik Rekanan PT Sinar Sosro' }}</strong></p>
-    <p><strong>Alamat : {{ $address ?? '-' }}</strong></p>
+    <p>Untuk surat pengantar MCU akan kami kirimkan ke pihak RS/Klinik, sehingga Anda cukup langsung datang ke bagian MCU dengan membawa KTP dan menginformasikan dari PT Sinar Sosro Gunung Slamat.</p>
 
-    <p>
-        Mohon untuk melakukan puasa mulai dari pukul 22.00 WIB H-1 sebelum MCU dilaksanakan (hanya diperbolehkan minum air putih). Untuk surat pengantar MCU akan kami kirimkan ke pihak RS/Klinik, sehingga Anda cukup langsung datang ke bagian MCU dengan membawa KTP dan menginformasikan bahwa Anda peserta rekrutmen dari PT Sinar Sosro Gunung Slamat.
+    <p>Salam,<br>
+        HC – Recruitment<br>
+        PT Sinar Sosro Gunung Slamat
     </p>
 
-    <p>Demikian informasi ini kami sampaikan. Atas perhatian dan kerja samanya kami ucapkan terima kasih.</p>
-
-    <p>Regards,</p>
-
-    <p>
-        HC-OD &amp; Recruitment<br>
-        PT. Sinar Sosro Gunung Slamat<br>
-        Graha Rekso Lt.8<br>
-        Jl. Bulevard Artha Gading No.Kav.A1<br>
-        RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading<br>
-        Jakarta Utara, DKI Jakarta 14240<br>
-        Email : <a href="mailto:recruitment.ho@sosro.com">recruitment.ho@sosro.com</a>
-    </p>
+    <p><em>Email ini dikirim otomatis oleh sistem. Mohon tidak dibalas.</em></p>
 </div>

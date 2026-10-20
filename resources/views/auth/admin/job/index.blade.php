@@ -148,16 +148,6 @@
                                     </span>
                                 @endif
 
-                <div class="mt-1">
-                    @if ($job->approval_status === 'pending')
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-100">Menunggu Persetujuan</span>
-                    @elseif ($job->approval_status === 'rejected')
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-100">Ditolak</span>
-                    @else
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">Disetujui</span>
-                    @endif
-                </div>
-
                             </td>
 
                             <td class="px-6 py-4 text-center" onclick="event.stopPropagation()">
