@@ -1,37 +1,35 @@
 Notes Alan :
 
 DONE
-- sesuaikan namanya pt sinar sosro gunung slamat
-- bagian maksimal kuota lamar 3, messagenya belum di perbaiki
-- foto di show biodata blm show
-- facebook dan TikTok apus
-- bpjs kseehatan dan tk apus
-- gol darah tambahin di input create biodata
-- klo l/p uda otomatis tau ayah laki ibu perempuan
-- input ortu tambahin status nikah apa
-- bagi anggota keluarga yg sudah meninggal pindahin ke halaman atas
-- apus underline yg double
-- hapus input covid di file print
-- input berapa batang sehari apus aja yg diprint
-- tambahin darimana anda dapat info job ini(linkekdin, Instagram, TikTok, etc),Nah kalau dia isi referral baru minta dia input  (Nama Lengkap Karyawan)
-- ganti role Utama di data users jadi pelamar
-- data admin, data kantor, data users(hapus kata datanya)
-- input referensi karyawan di edit biodata ga muncul
-- status lowongan apus aja yg di create lowongan
-- tambah statistic di lowongan
+* nama file dibelakang tambahin apa yg dia apply
+* sesuaikan namanya pt sinar sosro gunung slamat(lagi ditest)
+* bagian pernah kerja disosro Ketika diedit blm ngambil dari db
+* form biodata create dan edit di bagian bertato kanannya masi kosong jadi naikin aja input status pernikahan ke sebelahnya
+* agama nanti narik dari hcis(blm dpt datanya dari ka bagas)
+* select option buat nama universitas dan jurusan(blm dpt datanya dari ka bagas)
+
 
 
 
 
 
 ON GOING
-- cari cara biar struktur organisasi perusahaan bisa tergambarkan kalo misal ada pengalaman dari perusahaan lain
-- lokasi kerja di lowongan jadi select option
-- tambah filter
-- table stages blm ada halaman crud nya, masi add data dari dbseeder
-- bisa cancel lamaran yg uda di apply, kalo blm psikotes;jika tidak terpilih menjadi candidate data tetep ada di db applications tapi kuota nya jadi nambah satu
-- bidang(accounting, IT, purchasing) blm di siapin halaman crud
-- role untuk admin dan superadmin
+* ortu mertua kasi input tapi opsional
+* tambah input alamat perusahaan
+
+* message error masi Bahasa inggris dan pesannya munculin name input(dalam arti kodingan) bukan untuk dibaca manusia
+* kalo dicreate jangan ada tombol Kembali ke petinjau sebelum semua/step 4 selesai
+* kasi maksimal pengalaman cuma 3 jadi kalo semisal sosro pernah jadi sisa 2 pengalaman tersisa
+
+* bisa cancel apply pas sebagai applicant(lagi di test)
+* tanggal buka hapus aja(lagi ditest)
+* kota tempat sekolah berada blm ada
+* status lowongan apus aja yg di create lowongan
 
 
 
+implementasi
+- select option di create dan edit agama ambil nama2nya dari tabel agama yg tadi kita buat tapi idnya dari religion_id jadi nanti savenya religion_idnya ya
+- select option di create dan edit yang pilih dari sekolah mana sama kayak agama konsepnya cuma kalo semisal dia pilih other masukkin dari sekolah mana dan kota/kabupaten apa, tapi saya masi bingung untuk naro data kalo masukkin other yg nama sekolah dan kotanya menurutmu gmn
+- select option di create dan edit yang major sama kayak sekolah saya punya masalah yg sama
+- nah yg educaation konsepnya sama kayak religion aja kalo other ya other gaada nambah info baru 

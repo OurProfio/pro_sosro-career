@@ -78,7 +78,7 @@ class UpdateApplicantRequest extends FormRequest
             'weight' => ['required', 'integer', 'min:30', 'max:250'],
             'blood_type' => ['required', 'in:A,B,AB,O'],
             'phone_number' => ['required', 'string', 'between:10,15'],
-            'religion' => ['required', 'string', 'in:Islam,Kristen,Katolik,Hindu,Buddha,Khonghucu,Lainnya'],
+            'religion' => ['required', 'string', 'exists:treligion,RELIGION_ID'],
             'medical_history' => ['nullable', 'string'],
             'is_smoker' => ['required', 'in:y,n'],
             'has_tattoo' => ['required', 'in:y,n'],

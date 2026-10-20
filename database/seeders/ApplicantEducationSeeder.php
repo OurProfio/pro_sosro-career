@@ -21,6 +21,7 @@ class ApplicantEducationSeeder extends Seeder
             $applicant->educations()->createMany([
                 [
                     'institution_name' => 'SMA Negeri '.(1 + $index).' '.$applicant->place_of_birth,
+                    'city' => $applicant->place_of_birth ?: 'Jakarta',
                     'degree_level' => 'SMA/SMK',
                     'major' => 'IPA',
                     'gpa' => 85.5 + $index % 10 / 10,
@@ -29,6 +30,7 @@ class ApplicantEducationSeeder extends Seeder
                 ],
                 [
                     'institution_name' => $universities[$index % count($universities)],
+                    'city' => 'Jakarta',
                     'degree_level' => 'D4/S1',
                     'major' => $majors[$index % count($majors)],
                     'gpa' => 3.2 + $index % 8 / 10,

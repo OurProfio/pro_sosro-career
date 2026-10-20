@@ -27,7 +27,8 @@ class StoreApplicantEducationRequest extends FormRequest
         return [
             'educations' => ['required', 'array', 'min:1'],
             'educations.*.institution_name' => ['required', 'string', 'max:255'],
-            'educations.*.degree_level' => ['required', 'string', 'in:SMA/SMK,D3,D4/S1,S2,S3'],
+            'educations.*.city' => ['required', 'string', 'max:255'],
+            'educations.*.degree_level' => ['required', 'string', 'max:100'],
             'educations.*.major' => ['required', 'string', 'max:150'],
             'educations.*.gpa' => ['required', 'numeric', 'between:0,100.00'],
             'educations.*.entry_year' => ['required', 'digits:4', 'integer', 'min:1970', 'max:'.$currentYear],
@@ -46,6 +47,7 @@ class StoreApplicantEducationRequest extends FormRequest
             'educations.required' => 'Data riwayat pendidikan wajib diisi.',
             'educations.min' => 'Minimal sertakan 1 riwayat pendidikan terakhir.',
             'educations.*.institution_name.required' => 'Nama sekolah / universitas wajib diisi.',
+            'educations.*.city.required' => 'Kota/Kabupaten sekolah wajib diisi.',
             'educations.*.degree_level.required' => 'Jenjang pendidikan wajib dipilih.',
             'educations.*.degree_level.in' => 'Pilihan jenjang pendidikan tidak valid.',
             'educations.*.major.required' => 'Jurusan / program studi wajib diisi.',

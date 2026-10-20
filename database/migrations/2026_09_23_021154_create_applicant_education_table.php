@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('applicant_id')->constrained('applicants')->cascadeOnDelete();
             $table->string('institution_name');
+            $table->string('city');
             $table->string('degree_level');
             $table->string('major');
             $table->decimal('gpa', 4, 2);

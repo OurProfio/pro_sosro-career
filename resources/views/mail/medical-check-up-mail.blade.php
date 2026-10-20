@@ -7,7 +7,7 @@
 
     <p><strong>Tanggal : {{ $date ? \Carbon\Carbon::parse($date)->locale('id')->isoFormat('dddd, D MMMM Y') : 'Akan diinformasikan lebih lanjut' }}</strong></p>
     <p><strong>Waktu : {{ $time ?? '08:00 WIB' }}</strong></p>
-    <p><strong>Tempat : {{ $location ?? 'RS / Klinik Rekanan PT Sinar Sosro' }}</strong></p>
+    <p><strong>Tempat : {{ $location ?? 'RS / Klinik Rekanan PT Sinar Sosro Gunung Slamat' }}</strong></p>
     <p><strong>Alamat : {{ $address ?? '-' }}</strong></p>
 
     <p>

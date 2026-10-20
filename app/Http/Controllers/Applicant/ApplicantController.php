@@ -49,9 +49,10 @@ class ApplicantController extends Controller
     public function create()
     {
         $divisions = Division::all();
+        $religions = DB::table('treligion')->select('RELIGION_ID', 'RELIGION_NAME_ID', 'RELIGION_NAME_EN')->get();
         $applicant = auth()->user()->applicant ?? null;
 
-        return view('auth.applicant.biodata.create.biodata', compact('divisions', 'applicant'));
+        return view('auth.applicant.biodata.create.biodata', compact('divisions', 'religions', 'applicant'));
     }
 
     /**
@@ -110,8 +111,9 @@ class ApplicantController extends Controller
     public function edit(Applicant $applicant)
     {
         $divisions = Division::all();
+        $religions = DB::table('treligion')->select('RELIGION_ID', 'RELIGION_NAME_ID', 'RELIGION_NAME_EN')->get();
 
-        return view('auth.applicant.biodata.edit', compact('applicant', 'divisions'));
+        return view('auth.applicant.biodata.edit', compact('applicant', 'divisions', 'religions'));
     }
 
     /**

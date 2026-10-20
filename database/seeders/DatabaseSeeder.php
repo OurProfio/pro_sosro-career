@@ -87,6 +87,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->call([
+            HrisMasterSeeder::class,
             StageSeeder::class,
             JobSeeder::class,
             ApplicantSeeder::class,

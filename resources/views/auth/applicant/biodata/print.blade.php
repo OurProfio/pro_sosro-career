@@ -25,9 +25,9 @@ input[type=checkbox]{margin:0 4px 0 0;width:11px;height:11px;vertical-align:-1px
 .s.x{text-decoration:line-through}
 i.sm{font-size:10px}
 table{border-collapse:collapse;table-layout:fixed;width:692px;margin-left:-18px}
-td,th{border:1px solid #000;padding:1px 3px;font-size:10.5px;text-align:left;vertical-align:middle;word-break:break-word;overflow-wrap:anywhere;white-space:normal;height:auto}
+td,th{border:1px solid #000;padding:1px 3px;font-size:10.5px;text-align:center;vertical-align:middle;word-break:break-word;overflow-wrap:anywhere;white-space:normal;height:auto}
 th{text-align:center;font-weight:bold;padding:2px 0}
-td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:anywhere;white-space:normal;line-height:1.2;text-transform:uppercase;pointer-events:none}
+td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:anywhere;white-space:normal;line-height:1.2;text-transform:uppercase;pointer-events:none;text-align:center}
 .t2{width:606px;margin-left:19px}
 .jr{display:flex;align-items:flex-end;height:18px;margin:0 5px 0 36px;position:relative}
 .jr .n{position:absolute;left:-26px}
@@ -280,7 +280,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 {!! $R('No. Handphone', $I(0, $applicant->phone_number)) !!}
 {!! $R('Email', $I(0, $applicant->email)) !!}
 {!! $R('Instagram', $I(163, $applicant->instagram) . '<span class="w" style="margin-left:8px;width:60px">LinkedIn :</span>' . $I(0, $applicant->linkedin)) !!}
-{!! $R('Agama', $I(163, $applicant->religion)) !!}
+{!! $R('Agama', $I(163, $applicant->religion_name ?? $applicant->religion)) !!}
 <div class="r" style="height:19px"><span class="l">Status Perkawinan<sup>*)</sup></span><span class="c">:</span><label class="w" style="width:200px"><input type="checkbox" disabled @checked($marital === 'single')>single/bertunangan</label><label class="w" style="width:100px"><input type="checkbox" disabled @checked($marital === 'married')>menikah, sejak</label><span class="c">:</span>{!! $I(100, $marital === 'married' ? $maritalYear : '') !!}</div>
 <div class="r" style="height:17px"><span class="l"></span><span class="c"></span><i class="sm w" style="width:200px;margin-left:3px"><sup>*)</sup> pilih (v) salah satu</i><label class="w" style="width:100px"><input type="checkbox" disabled @checked(in_array($marital, ['divorced', 'widowed']))>bercerai, sejak</label><span class="c">:</span>{!! $I(100, in_array($marital, ['divorced', 'widowed']) ? $maritalYear : '') !!}</div>
 {!! $R('No. KTP', $I(192, $applicant->nik)) !!}

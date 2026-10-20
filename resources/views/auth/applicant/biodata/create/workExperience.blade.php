@@ -94,6 +94,15 @@
                         </p>
                     </header>
 
+                    @php
+                        $sosroExp = $workExperiences->first(function ($exp) {
+                            $cn = strtolower((string) ($exp->company_name ?? ''));
+                            return str_contains($cn, 'sosro') || str_contains($cn, 'gunung slamat') || str_contains($cn, 'rekso');
+                        });
+                        $hasWorkedSosroDb = $sosroExp ? '1' : ($workExperiences->isNotEmpty() ? '0' : '');
+                        $selectedWorkedSosro = old('has_worked_in_sosro', $hasWorkedSosroDb);
+                    @endphp
+
                     <div class="space-y-4 border-b border-gray-100 pb-6">
                         <div class="space-y-1.5">
                             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -103,7 +112,7 @@
                                 <label for="worked_sosro_yes" class="inline-flex items-center cursor-pointer group py-1">
                                     <input id="worked_sosro_yes" type="radio" name="has_worked_in_sosro" value="1"
                                         required
-                                        {{ old('has_worked_in_sosro', auth()->user()->applicant->has_worked_in_sosro ?? '') == '1' ? 'checked' : '' }}
+                                        {{ $selectedWorkedSosro == '1' ? 'checked' : '' }}
                                         class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
                                     <span
                                         class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Pernah</span>
@@ -111,7 +120,7 @@
                                 <label for="worked_sosro_no" class="inline-flex items-center cursor-pointer group py-1">
                                     <input id="worked_sosro_no" type="radio" name="has_worked_in_sosro" value="0"
                                         required
-                                        {{ old('has_worked_in_sosro', auth()->user()->applicant->has_worked_in_sosro ?? '') == '0' ? 'checked' : '' }}
+                                        {{ $selectedWorkedSosro == '0' ? 'checked' : '' }}
                                         class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
                                     <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Belum
                                         Pernah</span>
@@ -140,7 +149,7 @@
                                         Nama Perusahaan / Unit Kerja <span class="text-[#B11116]">*</span>
                                     </label>
                                     <input id="previous_sosro_company" name="experiences[0][company_name]" type="text"
-                                        value="{{ old('experiences.0.company_name', auth()->user()->applicant->previous_sosro_company ?? 'PT SINAR SOSRO GUNUNG SLAMAT') }}"
+                                        value="{{ old('experiences.0.company_name', $sosroExp?->company_name ?? 'PT SINAR SOSRO GUNUNG SLAMAT') }}"
                                         placeholder="Contoh: PT SINAR SOSRO GUNUNG SLAMAT - KBT Jakarta"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_name')
@@ -154,7 +163,7 @@
                                         No. Telepon Perusahaan / Kantor
                                     </label>
                                     <input id="previous_sosro_company_phone" name="experiences[0][company_phone]" type="tel"
-                                        value="{{ old('experiences.0.company_phone', auth()->user()->applicant->previous_sosro_company_phone ?? '') }}"
+                                        value="{{ old('experiences.0.company_phone', $sosroExp?->company_phone ?? '') }}"
                                         placeholder="Contoh: (021) 1234567 atau 0812345678"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_phone')
@@ -168,7 +177,7 @@
                                         Jabatan Terakhir <span class="text-[#B11116]">*</span>
                                     </label>
                                     <input id="previous_sosro_position" name="experiences[0][position]" type="text"
-                                        value="{{ old('experiences.0.position', auth()->user()->applicant->previous_sosro_position ?? '') }}"
+                                        value="{{ old('experiences.0.position', $sosroExp?->position ?? '') }}"
                                         placeholder="Contoh: Sales Officer"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.position')
@@ -184,7 +193,7 @@
                                     </label>
                                     <input id="previous_sosro_start_date" name="experiences[0][start_date]"
                                         type="date"
-                                        value="{{ old('experiences.0.start_date', auth()->user()->applicant->previous_sosro_start_date ?? '') }}"
+                                        value="{{ old('experiences.0.start_date', $sosroExp?->start_date ? \Carbon\Carbon::parse($sosroExp->start_date)->format('Y-m-d') : '') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.start_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.start_date')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
@@ -202,14 +211,14 @@
                                             <input type="checkbox" id="sosro_is_current_job"
                                                 name="experiences[0][is_current]" value="1"
                                                 onchange="toggleCurrentJob(this)"
-                                                {{ old('experiences.0.is_current', auth()->user()->applicant->previous_sosro_is_current ?? '') == '1' ? 'checked' : '' }}
+                                                {{ old('experiences.0.is_current', $sosroExp && empty($sosroExp->end_date) && !empty($sosroExp->start_date) ? '1' : '') == '1' ? 'checked' : '' }}
                                                 class="is-current-job-checkbox rounded border-gray-300 text-[#B11116] focus:ring-[#B11116] w-3.5 h-3.5 cursor-pointer">
                                             <span class="ml-1.5 text-xs text-gray-600 font-semibold">Masih Bekerja Saat
                                                 Ini</span>
                                         </label>
                                     </div>
                                     <input id="previous_sosro_end_date" name="experiences[0][end_date]" type="date"
-                                        value="{{ old('experiences.0.end_date', auth()->user()->applicant->previous_sosro_end_date ?? '') }}"
+                                        value="{{ old('experiences.0.end_date', $sosroExp?->end_date ? \Carbon\Carbon::parse($sosroExp->end_date)->format('Y-m-d') : '') }}"
                                         class="end-date-input w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.end_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.end_date')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
@@ -228,7 +237,7 @@
                                             </label>
                                             <input id="previous_sosro_reference_name" name="experiences[0][reference_name]"
                                                 type="text"
-                                                value="{{ old('experiences.0.reference_name', auth()->user()->applicant->previous_sosro_reference_name ?? '') }}"
+                                                value="{{ old('experiences.0.reference_name', $sosroExp?->reference_name ?? '') }}"
                                                 placeholder="Contoh: Bpk. Budi Santoso"
                                                 class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_name')
@@ -241,7 +250,7 @@
                                             </label>
                                             <input id="previous_sosro_reference_position" name="experiences[0][reference_position]"
                                                 type="text"
-                                                value="{{ old('experiences.0.reference_position', auth()->user()->applicant->previous_sosro_reference_position ?? '') }}"
+                                                value="{{ old('experiences.0.reference_position', $sosroExp?->reference_position ?? '') }}"
                                                 placeholder="Contoh: Manager Area Sales"
                                                 class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_position')
@@ -255,7 +264,7 @@
                                             <input id="previous_sosro_reference_phone" name="experiences[0][reference_phone]"
                                                 type="tel" inputmode="numeric"
                                                 oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                                value="{{ old('experiences.0.reference_phone', auth()->user()->applicant->previous_sosro_reference_phone ?? '') }}"
+                                                value="{{ old('experiences.0.reference_phone', $sosroExp?->reference_phone ?? '') }}"
                                                 placeholder="Contoh: 081234567890"
                                                 class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_phone')
@@ -279,7 +288,11 @@
                             if (empty($oldExperiences)) {
                                 if (isset($workExperiences) && $workExperiences->isNotEmpty()) {
                                     $oldExperiences = [];
-                                    foreach ($workExperiences as $idx => $we) {
+                                    $generalExperiences = $sosroExp
+                                        ? $workExperiences->filter(fn ($we) => $we->id !== $sosroExp->id)->values()
+                                        : $workExperiences->values();
+
+                                    foreach ($generalExperiences as $idx => $we) {
                                         $oldExperiences[$idx + 1] = [
                                             'company_name' => $we->company_name,
                                             'company_phone' => $we->company_phone,
@@ -621,7 +634,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Perusahaan</label>
-                    <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT. Sinar Sosro"
+                    <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT Sinar Sosro Gunung Slamat"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 

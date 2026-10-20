@@ -28,7 +28,33 @@ class ApplicantEducationController extends Controller
         $educations = $applicant?->educations ?? collect();
         $trainings = $applicant?->trainings ?? collect();
 
-        return view('auth.applicant.biodata.create.education', compact('applicant', 'educations', 'trainings'));
+        $educationTypes = DB::table('thrm_education')
+            ->select('EDUTYPE_ID', 'EDUTYPE_NAME_ID', 'EDUTYPE_NAME_EN', 'EDUTYPE_LEVEL')
+            ->orderByRaw('COALESCE(EDUTYPE_LEVEL, 99) ASC')
+            ->get();
+
+        $majors = DB::table('thrm_list_major')
+            ->select('MAJOR_ID', 'MAJOR_CODE', 'MAJOR_NAME')
+            ->whereNotNull('MAJOR_NAME')
+            ->where('MAJOR_NAME', '!=', '')
+            ->orderBy('MAJOR_NAME', 'ASC')
+            ->get();
+
+        $schools = DB::table('thrm_list_school')
+            ->select('EDU_ID', 'EDU_CODE', 'EDU_NAME')
+            ->whereNotNull('EDU_NAME')
+            ->where('EDU_NAME', '!=', '')
+            ->orderBy('EDU_NAME', 'ASC')
+            ->get();
+
+        return view('auth.applicant.biodata.create.education', compact(
+            'applicant',
+            'educations',
+            'trainings',
+            'educationTypes',
+            'majors',
+            'schools'
+        ));
     }
 
     /**

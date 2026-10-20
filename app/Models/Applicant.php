@@ -6,6 +6,7 @@ use Database\Factories\ApplicantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 #[Fillable([
     'user_id',
@@ -49,6 +50,19 @@ class Applicant extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getReligionNameAttribute(): ?string
+    {
+        if (empty($this->religion)) {
+            return null;
+        }
+
+        $row = DB::table('treligion')
+            ->where('RELIGION_ID', $this->religion)
+            ->first();
+
+        return $row ? ($row->RELIGION_NAME_ID ?? $row->RELIGION_NAME_EN) : $this->religion;
     }
 
     public function workExperiences()

@@ -189,7 +189,7 @@
                             </div>
                             <div>
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">Agama</p>
-                                <p class="font-semibold text-slate-700">{{ ucfirst($applicant->religion) }}</p>
+                                <p class="font-semibold text-slate-700">{{ $applicant->religion_name ?? ucfirst($applicant->religion) }}</p>
                             </div>
                             <div class="mt-2">
                                 <p class="text-[9px] text-slate-400 font-semibold uppercase">Jenis Kelamin</p>

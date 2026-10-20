@@ -198,7 +198,7 @@
                                     <div>
                                         <p class="text-xs text-slate-400">Agama</p>
                                         <p class="mt-1 text-sm font-medium text-slate-700">
-                                            {{ $applicant->religion ?? '-' }}
+                                            {{ $applicant->religion_name ?? $applicant->religion ?? '-' }}
                                         </p>
                                     </div>
                                 </div>

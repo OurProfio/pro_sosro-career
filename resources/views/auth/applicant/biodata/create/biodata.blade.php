@@ -286,10 +286,10 @@
                                 <option value="" disabled
                                     {{ old('religion', auth()->user()->applicant->religion ?? '') ? '' : 'selected' }}>
                                     Pilih Agama</option>
-                                @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu', 'Lainnya'] as $agamaOption)
-                                    <option value="{{ $agamaOption }}"
-                                        {{ old('religion', auth()->user()->applicant->religion ?? '') == $agamaOption ? 'selected' : '' }}>
-                                        {{ $agamaOption }}
+                                @foreach ($religions as $rel)
+                                    <option value="{{ $rel->RELIGION_ID }}"
+                                        {{ old('religion', auth()->user()->applicant->religion ?? '') == $rel->RELIGION_ID ? 'selected' : '' }}>
+                                        {{ $rel->RELIGION_NAME_ID ?? $rel->RELIGION_NAME_EN }}
                                     </option>
                                 @endforeach
                             </select>
@@ -412,50 +412,46 @@
                             @enderror
                         </div>
 
-                        <div class="space-y-4 md:col-span-2 pt-2 border-t border-gray-100">
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="space-y-1.5">
-                                    <label for="marital_status"
-                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        Status Pernikahan <span class="text-[#B11116]">*</span>
-                                    </label>
-                                    <select id="marital_status" name="marital_status" required onchange="toggleMaritalDate(this.value)"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_status') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <option value="" disabled
-                                            {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') ? '' : 'selected' }}>
-                                            Pilih Status</option>
-                                        <option value="single"
-                                            {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'single' ? 'selected' : '' }}>
-                                            Belum Menikah</option>
-                                        <option value="married"
-                                            {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'married' ? 'selected' : '' }}>
-                                            Sudah Menikah</option>
-                                        <option value="divorced"
-                                            {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'divorced' ? 'selected' : '' }}>
-                                            Cerai Hidup</option>
-                                        <option value="widowed"
-                                            {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'widowed' ? 'selected' : '' }}>
-                                            Cerai Mati</option>
-                                    </select>
-                                    @error('marital_status')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                        <div class="space-y-1.5">
+                            <label for="marital_status"
+                                class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Status Pernikahan <span class="text-[#B11116]">*</span>
+                            </label>
+                            <select id="marital_status" name="marital_status" required onchange="toggleMaritalDate(this.value)"
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_status') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                <option value="" disabled
+                                    {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') ? '' : 'selected' }}>
+                                    Pilih Status</option>
+                                <option value="single"
+                                    {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'single' ? 'selected' : '' }}>
+                                    Belum Menikah</option>
+                                <option value="married"
+                                    {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'married' ? 'selected' : '' }}>
+                                    Sudah Menikah</option>
+                                <option value="divorced"
+                                    {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'divorced' ? 'selected' : '' }}>
+                                    Cerai Hidup</option>
+                                <option value="widowed"
+                                    {{ old('marital_status', auth()->user()->applicant->marital_status ?? '') == 'widowed' ? 'selected' : '' }}>
+                                    Cerai Mati</option>
+                            </select>
+                            @error('marital_status')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                                <div id="maritalDateWrapper" class="space-y-1.5 {{ in_array(old('marital_status', auth()->user()->applicant->marital_status ?? ''), ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
-                                    <label for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                        Tahun Menikah / Bercerai (Sejak Tahun)
-                                    </label>
-                                    <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
-                                        placeholder="Contoh: 2020"
-                                        value="{{ old('marital_date', auth()->user()->applicant->marital_date ?? '') }}"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                    <span class="text-[11px] text-gray-400 block">Masukkan tahun (4 digit, contoh: 2020).</span>
-                                    @error('marital_date')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
+                        <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array(old('marital_status', auth()->user()->applicant->marital_status ?? ''), ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
+                            <label for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Tahun Menikah / Bercerai (Sejak Tahun)
+                            </label>
+                            <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
+                                placeholder="Contoh: 2020"
+                                value="{{ old('marital_date', auth()->user()->applicant->marital_date ?? '') }}"
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <span class="text-[11px] text-gray-400 block">Masukkan tahun (4 digit, contoh: 2020).</span>
+                            @error('marital_date')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
                         </div>
 
                         <div class="space-y-1.5">

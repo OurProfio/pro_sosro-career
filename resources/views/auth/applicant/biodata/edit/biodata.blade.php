@@ -191,15 +191,18 @@
                             <label for="religion" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Agama <span class="text-[#B11116]">*</span>
                             </label>
+                            @php
+                                $religionsList = $religions ?? \Illuminate\Support\Facades\DB::table('treligion')->select('RELIGION_ID', 'RELIGION_NAME_ID', 'RELIGION_NAME_EN')->get();
+                            @endphp
                             <select id="religion" name="religion" required
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('religion') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 <option value="" disabled
                                     {{ old('religion', $applicant->religion) ? '' : 'selected' }}>Pilih Agama
                                 </option>
-                                @foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Khonghucu', 'Lainnya'] as $agamaOption)
-                                    <option value="{{ $agamaOption }}"
-                                        {{ old('religion', $applicant->religion) == $agamaOption ? 'selected' : '' }}>
-                                        {{ $agamaOption }}
+                                @foreach ($religionsList as $rel)
+                                    <option value="{{ $rel->RELIGION_ID }}"
+                                        {{ old('religion', $applicant->religion) == $rel->RELIGION_ID ? 'selected' : '' }}>
+                                        {{ $rel->RELIGION_NAME_ID ?? $rel->RELIGION_NAME_EN }}
                                     </option>
                                 @endforeach
                             </select>
@@ -319,7 +322,7 @@
                             @enderror
                         </div>
 
-                        <div class="space-y-1.5 md:col-span-2 pt-2 border-t border-gray-100">
+                        <div class="space-y-1.5">
                             <label for="marital_status"
                                 class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Status Pernikahan <span class="text-[#B11116]">*</span>
