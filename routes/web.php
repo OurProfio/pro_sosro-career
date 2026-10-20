@@ -13,6 +13,7 @@ use App\Http\Controllers\Applicant\ApplicantFamilyController;
 use App\Http\Controllers\Applicant\ApplicantWorkExprienceController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Guest\GuestController;
 use App\Http\Controllers\Mail\MailController;
@@ -33,6 +34,10 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    Route::get('email/verify', [VerificationController::class, 'notice'])->name('verification.notice');
+    Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('email/verification-notification', [VerificationController::class, 'resend'])->middleware('throttle:6,1')->name('verification.send');
+
     Route::group(['middleware' => ['role:admin']], function () {
         Route::prefix('admin')->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
@@ -47,12 +52,10 @@ Route::group(['middleware' => ['auth']], function () {
             Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
             Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
 
-            Route::get('/view', [MailController::class, 'index'])->name('email.index');
-
         });
     });
 
-    Route::group(['middleware' => ['role:applicant']], function () {
+    Route::group(['middleware' => ['role:applicant', 'verified']], function () {
         Route::get('/dashboard', fn () => view('auth.applicant.index'))->name('applicant.dashboard');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');
@@ -74,3 +77,6 @@ Route::group(['middleware' => ['auth']], function () {
 // Fitur Sementara: Feedback (Kritik & Saran)
 Route::get('/feedback', [Controller::class, 'feedback'])->name('feedback.index');
 Route::post('/feedback', [Controller::class, 'storeFeedback'])->name('feedback.store');
+
+// Route::get('/email', [MailController::class, 'index'])->name('email.index');
+// Route::post('/email', [MailController::class, 'sendEmail'])->name('email.send');

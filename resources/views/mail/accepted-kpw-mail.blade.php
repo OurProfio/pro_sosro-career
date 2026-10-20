@@ -1,38 +1,27 @@
 <div>
-    <p>Selamat Pagi {{ $application->applicant->name }},</p>
+    <p>Selamat pagi {{ $application->applicant?->name ?? 'Kandidat' }},</p>
 
-    <p>Dengan ini kami mengucapkan Selamat Bergabung di PT Sinar Sosro Gunung Slamat untuk posisi :</p>
+    <p>Selamat bergabung di PT Sinar Sosro Gunung Slamat sebagai {{ $application->job->title }}. Hari pertama kerja Anda akan dimulai pada {{ \Carbon\Carbon::parse($startDate)->locale('id')->translatedFormat('l, d F Y') }}.</p>
 
-    <p><strong>Jabatan : {{ $application->job->title }}</strong></p>
-    <p><strong>Lokasi Kerja : {{ $application->job->location }}</strong></p>
+    <p>Mohon membawa berkas ASLI KTP, Kartu Keluarga, Akta Kelahiran, Ijazah, Transkrip Nilai, Buku Nikah dan SIM (jika ada) untuk dilakukan pengecekan.</p>
 
-    <p>Hari pertama kerja Anda akan dimulai pada:</p>
+    <p>Pada hari pertama ke kantor, silakan hadir pukul 08.00 WIB di {{ $workAddress }} mengenakan pakaian batik dan menginformasikan ke satpam untuk hari pertama masuk kerja dan akan bertemu dengan tim Recruitment.</p>
 
-    <p><strong>Tanggal : {{ \Carbon\Carbon::parse($startDate)->locale('id')->translatedFormat('l, d F Y') }}</strong></p>
-
-    <p>Mengenai jam kerja dan ketentuan lain diantaranya sebagai berikut :</p>
-
-    <p><strong>Senin – Jumat : Pukul 08.00 – 16.00</strong></p>
-    <p><strong>Sabtu : Pukul 08.00 – 13.00</strong></p>
-    <p><strong>Senin – Kamis : Memakai kemeja bebas, celana kain/jeans, dan sepatu tertutup</strong></p>
-    <p><strong>Jumat : Memakai kemeja batik, celana kain/jeans, dan sepatu tertutup</strong></p>
-    <p><strong>Sabtu : Memakai kemeja bebas, celana kain/jeans, dan sepatu tertutup</strong></p>
-
-    <p>
-        Pada hari pertama ke kantor. Silakan hadir <strong>sebelum</strong> pukul <strong>08.00</strong> di <strong>{{ $workAddress }}</strong> mengenakan pakaian kemeja batik dan menginformasikan ke satpam untuk hari pertama kerja dan akan bertemu dengan Tim Rekrutment PT.Sinar Sosro Gunung Slamat
+    <p><strong>Jam kerja</strong><br>
+        <strong>Senin–Jumat:</strong> 08.00–16.00 WIB<br>
+        <strong>Sabtu:</strong> 08.00–13.00 WIB
     </p>
 
-    <p>Demikian informasi ini kami sampaikan. Atas perhatian dan kerja samanya kami ucapkan terima kasih</p>
+    <p><strong>Ketentuan pakaian</strong><br>
+        <strong>Senin–Kamis:</strong> kemeja bebas, celana kain/jeans, sepatu tertutup<br>
+        <strong>Jumat:</strong> kemeja batik, celana kain/jeans, sepatu tertutup<br>
+        <strong>Sabtu:</strong> kemeja bebas, celana kain/jeans, sepatu tertutup
+    </p>
 
-    <p>Regards,</p>
-
-    <p>
+    <p>Salam,<br>
         HC-OD &amp; Recruitment<br>
-        PT.Sinar Sosro Gunung Slamat<br>
-        Graha Rekso Lt.8<br>
-        Jl. Bulevard Artha Gading No.Kav.A1<br>
-        RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading<br>
-        Jakarta Utara, DKI Jakarta 14240<br>
-        Email : <a href="mailto:recruitment.ho@sosro.com">recruitment.ho@sosro.com</a>
+        PT Sinar Sosro Gunung Slamat
     </p>
+
+    <p><em>Email ini dikirim otomatis oleh sistem. Mohon tidak dibalas.</em></p>
 </div>

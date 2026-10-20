@@ -13,20 +13,17 @@ class ApplicantSeeder extends Seeder
      */
     public function run(): void
     {
-        $names = [
-            'Budi Santoso', 'Siti Rahmawati', 'Andi Pratama', 'Dewi Lestari', 'Rizky Ramadhan',
-            'Putri Anggraini', 'Agus Wijaya', 'Nurul Hidayah', 'Fajar Nugroho', 'Maya Sari',
-        ];
+        $names = ['Budi Santoso', 'Siti Rahmawati', 'Andi Pratama'];
         $cities = ['Jakarta', 'Bandung', 'Semarang', 'Surabaya', 'Medan', 'Yogyakarta', 'Bogor', 'Malang'];
 
         foreach ($names as $index => $name) {
             $number = $index + 1;
-            $email = 'pelamar'.$number.'@example.com';
+            $email = 'applicant'.$number.'@applicant.test';
             $isMale = $number % 2 === 1;
 
             $user = User::firstOrCreate(
                 ['email' => $email],
-                ['password' => 'password', 'role' => 'user'],
+                ['password' => 'password', 'role' => 'user', 'email_verified_at' => now()],
             );
 
             Applicant::firstOrCreate(

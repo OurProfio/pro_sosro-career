@@ -1,30 +1,21 @@
 <div>
-    <p>Selamat Pagi {{ $application->applicant->name }},</p>
+    <p>Selamat pagi {{ $application->applicant?->name ?? 'Kandidat' }},</p>
+
+    <p>Melanjutkan proses seleksi untuk posisi {{ $application->job->title }}, Anda kami undang untuk mengikuti interview online pada:</p>
 
     <p>
-        Melanjutkan proses rekrutmen yang sudah anda laksanakan sebelumnya, melalui pemberitahuan ini kami mengundang Anda untuk dapat mengikuti proses interview dengan PT Sinar Sosro Gunung Slamat pada:
+        <strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}<br>
+        <strong>Waktu:</strong> {{ $time }} WIB<br>
+        <strong>Media:</strong> Online (Zoom / Google Meet)<br>
+        <strong>Link:</strong> <a href="{{ $link }}">{{ $link }}</a>
     </p>
 
-    <p><strong>Tanggal : {{ \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') }}</strong></p>
-    <p><strong>Waktu : {{ $time }} WIB</strong></p>
+    <p>Mohon bergabung 5 hingga 10 menit sebelum jadwal, pastikan koneksi internet stabil dan kamera aktif, serta kenakan pakaian rapi dan sopan.</p>
 
-    <p><strong>Link Interview : <a href="{{ $link }}">{{ $link }}</a></strong></p>
-
-    <p>
-        Adapun proses interview dilaksanakan secara virtual (Zoom/Google Meet) melalui link di atas. Pada saat proses interview, baik pria/wanita mengenakan pakaian rapi dan sopan.
+    <p>Salam,<br>
+        HC – Recruitment<br>
+        PT Sinar Sosro Gunung Slamat
     </p>
 
-    <p>Demikian informasi ini kami sampaikan. Atas perhatian dan kerja samanya kami ucapkan terima kasih</p>
-
-    <p>Regards,</p>
-
-    <p>
-        HC-OD &amp; Recruitment<br>
-        PT.Sinar Sosro Gunung Slamat<br>
-        Graha Rekso Lt.8<br>
-        Jl. Bulevard Artha Gading No.Kav.A1<br>
-        RT.18/RW.8, Klp. Gading Bar., Kec. Klp. Gading<br>
-        Jakarta Utara, DKI Jakarta 14240<br>
-        Email : <a href="mailto:recruitment.ho@sosro.com">recruitment.ho@sosro.com</a>
-    </p>
+    <p><em>Email ini dikirim otomatis oleh sistem. Mohon tidak dibalas.</em></p>
 </div>

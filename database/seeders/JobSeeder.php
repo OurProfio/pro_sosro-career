@@ -18,13 +18,8 @@ class JobSeeder extends Seeder
 
         $jobs = [
             ['title' => 'Staff IT Support', 'category' => 'profesional', 'occupation' => 'Information Technology', 'type' => 'Full-Time', 'office' => 'Kantor Pusat', 'location' => 'Jakarta'],
-            ['title' => 'Staff Akuntansi', 'category' => 'profesional', 'occupation' => 'Finance & Accounting', 'type' => 'Kontrak', 'office' => 'Kantor Pusat', 'location' => 'Jakarta'],
-            ['title' => 'Quality Control Officer', 'category' => 'profesional', 'occupation' => 'Quality Control', 'type' => 'Full-Time', 'office' => 'Pabrik Sentul', 'location' => 'Bogor'],
-            ['title' => 'Supervisor Produksi', 'category' => 'profesional', 'occupation' => 'Produksi / Teknik', 'type' => 'Full-Time', 'office' => 'Pabrik Ungaran', 'location' => 'Semarang'],
             ['title' => 'Sales Executive', 'category' => 'profesional', 'occupation' => 'Sales & Distribution', 'type' => 'Full-Time', 'office' => 'KPW Jawa Timur', 'location' => 'Surabaya'],
             ['title' => 'Management Trainee Batch 1', 'category' => 'management_trainee', 'occupation' => 'Marketing', 'type' => 'Kontrak', 'office' => 'Kantor Pusat', 'location' => 'Jakarta'],
-            ['title' => 'Magang Human Resources', 'category' => 'magang', 'occupation' => 'Human Resources & People Development', 'type' => 'Part-Time', 'office' => 'Kantor Pusat', 'location' => 'Jakarta'],
-            ['title' => 'Internship Supply Chain', 'category' => 'internship', 'occupation' => 'Supply Chain & Logistic', 'type' => 'Part-Time', 'office' => 'Pabrik Cibitung', 'location' => 'Bekasi'],
         ];
 
         foreach ($jobs as $job) {
