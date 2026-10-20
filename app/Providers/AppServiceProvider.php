@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
+use App\Mail\VerifyEmailMail;
 use Illuminate\Auth\Notifications\VerifyEmail;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,12 +21,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        VerifyEmail::toMailUsing(fn (object $notifiable, string $url) => (new MailMessage)
-            ->subject('Verifikasi Email Akun Karir PT Sinar Sosro Gunung Slamat')
-            ->view('mail.verify-email', [
-                'name' => $notifiable->applicant?->name ?? 'Kandidat',
-                'url' => $url,
-                'expire' => config('auth.verification.expire'),
-            ]));
+        VerifyEmail::toMailUsing(fn (object $notifiable, string $url) => (new VerifyEmailMail(
+            name: $notifiable->applicant?->name ?? 'Kandidat',
+            url: $url,
+            expire: (int) config('auth.verification.expire'),
+        ))->to($notifiable->email));
     }
 }

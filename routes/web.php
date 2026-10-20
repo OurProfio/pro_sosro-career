@@ -78,5 +78,5 @@ Route::group(['middleware' => ['auth']], function () {
 Route::get('/feedback', [Controller::class, 'feedback'])->name('feedback.index');
 Route::post('/feedback', [Controller::class, 'storeFeedback'])->name('feedback.store');
 
-Route::get('/email', [MailController::class, 'index'])->name('email.index');
-Route::post('/email', [MailController::class, 'sendEmail'])->name('email.send');
+// Route::get('/email', [MailController::class, 'index'])->name('email.index');
+// Route::post('/email', [MailController::class, 'sendEmail'])->name('email.send');

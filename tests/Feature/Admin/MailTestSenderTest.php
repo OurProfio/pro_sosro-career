@@ -7,6 +7,7 @@ use App\Mail\psikotesMail;
 use App\Mail\RejectedMail;
 use App\Mail\StudyCaseMail;
 use App\Mail\tesKepribadianMail;
+use App\Mail\VerifyEmailMail;
 use App\Models\Application;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,4 +95,15 @@ it('sends the study case, panel BOD and document collection templates', function
     Mail::assertSent(StudyCaseMail::class, fn ($mail) => $mail->hasTo('tester@example.com') && $mail->topic === 'Topik uji');
     Mail::assertSent(PanelBodMail::class, fn ($mail) => $mail->time === '10:00');
     Mail::assertSent(DocumentCollectionMail::class);
+});
+
+it('sends the email verification template', function () {
+    Application::factory()->create();
+
+    $this->actingAs(User::factory()->admin()->create())
+        ->post(route('email.send'), ['email' => 'tester@example.com', 'templates' => ['verify-email']])
+        ->assertSessionHasNoErrors();
+
+    Mail::assertSent(VerifyEmailMail::class, fn ($mail) => $mail->hasTo('tester@example.com')
+        && str_contains($mail->url, 'email/verify/'));
 });

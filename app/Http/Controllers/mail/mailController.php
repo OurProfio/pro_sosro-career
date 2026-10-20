@@ -15,12 +15,14 @@ use App\Mail\psikotesMail;
 use App\Mail\RejectedMail;
 use App\Mail\StudyCaseMail;
 use App\Mail\tesKepribadianMail;
+use App\Mail\VerifyEmailMail;
 use App\Models\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -46,6 +48,7 @@ class MailController extends Controller
             'study-case' => 'Studi Kasus (MT)',
             'panel-bod' => 'Panel BOD (MT)',
             'document-collection' => 'Pengumpulan Berkas',
+            'verify-email' => 'Verifikasi Email',
         ];
     }
 
@@ -100,6 +103,14 @@ class MailController extends Controller
             'study-case' => new StudyCaseMail($application, $data['study_case_topic'], $data['study_case_deadline'], $data['study_case_link']),
             'panel-bod' => new PanelBodMail($application, $data['panel_bod_date'], $data['panel_bod_time']),
             'document-collection' => new DocumentCollectionMail($application, $data['document_deadline']),
+            'verify-email' => new VerifyEmailMail(
+                name: $application->applicant?->name ?? 'Kandidat',
+                url: URL::temporarySignedRoute('verification.verify', now()->addMinutes((int) config('auth.verification.expire')), [
+                    'id' => $application->applicant->user_id,
+                    'hash' => sha1((string) $application->applicant->user?->email),
+                ]),
+                expire: (int) config('auth.verification.expire'),
+            ),
         };
     }
 
