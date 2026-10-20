@@ -32,24 +32,6 @@ class JobFactory extends Factory
             'description' => fake()->sentence(),
             'qualification' => fake()->sentence(),
             'status' => 'aktif',
-            'approval_status' => 'approved',
         ];
-    }
-
-    public function pending(): static
-    {
-        return $this->state(fn (): array => [
-            'approval_status' => 'pending',
-            'approved_by' => null,
-            'approved_at' => null,
-        ]);
-    }
-
-    public function rejected(): static
-    {
-        return $this->state(fn (): array => [
-            'approval_status' => 'rejected',
-            'rejection_reason' => fake()->sentence(),
-        ]);
     }
 }

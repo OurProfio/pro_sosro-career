@@ -42,8 +42,6 @@ Route::group(['middleware' => ['auth']], function () {
             Route::get('applicant/{applicant}/cetak', [AdminApplicantController::class, 'print'])->name('applicant.print');
             Route::resource('applicant', AdminApplicantController::class);
             Route::resource('user', UserController::class);
-            Route::patch('job/{job}/approve', [JobController::class, 'approve'])->name('job.approve');
-            Route::patch('job/{job}/reject', [JobController::class, 'reject'])->name('job.reject');
             Route::resource('job', JobController::class);
 
             Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
