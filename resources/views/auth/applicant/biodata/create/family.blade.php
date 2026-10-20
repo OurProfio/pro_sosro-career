@@ -373,6 +373,9 @@
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][name]" required value="{{ $sibling['name'] ?? '' }}" placeholder="Nama Lengkap Saudara Kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    @error('families.siblings.'.$sIndex.'.name')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -381,14 +384,23 @@
                                                         <option value="l" {{ ($sibling['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
                                                         <option value="p" {{ ($sibling['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
                                                     </select>
+                                                    @error('families.siblings.'.$sIndex.'.gender')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][place_of_birth]" required value="{{ $sibling['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    @error('families.siblings.'.$sIndex.'.place_of_birth')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                                     <input type="date" name="families[siblings][{{ $sIndex }}][date_of_birth]" required value="{{ $sibling['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    @error('families.siblings.'.$sIndex.'.date_of_birth')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
@@ -398,14 +410,23 @@
                                                             <option value="{{ $val }}" {{ ($sibling['education'] ?? '') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
                                                         @endforeach
                                                     </select>
+                                                    @error('families.siblings.'.$sIndex.'.education')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][work]" required value="{{ $sibling['work'] ?? '' }}" placeholder="Pekerjaan / Pelajar" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    @error('families.siblings.'.$sIndex.'.work')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                                 <div class="space-y-1.5 md:col-span-2">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
                                                     <input type="tel" name="families[siblings][{{ $sIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $sibling['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    @error('families.siblings.'.$sIndex.'.phone_number')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
                                                 </div>
                                             </div>
                                         </div>
@@ -565,6 +586,9 @@
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.name')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -573,14 +597,23 @@
                                                             <option value="l" {{ ($child['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
                                                             <option value="p" {{ ($child['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
                                                         </select>
+                                                        @error('families.children.'.$cIndex.'.gender')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.place_of_birth')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                                         <input type="date" name="families[children][{{ $cIndex }}][date_of_birth]" required value="{{ $child['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.date_of_birth')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan / Sekolah</label>
@@ -590,14 +623,23 @@
                                                                 <option value="{{ $val }}" {{ ($child['education'] ?? '') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
                                                             @endforeach
                                                         </select>
+                                                        @error('families.children.'.$cIndex.'.education')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.work')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                     <div class="space-y-1.5 md:col-span-2">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
                                                         <input type="tel" name="families[children][{{ $cIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $child['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890 / 0 jika belum punya" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.phone_number')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                             </div>

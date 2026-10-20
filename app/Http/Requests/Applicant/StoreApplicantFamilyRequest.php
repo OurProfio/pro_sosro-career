@@ -112,6 +112,11 @@ class StoreApplicantFamilyRequest extends FormRequest
         return $rules;
     }
 
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -123,7 +128,51 @@ class StoreApplicantFamilyRequest extends FormRequest
             'digits_between' => ':attribute harus berisi antara :min sampai :max digit.',
             'in' => 'Pilihan :attribute tidak valid.',
             'array' => ':attribute harus berupa format array.',
-            'max' => ':attribute tidak boleh melebihi :max data.',
+            'max' => ':attribute tidak boleh lebih dari :max karakter.',
+            'families.children.max' => ':attribute tidak boleh lebih dari :max data.',
         ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        $labels = [
+            'name' => 'nama lengkap',
+            'status' => 'kondisi/status',
+            'place_of_birth' => 'tempat lahir',
+            'date_of_birth' => 'tanggal lahir',
+            'education' => 'pendidikan terakhir',
+            'work' => 'pekerjaan',
+            'phone_number' => 'nomor telepon',
+            'gender' => 'jenis kelamin',
+            'relationship' => 'hubungan keluarga',
+            'family_type' => 'tipe keluarga',
+        ];
+
+        $members = [
+            'father' => 'ayah',
+            'mother' => 'ibu',
+            'spouse' => 'pasangan',
+            'siblings.*' => 'saudara kandung ke-:position',
+            'children.*' => 'anak ke-:position',
+        ];
+
+        $attributes = [
+            'families.siblings' => 'data saudara kandung',
+            'families.children' => 'data anak',
+            'redirect_step' => 'langkah tujuan',
+        ];
+
+        foreach ($members as $member => $memberLabel) {
+            foreach ($labels as $field => $label) {
+                $attributes["families.{$member}.{$field}"] = "{$label} {$memberLabel}";
+            }
+        }
+
+        return $attributes;
     }
 }
