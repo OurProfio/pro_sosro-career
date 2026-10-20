@@ -52,6 +52,13 @@ class ApplicantFamilyController extends Controller
                     }
                 } else {
                     $data['applicant_id'] = $applicant->id;
+                    if ($member === 'father') {
+                        $data['gender'] = 'l';
+                    } elseif ($member === 'mother') {
+                        $data['gender'] = 'p';
+                    } elseif ($member === 'spouse' && empty($data['gender'])) {
+                        $data['gender'] = $applicant->gender === 'l' ? 'p' : ($applicant->gender === 'p' ? 'l' : null);
+                    }
                     ApplicantFamily::create($data);
                 }
             }

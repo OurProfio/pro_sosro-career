@@ -75,7 +75,9 @@
                 </div>
             </div>
         @else
-            @if (request()->routeIs('guest.login'))
+            @if (request()->routeIs('admin.login'))
+                {{-- Di halaman login admin, tombol tidak ditampilkan agar bersih dan fokus --}}
+            @elseif (request()->routeIs('guest.login'))
                 <a href="{{ route('guest.register') }}"
                     class="px-6 py-2 bg-white text-red-700 font-bold rounded-full hover:bg-gray-100 transition shadow-md hover:shadow-lg transform active:scale-95">
                     Daftar

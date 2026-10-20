@@ -370,9 +370,17 @@
                                             <input type="hidden" name="families[siblings][{{ $sIndex }}][relationship]" value="sibling">
 
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div class="space-y-1.5 md:col-span-2">
+                                                <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][name]" required value="{{ $sibling['name'] ?? '' }}" placeholder="Nama Lengkap Saudara Kandung" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                </div>
+                                                <div class="space-y-1.5">
+                                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
+                                                    <select name="families[siblings][{{ $sIndex }}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        <option value="" disabled {{ empty($sibling['gender']) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                                        <option value="l" {{ ($sibling['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
+                                                        <option value="p" {{ ($sibling['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
+                                                    </select>
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
@@ -554,9 +562,17 @@
                                                 <input type="hidden" name="families[children][{{ $cIndex }}][relationship]" value="child">
 
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <div class="space-y-1.5 md:col-span-2">
+                                                    <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
+                                                        <select name="families[children][{{ $cIndex }}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                            <option value="" disabled {{ empty($child['gender']) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                                            <option value="l" {{ ($child['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
+                                                            <option value="p" {{ ($child['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
+                                                        </select>
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
@@ -672,9 +688,17 @@
                     <input type="hidden" name="families[siblings][${siblingIndex}][relationship]" value="sibling">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1.5 md:col-span-2">
+                        <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
                             <input type="text" name="families[siblings][${siblingIndex}][name]" required placeholder="Nama Lengkap Saudara Kandung" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
+                            <select name="families[siblings][${siblingIndex}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                                <option value="l">Laki-Laki (L)</option>
+                                <option value="p">Perempuan (P)</option>
+                            </select>
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
@@ -735,9 +759,17 @@
                     <input type="hidden" name="families[children][${childIndex}][relationship]" value="child">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="space-y-1.5 md:col-span-2">
+                        <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
                             <input type="text" name="families[children][${childIndex}][name]" required placeholder="Nama Lengkap Anak" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
+                            <select name="families[children][${childIndex}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                <option value="" disabled selected>Pilih Jenis Kelamin</option>
+                                <option value="l">Laki-Laki (L)</option>
+                                <option value="p">Perempuan (P)</option>
+                            </select>
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>

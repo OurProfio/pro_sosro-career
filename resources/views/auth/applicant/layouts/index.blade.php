@@ -19,9 +19,9 @@
 
 <body>
 
-    <div class="mx-auto min-w-screen">
+    <div class="min-h-screen flex flex-col">
         @include('auth.applicant.layouts.navbar')
-        <main>
+        <main class="flex-1">
             @yield('content')
         </main>
         @include('auth.applicant.layouts.footer')

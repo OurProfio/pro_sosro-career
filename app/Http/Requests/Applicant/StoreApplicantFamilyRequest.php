@@ -50,6 +50,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             'families.siblings.*.phone_number' => ['required', 'numeric', 'digits_between:1,15'],
             'families.siblings.*.relationship' => ['required', 'in:sibling'],
             'families.siblings.*.family_type' => ['required', 'in:biological'],
+            'families.siblings.*.gender' => ['nullable', 'in:l,p'],
             'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
         ];
 
@@ -63,6 +64,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             $rules['families.spouse.phone_number'] = ['required', 'numeric', 'digits_between:10,15'];
             $rules['families.spouse.relationship'] = ['required', 'in:spouse'];
             $rules['families.spouse.family_type'] = ['required', 'in:nuclear'];
+            $rules['families.spouse.gender'] = ['nullable', 'in:l,p'];
             $rules['families.children'] = ['nullable', 'array', 'max:3'];
             $rules['families.children.*.name'] = ['required', 'string', 'max:255'];
             $rules['families.children.*.place_of_birth'] = ['required', 'string', 'max:100'];
@@ -72,6 +74,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             $rules['families.children.*.phone_number'] = ['required', 'numeric', 'digits_between:1,15'];
             $rules['families.children.*.relationship'] = ['required', 'in:child'];
             $rules['families.children.*.family_type'] = ['required', 'in:nuclear'];
+            $rules['families.children.*.gender'] = ['nullable', 'in:l,p'];
         }
 
         return $rules;

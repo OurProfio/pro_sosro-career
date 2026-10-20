@@ -16,9 +16,9 @@
 </head>
 
 <body>
-    <div class="mx-auto min-w-screen">
+    <div class="min-h-screen flex flex-col">
         @include('guest.layouts.navbar')
-        <main>
+        <main class="flex-1">
             @yield('content')
         </main>
         @include('guest.layouts.footer')

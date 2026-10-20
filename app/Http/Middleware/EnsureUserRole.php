@@ -16,7 +16,7 @@ class EnsureUserRole
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
         if (! auth()->check()) {
-            return redirect()->route('guest.login');
+            return redirect()->route($request->is('admin', 'admin/*') ? 'admin.login' : 'guest.login');
         }
 
         $user = auth()->user();

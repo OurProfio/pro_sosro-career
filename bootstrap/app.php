@@ -14,7 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn () => route('guest.login'));
+        $middleware->redirectGuestsTo(fn (Request $request) => $request->is('admin', 'admin/*')
+            ? route('admin.login')
+            : route('guest.login')
+        );
+        $middleware->redirectUsersTo(fn () => auth()->user()?->role === 'admin'
+            ? route('admin.dashboard')
+            : route('applicant.dashboard')
+        );
         $middleware->alias([
             'role' => EnsureUserRole::class,
             'verified' => EnsureEmailIsVerified::class,
