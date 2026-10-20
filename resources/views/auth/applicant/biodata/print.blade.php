@@ -162,7 +162,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 
     $jobRows = [
         ['Nama Perusahaan', 'company_name'],
-        ['Alamat Perusahaan', null, 'a'],
+        ['Alamat Perusahaan', 'company_address', 'a'],
         ['No. Telp Perusahaan', 'company_phone'],
         ['Jabatan Terakhir', 'position'],
         ['Divisi / Departemen', 'division'],

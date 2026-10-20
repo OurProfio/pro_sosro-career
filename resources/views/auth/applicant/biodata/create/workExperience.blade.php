@@ -148,6 +148,20 @@
                                     @enderror
                                 </div>
 
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label for="previous_sosro_company_address"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Alamat Perusahaan / Unit Kerja
+                                    </label>
+                                    <input id="previous_sosro_company_address" name="experiences[0][company_address]" type="text"
+                                        value="{{ old('experiences.0.company_address', '') }}"
+                                        placeholder="Contoh: Jl. Raya Bogor KM 28, Jakarta Timur"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('experiences.0.company_address')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
                                 <div class="space-y-1.5">
                                     <label for="previous_sosro_company_phone"
                                         class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -282,6 +296,7 @@
                                     foreach ($workExperiences as $idx => $we) {
                                         $oldExperiences[$idx + 1] = [
                                             'company_name' => $we->company_name,
+                                            'company_address' => $we->company_address,
                                             'company_phone' => $we->company_phone,
                                             'position' => $we->position,
                                             'division' => $we->division,
@@ -300,6 +315,7 @@
                                     $oldExperiences = [
                                         1 => [
                                             'company_name' => '',
+                                            'company_address' => '',
                                             'company_phone' => '',
                                             'position' => '',
                                             'division' => '',
@@ -357,6 +373,20 @@
                                             placeholder="Contoh: PT. Maju Bersama"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_name")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Alamat Perusahaan -->
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Alamat Perusahaan
+                                        </label>
+                                        <input type="text" name="experiences[{{ $index }}][company_address]"
+                                            value="{{ $exp['company_address'] ?? '' }}"
+                                            placeholder="Contoh: Jl. Merdeka No. 1, Jakarta"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_address") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error("experiences.{$index}.company_address")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -622,6 +652,12 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Perusahaan</label>
                     <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT. Sinar Sosro"
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                </div>
+
+                <div class="space-y-1.5 md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Perusahaan</label>
+                    <input type="text" name="experiences[{INDEX}][company_address]" placeholder="Contoh: Jl. Merdeka No. 1, Jakarta"
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 

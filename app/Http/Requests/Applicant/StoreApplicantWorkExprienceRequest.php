@@ -25,6 +25,7 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
     {
         $this->uppercaseInput([
             'experiences.*.company_name',
+            'experiences.*.company_address',
             'experiences.*.position',
             'experiences.*.division',
             'experiences.*.facility',
@@ -55,6 +56,7 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
         return [
             'experiences' => ['nullable', 'array'],
             'experiences.*.company_name' => ['nullable', 'string', 'max:255'],
+            'experiences.*.company_address' => ['nullable', 'string', 'max:255'],
             'experiences.*.company_phone' => ['nullable', 'string', 'max:20'],
             'experiences.*.position' => ['nullable', 'string', 'max:255'],
             'experiences.*.division' => ['nullable', 'string', 'max:255'],

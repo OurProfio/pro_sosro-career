@@ -21,6 +21,7 @@ class ApplicantWorkExprienceSeeder extends Seeder
 
             $applicant->workExperiences()->create([
                 'company_name' => $companies[$index % count($companies)],
+                'company_address' => 'Jl. Industri Raya No. '.($index + 1).', Jakarta',
                 'company_phone' => '021555'.str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT),
                 'position' => 'Staff',
                 'division' => 'Operasional',
