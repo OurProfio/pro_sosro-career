@@ -27,6 +27,11 @@ Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
     Route::post('register', [AuthController::class, 'register'])->name('register.post');
 });
 
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('admin/login', fn () => view('auth.admin.auth.login'))->name('admin.login');
+    Route::post('admin/login', [AuthController::class, 'adminLogin'])->name('admin.login.post');
+});
+
 Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role:admin']], function () {
         Route::prefix('admin')->group(function () {

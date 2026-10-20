@@ -3,7 +3,7 @@
 @section('title', 'Daftar')
 
 @section('content')
-    <div class="flex flex-col items-center justify-center px-4 py-8">
+    <div class="flex flex-col items-center justify-center px-4 py-8 min-h-full">
         <div
             class="w-full sm:max-w-lg bg-white shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-2xl p-8 md:p-10 border border-gray-100">
 
