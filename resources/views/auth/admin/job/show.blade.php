@@ -3,36 +3,37 @@
 @section('title', 'Detail Lowongan Pekerjaan')
 
 @section('content')
-    <div class="flex items-center justify-between gap-4">
-        <div>
-            <h2 class="text-xl font-bold text-slate-800">Detail Lowongan</h2>
-            <p class="text-sm text-slate-500">
-                Informasi lengkap mengenai lowongan pekerjaan.
-            </p>
-        </div>
+    <div class="space-y-6 font-sans" x-data="{ openEditModal: {{ $errors->any() ? 'true' : 'false' }} }">
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <h2 class="text-xl font-bold text-slate-800">Detail Lowongan</h2>
+                <p class="text-sm text-slate-500">
+                    Informasi lengkap mengenai lowongan pekerjaan.
+                </p>
+            </div>
 
-        <div class="flex items-center gap-2">
-            <a href="{{ route('job.index') }}"
-                class="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors">
-                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                </svg>
-                Kembali
-            </a>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('job.index') }}"
+                    class="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                    Kembali
+                </a>
 
-            <a href="{{ route('job.edit', $job->id) }}"
-                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors">
-                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.07a4.5 4.5 0 0 1-1.897 1.13l-2.685.805.805-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125 16.875 4.5" />
-                </svg>
-                Edit Lowongan
-            </a>
+                <button type="button" @click="openEditModal = true"
+                    class="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-[#A6192E] hover:bg-[#7f1d1d] rounded-xl transition-colors cursor-pointer shadow-sm">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.07a4.5 4.5 0 0 1-1.897 1.13l-2.685.805.805-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125 16.875 4.5" />
+                    </svg>
+                    Edit Lowongan
+                </button>
+            </div>
         </div>
-    </div>
 
     <div class="bg-white border border-slate-200 rounded-2xl shadow-xs overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100">
@@ -370,6 +371,275 @@
             </div>
         @endif
     </div>
+
+    <!-- BEGIN: Modal Edit Lowongan (Alpine.js) -->
+    <div x-show="openEditModal"
+        x-cloak
+        style="display: none;"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-edit-title"
+        @keydown.escape.window="openEditModal = false">
+        
+        <div x-show="openEditModal"
+            x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 scale-95"
+            x-transition:enter-end="opacity-100 scale-100"
+            x-transition:leave="ease-in duration-200"
+            x-transition:leave-start="opacity-100 scale-100"
+            x-transition:leave-end="opacity-0 scale-95"
+            @click.outside="openEditModal = false"
+            class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
+            
+            <!-- Modal Header -->
+            <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+                <div class="flex items-center gap-3.5">
+                    <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-100/70 flex items-center justify-center text-[#A6192E] shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 15.07a4.5 4.5 0 0 1-1.897 1.13l-2.685.805.805-2.685a4.5 4.5 0 0 1 1.13-1.897L16.862 4.487Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125 16.875 4.5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-lg font-bold text-slate-900 leading-tight" id="modal-edit-title">Edit Data Lowongan</h3>
+                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-[#A6192E] border border-red-100/70">ID: #{{ $job->id }}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-0.5">Perbarui informasi dan rincian lowongan kerja ini.</p>
+                    </div>
+                </div>
+                <button type="button" @click="openEditModal = false" aria-label="Tutup Modal" class="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition cursor-pointer">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Form Container -->
+            <form action="{{ route('job.update', $job->id) }}" method="POST" class="flex flex-col flex-1 min-h-0 overflow-hidden">
+                @csrf
+                @method('PUT')
+                <div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+                    <!-- Group 1: Informasi Dasar -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
+                            <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Informasi Dasar</h4>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="modal_edit_title" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                Judul Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                            </label>
+                            <input type="text" name="title" id="modal_edit_title" value="{{ old('title', $job->title) }}"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('title') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
+                                placeholder="Contoh: Senior Backend Developer" required>
+                            @error('title')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_office_id" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Kantor / Cabang <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="office_id" id="modal_edit_office_id"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled>-- Pilih Kantor / Cabang --</option>
+                                        @if (isset($offices))
+                                            @foreach ($offices as $office)
+                                                <option value="{{ $office->id }}" {{ old('office_id', $job->office_id) == $office->id ? 'selected' : '' }}>
+                                                    {{ $office->name ?? $office->title }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                @error('office_id')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_category" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Kategori Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="category" id="modal_edit_category"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('category') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled>-- Pilih Kategori --</option>
+                                        <option value="profesional" {{ old('category', $job->category) == 'profesional' ? 'selected' : '' }}>Profesional</option>
+                                        <option value="management_trainee" {{ old('category', $job->category) == 'management_trainee' ? 'selected' : '' }}>Management Trainee</option>
+                                        <option value="internship" {{ old('category', $job->category) == 'internship' ? 'selected' : '' }}>Internship / PKL</option>
+                                        <option value="magang" {{ old('category', $job->category) == 'magang' ? 'selected' : '' }}>Magang</option>
+                                    </select>
+                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                @error('category')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_occupation" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Bidang Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="occupation" id="modal_edit_occupation"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('occupation') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled>-- Pilih Bidang Pekerjaan --</option>
+                                        @if (isset($divisions))
+                                            @foreach ($divisions as $division)
+                                                <option value="{{ $division->name }}" {{ old('occupation', $job->occupation) == $division->name ? 'selected' : '' }}>
+                                                    {{ $division->name }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                @error('occupation')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_type" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Tipe Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <div class="relative">
+                                    <select name="type" id="modal_edit_type"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('type') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled>-- Pilih Tipe Pekerjaan --</option>
+                                        <option value="Full-Time" {{ old('type', $job->type) == 'Full-Time' ? 'selected' : '' }}>Full-Time (Tetap)</option>
+                                        <option value="Kontrak" {{ old('type', $job->type) == 'Kontrak' ? 'selected' : '' }}>Kontrak (PKWT)</option>
+                                        <option value="Part-Time" {{ old('type', $job->type) == 'Part-Time' ? 'selected' : '' }}>Part Time</option>
+                                        <option value="Freelance" {{ old('type', $job->type) == 'Freelance' ? 'selected' : '' }}>Freelance</option>
+                                    </select>
+                                    <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                @error('type')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="modal_edit_location" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                Lokasi Kerja <span class="text-[#A6192E] font-bold">*</span>
+                            </label>
+                            <input type="text" name="location" id="modal_edit_location" value="{{ old('location', $job->location) }}"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
+                                placeholder="Contoh: Jakarta Selatan" required>
+                            @error('location')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Rincian Lowongan -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
+                            <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Rincian Posisi</h4>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="modal_edit_description" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                Deskripsi Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                            </label>
+                            <textarea name="description" id="modal_edit_description" rows="4"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('description') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition leading-relaxed resize-y"
+                                placeholder="Tuliskan tanggung jawab dan rincian pekerjaan..." required>{{ old('description', $job->description) }}</textarea>
+                            @error('description')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label for="modal_edit_qualification" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                Kualifikasi Pelamar <span class="text-[#A6192E] font-bold">*</span>
+                            </label>
+                            <textarea name="qualification" id="modal_edit_qualification" rows="4"
+                                class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('qualification') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition leading-relaxed resize-y"
+                                placeholder="Tuliskan pendidikan, pengalaman, keahlian, dan persyaratan lainnya..." required>{{ old('qualification', $job->qualification) }}</textarea>
+                            @error('qualification')
+                                <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Group 3: Periode Waktu -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
+                            <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_opening_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Tanggal Buka <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <input type="date" name="opening_date" id="modal_edit_opening_date" value="{{ old('opening_date', $job->opening_date ? \Carbon\Carbon::parse($job->opening_date)->format('Y-m-d') : '') }}"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('opening_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
+                                    required>
+                                @error('opening_date')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-1.5">
+                                <label for="modal_edit_closing_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Tanggal Tutup <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <input type="date" name="closing_date" id="modal_edit_closing_date" value="{{ old('closing_date', $job->closing_date ? \Carbon\Carbon::parse($job->closing_date)->format('Y-m-d') : '') }}"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('closing_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
+                                    required>
+                                @error('closing_date')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="px-8 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
+                    <button type="button" @click="openEditModal = false" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition duration-150 cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        Simpan Perubahan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- END: Modal Edit Lowongan -->
+</div>
 
     <x-application.modal-email />
 

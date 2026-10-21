@@ -79,14 +79,6 @@ class JobController extends Controller
             ->orderBy('step')
             ->get();
 
-        return view('auth.admin.job.show', compact('job', 'stages'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Job $job)
-    {
         if (auth()->user()->admin->role === 'superadmin') {
             $offices = Office::all();
         } else {
@@ -95,7 +87,15 @@ class JobController extends Controller
 
         $divisions = Division::all();
 
-        return view('auth.admin.job.edit', compact('job', 'offices', 'divisions'));
+        return view('auth.admin.job.show', compact('job', 'stages', 'offices', 'divisions'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Job $job)
+    {
+        return redirect()->route('job.show', $job->id);
     }
 
     /**
