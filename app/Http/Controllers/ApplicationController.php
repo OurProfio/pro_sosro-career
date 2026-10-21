@@ -181,7 +181,7 @@ class ApplicationController extends Controller
             abort(403, 'Akses tidak diizinkan.');
         }
 
-        if (in_array($application->status, ['accepted', 'rejected', 'cancelled'])) {
+        if ($application->status !== 'pending') {
             return redirect()->back()->with('error', 'Lamaran ini sudah tidak dapat dibatalkan.');
         }
 

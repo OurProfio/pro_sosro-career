@@ -156,11 +156,11 @@
                             <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Alamat Email Resmi <span class="text-[#B11116]">*</span>
                             </label>
-                            <input id="email" name="email" type="email" required
+                            <input id="email" name="email" type="email" required readonly
                                 value="{{ old('email', auth()->user()->applicant->email ?? (auth()->user()->email ?? '')) }}"
                                 placeholder="nama@email.com"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('email') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span id="msg_email" class="text-[11px] text-gray-400 block transition-colors">Gunakan alamat email resmi aktif (contoh: nama@domain.com).</span>
+                                class="w-full px-4 py-2.5 bg-gray-100 rounded-xl border @error('email') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-600 text-sm transition-all outline-none shadow-sm cursor-not-allowed">
+                            <span id="msg_email" class="text-[11px] text-gray-400 block transition-colors">Alamat email terdaftar akun Anda (tidak dapat diubah).</span>
                             @error('email')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -318,6 +318,7 @@
                                 Tanggal Lahir <span class="text-[#B11116]">*</span>
                             </label>
                             <input id="date_of_birth" name="date_of_birth" type="date" required
+                                max="{{ now()->subYears(15)->format('Y-m-d') }}"
                                 value="{{ old('date_of_birth', auth()->user()->applicant->date_of_birth ?? '') }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('date_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('date_of_birth')
@@ -780,7 +781,7 @@
 
                                     $sortedDivisions = $sortedDivisions->merge($remainingDivisions);
                                 } else {
-                                    $sortedDivisions = $divisions;
+                                    $sortedDivisions = $divisions->shuffle();
                                 }
                             @endphp
 

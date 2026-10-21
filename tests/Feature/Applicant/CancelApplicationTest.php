@@ -32,7 +32,7 @@ it('allows an applicant to cancel their own pending application', function () {
         ->notes->toContain('Dibatalkan oleh pelamar');
 });
 
-it('allows an applicant to cancel their own in-progress application', function () {
+it('prevents an applicant from cancelling an in-progress application', function () {
     $application = Application::factory()->create([
         'applicant_id' => $this->applicant->id,
         'job_id' => $this->job->id,
@@ -43,9 +43,9 @@ it('allows an applicant to cancel their own in-progress application', function (
         ->from(route('applications.index'))
         ->patch(route('applications.cancel', $application))
         ->assertRedirect(route('applications.index'))
-        ->assertSessionHas('success', 'Lamaran pekerjaan berhasil dibatalkan.');
+        ->assertSessionHas('error', 'Lamaran ini sudah tidak dapat dibatalkan.');
 
-    expect($application->fresh()->status)->toBe('cancelled');
+    expect($application->fresh()->status)->toBe('progress');
 });
 
 it('prevents an applicant from cancelling someone elses application', function () {

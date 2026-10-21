@@ -37,6 +37,12 @@ class ApplicantWorkExprienceController extends Controller
         $applicant = auth()->user()->applicant;
 
         DB::transaction(function () use ($request, $applicant) {
+            $applicant->update([
+                'has_applied_sosro' => $request->input('has_applied_sosro', 'n'),
+                'previous_applied_position' => $request->input('has_applied_sosro') === 'y' ? $request->input('previous_applied_position') : null,
+                'previous_applied_year' => $request->input('has_applied_sosro') === 'y' ? $request->input('previous_applied_year') : null,
+            ]);
+
             ApplicantWorkExprience::where('applicant_id', $applicant->id)->delete();
 
             if ($request->has('experiences')) {

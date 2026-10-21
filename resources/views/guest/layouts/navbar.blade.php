@@ -6,9 +6,22 @@
     <div class="flex items-center space-x-4">
         @if (auth()->check())
             @php
-                $accountName = auth()->user()->admin?->name ?? auth()->user()->applicant?->name;
-                $accountRole = auth()->user()->admin ? 'Admin' : (auth()->user()->applicant ? 'Pelamar' : 'Pengguna');
-                $accountDisplayName = filled($accountName) ? $accountName : $accountRole;
+                $user = auth()->user();
+                $applicant = $user->applicant;
+                $admin = $user->admin;
+
+                $accountRole = $admin ? 'Admin' : 'Pelamar';
+
+                if ($admin?->name) {
+                    $accountDisplayName = $admin->name;
+                } elseif ($applicant?->name) {
+                    $accountDisplayName = $applicant->name;
+                } else {
+                    $emailName = explode('@', $user->email)[0] ?? 'Pelamar';
+                    $accountDisplayName = ucwords(str_replace(['.', '_', '-'], ' ', $emailName));
+                }
+
+                $avatarInitial = strtoupper(substr($accountDisplayName, 0, 1));
             @endphp
 
             <div class="relative" data-account-menu-root>
@@ -27,7 +40,7 @@
 
                     <div
                         class="h-8 w-8 rounded-full bg-red-600 text-white flex items-center justify-center font-bold shadow-md border border-white/20 transition group-hover:scale-105 group-active:scale-95">
-                        {{ substr($accountDisplayName, 0, 1) }}
+                        {{ $avatarInitial }}
                     </div>
                 </button>
 

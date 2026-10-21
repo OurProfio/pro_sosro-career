@@ -4,14 +4,7 @@
 
 @section('content')
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-figtree">
-        <div class="mb-6 flex items-center justify-between">
-            <a href="{{ route('biodata.index') }}"
-                class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Kembali ke Pratinjau Biodata
-            </a>
+        <div class="mb-6 flex items-center justify-end">
             <span class="text-xs font-medium text-gray-400">Langkah 3 dari 4</span>
         </div>
 

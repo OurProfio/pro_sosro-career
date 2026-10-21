@@ -155,14 +155,14 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
     $biological = [
         ['Ayah', $byRel('father')->first(), 'L'],
         ['Ibu', $byRel('mother')->first(), 'P'],
-        ['Ayah Mertua', null, 'L'],
-        ['Ibu Mertua', null, 'P']
+        ['Ayah Mertua', $byRel('father_in_law')->first(), 'L'],
+        ['Ibu Mertua', $byRel('mother_in_law')->first(), 'P']
     ];
     foreach (range(0, 4) as $i) { $biological[] = ['Saudara ' . ($i + 1), $byRel('sibling')->get($i), null]; }
 
     $jobRows = [
         ['Nama Perusahaan', 'company_name'],
-        ['Alamat Perusahaan', null, 'a'],
+        ['Alamat Perusahaan', 'company_address'],
         ['No. Telp Perusahaan', 'company_phone'],
         ['Jabatan Terakhir', 'position'],
         ['Divisi / Departemen', 'division'],
@@ -188,9 +188,6 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
                 $field = $I(0, $val);
             }
             $out .= '<div class="jr">' . $num . '<span class="l">' . $label . '</span><span class="c">:</span>' . $field . '</div>';
-            if ($kind === 'a') {
-                $out .= '<div class="jr" style="padding-left:151px">' . $I(0) . '</div>';
-            }
         }
         return $out;
     };
@@ -317,7 +314,13 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <div style="margin:14px 0 6px 6px"><b>Gambarkan Struktur Organisasi Perusahaan Anda (terakhir) dan posisi Anda di dalamnya !</b></div>
 <textarea style="width:718px;margin-left:-18px;height:180px;border:1px solid #000;resize:none;display:block;padding:4px" readonly tabindex="-1"></textarea>
 <div style="margin:14px 0 4px 6px">Pernahkah Anda melamar di Perusahaan / Group ini sebelumnya? Kapan? Untuk posisi jabatan apa?</div>
-<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end">{!! $I(0) !!}</div>
+<div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end">
+    @if (($applicant->has_applied_sosro ?? 'n') === 'y')
+        {!! $I(0, 'YA, TAHUN ' . ($applicant->previous_applied_year ?? '-') . ' UNTUK POSISI ' . ($applicant->previous_applied_position ?? '-')) !!}
+    @else
+        {!! $I(0, 'TIDAK') !!}
+    @endif
+</div>
 <div style="margin:0 0 0 38px;height:20px;display:flex;align-items:flex-end"><span class="w">Pernahkah Anda bekerja di Perusahaan / Group ini sebelumnya?&nbsp;</span>{!! $I(0, $hasWorkedSosro ? 'YA' : 'TIDAK') !!}</div>
 {!! $jy(1) !!}{!! $jy(2) !!}
 <div style="margin:14px 0 6px 6px">Buatlah urutan minat Anda dalam bekerja. (Nomor 1 – {{ $divisions->count() }})</div>

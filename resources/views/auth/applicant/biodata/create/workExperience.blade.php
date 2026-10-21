@@ -4,14 +4,7 @@
 
 @section('content')
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-figtree">
-        <div class="mb-6 flex items-center justify-between">
-            <a href="{{ route('biodata.index') }}"
-                class="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-xs font-semibold text-gray-700 shadow-sm transition hover:border-gray-300 hover:bg-gray-50 cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Kembali ke Pratinjau Biodata
-            </a>
+        <div class="mb-6 flex items-center justify-end">
             <span class="text-xs font-medium text-gray-400">Langkah 4 dari 4</span>
         </div>
 
@@ -101,14 +94,74 @@
                         });
                         $hasWorkedSosroDb = $sosroExp ? '1' : ($workExperiences->isNotEmpty() ? '0' : '');
                         $selectedWorkedSosro = old('has_worked_in_sosro', $hasWorkedSosroDb);
+                        $hasAppliedSosro = old('has_applied_sosro', $applicant?->has_applied_sosro ?? 'n');
                     @endphp
 
-                    <div class="space-y-4 border-b border-gray-100 pb-6">
-                        <div class="space-y-1.5">
+                    <!-- PERTANYAAN PERNAH MELAMAR DI SOSRO -->
+                    <div class="space-y-3 border-b border-gray-100 pb-4">
+                        <div class="space-y-1">
+                            <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                Pernahkah Anda Melamar di PT SINAR SOSRO / Group ini sebelumnya? <span class="text-[#B11116]">*</span>
+                            </span>
+                            <div class="flex items-center gap-6 py-1">
+                                <label for="applied_sosro_yes" class="inline-flex items-center cursor-pointer group py-1">
+                                    <input id="applied_sosro_yes" type="radio" name="has_applied_sosro" value="y"
+                                        required
+                                        {{ $hasAppliedSosro === 'y' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                    <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Pernah</span>
+                                </label>
+                                <label for="applied_sosro_no" class="inline-flex items-center cursor-pointer group py-1">
+                                    <input id="applied_sosro_no" type="radio" name="has_applied_sosro" value="n"
+                                        required
+                                        {{ $hasAppliedSosro === 'n' ? 'checked' : '' }}
+                                        class="w-4 h-4 text-[#B11116] border-gray-300 focus:ring-[#B11116]">
+                                    <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-900">Belum Pernah</span>
+                                </label>
+                            </div>
+                            @error('has_applied_sosro')
+                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- DETAIL MELAMAR DI SOSRO -->
+                        <div id="appliedSosroDetailCard" class="{{ $hasAppliedSosro === 'y' ? '' : 'hidden' }} p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-4 transition-all">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="space-y-1.5">
+                                    <label for="previous_applied_position" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Untuk Posisi Jabatan Apa? <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="previous_applied_position" name="previous_applied_position" type="text"
+                                        value="{{ old('previous_applied_position', $applicant?->previous_applied_position ?? '') }}"
+                                        placeholder="Contoh: Staff HRD / Sales Officer"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('previous_applied_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('previous_applied_position')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="previous_applied_year" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Kapan (Tahun)? <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="previous_applied_year" name="previous_applied_year" type="number" inputmode="numeric"
+                                        min="1970" max="{{ date('Y') }}"
+                                        value="{{ old('previous_applied_year', $applicant?->previous_applied_year ?? '') }}"
+                                        placeholder="Contoh: {{ date('Y') - 1 }}"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('previous_applied_year') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('previous_applied_year')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 border-b border-gray-100 pb-4">
+                        <div class="space-y-1">
                             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Pernah Bekerja di PT SINAR SOSRO GUNUNG SLAMAT? <span class="text-[#B11116]">*</span>
                             </span>
-                            <div class="flex items-center gap-6 py-2">
+                            <div class="flex items-center gap-6 py-1">
                                 <label for="worked_sosro_yes" class="inline-flex items-center cursor-pointer group py-1">
                                     <input id="worked_sosro_yes" type="radio" name="has_worked_in_sosro" value="1"
                                         required
@@ -167,6 +220,20 @@
                                         placeholder="Contoh: (021) 1234567 atau 0812345678"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_phone')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label for="previous_sosro_company_address"
+                                        class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Alamat Perusahaan / Kantor
+                                    </label>
+                                    <input id="previous_sosro_company_address" name="experiences[0][company_address]" type="text"
+                                        value="{{ old('experiences.0.company_address', $sosroExp?->company_address ?? '') }}"
+                                        placeholder="Contoh: Jl. Raya Sultan Agung KM 28, Bekasi"
+                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('experiences.0.company_address')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -278,7 +345,7 @@
                     </div>
 
                     <!-- Container Card Pengalaman Kerja General -->
-                    <div id="experienceContainer" class="space-y-6">
+                    <div id="experienceContainer" class="space-y-4 pt-0">
                         @php
                             $oldExperiences = old('experiences', []);
                             // Abaikan indeks 0 jika itu berasal dari form Sosro
@@ -295,6 +362,7 @@
                                     foreach ($generalExperiences as $idx => $we) {
                                         $oldExperiences[$idx + 1] = [
                                             'company_name' => $we->company_name,
+                                            'company_address' => $we->company_address,
                                             'company_phone' => $we->company_phone,
                                             'position' => $we->position,
                                             'division' => $we->division,
@@ -313,6 +381,7 @@
                                     $oldExperiences = [
                                         1 => [
                                             'company_name' => '',
+                                            'company_address' => '',
                                             'company_phone' => '',
                                             'position' => '',
                                             'division' => '',
@@ -384,6 +453,20 @@
                                             placeholder="Contoh: (021) 1234567 atau 0812345678"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_phone")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Alamat Perusahaan -->
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Alamat Perusahaan
+                                        </label>
+                                        <input type="text" name="experiences[{{ $index }}][company_address]"
+                                            value="{{ $exp['company_address'] ?? '' }}"
+                                            placeholder="Contoh: Jl. Jend. Sudirman No. 10, Jakarta Selatan"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_address") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error("experiences.{$index}.company_address")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -563,14 +646,6 @@
                     <!-- Actions Bottom -->
                     <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
                         <div class="flex items-center gap-3 w-full sm:w-auto">
-                            <a href="{{ route('biodata.index') }}"
-                                class="w-full sm:w-auto px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                                </svg>
-                                Kembali ke Pratinjau
-                            </a>
                             <a href="{{ route('biodata.education.create') }}"
                                 class="w-full sm:w-auto px-6 py-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-xl transition-all inline-flex items-center justify-center gap-2 cursor-pointer">
                                 Kembali ke Langkah 3
@@ -641,6 +716,12 @@
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon Perusahaan</label>
                     <input type="tel" name="experiences[{INDEX}][company_phone]" placeholder="Contoh: (021) 1234567 atau 0812345678"
+                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                </div>
+
+                <div class="space-y-1.5 md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Perusahaan</label>
+                    <input type="text" name="experiences[{INDEX}][company_address]" placeholder="Contoh: Jl. Jend. Sudirman No. 10, Jakarta Selatan"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
@@ -824,6 +905,25 @@
             updateGlobalCurrentJobCheckboxes();
         }
 
+        /* Cek dan update visibilitas tombol Tambah Pengalaman (Maksimal total 3) */
+        function updateAddButtonVisibility() {
+            const workedSosroYes = document.getElementById('worked_sosro_yes');
+            const isSosroActive = workedSosroYes && workedSosroYes.checked;
+            // Jika pernah kerja di Sosro (1 slot terpakai), sisa kuota pengalaman luar adalah 2.
+            // Jika belum pernah kerja di Sosro, kuota pengalaman luar adalah 3.
+            const maxDynamic = isSosroActive ? 2 : 3;
+            const currentDynamicCount = document.querySelectorAll('#experienceContainer .experience-card').length;
+            const btnAdd = document.getElementById('btnAddExperience');
+
+            if (btnAdd) {
+                if (currentDynamicCount >= maxDynamic) {
+                    btnAdd.style.display = 'none';
+                } else {
+                    btnAdd.style.display = 'inline-flex';
+                }
+            }
+        }
+
         /* Hitung total card aktif dan tentukan index awal baru */
         function getNextExperienceIndex() {
             const workedSosroYes = document.getElementById('worked_sosro_yes');
@@ -835,6 +935,15 @@
 
         /* Tambah Card Pengalaman */
         function addExperienceCard() {
+            const workedSosroYes = document.getElementById('worked_sosro_yes');
+            const isSosroActive = workedSosroYes && workedSosroYes.checked;
+            const maxDynamic = isSosroActive ? 2 : 3;
+            const currentDynamicCount = document.querySelectorAll('#experienceContainer .experience-card').length;
+
+            if (currentDynamicCount >= maxDynamic) {
+                return;
+            }
+
             const container = document.getElementById('experienceContainer');
             const template = document.getElementById('experienceCardTemplate').innerHTML;
             const nextIndex = getNextExperienceIndex();
@@ -847,6 +956,7 @@
             container.insertAdjacentHTML('beforeend', newCardHtml);
             reindexExperienceCards();
             updateGlobalCurrentJobCheckboxes();
+            updateAddButtonVisibility();
         }
 
         /* Hapus Card Pengalaman */
@@ -856,6 +966,7 @@
                 card.remove();
                 reindexExperienceCards();
                 updateGlobalCurrentJobCheckboxes();
+                updateAddButtonVisibility();
             }
         }
 
@@ -929,7 +1040,16 @@
                         toggleCurrentJob(sosroCurrentCb);
                     }
                 }
+                // Jika user memilih Sosro dan kartu dinamis melebihi kuota (maks 2), hapus kartu berlebih dari belakang
+                if (workedSosroYes && workedSosroYes.checked) {
+                    let dynamicCards = document.querySelectorAll('#experienceContainer .experience-card');
+                    while (dynamicCards.length > 2) {
+                        dynamicCards[dynamicCards.length - 1].remove();
+                        dynamicCards = document.querySelectorAll('#experienceContainer .experience-card');
+                    }
+                }
                 reindexExperienceCards();
+                updateAddButtonVisibility();
             }
 
             if (workedSosroYes && workedSosroNo) {
@@ -937,6 +1057,39 @@
                 workedSosroNo.addEventListener('change', toggleSosroDetails);
                 toggleSosroDetails();
             }
+
+            // TOGGLE PERNAH MELAMAR DI SOSRO
+            const appliedSosroYes = document.getElementById('applied_sosro_yes');
+            const appliedSosroNo = document.getElementById('applied_sosro_no');
+            const appliedDetailCard = document.getElementById('appliedSosroDetailCard');
+            const prevAppliedPosition = document.getElementById('previous_applied_position');
+            const prevAppliedYear = document.getElementById('previous_applied_year');
+
+            function toggleAppliedSosro() {
+                if (appliedSosroYes && appliedSosroYes.checked) {
+                    if (appliedDetailCard) appliedDetailCard.classList.remove('hidden');
+                    if (prevAppliedPosition) prevAppliedPosition.setAttribute('required', 'required');
+                    if (prevAppliedYear) prevAppliedYear.setAttribute('required', 'required');
+                } else {
+                    if (appliedDetailCard) appliedDetailCard.classList.add('hidden');
+                    if (prevAppliedPosition) {
+                        prevAppliedPosition.removeAttribute('required');
+                        prevAppliedPosition.value = '';
+                    }
+                    if (prevAppliedYear) {
+                        prevAppliedYear.removeAttribute('required');
+                        prevAppliedYear.value = '';
+                    }
+                }
+            }
+
+            if (appliedSosroYes && appliedSosroNo) {
+                appliedSosroYes.addEventListener('change', toggleAppliedSosro);
+                appliedSosroNo.addEventListener('change', toggleAppliedSosro);
+                toggleAppliedSosro();
+            }
+
+            updateAddButtonVisibility();
 
             // Inisialisasi Format Rupiah untuk input Gaji yang sudah terisi
             document.querySelectorAll('.salary-input').forEach(input => {

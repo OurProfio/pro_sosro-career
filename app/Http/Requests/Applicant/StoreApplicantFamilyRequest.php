@@ -75,6 +75,26 @@ class StoreApplicantFamilyRequest extends FormRequest
             $rules['families.children.*.relationship'] = ['required', 'in:child'];
             $rules['families.children.*.family_type'] = ['required', 'in:nuclear'];
             $rules['families.children.*.gender'] = ['nullable', 'in:l,p'];
+
+            $rules['families.father_in_law.name'] = ['nullable', 'string', 'max:255'];
+            $rules['families.father_in_law.place_of_birth'] = ['nullable', 'string', 'max:100'];
+            $rules['families.father_in_law.date_of_birth'] = ['nullable', 'date', 'before:today'];
+            $rules['families.father_in_law.education'] = ['nullable', 'string', 'max:100'];
+            $rules['families.father_in_law.work'] = ['nullable', 'string', 'max:100'];
+            $rules['families.father_in_law.phone_number'] = ['nullable', 'string', 'max:20'];
+            $rules['families.father_in_law.relationship'] = ['nullable', 'in:father_in_law'];
+            $rules['families.father_in_law.family_type'] = ['nullable', 'in:nuclear'];
+            $rules['families.father_in_law.gender'] = ['nullable', 'in:l,p'];
+
+            $rules['families.mother_in_law.name'] = ['nullable', 'string', 'max:255'];
+            $rules['families.mother_in_law.place_of_birth'] = ['nullable', 'string', 'max:100'];
+            $rules['families.mother_in_law.date_of_birth'] = ['nullable', 'date', 'before:today'];
+            $rules['families.mother_in_law.education'] = ['nullable', 'string', 'max:100'];
+            $rules['families.mother_in_law.work'] = ['nullable', 'string', 'max:100'];
+            $rules['families.mother_in_law.phone_number'] = ['nullable', 'string', 'max:20'];
+            $rules['families.mother_in_law.relationship'] = ['nullable', 'in:mother_in_law'];
+            $rules['families.mother_in_law.family_type'] = ['nullable', 'in:nuclear'];
+            $rules['families.mother_in_law.gender'] = ['nullable', 'in:l,p'];
         }
 
         return $rules;

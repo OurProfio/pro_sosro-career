@@ -40,8 +40,12 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'experiences' => ['nullable', 'array'],
+            'has_applied_sosro' => ['nullable', 'in:y,n'],
+            'previous_applied_position' => ['required_if:has_applied_sosro,y', 'nullable', 'string', 'max:255'],
+            'previous_applied_year' => ['required_if:has_applied_sosro,y', 'nullable', 'digits:4', 'integer'],
+            'experiences' => ['nullable', 'array', 'max:3'],
             'experiences.*.company_name' => ['nullable', 'string', 'max:255'],
+            'experiences.*.company_address' => ['nullable', 'string'],
             'experiences.*.company_phone' => ['nullable', 'string', 'max:20'],
             'experiences.*.position' => ['nullable', 'string', 'max:255'],
             'experiences.*.division' => ['nullable', 'string', 'max:255'],
@@ -78,6 +82,10 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.reference_name.max' => 'Nama & telepon referensi maksimal 255 karakter.',
             'experiences.*.reason_for_leaving.string' => 'Alasan berhenti harus berupa teks.',
             'experiences.*.reason_for_leaving.max' => 'Alasan berhenti maksimal 255 karakter.',
+            'experiences.max' => 'Maksimal riwayat pengalaman kerja yang dapat dimasukkan adalah 3.',
+            'previous_applied_position.required_if' => 'Jabatan posisi wajib diisi jika pernah melamar di Sinar Sosro / Group.',
+            'previous_applied_year.required_if' => 'Tahun wajib diisi jika pernah melamar di Sinar Sosro / Group.',
+            'previous_applied_year.digits' => 'Tahun melamar harus terdiri dari 4 digit angka.',
         ];
     }
 }

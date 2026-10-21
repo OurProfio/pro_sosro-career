@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('education');
             $table->string('phone_number');
             $table->string('work');
-            $table->enum('relationship', ['father', 'mother', 'sibling', 'spouse', 'child']);
+            $table->enum('relationship', ['father', 'mother', 'sibling', 'spouse', 'child', 'father_in_law', 'mother_in_law']);
             $table->enum('gender', ['l', 'p'])->nullable();
             $table->enum('family_type', ['biological', 'nuclear']);
             $table->enum('status', ['alive', 'deceased', 'divorced'])->default('alive');

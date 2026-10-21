@@ -36,6 +36,9 @@ use Illuminate\Support\Facades\DB;
     'emergency_contact_name',
     'emergency_contact_relationship',
     'emergency_contact_phone',
+    'has_applied_sosro',
+    'previous_applied_position',
+    'previous_applied_year',
     'photo_url',
 ])]
 class Applicant extends Model

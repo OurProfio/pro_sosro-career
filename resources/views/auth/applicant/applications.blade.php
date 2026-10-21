@@ -151,7 +151,7 @@
                                     'cancelled' => 'Dibatalkan',
                                 ];
                                 $status = strtolower($app->status ?? 'pending');
-                                $canCancel = in_array($status, ['pending', 'progress']);
+                                $canCancel = ($status === 'pending');
                             @endphp
                             <span class="px-3.5 py-1.5 border rounded-xl text-xs font-bold {{ $statusClasses }}">
                                 Status: {{ $statusLabels[$status] ?? 'Dalam Peninjauan' }}

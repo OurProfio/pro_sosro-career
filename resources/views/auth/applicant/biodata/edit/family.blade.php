@@ -473,6 +473,134 @@
                                 </div>
                             </div>
 
+                            <!-- Data Orang Tua Mertua (Opsional) -->
+                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-6">
+                                <div class="border-b border-gray-200/80 pb-3">
+                                    <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                        <span>Data Orang Tua Mertua</span>
+                                        <span class="text-[11px] font-normal text-gray-400 capitalize">(Opsional)</span>
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
+                                </div>
+
+                                <!-- Ayah Mertua -->
+                                <div class="space-y-4">
+                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                        Ayah Mertua
+                                    </h4>
+                                    <input type="hidden" name="families[father_in_law][family_type]" value="nuclear">
+                                    <input type="hidden" name="families[father_in_law][relationship]" value="father_in_law">
+                                    <input type="hidden" name="families[father_in_law][gender]" value="l">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ayah Mertua</label>
+                                            <input type="text" name="families[father_in_law][name]"
+                                                value="{{ old('families.father_in_law.name') }}"
+                                                placeholder="Nama Lengkap Ayah Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
+                                            <input type="text" name="families[father_in_law][place_of_birth]"
+                                                value="{{ old('families.father_in_law.place_of_birth') }}"
+                                                placeholder="Kota Lahir"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
+                                            <input type="date" name="families[father_in_law][date_of_birth]"
+                                                value="{{ old('families.father_in_law.date_of_birth') }}"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
+                                            <select name="families[father_in_law][education]"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                <option value="" selected>Pilih Pendidikan (Opsional)</option>
+                                                @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
+                                                    <option value="{{ $val }}" {{ old('families.father_in_law.education') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
+                                            <input type="text" name="families[father_in_law][work]"
+                                                value="{{ old('families.father_in_law.work') }}"
+                                                placeholder="Pekerjaan Ayah Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
+                                            <input type="tel" name="families[father_in_law][phone_number]"
+                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                value="{{ old('families.father_in_law.phone_number') }}"
+                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-gray-200/70 pt-4 space-y-4">
+                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                        Ibu Mertua
+                                    </h4>
+                                    <input type="hidden" name="families[mother_in_law][family_type]" value="nuclear">
+                                    <input type="hidden" name="families[mother_in_law][relationship]" value="mother_in_law">
+                                    <input type="hidden" name="families[mother_in_law][gender]" value="p">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ibu Mertua</label>
+                                            <input type="text" name="families[mother_in_law][name]"
+                                                value="{{ old('families.mother_in_law.name') }}"
+                                                placeholder="Nama Lengkap Ibu Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
+                                            <input type="text" name="families[mother_in_law][place_of_birth]"
+                                                value="{{ old('families.mother_in_law.place_of_birth') }}"
+                                                placeholder="Kota Lahir"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
+                                            <input type="date" name="families[mother_in_law][date_of_birth]"
+                                                value="{{ old('families.mother_in_law.date_of_birth') }}"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
+                                            <select name="families[mother_in_law][education]"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                <option value="" selected>Pilih Pendidikan (Opsional)</option>
+                                                @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
+                                                    <option value="{{ $val }}" {{ old('families.mother_in_law.education') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
+                                            <input type="text" name="families[mother_in_law][work]"
+                                                value="{{ old('families.mother_in_law.work') }}"
+                                                placeholder="Pekerjaan Ibu Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
+                                            <input type="tel" name="families[mother_in_law][phone_number]"
+                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                value="{{ old('families.mother_in_law.phone_number') }}"
+                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Data Anak -->
                             <div class="space-y-4 pt-2">
                                 <div class="flex items-center justify-between">

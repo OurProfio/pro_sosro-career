@@ -31,6 +31,15 @@ class EnsureUserRole
             $roles
         );
 
+        // Jika rute mensyaratkan 'superadmin', periksa role pada tabel admin
+        if (in_array('superadmin', $roles, true)) {
+            if ($userRole !== 'admin' || $user->admin?->role !== 'superadmin') {
+                abort(403, 'Akses terbatas untuk Super Admin.');
+            }
+
+            return $next($request);
+        }
+
         if (! in_array($userRole, $allowedRoles, true)) {
             if ($userRole === 'admin') {
                 return redirect()->route('admin.dashboard');

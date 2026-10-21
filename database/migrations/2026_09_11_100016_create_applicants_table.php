@@ -40,6 +40,9 @@ return new class extends Migration
             $table->string('emergency_contact_name')->nullable();
             $table->string('emergency_contact_relationship')->nullable();
             $table->string('emergency_contact_phone')->nullable();
+            $table->enum('has_applied_sosro', ['y', 'n'])->default('n');
+            $table->string('previous_applied_position')->nullable();
+            $table->string('previous_applied_year', 10)->nullable();
             $table->string('photo_url');
             $table->timestamps();
         });

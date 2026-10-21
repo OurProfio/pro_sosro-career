@@ -41,21 +41,25 @@ Route::group(['middleware' => ['auth']], function () {
     Route::group(['middleware' => ['role:admin']], function () {
         Route::prefix('admin')->group(function () {
             Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-            Route::resource('admin', AdminController::class);
-            Route::resource('office', OfficeController::class);
-            Route::resource('division', DivisionController::class);
             Route::get('applicant/{applicant}/cetak', [AdminApplicantController::class, 'print'])->name('applicant.print');
             Route::resource('applicant', AdminApplicantController::class);
-            Route::resource('user', UserController::class);
             Route::resource('job', JobController::class);
 
             Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
             Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
 
+            // Khusus Super Admin
+            Route::group(['middleware' => ['role:superadmin']], function () {
+                Route::resource('office', OfficeController::class);
+                Route::resource('division', DivisionController::class);
+                Route::resource('admin', AdminController::class);
+                Route::resource('user', UserController::class);
+            });
         });
     });
 
-    Route::group(['middleware' => ['role:applicant', 'verified']], function () {
+    Route::group(['middleware' => ['role:applicant']], function () {
+        // Route::group(['middleware' => ['role:applicant', 'verified']], function () {
         Route::get('/dashboard', fn () => view('auth.applicant.index'))->name('applicant.dashboard');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');
