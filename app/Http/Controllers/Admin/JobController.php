@@ -24,14 +24,6 @@ class JobController extends Controller
 
         $jobs = Job::all();
 
-        return view('auth.admin.job.index', compact('jobs'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
         if (auth()->user()->admin->role === 'superadmin') {
             $offices = Office::all();
         } else {
@@ -40,7 +32,15 @@ class JobController extends Controller
 
         $divisions = Division::all();
 
-        return view('auth.admin.job.create', compact('offices', 'divisions'));
+        return view('auth.admin.job.index', compact('jobs', 'offices', 'divisions'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return redirect()->route('job.index');
     }
 
     /**

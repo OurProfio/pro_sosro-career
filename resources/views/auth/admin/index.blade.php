@@ -27,7 +27,7 @@
                         class="inline-flex min-h-10 items-center justify-center rounded-lg border border-slate-200 bg-white px-3.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
                         Lihat pelamar
                     </a>
-                    <a href="{{ route('job.create') }}"
+                    <a href="{{ route('job.index') }}"
                         class="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#B11116] px-3.5 text-xs font-semibold text-white transition hover:bg-[#940e13] focus:outline-none focus:ring-2 focus:ring-[#B11116] focus:ring-offset-2">
                         Tambah lowongan
                     </a>
