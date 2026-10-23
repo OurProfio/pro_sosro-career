@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Division;
+use App\Models\Stage;
 use Illuminate\Http\Request;
 
 class ApplicantController extends Controller
@@ -14,9 +15,16 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        $applicants = Applicant::all();
+        $applicants = Applicant::with([
+            'educations',
+            'workExperiences',
+            'applications.stage',
+            'interest',
+        ])->get();
 
-        return view('auth.admin.applicant.index', compact('applicants'));
+        $divisions = Division::all();
+
+        return view('auth.admin.applicant.index', compact('applicants', 'divisions'));
     }
 
     /**
@@ -59,7 +67,12 @@ class ApplicantController extends Controller
             ->whereIn('id', $interestIds)
             ->pluck('name', 'id');
 
-        return view('auth.admin.applicant.show', compact('applicant', 'interestNames'));
+        $latestApplication = $applicant->applications->sortByDesc('created_at')->first();
+        $stages = $latestApplication?->job?->category
+            ? Stage::where('type', $latestApplication->job->category)->orderBy('step')->get()
+            : collect();
+
+        return view('auth.admin.applicant.show', compact('applicant', 'interestNames', 'latestApplication', 'stages'));
     }
 
     /**

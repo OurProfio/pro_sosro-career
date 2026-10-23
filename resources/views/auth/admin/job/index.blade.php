@@ -3,28 +3,80 @@
 @section('title', 'Manajemen Lowongan - Sinar Sosro Gunung Slamat (Rekso)')
 
 @section('content')
-    <div class="space-y-6 font-sans" x-data="{ openCreateModal: {{ $errors->any() ? 'true' : 'false' }} }">
-        <!-- Header Section: Title, Location Filter, & Action Button -->
-        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-2" data-purpose="page-title-and-actions">
-            <div>
-                <h2 class="text-2xl font-bold tracking-tight text-[#7f1d1d]">Manajemen Lowongan</h2>
-                <p class="text-sm text-slate-500 mt-1">Kelola permohonan, pantau jadwal posting, dan verifikasi kebutuhan posisi kerja.</p>
+    <div class="space-y-6 font-sans" x-data="{
+        openCreateModal: {{ $errors->any() ? 'true' : 'false' }},
+        search: '',
+        selectedOffice: '',
+        sortBy: 'latest',
+        visibleJobsCount: {{ $jobs->count() }},
+        applyFilters() {
+            this.$nextTick(() => {
+                const rows = document.querySelectorAll('#job-vacancies-table tbody tr.job-row');
+                let count = 0;
+                const q = (this.search || '').trim().toLowerCase();
+                const office = this.selectedOffice;
+
+                rows.forEach(r => {
+                    const haystack = (r.dataset.haystack || '').toLowerCase();
+                    const rOffice = r.dataset.office || '';
+
+                    const matchSearch = !q || haystack.includes(q);
+                    const matchOffice = !office || rOffice === office;
+
+                    if (matchSearch && matchOffice) {
+                        r.style.display = '';
+                        count++;
+                    } else {
+                        r.style.display = 'none';
+                    }
+                });
+
+                this.visibleJobsCount = count;
+                this.reNumberVisibleRows();
+            });
+        },
+        applySort() {
+            let tbody = document.querySelector('#job-vacancies-table tbody');
+            if (!tbody) return;
+            let rows = Array.from(tbody.querySelectorAll('tr.job-row'));
+            rows.sort((a, b) => {
+                if (this.sortBy === 'latest') return Number(b.dataset.created || 0) - Number(a.dataset.created || 0);
+                if (this.sortBy === 'closing_soon') return Number(a.dataset.closing || 0) - Number(b.dataset.closing || 0);
+                if (this.sortBy === 'most_applicants') return Number(b.dataset.applicants || 0) - Number(a.dataset.applicants || 0);
+                return 0;
+            });
+            const emptyRow = document.querySelector('#job-vacancies-empty-row');
+            rows.forEach(r => tbody.appendChild(r));
+            if (emptyRow) tbody.appendChild(emptyRow);
+            this.reNumberVisibleRows();
+        },
+        reNumberVisibleRows() {
+            let visibleIdx = 1;
+            document.querySelectorAll('#job-vacancies-table tbody tr.job-row').forEach(r => {
+                if (r.style.display !== 'none') {
+                    const cell = r.querySelector('.row-number');
+                    if (cell) cell.textContent = visibleIdx++;
+                }
+            });
+        }
+    }"
+    x-init="
+        $watch('search', () => applyFilters());
+        $watch('selectedOffice', () => applyFilters());
+        $watch('sortBy', () => applySort());
+    ">
+        <!-- Header Section: Title & Action Button -->
+        <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-3.5 border-b border-slate-200" data-purpose="page-title-and-actions">
+            <div class="space-y-0.5">
+                <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-[#9b1b1f] transition">Portal Karir</a>
+                    <span class="material-symbols-outlined text-xs">chevron_right</span>
+                    <span class="text-[#9b1b1f] font-bold">Manajemen Lowongan</span>
+                </nav>
+                <h1 class="text-xl font-bold tracking-tight text-slate-900">Manajemen Lowongan</h1>
+                <p class="text-xs text-slate-500">Kelola permohonan, pantau jadwal posting, dan verifikasi kebutuhan posisi kerja.</p>
             </div>
             <div class="flex items-center gap-3">
-                <!-- Region Filter Dropdown -->
-                <div class="relative">
-                    <select aria-label="Filter Wilayah" class="appearance-none bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full pl-4 pr-9 py-2.5 shadow-sm hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]/20 focus:border-[#b91c1c] transition cursor-pointer">
-                        <option value="all">Semua Wilayah</option>
-                        <option value="cibitung">Pabrik Cibitung</option>
-                        <option value="cakung">Pabrik Cakung</option>
-                        <option value="kpb">KPB (Pusat)</option>
-                        <option value="semarang">Cabang Semarang</option>
-                        <option value="bali">Distribusi Bali</option>
-                    </select>
-                    <svg class="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                    </svg>
-                </div>
                 <!-- Tambah Lowongan Primary CTA -->
                 <button type="button" @click="openCreateModal = true" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#A6192E] hover:bg-[#7f1d1d] text-white text-xs font-bold shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -37,50 +89,80 @@
 
         <!-- Main Card Container -->
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden" data-purpose="content-card">
-            <!-- Status Filter Tabs with Approval Tab -->
+            <!-- Status Filter Tabs -->
             <div class="px-6 pt-5 pb-3 border-b border-slate-100 flex flex-wrap items-center gap-2" data-purpose="status-tab-group">
-                <!-- Tab 1: Semua Lowongan -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" type="button">
+                <!-- Tab 1: Semua Lowongan (Default Active) -->
+                <a href="{{ route('job.index') }}"
+                    class="px-4 py-2 text-xs font-bold rounded-full bg-red-50 text-[#A6192E] border border-red-200/70 shadow-sm transition cursor-pointer">
                     Semua Lowongan
-                </button>
-                <!-- Tab 2: Persetujuan Upload Lowongan -->
-                <button class="relative inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-full bg-red-50 text-[#A6192E] border border-red-200/70 shadow-sm transition" type="button">
-                    <span>Persetujuan Upload Lowongan</span>
-                    <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#A6192E] text-white">
-                        5
-                    </span>
-                </button>
-                <!-- Tab 3: Lowongan Dibuka -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" type="button">
+                </a>
+                <!-- Tab 2: Lowongan Dibuka -->
+                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
                     Lowongan Dibuka
                 </button>
-                <!-- Tab 4: Lowongan Ditunda -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" type="button">
+                <!-- Tab 3: Lowongan Ditunda -->
+                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
                     Lowongan Ditunda
                 </button>
-                <!-- Tab 5: Lowongan Ditutup -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition" type="button">
+                <!-- Tab 4: Lowongan Ditutup -->
+                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
                     Lowongan Ditutup
                 </button>
             </div>
 
             <!-- Search Bar and Sorting Toolbar -->
-            <div class="p-6 pb-4 flex flex-col sm:flex-row items-center justify-between gap-4" data-purpose="table-controls">
-                <div class="relative w-full sm:max-w-md">
+            <div class="p-6 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4" data-purpose="table-controls">
+                <div class="relative w-full md:max-w-md">
                     <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
                         </svg>
                     </span>
-                    <input class="w-full pl-10 pr-4 py-2 text-xs rounded-full border border-slate-300 focus:border-[#b91c1c] focus:ring-2 focus:ring-[#b91c1c]/20 text-slate-800 placeholder-slate-400 transition" placeholder="Cari Lowongan berdasarkan posisi, divisi..." type="text" />
+                    <input
+                        x-model="search"
+                        @input="applyFilters()"
+                        class="w-full pl-10 pr-9 py-2 text-xs rounded-full border border-slate-300 focus:border-[#b91c1c] focus:ring-2 focus:ring-[#b91c1c]/20 text-slate-800 placeholder-slate-400 transition"
+                        placeholder="Cari Lowongan berdasarkan posisi, divisi, lokasi..."
+                        type="text"
+                    />
+                    <button
+                        x-show="search"
+                        @click="search = ''; applyFilters()"
+                        type="button"
+                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        title="Hapus pencarian"
+                    >
+                        <span class="material-symbols-outlined text-[16px]">close</span>
+                    </button>
                 </div>
-                <div class="flex items-center gap-2 self-end sm:self-auto text-xs text-slate-500">
-                    <span>Urutkan:</span>
-                    <select aria-label="Urutan Tampilan" class="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:ring-1 focus:ring-[#b91c1c]">
-                        <option>Paling Baru</option>
-                        <option>Batas Waktu Terdekat</option>
-                        <option>Kandidat Terbanyak</option>
-                    </select>
+                <div class="flex flex-wrap items-center gap-3 self-end md:self-auto text-xs text-slate-500">
+                    <!-- Dropdown Semua Wilayah dari Database (Office) -->
+                    <div class="relative">
+                        <select
+                            x-model="selectedOffice"
+                            @change="applyFilters()"
+                            aria-label="Filter Wilayah"
+                            class="bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full px-3.5 py-2 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]/20 focus:border-[#b91c1c] transition cursor-pointer">
+                            <option value="">Semua Wilayah</option>
+                            @foreach ($offices as $office)
+                                <option value="{{ $office->id }}">{{ $office->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Dropdown Urutkan -->
+                    <div class="flex items-center gap-1.5">
+                        <span class="font-medium">Urutkan:</span>
+                        <select
+                            x-model="sortBy"
+                            @change="applySort()"
+                            aria-label="Urutan Tampilan"
+                            class="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-700 font-medium focus:ring-1 focus:ring-[#b91c1c] cursor-pointer">
+                            <option value="latest">Paling Baru</option>
+                            <option value="closing_soon">Batas Waktu Terdekat</option>
+                            <option value="most_applicants">Kandidat Terbanyak</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -90,235 +172,111 @@
                     <thead>
                         <tr class="bg-rose-50/40 border-y border-rose-100/60 text-[11px] font-bold uppercase tracking-wider text-[#7f1d1d]">
                             <th class="py-3 px-5 text-center w-12" scope="col">No.</th>
-                            <th class="py-3 px-6" scope="col">Informasi Lowongan</th>
+                            <th class="py-3 px-6 text-center" scope="col">Informasi Lowongan</th>
                             <th class="py-3 px-4 text-center" scope="col">Kandidat</th>
-                            <th class="py-3 px-5" scope="col">Terbuat</th>
-                            <th class="py-3 px-5" scope="col">
-                                <div class="flex items-center gap-1 cursor-pointer group">
+                            <th class="py-3 px-5 text-center" scope="col">Terbuat</th>
+                            <th class="py-3 px-5 text-center" scope="col">
+                                <div class="inline-flex items-center justify-center gap-1 cursor-pointer group">
                                     <span>Batas Waktu</span>
-                                    <svg class="w-3.5 h-3.5 text-[#b91c1c]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
                                 </div>
                             </th>
                             <th class="py-3 px-5 text-center" scope="col">
-                                <div class="inline-flex items-center gap-1 cursor-pointer">
+                                <div class="inline-flex items-center justify-center gap-1 cursor-pointer">
                                     <span>Status</span>
-                                    <svg class="w-3.5 h-3.5 text-[#b91c1c]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                        <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
                                 </div>
                             </th>
-                            <th class="py-3 px-6 text-right" scope="col">Aksi</th>
+                            <th class="py-3 px-6 text-center" scope="col">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 text-xs">
-                        <!-- Row 1: Production Operator -->
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-5 text-center text-slate-400 font-semibold">1</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800 text-[13px]">Production Operator</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">Departemen Produksi • Plant Cibitung (Full Time)</div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                                    1
-                                </span>
-                            </td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">14 Sept 2026</td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">28 Sept 2026</td>
-                            <td class="py-4 px-5 text-center">
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending Review
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="inline-flex items-center justify-end gap-1.5">
-                                    <button class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition" title="Setujui Lowongan" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                        @forelse ($jobs as $index => $job)
+                            @php
+                                $jobOfficeId = (string) ($job->office_id ?? '');
+                                $searchHaystack = strtolower(
+                                    $job->title . ' ' .
+                                    ($job->occupation ?? '') . ' ' .
+                                    ($job->category ?? '') . ' ' .
+                                    ($job->office?->name ?? '') . ' ' .
+                                    ($job->location ?? '')
+                                );
+                                $closingTimestamp = $job->closing_date ? \Carbon\Carbon::parse($job->closing_date)->timestamp : 9999999999;
+                                $createdTimestamp = $job->created_at ? $job->created_at->timestamp : 0;
+                                $applicantsTotal = (int) ($job->applications_count ?? $job->applications->count());
+                            @endphp
+                            <tr
+                                data-haystack="{{ $searchHaystack }}"
+                                data-office="{{ $jobOfficeId }}"
+                                data-created="{{ $createdTimestamp }}"
+                                data-closing="{{ $closingTimestamp }}"
+                                data-applicants="{{ $applicantsTotal }}"
+                                class="job-row hover:bg-slate-50/70 transition-colors"
+                            >
+                                <td class="py-4 px-5 text-center text-slate-400 font-semibold row-number">{{ $index + 1 }}</td>
+                                <td class="py-4 px-6">
+                                    <a href="{{ route('job.show', $job) }}" class="font-bold text-slate-800 hover:text-[#A6192E] transition-colors text-[13px] block">
+                                        {{ $job->title }}
+                                    </a>
+                                    <div class="text-[11px] text-slate-400 mt-0.5">
+                                        {{ $job->occupation ?? ucwords(str_replace('_', ' ', $job->category ?? '-')) }} • {{ $job->office->name ?? $job->location ?? '-' }} ({{ $job->type ?? '-' }})
+                                    </div>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
+                                        {{ $job->applications_count ?? $job->applications->count() }}
+                                    </span>
+                                </td>
+                                <td class="py-4 px-5 text-center text-slate-600 font-medium">
+                                    {{ $job->opening_date ? \Carbon\Carbon::parse($job->opening_date)->translatedFormat('d M Y') : ($job->created_at ? $job->created_at->translatedFormat('d M Y') : '-') }}
+                                </td>
+                                <td class="py-4 px-5 text-center text-slate-600 font-medium">
+                                    {{ $job->closing_date ? \Carbon\Carbon::parse($job->closing_date)->translatedFormat('d M Y') : '-' }}
+                                </td>
+                                <td class="py-4 px-5 text-center">
+                                    @if ($job->status === 'aktif')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Aktif
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            Ditutup
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="py-4 px-6 text-center">
+                                    <div class="inline-flex items-center justify-center">
+                                        <a href="{{ route('job.show', $job) }}" class="p-1.5 text-slate-500 hover:text-[#A6192E] hover:bg-rose-50 rounded-md transition" title="Lihat Detail">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+                                                <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="py-12 px-6 text-center text-slate-400">
+                                    <div class="flex flex-col items-center justify-center gap-2">
+                                        <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0"></path>
                                         </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-rose-50 rounded-md transition" title="Lihat Detail" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md transition" title="Pilihan Lain" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                                        <p class="text-xs font-medium">Belum ada data lowongan yang terdaftar.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
 
-                        <!-- Row 2: PRODUCTION OPERATOR KPB -->
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-5 text-center text-slate-400 font-semibold">2</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800 text-[13px]">PRODUCTION OPERATOR KPB</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">Departemen Produksi • Unit KPB (Kontrak)</div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                                    1
-                                </span>
-                            </td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">14 Sept 2026</td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">28 Sept 2026</td>
-                            <td class="py-4 px-5 text-center">
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending Review
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="inline-flex items-center justify-end gap-1.5">
-                                    <button class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition" title="Setujui Lowongan" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-rose-50 rounded-md transition" title="Lihat Detail" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md transition" title="Pilihan Lain" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 3: Mechanic Operator -->
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-5 text-center text-slate-400 font-semibold">3</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800 text-[13px]">Mechanic Operator</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">Departemen Maintenance &amp; Mesin • Cakung</div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                                    1
-                                </span>
-                            </td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">14 Sept 2026</td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">28 Sept 2026</td>
-                            <td class="py-4 px-5 text-center">
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending Review
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="inline-flex items-center justify-end gap-1.5">
-                                    <button class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition" title="Setujui Lowongan" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-rose-50 rounded-md transition" title="Lihat Detail" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md transition" title="Pilihan Lain" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 4: Sales TO Area -->
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-5 text-center text-slate-400 font-semibold">4</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800 text-[13px]">Sales TO Area</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">Departemen Sales &amp; Distribusi • Bali &amp; Lombok</div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                                    1
-                                </span>
-                            </td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">14 Sept 2026</td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">28 Sept 2026</td>
-                            <td class="py-4 px-5 text-center">
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending Review
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="inline-flex items-center justify-end gap-1.5">
-                                    <button class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition" title="Setujui Lowongan" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-rose-50 rounded-md transition" title="Lihat Detail" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md transition" title="Pilihan Lain" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Row 5: Administration Supervisor -->
-                        <tr class="hover:bg-slate-50/70 transition-colors">
-                            <td class="py-4 px-5 text-center text-slate-400 font-semibold">5</td>
-                            <td class="py-4 px-6">
-                                <div class="font-bold text-slate-800 text-[13px]">Administration Supervisor</div>
-                                <div class="text-[11px] text-slate-400 mt-0.5">Departemen HR &amp; GA • Kantor Pusat</div>
-                            </td>
-                            <td class="py-4 px-4 text-center">
-                                <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
-                                    1
-                                </span>
-                            </td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">14 Sept 2026</td>
-                            <td class="py-4 px-5 text-slate-600 font-medium">28 Sept 2026</td>
-                            <td class="py-4 px-5 text-center">
-                                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                    Pending Review
-                                </span>
-                            </td>
-                            <td class="py-4 px-6 text-right">
-                                <div class="inline-flex items-center justify-end gap-1.5">
-                                    <button class="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-md transition" title="Setujui Lowongan" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                            <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-500 hover:text-red-800 hover:bg-rose-50 rounded-md transition" title="Lihat Detail" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
-                                    <button class="p-1.5 text-slate-400 hover:text-slate-600 rounded-md transition" title="Pilihan Lain" type="button">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                            <path d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" stroke-linecap="round" stroke-linejoin="round"></path>
-                                        </svg>
-                                    </button>
+                        <!-- Empty state when search or filter returns 0 results -->
+                        <tr id="job-vacancies-empty-row" x-show="visibleJobsCount === 0 && {{ $jobs->count() }} > 0" style="display: none;">
+                            <td colspan="7" class="py-12 px-6 text-center text-slate-400">
+                                <div class="flex flex-col items-center justify-center gap-2">
+                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"></path>
+                                    </svg>
+                                    <p class="text-xs font-semibold text-slate-700">Tidak ada lowongan yang sesuai</p>
+                                    <p class="text-[11px] text-slate-400">Tidak ditemukan lowongan dengan kata kunci atau filter wilayah tersebut.</p>
                                 </div>
                             </td>
                         </tr>
@@ -327,50 +285,34 @@
             </div>
             <!-- END: RecruitmentDataTable -->
 
-            <!-- BEGIN: TablePaginationFooter -->
-            <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500" data-purpose="table-pagination">
-                <p>Menampilkan <span class="font-semibold text-slate-700">1-5</span> dari <span class="font-semibold text-slate-700">28</span> total lowongan</p>
-                <nav aria-label="Pagination Navigation" class="inline-flex items-center gap-1">
-                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-50" disabled="" type="button">
-                        Sebelumnya
-                    </button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded font-semibold bg-[#A6192E] text-white" type="button">
-                        1
-                    </button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-slate-600 hover:bg-slate-100" type="button">
-                        2
-                    </button>
-                    <button class="w-7 h-7 flex items-center justify-center rounded text-slate-600 hover:bg-slate-100" type="button">
-                        3
-                    </button>
-                    <button class="px-2.5 py-1.5 rounded border border-slate-200 bg-white text-slate-600 hover:bg-slate-50" type="button">
-                        Selanjutnya
-                    </button>
-                </nav>
+            <!-- BEGIN: TableFooter (Tanpa Tombol Pagination) -->
+            <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500" data-purpose="table-footer">
+                <p>Menampilkan <span class="font-semibold text-slate-700" x-text="visibleJobsCount">{{ $jobs->count() }}</span> dari <span class="font-semibold text-slate-700">{{ $jobs->count() }}</span> total lowongan</p>
             </div>
-            <!-- END: TablePaginationFooter -->
+            <!-- END: TableFooter -->
         </div>
         <!-- END: Main Card Container -->
 
         <!-- BEGIN: Modal Tambah Lowongan (Alpine.js) -->
-        <div x-show="openCreateModal"
-            x-cloak
-            style="display: none;"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-            @keydown.escape.window="openCreateModal = false">
-            
+        <template x-teleport="body">
             <div x-show="openCreateModal"
-                x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 scale-95"
-                x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="ease-in duration-200"
-                x-transition:leave-start="opacity-100 scale-100"
-                x-transition:leave-end="opacity-0 scale-95"
-                @click.outside="openCreateModal = false"
-                class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
+                x-cloak
+                style="display: none;"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="modal-title"
+                @keydown.escape.window="openCreateModal = false">
+                
+                <div x-show="openCreateModal"
+                    x-transition:enter="ease-out duration-300"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-200"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    @click.outside="openCreateModal = false"
+                    class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
                 
                 <!-- Modal Header -->
                 <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -436,9 +378,6 @@
                                                 @endforeach
                                             @endif
                                         </select>
-                                        <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
                                     </div>
                                     @error('office_id')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -459,9 +398,6 @@
                                             <option value="internship" {{ old('category') == 'internship' ? 'selected' : '' }}>Internship / PKL</option>
                                             <option value="magang" {{ old('category') == 'magang' ? 'selected' : '' }}>Magang</option>
                                         </select>
-                                        <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
                                     </div>
                                     @error('category')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -487,9 +423,6 @@
                                                 @endforeach
                                             @endif
                                         </select>
-                                        <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
                                     </div>
                                     @error('occupation')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -510,9 +443,6 @@
                                             <option value="Part-Time" {{ old('type') == 'Part-Time' ? 'selected' : '' }}>Part Time</option>
                                             <option value="Freelance" {{ old('type') == 'Freelance' ? 'selected' : '' }}>Freelance</option>
                                         </select>
-                                        <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-3 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                                        </svg>
                                     </div>
                                     @error('type')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -544,9 +474,15 @@
                                 <label for="modal_description" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Deskripsi Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
                                 </label>
-                                <textarea name="description" id="modal_description" rows="4"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('description') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition leading-relaxed resize-y"
-                                    placeholder="Tuliskan tanggung jawab dan rincian pekerjaan..." required>{{ old('description') }}</textarea>
+                                <x-forms.rich-textarea
+                                    name="description"
+                                    id="modal_description"
+                                    :value="old('description')"
+                                    placeholder="Tuliskan tanggung jawab dan rincian pekerjaan..."
+                                    :hasError="$errors->has('description')"
+                                    :required="true"
+                                    :rows="4"
+                                />
                                 @error('description')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
@@ -556,9 +492,15 @@
                                 <label for="modal_qualification" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Kualifikasi Pelamar <span class="text-[#A6192E] font-bold">*</span>
                                 </label>
-                                <textarea name="qualification" id="modal_qualification" rows="4"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('qualification') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition leading-relaxed resize-y"
-                                    placeholder="Tuliskan pendidikan, pengalaman, keahlian, dan persyaratan lainnya..." required>{{ old('qualification') }}</textarea>
+                                <x-forms.rich-textarea
+                                    name="qualification"
+                                    id="modal_qualification"
+                                    :value="old('qualification')"
+                                    placeholder="Tuliskan pendidikan, pengalaman, keahlian, dan persyaratan lainnya..."
+                                    :hasError="$errors->has('qualification')"
+                                    :required="true"
+                                    :rows="4"
+                                />
                                 @error('qualification')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror
@@ -572,30 +514,16 @@
                                 <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div class="space-y-1.5">
-                                    <label for="modal_opening_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Tanggal Buka <span class="text-[#A6192E] font-bold">*</span>
-                                    </label>
-                                    <input type="date" name="opening_date" id="modal_opening_date" value="{{ old('opening_date') }}"
-                                        class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('opening_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
-                                        required>
-                                    @error('opening_date')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="space-y-1.5">
-                                    <label for="modal_closing_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Tanggal Tutup <span class="text-[#A6192E] font-bold">*</span>
-                                    </label>
-                                    <input type="date" name="closing_date" id="modal_closing_date" value="{{ old('closing_date') }}"
-                                        class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('closing_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
-                                        required>
-                                    @error('closing_date')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
+                            <div class="space-y-1.5">
+                                <label for="modal_closing_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
+                                    Tanggal Tutup <span class="text-[#A6192E] font-bold">*</span>
+                                </label>
+                                <input type="date" name="closing_date" id="modal_closing_date" value="{{ old('closing_date') }}"
+                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('closing_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
+                                    required>
+                                @error('closing_date')
+                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -615,6 +543,7 @@
                 </form>
             </div>
         </div>
+        </template>
         <!-- END: Modal Tambah Lowongan -->
     </div>
 @endsection

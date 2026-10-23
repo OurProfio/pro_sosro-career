@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Edit Biodata Pelamar')
 
@@ -67,7 +67,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-6 sm:p-10">
                     <header class="mb-8 pb-4 border-b border-gray-100">
-                        <h1 class="text-2xl font-black text-gray-900 tracking-tight">
+                        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
                             Edit Data <span class="text-[#B11116]">Personal</span>
                         </h1>
                         <p class="text-gray-500 text-sm mt-1">

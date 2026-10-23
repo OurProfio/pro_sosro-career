@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Data Pendidikan & Pelatihan Pelamar')
 
@@ -147,7 +147,7 @@
                                                     d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                                             </svg>
                                         </div>
-                                        <h3 class="text-xs font-black uppercase tracking-wider text-gray-800 card-title-label">
+                                        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800 card-title-label">
                                             {{ $index === 0 ? 'Pendidikan Terakhir' : 'Pendidikan Ke-' . ($index + 1) }}
                                         </h3>
                                         @if ($index === 0)
@@ -431,7 +431,7 @@
                                                         d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                                 </svg>
                                             </div>
-                                            <h3 class="text-xs font-black uppercase tracking-wider text-gray-800 training-title-label">
+                                            <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800 training-title-label">
                                                 Pelatihan Ke-{{ $tIndex + 1 }}
                                             </h3>
                                         </div>
@@ -531,7 +531,7 @@
                                 d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                         </svg>
                     </div>
-                    <h3 class="text-xs font-black uppercase tracking-wider text-gray-800 card-title-label">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800 card-title-label">
                         Pendidikan Ke-{NUMBER}
                     </h3>
                 </div>
@@ -711,7 +711,7 @@
                                 d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                         </svg>
                     </div>
-                    <h3 class="text-xs font-black uppercase tracking-wider text-gray-800 training-title-label">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800 training-title-label">
                         Pelatihan Ke-{NUMBER}
                     </h3>
                 </div>

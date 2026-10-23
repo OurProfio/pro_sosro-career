@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Edit Biodata Pelamar')
 
@@ -78,7 +78,7 @@
             <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
                 <div class="p-6 sm:p-10">
                     <header class="mb-8 pb-4 border-b border-gray-100">
-                        <h1 class="text-2xl font-black text-gray-900 tracking-tight">
+                        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
                             Edit Data <span class="text-[#B11116]">Personal</span>
                         </h1>
                         <p class="text-gray-500 text-sm mt-1">
@@ -516,7 +516,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-xs font-black uppercase tracking-wider text-gray-800">
+                                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800">
                                         Kontak Darurat (Emergency Contact) <span class="text-[#B11116]">*</span>
                                     </h3>
                                     <p class="text-[11px] text-gray-500">Wajib diisi: Keluarga atau kerabat terdekat yang dapat dihubungi saat situasi darurat.</p>

@@ -31,9 +31,8 @@ class UpdateJobRequest extends FormRequest
             'location' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
-            'opening_date' => ['required', 'date'],
-            'closing_date' => ['required', 'date', 'after_or_equal:opening_date'],
-            'status' => ['required', 'in:aktif,nonaktif,dihapus,selesai'],
+            'closing_date' => ['required', 'date'],
+            'status' => ['nullable', 'in:aktif,nonaktif,dihapus,selesai'],
         ];
     }
 

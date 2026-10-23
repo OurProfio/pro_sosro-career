@@ -22,12 +22,12 @@ class JobController extends Controller
             ->whereDate('closing_date', '<', today())
             ->update(['status' => 'nonaktif']);
 
-        $jobs = Job::all();
+        $jobs = Job::with('office')->withCount('applications')->latest()->get();
 
         if (auth()->user()->admin->role === 'superadmin') {
-            $offices = Office::all();
+            $offices = Office::orderBy('name')->get();
         } else {
-            $offices = Office::where('id', auth()->user()->admin->office_id)->get();
+            $offices = Office::where('id', auth()->user()->admin->office_id)->orderBy('name')->get();
         }
 
         $divisions = Division::all();
@@ -48,12 +48,10 @@ class JobController extends Controller
      */
     public function store(StoreJobRequest $request)
     {
-        $openingDate = Carbon::parse($request->opening_date)->startOfDay();
-        $status = $openingDate->isToday() ? 'aktif' : 'nonaktif';
-
         Job::create($request->validated() + [
             'admin_id' => auth()->user()->admin->id,
-            'status' => $status,
+            'opening_date' => today(),
+            'status' => 'aktif',
         ]);
 
         return redirect()->route('job.index');
@@ -71,7 +69,8 @@ class JobController extends Controller
         $job->load([
             'office',
             'admin.user',
-            'applications.applicant',
+            'applications.applicant.educations',
+            'applications.applicant.workExperiences',
             'applications.stage',
         ]);
 
@@ -80,9 +79,9 @@ class JobController extends Controller
             ->get();
 
         if (auth()->user()->admin->role === 'superadmin') {
-            $offices = Office::all();
+            $offices = Office::orderBy('name')->get();
         } else {
-            $offices = Office::where('id', auth()->user()->admin->office_id)->get();
+            $offices = Office::where('id', auth()->user()->admin->office_id)->orderBy('name')->get();
         }
 
         $divisions = Division::all();
@@ -103,19 +102,29 @@ class JobController extends Controller
      */
     public function update(UpdateJobRequest $request, Job $job)
     {
-        $job->update($request->validated());
+        $data = $request->validated();
 
-        return redirect()->route('job.index');
+        if ($job->status !== 'aktif') {
+            $data['status'] = 'nonaktif';
+        }
+
+        $job->update($data);
+
+        return redirect()->route('job.show', $job)->with('success', 'Data lowongan berhasil diperbarui.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Close the specified job (cannot be deleted or reopened once closed).
      */
     public function destroy(Job $job)
     {
-        $job->update(['status' => 'dihapus']);
-        $job->delete();
+        if ($job->status === 'aktif') {
+            $job->update([
+                'status' => 'nonaktif',
+                'closing_date' => today(),
+            ]);
+        }
 
-        return redirect()->route('job.index')->with('success', 'Berhasil menghapus data lowongan.');
+        return redirect()->back()->with('success', 'Lowongan berhasil ditutup secara permanen.');
     }
 }

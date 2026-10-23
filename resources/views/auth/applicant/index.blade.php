@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Dashboard Pelamar')
 
@@ -6,7 +6,7 @@
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-black text-gray-800 tracking-tight">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
                     Selamat datang, <span class="text-red-600">{{ auth()->user()->applicant?->name ?: 'Pelamar' }}</span>
                 </h2>
 
@@ -23,7 +23,7 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <span class="text-[10px] uppercase tracking-widest font-black text-gray-400 leading-none mb-1">
+                    <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
                         Status Profil
                     </span>
 

@@ -18,6 +18,7 @@ DONE
 * kasi maksimal pengalaman cuma 3 jadi kalo semisal sosro pernah jadi sisa 2 pengalaman tersisa(biar tombol ilang kalo uda 3)
 * kota tempat sekolah berada blm ada
 * message error masi Bahasa inggris dan pesannya munculin name input(dalam arti kodingan) bukan untuk dibaca manusia
+* tanggal buka hapus aja(lagi ditest)
 
 
 
@@ -28,7 +29,6 @@ ON GOING
 * kalo dicreate jangan ada tombol Kembali ke petinjau sebelum semua/step 4 selesai
 
 * bisa cancel apply pas sebagai applicant(lagi di test)
-* tanggal buka hapus aja(lagi ditest)
 * status lowongan apus aja yg di create lowongan
 
 
@@ -36,3 +36,4 @@ ON GOING
 * bug kalo edit misal dari belum menikah jadi menikah terus di arahin url ke dashboard jadinya data pasangan masi kosong
 * persetujuan upload lowongan bagusnya namanya apa
 * users gabisa dihapus tapi nonaktif aja
+* simpan ip yg login

@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Riwayat Lamaran Saya')
 
@@ -7,7 +7,7 @@
         {{-- Header Section --}}
         <div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-black text-gray-900 tracking-tight">
+                <h2 class="font-bold text-2xl md:text-3xl text-gray-900 tracking-tight">
                     Riwayat <span class="text-[#B11116]">Lamaran Saya</span>
                 </h2>
                 <p class="text-gray-500 mt-1 font-medium text-sm">
@@ -30,7 +30,7 @@
                         </svg>
                     </div>
                     <div class="flex flex-col">
-                        <span class="text-[10px] uppercase tracking-widest font-black text-gray-400 leading-none mb-1">
+                        <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
                             Kuota Aktif
                         </span>
                         <span class="text-sm font-bold {{ $activeCount >= 3 ? 'text-amber-600' : 'text-gray-800' }} leading-none">
@@ -40,7 +40,7 @@
                 </div>
                 <div class="h-8 w-px bg-gray-200"></div>
                 <div class="flex flex-col">
-                    <span class="text-[10px] uppercase tracking-widest font-black text-gray-400 leading-none mb-1">
+                    <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
                         Total Riwayat
                     </span>
                     <span class="text-sm font-bold text-gray-600 leading-none">

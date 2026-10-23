@@ -31,8 +31,7 @@ class StoreJobRequest extends FormRequest
             'location' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
-            'opening_date' => ['required', 'date', 'after_or_equal:today'],
-            'closing_date' => ['required', 'date', 'after_or_equal:opening_date'],
+            'closing_date' => ['required', 'date', 'after_or_equal:today'],
         ];
     }
 

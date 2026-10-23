@@ -37,6 +37,13 @@ class AdminDashboardController extends Controller
             ->where('status', 'progress')
             ->count();
 
+        $acceptedApplicationsCount = (clone $applicationsQuery())
+            ->where('status', 'accepted')
+            ->count();
+
+        $totalApplicationsCount = (clone $applicationsQuery())
+            ->count();
+
         $activeJobsCount = (clone $jobsQuery())
             ->where('status', 'aktif')
             ->whereDate('opening_date', '<=', $today)
@@ -52,14 +59,16 @@ class AdminDashboardController extends Controller
         $recentApplications = $applicationsQuery()
             ->with([
                 'applicant:id,name,email',
-                'job:id,title,office_id',
+                'applicant.educations:id,applicant_id,degree_level,major,graduation_year',
+                'job:id,title,category,office_id',
                 'stage:id,name',
             ])
             ->latest()
-            ->limit(6)
+            ->limit(5)
             ->get();
 
         $closingSoonJobs = $jobsQuery()
+            ->with('office:id,name')
             ->withCount('applications')
             ->where('status', 'aktif')
             ->whereDate('opening_date', '<=', $today)
@@ -75,6 +84,8 @@ class AdminDashboardController extends Controller
             'isSuperAdmin' => $isSuperAdmin,
             'pendingApplicationsCount' => $pendingApplicationsCount,
             'inProgressApplicationsCount' => $inProgressApplicationsCount,
+            'acceptedApplicationsCount' => $acceptedApplicationsCount,
+            'totalApplicationsCount' => $totalApplicationsCount,
             'activeJobsCount' => $activeJobsCount,
             'applicantsCount' => $applicantsCount,
             'recentApplications' => $recentApplications,

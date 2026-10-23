@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Pratinjau Biodata Pelamar')
 
@@ -59,7 +59,7 @@
     <div class="hidden print:block mb-6 border-b-2 border-slate-900 pb-4">
         <div class="flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-black uppercase tracking-wider text-slate-900">Biodata Calon Karyawan</h1>
+                <h1 class="text-2xl font-bold uppercase tracking-wider text-slate-900">Biodata Calon Karyawan</h1>
                 <p class="text-xs text-slate-500 font-medium">Dokumen Resmi Sistem Rekrutmen Perusahaan</p>
             </div>
             <p class="text-[10px] text-slate-400 font-mono">Dicetak pada: {{ date('d/m/Y H:i') }}</p>
@@ -161,7 +161,7 @@
                             <div class="flex items-center gap-3 text-slate-700">
                                 <div
                                     class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
-                                    <span class="text-[10px] font-black">IN</span>
+                                    <span class="text-[10px] font-bold">IN</span>
                                 </div>
                                 <span class="font-medium truncate">{{ $applicant->linkedin }}</span>
                             </div>
@@ -171,7 +171,7 @@
                             <div class="flex items-center gap-3 text-slate-700">
                                 <div
                                     class="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center flex-shrink-0 text-slate-500">
-                                    <span class="text-[10px] font-black">IG</span>
+                                    <span class="text-[10px] font-bold">IG</span>
                                 </div>
                                 <span class="font-medium">{{ $applicant->instagram }}</span>
                             </div>

@@ -1,4 +1,4 @@
-@extends('auth.applicant.layouts.index')
+﻿@extends('auth.applicant.layouts.index')
 
 @section('title', 'Data Keluarga Pelamar')
 
@@ -113,7 +113,7 @@
                 <div class="p-6 sm:p-10 space-y-10">
 
                     <header class="pb-4 border-b border-gray-100">
-                        <h1 class="text-2xl font-black text-gray-900 tracking-tight">
+                        <h1 class="text-2xl font-bold text-gray-900 tracking-tight">
                             Data <span class="text-[#B11116]">Keluarga</span>
                         </h1>
                         <p class="text-gray-500 text-sm mt-1">
