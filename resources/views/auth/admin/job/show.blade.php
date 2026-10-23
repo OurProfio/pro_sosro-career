@@ -538,12 +538,25 @@
                                         @endif
                                     </td>
 
-                                    <td class="py-3.5 px-4 text-center">
+                                    <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                         @if ($applicant)
-                                            <a href="{{ route('applicant.show', $applicant) }}"
-                                                class="inline-flex items-center px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-[#991b1b] hover:border-[#991b1b] font-semibold text-xs shadow-2xs transition">
-                                                Lihat Profil
-                                            </a>
+                                            <div class="inline-flex items-center justify-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200/80">
+                                                <a href="{{ route('applicant.show', $applicant) }}"
+                                                    class="p-1.5 text-slate-500 hover:text-[#A6192E] hover:bg-white rounded-md transition cursor-pointer"
+                                                    title="Lihat Profil Pelamar">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                    </svg>
+                                                </a>
+                                                <a href="{{ route('applicant.print', $applicant) }}" target="_blank"
+                                                    class="p-1.5 text-slate-500 hover:text-slate-900 hover:bg-white rounded-md transition cursor-pointer"
+                                                    title="Cetak Berkas CV">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
+                                                    </svg>
+                                                </a>
+                                            </div>
                                         @endif
                                     </td>
                                 </tr>

@@ -17,11 +17,14 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $admins = Admin::where('user_id', '!=', auth()->user()->id)
-            ->with('user', 'office')
+        $admins = Admin::with('user', 'office')
+            ->where('user_id', '!=', auth()->id())
+            ->latest()
             ->get();
 
-        return view('auth.admin.admin.index', compact('admins'));
+        $offices = Office::orderBy('name')->get();
+
+        return view('auth.admin.admin.index', compact('admins', 'offices'));
     }
 
     /**
@@ -29,7 +32,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $offices = Office::all();
+        $offices = Office::orderBy('name')->get();
 
         return view('auth.admin.admin.create', compact('offices'));
     }
@@ -41,6 +44,7 @@ class AdminController extends Controller
     {
         DB::transaction(function () use ($request) {
             $user = User::create([
+                'nama' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
                 'role' => 'admin',
@@ -54,7 +58,7 @@ class AdminController extends Controller
             ]);
         });
 
-        return redirect()->route('admin.index')->with('info', 'Berhasil menambahkan data admin baru.');
+        return redirect()->route('admin.index')->with('success', 'Berhasil menambahkan data admin baru.');
     }
 
     /**
@@ -70,7 +74,7 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        $offices = Office::all();
+        $offices = Office::orderBy('name')->get();
 
         return view('auth.admin.admin.edit', compact('admin', 'offices'));
     }
@@ -82,7 +86,7 @@ class AdminController extends Controller
     {
         DB::transaction(function () use ($request, $admin) {
             $userData = [
-                'nama' => $request->nama,
+                'nama' => $request->name,
                 'email' => $request->email,
             ];
 
@@ -94,12 +98,13 @@ class AdminController extends Controller
             $admin->user->update($userData);
 
             $admin->update([
-                'cabang_id' => $request->cabang_id,
+                'name' => $request->name,
+                'office_id' => $request->office_id,
                 'role' => $request->role,
             ]);
         });
 
-        return redirect()->route('admin.index')->with('info', 'Berhasil memperbarui data admin.');
+        return redirect()->route('admin.index')->with('success', 'Berhasil memperbarui data admin.');
     }
 
     /**
@@ -107,11 +112,15 @@ class AdminController extends Controller
      */
     public function destroy(Admin $admin)
     {
+        if ($admin->user_id === auth()->id()) {
+            return redirect()->route('admin.index')->with('error', 'Tidak dapat menghapus akun Anda sendiri.');
+        }
+
         DB::transaction(function () use ($admin) {
             $admin->user->delete();
             $admin->delete();
         });
 
-        return redirect()->route('admin.index')->with('info', 'Berhasil menghapus data admin.');
+        return redirect()->route('admin.index')->with('success', 'Berhasil menghapus data admin.');
     }
 }

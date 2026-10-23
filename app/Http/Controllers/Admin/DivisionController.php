@@ -14,7 +14,7 @@ class DivisionController extends Controller
      */
     public function index()
     {
-        $divisions = Division::all();
+        $divisions = Division::latest()->get();
 
         return view('auth.admin.division.index', compact('divisions'));
     }

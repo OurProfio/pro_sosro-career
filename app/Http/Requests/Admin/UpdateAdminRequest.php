@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,9 +23,12 @@ class UpdateAdminRequest extends FormRequest
      */
     public function rules(): array
     {
+        $admin = $this->route('admin');
+        $userId = $admin instanceof Admin ? $admin->user_id : $admin;
+
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$userId],
             'password' => ['nullable', 'string', 'min:8'],
             'office_id' => ['required', 'exists:offices,id'],
             'role' => ['required', 'in:admin,superadmin'],

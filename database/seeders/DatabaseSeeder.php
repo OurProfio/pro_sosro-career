@@ -91,18 +91,18 @@ class DatabaseSeeder extends Seeder
             Division::firstOrCreate(['name' => $name]);
         }
 
-        // $this->call([
-        //     HrisMasterSeeder::class,
-        //     StageSeeder::class,
-        //     JobSeeder::class,
-        //     ApplicantSeeder::class,
-        //     ApplicantEducationSeeder::class,
-        //     ApplicantFamilySeeder::class,
-        //     ApplicantWorkExprienceSeeder::class,
-        //     ApplicantTrainingSeeder::class,
-        //     ApplicantInterestSeeder::class,
-        //     ApplicantExpectationSeeder::class,
-        //     ApplicationSeeder::class,
-        // ]);
+        $this->call([
+            // HrisMasterSeeder::class,
+            StageSeeder::class,
+            JobSeeder::class,
+            // ApplicantSeeder::class,
+            // ApplicantEducationSeeder::class,
+            // ApplicantFamilySeeder::class,
+            // ApplicantWorkExprienceSeeder::class,
+            // ApplicantTrainingSeeder::class,
+            // ApplicantInterestSeeder::class,
+            // ApplicantExpectationSeeder::class,
+            // ApplicationSeeder::class,
+        ]);
     }
 }

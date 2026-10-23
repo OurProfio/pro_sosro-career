@@ -14,7 +14,7 @@ class OfficeController extends Controller
      */
     public function index()
     {
-        $offices = Office::all();
+        $offices = Office::withCount(['admin', 'jobs'])->latest()->get();
 
         return view('auth.admin.office.index', compact('offices'));
     }
@@ -34,7 +34,7 @@ class OfficeController extends Controller
     {
         Office::create($request->validated());
 
-        return redirect()->route('office.index')->with('info', 'Berhasil menambahkan data kantor cabang baru.');
+        return redirect()->route('office.index')->with('success', 'Berhasil menambahkan data kantor cabang baru.');
     }
 
     /**
@@ -60,7 +60,7 @@ class OfficeController extends Controller
     {
         $office->update($request->validated());
 
-        return redirect()->route('office.index')->with('info', 'Berhasil memperbarui data kantor cabang.');
+        return redirect()->route('office.index')->with('success', 'Berhasil memperbarui data kantor cabang.');
     }
 
     /**
@@ -70,6 +70,6 @@ class OfficeController extends Controller
     {
         $office->delete();
 
-        return redirect()->route('office.index')->with('info', 'Berhasil menghapus data kantor cabang.');
+        return redirect()->route('office.index')->with('success', 'Berhasil menghapus data kantor cabang.');
     }
 }
