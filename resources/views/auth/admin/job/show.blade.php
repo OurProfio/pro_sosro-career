@@ -18,6 +18,7 @@
         x-data="{
             openEditModal: {{ $errors->any() ? 'true' : 'false' }},
             closeModalOpen: false,
+            approveModalOpen: false,
             searchQuery: '',
             stageFilter: '',
             eduFilter: '',
@@ -70,15 +71,41 @@
                         <span class="material-symbols-outlined text-xs">chevron_right</span>
                         <a href="{{ route('job.index') }}" class="hover:text-[#9b1b1f] transition">Manajemen Lowongan</a>
                         <span class="material-symbols-outlined text-xs">chevron_right</span>
-                        <span class="text-[#9b1b1f] font-bold">{{ $job->title }}</span>
+                        <span class="text-[#9b1b1f] font-semibold">{{ $job->title }}</span>
                     </nav>
-                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">Detail Lowongan Pekerjaan</h1>
+                    <h1 class="text-xl font-semibold text-slate-900 tracking-tight">Detail Lowongan Pekerjaan</h1>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap items-center gap-2.5">
-                @if ($job->status === 'aktif')
+                @if ($job->status === 'pending')
+                    @if (auth()->user()->admin?->role === 'superadmin')
+                        <button type="button"
+                            @click="approveModalOpen = true"
+                            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-2xs transition cursor-pointer">
+                            <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                            Setujui Lowongan (ACC)
+                        </button>
+                    @else
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-xs">
+                            <span class="material-symbols-outlined text-[16px]">hourglass_empty</span>
+                            Menunggu Persetujuan Superadmin
+                        </span>
+                    @endif
+
+                    <button type="button" @click="openEditModal = true"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 font-semibold text-xs shadow-2xs hover:bg-slate-100 transition cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px] text-slate-500">edit_square</span>
+                        Edit Lowongan
+                    </button>
+
+                    <button type="button" @click="closeModalOpen = true"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-red-50 text-[#A6192E] border border-red-200 font-semibold text-xs shadow-2xs hover:bg-red-100 transition cursor-pointer">
+                        <span class="material-symbols-outlined text-[16px]">close</span>
+                        Tutup Lowongan
+                    </button>
+                @elseif ($job->status === 'aktif')
                     <button type="button" @click="closeModalOpen = true"
                         class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-red-50 text-[#A6192E] border border-red-200 font-semibold text-xs shadow-2xs hover:bg-red-100 transition cursor-pointer">
                         <span class="material-symbols-outlined text-[16px]">lock</span>
@@ -112,6 +139,11 @@
                                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                                 Lowongan Aktif
                             </span>
+                        @elseif ($job->status === 'pending')
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                                Menunggu Persetujuan
+                            </span>
                         @else
                             <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                                 <span class="w-2 h-2 rounded-full bg-slate-400"></span>
@@ -120,13 +152,13 @@
                         @endif
 
                         @if ($job->category)
-                            <span class="px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 uppercase tracking-wider">
+                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 uppercase tracking-wider">
                                 {{ ucwords(str_replace('_', ' ', $job->category)) }}
                             </span>
                         @endif
                     </div>
 
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
+                    <h1 class="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight leading-snug">
                         {{ $job->title }}
                     </h1>
 
@@ -145,18 +177,23 @@
 
                 <div class="flex items-center lg:flex-col lg:items-end justify-between border-t lg:border-t-0 pt-4 lg:pt-0 border-slate-100 gap-2 shrink-0">
                     <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Masa Pendaftaran</span>
-                    @if ($job->status !== 'aktif' || ($daysRemaining !== null && $daysRemaining < 0))
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 text-xs font-bold">
+                    @if ($job->status === 'pending')
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg text-amber-800 text-xs font-semibold border border-amber-200">
+                            <span class="material-symbols-outlined text-amber-600 text-sm">schedule</span>
+                            Menunggu ACC (Batas: {{ $closingDate ? $closingDate->translatedFormat('d M Y') : '-' }})
+                        </div>
+                    @elseif ($job->status !== 'aktif' || ($daysRemaining !== null && $daysRemaining < 0))
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-lg text-slate-600 text-xs font-semibold">
                             <span class="material-symbols-outlined text-slate-500 text-sm">lock_clock</span>
                             Sudah Ditutup ({{ $closingDate ? $closingDate->translatedFormat('d M Y') : '-' }})
                         </div>
                     @elseif ($daysRemaining === 0)
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 rounded-lg text-[#991b1b] text-xs font-bold border border-red-100">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-50 rounded-lg text-[#991b1b] text-xs font-semibold border border-red-100">
                             <span class="material-symbols-outlined text-[#991b1b] text-sm">hourglass_bottom</span>
                             Hari Terakhir ({{ $closingDate->translatedFormat('d M Y') }})
                         </div>
                     @elseif ($daysRemaining !== null)
-                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg text-amber-800 text-xs font-bold border border-amber-100">
+                        <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-50 rounded-lg text-amber-800 text-xs font-semibold border border-amber-100">
                             <span class="material-symbols-outlined text-amber-600 text-sm">hourglass_top</span>
                             Sisa {{ $daysRemaining }} Hari Lagi ({{ $closingDate->translatedFormat('d M Y') }})
                         </div>
@@ -168,29 +205,29 @@
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-slate-100">
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Divisi / Bidang</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate" title="{{ $job->occupation }}">{{ $job->occupation ?? '-' }}</p>
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate" title="{{ $job->occupation }}">{{ $job->occupation ?? '-' }}</p>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Tipe Kontrak</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate" title="{{ $job->type }}">{{ $job->type ?? '-' }}</p>
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate" title="{{ $job->type }}">{{ $job->type ?? '-' }}</p>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Unit Kerja</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate" title="{{ $job->office->name ?? '-' }}">{{ $job->office->name ?? '-' }}</p>
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate" title="{{ $job->office->name ?? '-' }}">{{ $job->office->name ?? '-' }}</p>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Penempatan</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate" title="{{ $job->location }}">{{ $job->location ?? '-' }}</p>
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate" title="{{ $job->location }}">{{ $job->location ?? '-' }}</p>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Tanggal Buka</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate">
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate">
                         {{ $job->opening_date ? \Carbon\Carbon::parse($job->opening_date)->translatedFormat('d M Y') : '-' }}
                     </p>
                 </div>
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Batas Lamaran</p>
-                    <p class="text-xs font-bold text-slate-800 mt-1 truncate">
+                    <p class="text-xs font-semibold text-slate-800 mt-1 truncate">
                         {{ $job->closing_date ? \Carbon\Carbon::parse($job->closing_date)->translatedFormat('d M Y') : '-' }}
                     </p>
                 </div>
@@ -203,7 +240,7 @@
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pelamar</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1">
+                    <h3 class="text-2xl font-semibold text-slate-900 mt-1">
                         {{ number_format($totalApplicants, 0, ',', '.') }} <span class="text-xs font-normal text-slate-400">Kandidat</span>
                     </h3>
                     <p class="text-[11px] text-emerald-600 font-semibold mt-1 flex items-center gap-0.5">
@@ -220,7 +257,7 @@
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Dalam Proses</p>
-                    <h3 class="text-2xl font-bold text-blue-900 mt-1">
+                    <h3 class="text-2xl font-semibold text-blue-900 mt-1">
                         {{ number_format($inProgressApplicants, 0, ',', '.') }} <span class="text-xs font-normal text-slate-400">Kandidat</span>
                     </h3>
                     <p class="text-[11px] text-slate-500 font-medium mt-1">Screening, Tes, Interview</p>
@@ -234,7 +271,7 @@
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Diterima (Accepted)</p>
-                    <h3 class="text-2xl font-bold text-emerald-800 mt-1">
+                    <h3 class="text-2xl font-semibold text-emerald-800 mt-1">
                         {{ number_format($acceptedApplicants, 0, ',', '.') }} <span class="text-xs font-normal text-slate-400">Kandidat</span>
                     </h3>
                     <p class="text-[11px] text-emerald-700 font-medium mt-1">Lolos seleksi akhir</p>
@@ -248,7 +285,7 @@
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tidak Memenuhi</p>
-                    <h3 class="text-2xl font-bold text-slate-600 mt-1">
+                    <h3 class="text-2xl font-semibold text-slate-600 mt-1">
                         {{ number_format($rejectedApplicants, 0, ',', '.') }} <span class="text-xs font-normal text-slate-400">Kandidat</span>
                     </h3>
                     <p class="text-[11px] text-slate-400 font-medium mt-1">Tidak lolos kualifikasi</p>
@@ -268,7 +305,7 @@
                         <span class="material-symbols-outlined text-lg">engineering</span>
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Deskripsi &amp; Tanggung Jawab</h2>
+                        <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wide">Deskripsi &amp; Tanggung Jawab</h2>
                         <p class="text-xs text-slate-400">Rincian tugas dan tanggung jawab posisi pekerjaan</p>
                     </div>
                 </div>
@@ -289,7 +326,7 @@
                         <span class="material-symbols-outlined text-lg">assignment_ind</span>
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wide">Kualifikasi &amp; Kriteria Pelamar</h2>
+                        <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wide">Kualifikasi &amp; Kriteria Pelamar</h2>
                         <p class="text-xs text-slate-400">Standar kualifikasi teknis &amp; persyaratan kandidat</p>
                     </div>
                 </div>
@@ -310,8 +347,8 @@
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-2">
-                        <h2 class="text-lg font-bold text-slate-900">Kandidat Pelamar Lowongan Ini</h2>
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-[#991b1b]">
+                        <h2 class="text-lg font-semibold text-slate-900">Kandidat Pelamar Lowongan Ini</h2>
+                        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-[#991b1b]">
                             {{ $totalApplicants }} Orang
                         </span>
                     </div>
@@ -373,7 +410,7 @@
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[900px]">
                         <thead>
-                            <tr class="bg-red-50/60 text-[11px] font-bold text-[#7f1d1d] uppercase tracking-wider rounded-lg">
+                            <tr class="bg-red-50/60 text-[11px] font-semibold text-[#7f1d1d] uppercase tracking-wider rounded-lg">
                                 <th class="py-3 px-3 rounded-l-lg w-12 text-center">NO</th>
                                 <th class="py-3 px-4 text-center">KANDIDAT / PELAMAR</th>
                                 <th class="py-3 px-4 text-center">PENDIDIKAN TERAKHIR</th>
@@ -415,7 +452,7 @@
                                         (!stageFilter || @js($stageText).includes(stageFilter.toLowerCase().trim())) &&
                                         (!eduFilter || @js($eduText).includes(eduFilter.toLowerCase().trim()))
                                     ">
-                                    <td class="py-3.5 px-3 text-center font-bold text-slate-400">
+                                    <td class="py-3.5 px-3 text-center font-semibold text-slate-400">
                                         {{ $loop->iteration }}
                                     </td>
 
@@ -426,12 +463,12 @@
                                                     src="{{ asset('storage/' . $applicant->photo_url) }}"
                                                     alt="{{ $applicant->name }}">
                                             @else
-                                                <div class="w-10 h-10 rounded-full bg-red-50 text-[#991b1b] border border-red-100 flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs">
+                                                <div class="w-10 h-10 rounded-full bg-red-50 text-[#991b1b] border border-red-100 flex items-center justify-center font-semibold text-xs shrink-0 shadow-2xs">
                                                     {{ strtoupper(substr($applicant->name ?? 'A', 0, 2)) }}
                                                 </div>
                                             @endif
                                             <div class="min-w-0">
-                                                <p class="font-bold text-slate-900 group-hover:text-[#991b1b] transition truncate">
+                                                <p class="font-semibold text-slate-900 group-hover:text-[#991b1b] transition truncate">
                                                     {{ $applicant->name ?? '-' }}
                                                 </p>
                                                 <p class="text-[11px] text-slate-500 truncate">
@@ -449,7 +486,7 @@
                                             <p class="text-[11px] text-slate-500">
                                                 {{ $latestEdu->institution_name }}
                                                 @if ($latestEdu->gpa !== null)
-                                                    • IPK <span class="font-bold text-slate-700">{{ $latestEdu->gpa }}</span>
+                                                    • IPK <span class="font-semibold text-slate-700">{{ $latestEdu->gpa }}</span>
                                                 @endif
                                             </p>
                                         @else
@@ -512,19 +549,19 @@
 
                                     <td class="py-3.5 px-3 text-center whitespace-nowrap">
                                         @if ($application->status === 'pending')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200/80 whitespace-nowrap shrink-0 min-w-max">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200/80 whitespace-nowrap shrink-0 min-w-max">
                                                 Dalam Review
                                             </span>
                                         @elseif ($application->status === 'progress')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/80 whitespace-nowrap shrink-0 min-w-max">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200/80 whitespace-nowrap shrink-0 min-w-max">
                                                 Sedang Diproses
                                             </span>
                                         @elseif ($application->status === 'accepted')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200/80 whitespace-nowrap shrink-0 min-w-max">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200/80 whitespace-nowrap shrink-0 min-w-max">
                                                 Diterima
                                             </span>
                                         @elseif ($application->status === 'rejected')
-                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-bold bg-rose-50 text-rose-700 border border-rose-200/80 whitespace-nowrap shrink-0 min-w-max">
+                                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 whitespace-nowrap shrink-0 min-w-max">
                                                 Tidak Lolos
                                             </span>
                                         @elseif ($application->status === 'cancelled')
@@ -620,7 +657,7 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h3 class="text-lg font-bold text-slate-900 leading-tight" id="modal-edit-title">Edit Data Lowongan</h3>
+                                <h3 class="text-lg font-semibold text-slate-900 leading-tight" id="modal-edit-title">Edit Data Lowongan</h3>
                             </div>
                             <p class="text-xs text-slate-500 mt-0.5">Perbarui informasi dan rincian lowongan kerja ini.</p>
                         </div>
@@ -641,12 +678,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Informasi Dasar</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Informasi Dasar</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_title" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Judul Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                                    Judul Lowongan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="text" name="title" id="modal_edit_title" value="{{ old('title', $job->title) }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('title') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
@@ -659,22 +696,34 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="modal_edit_office_id" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Kantor / Cabang <span class="text-[#A6192E] font-bold">*</span>
+                                        Kantor / Cabang <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
-                                    <div class="relative">
-                                        <select name="office_id" id="modal_edit_office_id"
-                                            class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
-                                            required>
-                                            <option value="" disabled>-- Pilih Kantor / Cabang --</option>
-                                            @if (isset($offices))
-                                                @foreach ($offices as $office)
-                                                    <option value="{{ $office->id }}" {{ old('office_id', $job->office_id) == $office->id ? 'selected' : '' }}>
-                                                        {{ $office->name ?? $office->title }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
+                                    @if (auth()->user()->admin?->role === 'superadmin')
+                                        <div class="relative">
+                                            <select name="office_id" id="modal_edit_office_id"
+                                                class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                                required>
+                                                <option value="" disabled>-- Pilih Kantor / Cabang --</option>
+                                                @if (isset($offices))
+                                                    @foreach ($offices as $office)
+                                                        <option value="{{ $office->id }}" {{ old('office_id', $job->office_id) == $office->id ? 'selected' : '' }}>
+                                                            {{ $office->name ?? $office->title }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    @else
+                                        <input type="hidden" name="office_id" value="{{ $job->office_id ?? auth()->user()->admin?->office_id }}">
+                                        <div class="relative">
+                                            <input type="text"
+                                                id="modal_edit_office_id"
+                                                value="{{ $job->office?->name ?? auth()->user()->admin?->office?->name ?? '-' }}"
+                                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-100/80 text-slate-700 font-semibold cursor-not-allowed select-none"
+                                                readonly
+                                                tabindex="-1">
+                                        </div>
+                                    @endif
                                     @error('office_id')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
@@ -682,7 +731,7 @@
 
                                 <div class="space-y-1.5">
                                     <label for="modal_edit_category" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Kategori Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                                        Kategori Lowongan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="category" id="modal_edit_category"
@@ -704,7 +753,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="modal_edit_occupation" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Bidang Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                        Bidang Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="occupation" id="modal_edit_occupation"
@@ -727,7 +776,7 @@
 
                                 <div class="space-y-1.5">
                                     <label for="modal_edit_type" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Tipe Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                        Tipe Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="type" id="modal_edit_type"
@@ -748,7 +797,7 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_location" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Lokasi Kerja <span class="text-[#A6192E] font-bold">*</span>
+                                    Lokasi Kerja <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="text" name="location" id="modal_edit_location" value="{{ old('location', $job->location) }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
@@ -763,12 +812,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Rincian Posisi</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Rincian Posisi</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_description" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Deskripsi Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                    Deskripsi Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <x-forms.rich-textarea
                                     name="description"
@@ -786,7 +835,7 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_qualification" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Kualifikasi Pelamar <span class="text-[#A6192E] font-bold">*</span>
+                                    Kualifikasi Pelamar <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <x-forms.rich-textarea
                                     name="qualification"
@@ -807,12 +856,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_closing_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Tanggal Tutup <span class="text-[#A6192E] font-bold">*</span>
+                                    Tanggal Tutup <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="date" name="closing_date" id="modal_edit_closing_date" value="{{ old('closing_date', $job->closing_date ? \Carbon\Carbon::parse($job->closing_date)->format('Y-m-d') : '') }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('closing_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
@@ -829,7 +878,7 @@
                         <button type="button" @click="openEditModal = false" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition duration-150 cursor-pointer">
                             Batal
                         </button>
-                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
+                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
@@ -870,13 +919,13 @@
                             </svg>
                         </div>
 
-                        <h3 class="text-base font-bold text-slate-900" id="close-job-modal-title">
+                        <h3 class="text-base font-semibold text-slate-900" id="close-job-modal-title">
                             Tutup Lowongan Pekerjaan?
                         </h3>
 
                         <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                            Apakah Anda yakin ingin menutup lowongan <span class="font-bold text-slate-800">{{ $job->title }}</span>?
-                            Lowongan yang sudah ditutup <span class="font-bold text-[#A6192E]">tidak dapat dibuka kembali</span> secara permanen.
+                            Apakah Anda yakin ingin menutup lowongan <span class="font-semibold text-slate-800">{{ $job->title }}</span>?
+                            Lowongan yang sudah ditutup <span class="font-semibold text-[#A6192E]">tidak dapat dibuka kembali</span> secara permanen.
                         </p>
                     </div>
 
@@ -888,7 +937,7 @@
                             Batal
                         </button>
                         <button type="submit"
-                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm transition cursor-pointer">
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"></path>
                             </svg>
@@ -899,6 +948,60 @@
             </div>
         </template>
         <!-- END: Modal Konfirmasi Tutup Lowongan -->
+
+        <!-- BEGIN: Modal Konfirmasi Persetujuan Lowongan (Alpine.js) -->
+        <template x-teleport="body">
+            <div x-show="approveModalOpen"
+                x-cloak
+                style="display: none;"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="approve-job-modal-title"
+                @keydown.escape.window="approveModalOpen = false">
+
+                <div x-show="approveModalOpen"
+                    x-transition:enter="ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-150"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    @click.outside="approveModalOpen = false"
+                    class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+
+                    <div class="p-6 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mx-auto mb-4 shadow-2xs">
+                            <span class="material-symbols-outlined text-2xl">check_circle</span>
+                        </div>
+
+                        <h3 class="text-base font-semibold text-slate-900" id="approve-job-modal-title">
+                            Setujui dan Aktifkan Lowongan?
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                            Apakah Anda yakin ingin menyetujui lowongan <span class="font-semibold text-slate-800">{{ $job->title }}</span>?
+                            Lowongan ini akan langsung aktif dan dapat dilihat oleh calon pelamar di halaman lowongan karir.
+                        </p>
+                    </div>
+
+                    <form action="{{ route('job.approve', $job) }}" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                        @csrf
+                        @method('PATCH')
+                        <button type="button" @click="approveModalOpen = false"
+                            class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                            <span class="material-symbols-outlined text-sm">check</span>
+                            Ya, Setujui Lowongan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+        <!-- END: Modal Konfirmasi Persetujuan Lowongan -->
     </div>
 
     <x-application.modal-email />

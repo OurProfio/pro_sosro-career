@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('office_id')->constrained('offices')->cascadeOnDelete();
             $table->enum('role', ['superadmin', 'admin'])->default('admin');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

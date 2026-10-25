@@ -44,7 +44,6 @@ class AdminController extends Controller
     {
         DB::transaction(function () use ($request) {
             $user = User::create([
-                'nama' => $request->name,
                 'email' => $request->email,
                 'password' => $request->password,
                 'role' => 'admin',
@@ -86,7 +85,6 @@ class AdminController extends Controller
     {
         DB::transaction(function () use ($request, $admin) {
             $userData = [
-                'nama' => $request->name,
                 'email' => $request->email,
             ];
 
@@ -97,30 +95,49 @@ class AdminController extends Controller
 
             $admin->user->update($userData);
 
-            $admin->update([
+            $adminData = [
                 'name' => $request->name,
                 'office_id' => $request->office_id,
                 'role' => $request->role,
-            ]);
+            ];
+
+            if ($request->has('is_active')) {
+                $adminData['is_active'] = $request->boolean('is_active');
+            }
+
+            $admin->update($adminData);
         });
 
         return redirect()->route('admin.index')->with('success', 'Berhasil memperbarui data admin.');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deactivate the specified admin.
      */
     public function destroy(Admin $admin)
     {
         if ($admin->user_id === auth()->id()) {
-            return redirect()->route('admin.index')->with('error', 'Tidak dapat menghapus akun Anda sendiri.');
+            return redirect()->route('admin.index')->with('error', 'Tidak dapat menonaktifkan akun Anda sendiri.');
         }
 
-        DB::transaction(function () use ($admin) {
-            $admin->user->delete();
-            $admin->delete();
-        });
+        $admin->update(['is_active' => false]);
 
-        return redirect()->route('admin.index')->with('success', 'Berhasil menghapus data admin.');
+        return redirect()->route('admin.index')->with('success', 'Berhasil menonaktifkan data admin.');
+    }
+
+    /**
+     * Toggle active/inactive status of the specified admin.
+     */
+    public function toggleStatus(Admin $admin)
+    {
+        if ($admin->user_id === auth()->id()) {
+            return redirect()->route('admin.index')->with('error', 'Tidak dapat mengubah status akun Anda sendiri.');
+        }
+
+        $admin->update(['is_active' => ! $admin->is_active]);
+
+        $statusText = $admin->is_active ? 'diaktifkan kembali' : 'dinonaktifkan';
+
+        return redirect()->route('admin.index')->with('success', "Akun admin berhasil {$statusText}.");
     }
 }

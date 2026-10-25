@@ -19,6 +19,8 @@ DONE
 * kota tempat sekolah berada blm ada
 * message error masi Bahasa inggris dan pesannya munculin name input(dalam arti kodingan) bukan untuk dibaca manusia
 * tanggal buka hapus aja(lagi ditest)
+* bisa cancel apply pas sebagai applicant(lagi di test)
+* persetujuan upload lowongan bagusnya namanya apa
 
 
 
@@ -28,12 +30,10 @@ DONE
 ON GOING
 * kalo dicreate jangan ada tombol Kembali ke petinjau sebelum semua/step 4 selesai
 
-* bisa cancel apply pas sebagai applicant(lagi di test)
 * status lowongan apus aja yg di create lowongan
 
 
 * sebelum bisa balik ke dashboard cek dulu data biodata yg di create uda keisii apa blm
 * bug kalo edit misal dari belum menikah jadi menikah terus di arahin url ke dashboard jadinya data pasangan masi kosong
-* persetujuan upload lowongan bagusnya namanya apa
 * users gabisa dihapus tapi nonaktif aja
 * simpan ip yg login

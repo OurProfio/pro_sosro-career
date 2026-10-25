@@ -16,6 +16,20 @@ class UpdateJobRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $admin = $this->user()?->admin;
+
+        if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+            $this->merge([
+                'office_id' => $admin->office_id,
+            ]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -32,7 +46,7 @@ class UpdateJobRequest extends FormRequest
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
             'closing_date' => ['required', 'date'],
-            'status' => ['nullable', 'in:aktif,nonaktif,dihapus,selesai'],
+            'status' => ['nullable', 'in:pending,aktif,nonaktif,dihapus,selesai'],
         ];
     }
 

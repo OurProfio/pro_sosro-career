@@ -22,6 +22,14 @@ class EnsureUserRole
         $user = auth()->user();
         $userRole = $user->role;
 
+        if ($userRole === 'admin' && $user->admin && ! $user->admin->is_active) {
+            auth()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('admin.login')->with('error', 'Akun Admin Anda telah dinonaktifkan.');
+        }
+
         // Map role aliases if necessary (e.g. 'applicant' corresponds to 'user' in DB)
         $allowedRoles = array_map(
             fn (string $role): string => match ($role) {

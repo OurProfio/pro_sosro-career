@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Riwayat Lamaran Saya')
 
@@ -158,19 +158,15 @@
                             </span>
 
                             @if ($canCancel)
-                                <form action="{{ route('applications.cancel', $app->id) }}" method="POST"
-                                    onsubmit="return confirm('Apakah Anda yakin ingin membatalkan lamaran pekerjaan ini? Tindakan ini tidak dapat dibatalkan kembali.');">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit"
-                                        class="px-3.5 py-1.5 bg-white border border-gray-200 hover:border-red-300 hover:bg-red-50 text-gray-500 hover:text-[#B11116] text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
-                                        title="Batalkan Lamaran Ini">
-                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                        </svg>
-                                        Batalkan Lamaran
-                                    </button>
-                                </form>
+                                <button type="button"
+                                    onclick="bukaModalCancel('{{ route('applications.cancel', $app->id) }}', '{{ addslashes($app->job->title ?? 'posisi ini') }}')"
+                                    class="px-3.5 py-1.5 bg-white border border-gray-200 hover:border-red-300 hover:bg-red-50 text-gray-500 hover:text-[#B11116] text-xs font-semibold rounded-xl transition-all inline-flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-sm"
+                                    title="Batalkan Lamaran Ini">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                    Batalkan Lamaran
+                                </button>
                             @endif
                         </div>
                     </div>
@@ -194,4 +190,56 @@
             </div>
         @endif
     </div>
+
+    <!-- Modal Konfirmasi Batalkan Lamaran -->
+    <div id="modalCancelApp" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#B11116] mx-auto mb-4 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">
+                    Batalkan Lamaran Pekerjaan?
+                </h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Apakah Anda yakin ingin membatalkan lamaran untuk posisi <span id="modalCancelJobTitle" class="font-semibold text-slate-800"></span>? Tindakan ini <span class="font-semibold text-[#B11116]">tidak dapat dibatalkan</span> kembali.
+                </p>
+            </div>
+            <form id="formCancelApp" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                @csrf
+                @method('PATCH')
+                <button type="button" onclick="tutupModalCancel()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#B11116] hover:bg-[#940e13] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                    Ya, Batalkan Lamaran
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function bukaModalCancel(url, title) {
+            const form = document.getElementById('formCancelApp');
+            const titleEl = document.getElementById('modalCancelJobTitle');
+            const modal = document.getElementById('modalCancelApp');
+
+            if (form) form.action = url;
+            if (titleEl) titleEl.textContent = title;
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function tutupModalCancel() {
+            const modal = document.getElementById('modalCancelApp');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+    </script>
 @endsection

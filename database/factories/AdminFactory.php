@@ -24,6 +24,7 @@ class AdminFactory extends Factory
             'user_id' => User::factory()->admin(),
             'office_id' => Office::factory(),
             'role' => 'admin',
+            'is_active' => true,
         ];
     }
 }

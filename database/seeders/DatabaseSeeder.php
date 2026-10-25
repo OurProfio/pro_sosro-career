@@ -51,8 +51,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $admins = [
-            ['email' => 'admin1@admin.test', 'name' => 'Admin HO', 'role' => 'superadmin', 'office' => 'Kantor Pusat'],
-            ['email' => 'admin2@admin.test', 'name' => 'Admin KPW', 'role' => 'admin', 'office' => 'KPW Jakarta Banten'],
+            ['email' => 'kpw@admin.admin', 'name' => 'Admin KPW', 'role' => 'admin', 'office' => 'KPW Jakarta Banten'],
             ['email' => 'admin@admin.admin', 'name' => 'Admin', 'role' => 'superadmin', 'office' => 'Kantor Pusat'],
         ];
 
@@ -94,7 +93,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // HrisMasterSeeder::class,
             StageSeeder::class,
-            JobSeeder::class,
+            // JobSeeder::class,
             // ApplicantSeeder::class,
             // ApplicantEducationSeeder::class,
             // ApplicantFamilySeeder::class,

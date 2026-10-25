@@ -1,4 +1,4 @@
-﻿@extends('auth.admin.layouts.index')
+@extends('auth.admin.layouts.index')
 
 @section('title', 'Dashboard Rekrutmen - Sinar Sosro Gunung Slamat')
 
@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <span class="text-xs text-slate-500 truncate">Lamaran baru masuk di cabang ini</span>
+                    <span class="text-xs text-slate-500 truncate">{{ $isSuperAdmin ? 'Lamaran baru masuk di semua cabang' : 'Lamaran baru masuk di cabang ini' }}</span>
                     <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-red-50 text-[#A6192E] border border-red-200/70 text-[11px] font-bold shrink-0">
                         Perhatian
                     </span>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                    <span class="text-xs text-slate-500 truncate">Lolos seleksi di cabang ini</span>
+                    <span class="text-xs text-slate-500 truncate">{{ $isSuperAdmin ? 'Lolos seleksi di semua cabang' : 'Lolos seleksi di cabang ini' }}</span>
                     <span class="inline-flex items-center gap-1 text-emerald-700 text-[11px] font-bold shrink-0">
                         <span class="material-symbols-outlined text-[15px]">check_circle</span>
                         Siap Onboarding
@@ -133,7 +133,9 @@
                 <!-- Header Tabel -->
                 <div class="p-5 sm:px-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-2.5">
-                        <h2 class="text-base sm:text-lg font-bold text-slate-900">Lamaran Terbaru di Cabang Ini</h2>
+                        <h2 class="text-base sm:text-lg font-bold text-slate-900">
+                            {{ $isSuperAdmin ? 'Lamaran Masuk Terbaru (Semua Cabang)' : 'Lamaran Terbaru di Cabang Ini' }}
+                        </h2>
                         <span class="px-2.5 py-0.5 rounded-full bg-red-50 text-[#A6192E] border border-red-200/60 text-[11px] font-bold">
                             {{ $recentApplications->count() }} Data Terkini
                         </span>
@@ -216,7 +218,7 @@
                                     >
                                         <td class="py-3.5 px-6">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-9 h-9 rounded-full border {{ $avatarClass }} text-xs flex items-center justify-center font-extrabold shrink-0">
+                                                <div class="w-9 h-9 rounded-full border {{ $avatarClass }} text-xs flex items-center justify-center font-semibold shrink-0">
                                                     {{ $initials }}
                                                 </div>
                                                 <div class="flex flex-col min-w-0">
@@ -273,7 +275,7 @@
                     </span>
                     <a href="{{ route('applicant.index') }}"
                         class="text-[#A6192E] hover:text-[#7f1d1d] font-bold inline-flex items-center gap-1 transition-colors">
-                        <span>Lihat Semua Cabang</span>
+                        <span>Lihat Semua Pelamar</span>
                         <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
                     </a>
                 </div>

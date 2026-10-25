@@ -122,10 +122,10 @@
             showToast('success', 'Berhasil!', @json(session('success') ?? session('status')));
         @elseif (session('error'))
             showToast('error', 'Terjadi Kesalahan!', @json(session('error')));
+        @elseif (session('warning') || request('required'))
+            showToast('warning', 'Lengkapi Biodata', @json(session('warning') ?? 'Silakan lengkapi biodata Anda terlebih dahulu sebelum melamar pekerjaan.'));
         @elseif (session('info'))
             showToast('info', 'Informasi', @json(session('info')));
-        @elseif (session('warning'))
-            showToast('warning', 'Peringatan!', @json(session('warning')));
         @elseif ($errors->any())
             showToast('error', 'Validasi Gagal!', @json($errors->first()));
         @endif

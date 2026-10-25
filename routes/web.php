@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth']], function () {
 
             // Khusus Super Admin
             Route::group(['middleware' => ['role:superadmin']], function () {
+                Route::patch('/job/{job}/approve', [JobController::class, 'approve'])->name('job.approve');
+                Route::patch('/admin/{admin}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggleStatus');
                 Route::resource('office', OfficeController::class);
                 Route::resource('division', DivisionController::class);
                 Route::resource('admin', AdminController::class);

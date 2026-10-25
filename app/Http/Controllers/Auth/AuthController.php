@@ -51,6 +51,14 @@ class AuthController extends Controller
                 return back()->with('error', 'Akun ini bukan akun Admin. Silakan masuk melalui halaman login Pelamar.')->withInput();
             }
 
+            if (auth()->user()->admin && ! auth()->user()->admin->is_active) {
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+
+                return back()->with('error', 'Akun Admin Anda telah dinonaktifkan. Silakan hubungi Superadmin.')->withInput();
+            }
+
             $request->session()->regenerate();
 
             return redirect()->intended(route('admin.dashboard'));

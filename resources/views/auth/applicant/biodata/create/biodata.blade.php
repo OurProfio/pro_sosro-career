@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Biodata Pelamar')
 
@@ -45,6 +45,15 @@
                 </li>
             </ol>
         </div>
+
+        @if (session('warning') || request('required'))
+            <div class="mb-6 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs font-medium flex items-center gap-2.5 shadow-sm">
+                <svg class="w-5 h-5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <span>{{ session('warning') ?? 'Silakan lengkapi formulir biodata Anda terlebih dahulu sebelum dapat melamar lowongan pekerjaan.' }}</span>
+            </div>
+        @endif
 
         <form action="{{ route('biodata.store') }}" method="POST" id="biodataForm" enctype="multipart/form-data"
             novalidate>
@@ -1209,14 +1218,18 @@
                         e.preventDefault();
                         nikInput.focus();
                         validateNik();
-                        alert('NIK harus terdiri dari tepat 16 digit angka.');
+                        if (typeof showToast === 'function') {
+                            showToast('warning', 'Validasi Gagal', 'NIK harus terdiri dari tepat 16 digit angka.');
+                        }
                         return false;
                     }
                     if (phoneInput && (phoneInput.value.length < 10 || phoneInput.value.length > 15)) {
                         e.preventDefault();
                         phoneInput.focus();
                         validatePhone(phoneInput, msgPhone, true);
-                        alert('Nomor telepon harus antara 10 sampai 15 digit angka.');
+                        if (typeof showToast === 'function') {
+                            showToast('warning', 'Validasi Gagal', 'Nomor telepon harus antara 10 sampai 15 digit angka.');
+                        }
                         return false;
                     }
                     if (salaryInput) {

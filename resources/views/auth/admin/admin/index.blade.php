@@ -30,9 +30,11 @@
             search: '',
             selectedRole: 'all',
             selectedOffice: 'all',
+            selectedStatus: 'all',
             openCreateModal: {{ $errors->any() && !old('_method') ? 'true' : 'false' }},
             openEditModal: {{ $errors->any() && old('_method') === 'PUT' ? 'true' : 'false' }},
             openDeleteModal: false,
+            openActivateModal: false,
             editData: {
                 id: '{{ old('edit_id') }}',
                 name: '{{ old('name') }}',
@@ -41,6 +43,10 @@
                 office_id: '{{ old('office_id') }}'
             },
             deleteData: {
+                id: null,
+                name: ''
+            },
+            activateData: {
                 id: null,
                 name: ''
             },
@@ -61,10 +67,18 @@
                 };
                 this.openDeleteModal = true;
             },
+            openActivate(admin) {
+                this.activateData = {
+                    id: admin.id,
+                    name: admin.name
+                };
+                this.openActivateModal = true;
+            },
             resetFilters() {
                 this.search = '';
                 this.selectedRole = 'all';
                 this.selectedOffice = 'all';
+                this.selectedStatus = 'all';
             }
         }">
 
@@ -227,6 +241,16 @@
                     </select>
                 </div>
 
+                <!-- Status Filter -->
+                <div class="min-w-[130px]">
+                    <select x-model="selectedStatus"
+                        class="w-full py-2 px-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition cursor-pointer">
+                        <option value="all">Semua Status</option>
+                        <option value="aktif">Aktif</option>
+                        <option value="nonaktif">Nonaktif</option>
+                    </select>
+                </div>
+
                 <!-- Reset Button -->
                 <button type="button" @click="resetFilters()"
                     class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 border border-slate-200 rounded-xl transition cursor-pointer"
@@ -271,6 +295,8 @@
                                     (selectedRole === 'all' || '{{ $admin->role }}' === selectedRole)
                                     &&
                                     (selectedOffice === 'all' || '{{ $admin->office_id }}' === selectedOffice)
+                                    &&
+                                    (selectedStatus === 'all' || (selectedStatus === 'aktif' && {{ $admin->is_active ? 'true' : 'false' }}) || (selectedStatus === 'nonaktif' && !{{ $admin->is_active ? 'true' : 'false' }}))
                                 ">
                                 <td class="py-4 pl-6 pr-4">
                                     <div class="flex items-center gap-3">
@@ -326,10 +352,17 @@
                                 </td>
 
                                 <td class="py-4 px-4 text-center whitespace-nowrap">
-                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Aktif
-                                    </span>
+                                    @if ($admin->is_active)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Aktif
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500 border border-slate-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            Nonaktif
+                                        </span>
+                                    @endif
                                 </td>
 
                                 <td class="py-4 px-4 text-slate-500 whitespace-nowrap">
@@ -348,14 +381,25 @@
                                             </svg>
                                         </button>
 
-                                        <button type="button"
-                                            @click="openDelete({{ $admin->toJson() }})"
-                                            class="p-1.5 text-slate-500 hover:text-red-600 hover:bg-white rounded-md transition cursor-pointer"
-                                            title="Hapus Akun">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
+                                        @if ($admin->is_active)
+                                            <button type="button"
+                                                @click="openDelete({{ $admin->toJson() }})"
+                                                class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-white rounded-md transition cursor-pointer"
+                                                title="Nonaktifkan Akun">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                                                </svg>
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                @click="openActivate({{ $admin->toJson() }})"
+                                                class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-md transition cursor-pointer"
+                                                title="Aktifkan Kembali Akun">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                </svg>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -693,7 +737,7 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Hapus Admin (Alpine.js with Teleport & Backdrop Blur) -->
+        <!-- MODAL 3: Konfirmasi Nonaktifkan Admin (Alpine.js with Teleport & Backdrop Blur) -->
         <template x-teleport="body">
             <div x-show="openDeleteModal"
                 x-cloak
@@ -715,19 +759,19 @@
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#A6192E] mx-auto mb-4 shadow-2xs">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mx-auto mb-4 shadow-2xs">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
                             </svg>
                         </div>
 
                         <h3 class="text-base font-bold text-slate-900" id="delete-admin-modal-title">
-                            Hapus Akun Administrator?
+                            Nonaktifkan Akun Administrator?
                         </h3>
 
                         <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                            Apakah Anda yakin ingin menghapus akun <span class="font-bold text-slate-800" x-text="deleteData.name"></span>?
-                            Tindakan ini akan menghapus hak akses akun ke portal rekrutmen.
+                            Apakah Anda yakin ingin menonaktifkan akun <span class="font-bold text-slate-800" x-text="deleteData.name"></span>?
+                            Admin yang dinonaktifkan tidak dapat masuk ke sistem. Data tetap tersimpan dan dapat diaktifkan kembali sewaktu-waktu.
                         </p>
                     </div>
 
@@ -739,11 +783,68 @@
                             Batal
                         </button>
                         <button type="submit"
-                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm transition cursor-pointer">
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs shadow-sm transition cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
                             </svg>
-                            Ya, Hapus Akun
+                            Ya, Nonaktifkan Akun
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+
+        <!-- MODAL 4: Konfirmasi Aktifkan Kembali Admin (Alpine.js with Teleport & Backdrop Blur) -->
+        <template x-teleport="body">
+            <div x-show="openActivateModal"
+                x-cloak
+                style="display: none;"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="activate-admin-modal-title"
+                @keydown.escape.window="openActivateModal = false">
+
+                <div x-show="openActivateModal"
+                    x-transition:enter="ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-150"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    @click.outside="openActivateModal = false"
+                    class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+
+                    <div class="p-6 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mx-auto mb-4 shadow-2xs">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+
+                        <h3 class="text-base font-semibold text-slate-900" id="activate-admin-modal-title">
+                            Aktifkan Kembali Akun Administrator?
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                            Apakah Anda yakin ingin mengaktifkan kembali akun <span class="font-semibold text-slate-800" x-text="activateData.name"></span>?
+                            Admin ini akan dapat kembali masuk ke sistem dan mengelola data sesuai hak aksesnya.
+                        </p>
+                    </div>
+
+                    <form :action="'{{ url('admin/admin') }}/' + activateData.id + '/toggle-status'" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                        @csrf
+                        @method('PATCH')
+                        <button type="button" @click="openActivateModal = false"
+                            class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            Ya, Aktifkan Akun
                         </button>
                     </form>
                 </div>

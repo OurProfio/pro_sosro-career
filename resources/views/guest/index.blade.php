@@ -170,44 +170,60 @@
                         <div class="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/70 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
                             <p class="text-xs leading-5 text-slate-500">Periksa kualifikasi sebelum mengirim lamaran.</p>
                             @auth
-                                @php
-                                    $applicant = auth()->user()->applicant;
-                                    $applicationExisting = $applicant
-                                        ? \App\Models\Application::where('applicant_id', $applicant->id)
-                                            ->where('job_id', $job->id)
-                                            ->first()
-                                        : null;
-                                @endphp
+                                @if (auth()->user()->role === 'user')
+                                    @php
+                                        $applicant = auth()->user()->applicant;
+                                        $applicationExisting = $applicant
+                                            ? \App\Models\Application::where('applicant_id', $applicant->id)
+                                                ->where('job_id', $job->id)
+                                                ->first()
+                                            : null;
+                                    @endphp
 
-                                @if ($applicationExisting)
-                                    @if ($applicationExisting->status === 'rejected')
-                                        <button disabled aria-disabled="true"
-                                            class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-rose-50 px-5 py-2.5 text-sm font-semibold text-rose-800 ring-1 ring-inset ring-rose-200">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
-                                            Lamaran Tidak Terpilih
-                                        </button>
-                                    @else
-                                        <button disabled aria-disabled="true"
-                                            class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
-                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
-                                            Sudah dilamar
-                                        </button>
-                                    @endif
-                                @else
-                                    <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
-                                        @csrf
-                                        <input type="hidden" name="job_id" value="{{ $job->id }}">
-                                        <button type="button" onclick="konfirmasiLamar(this)" data-title="{{ $job->title }}"
-                                            class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
+                                    @if ($applicationExisting)
+                                        @if ($applicationExisting->status === 'rejected')
+                                            <button disabled aria-disabled="true"
+                                                class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-rose-50 px-5 py-2.5 text-sm font-semibold text-rose-800 ring-1 ring-inset ring-rose-200">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+                                                Lamaran Tidak Terpilih
+                                            </button>
+                                        @else
+                                            <button disabled aria-disabled="true"
+                                                class="inline-flex min-h-11 cursor-not-allowed items-center justify-center gap-2 rounded-xl bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-800 ring-1 ring-inset ring-emerald-200">
+                                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="m5 13 4 4L19 7" /></svg>
+                                                Sudah dilamar
+                                            </button>
+                                        @endif
+                                    @elseif (!$applicant)
+                                        {{-- KONDISI 2: Sudah login, tapi belum isi biodata --}}
+                                        <button type="button" onclick="handleBelumBiodata(this)" data-title="{{ $job->title }}"
+                                            class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
                                             Lamar posisi ini
                                         </button>
-                                    </form>
+                                    @else
+                                        {{-- KONDISI 3: Sudah login dan sudah isi biodata --}}
+                                        <form action="{{ route('applications.store') }}" method="POST" class="form-apply">
+                                            @csrf
+                                            <input type="hidden" name="job_id" value="{{ $job->id }}">
+                                            <button type="button" onclick="konfirmasiLamar(this)" data-title="{{ $job->title }}"
+                                                class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
+                                                Lamar posisi ini
+                                            </button>
+                                        </form>
+                                    @endif
+                                @else
+                                    {{-- Akun Administrator / Super Admin --}}
+                                    <button type="button" onclick="handleAkunAdmin()"
+                                        class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
+                                        Lamar posisi ini
+                                    </button>
                                 @endif
                             @else
-                                <a href="{{ route('guest.login') }}"
-                                    class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2">
-                                    Masuk untuk melamar
-                                </a>
+                                {{-- KONDISI 1: Belum login --}}
+                                <button type="button" onclick="handleBelumLogin(this)" data-title="{{ $job->title }}"
+                                    class="cursor-pointer hover:cursor-pointer inline-flex min-h-11 items-center justify-center rounded-xl bg-[#B11116] px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#940e13] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B11116] focus-visible:ring-offset-2 active:scale-[0.98]">
+                                    Lamar posisi ini
+                                </button>
                             @endauth
                         </div>
                     </article>
@@ -403,28 +419,234 @@
             }
             filterJobs();
         });
-
-        function konfirmasiLamar(button) {
-            const title = button.dataset.title;
-            const form = button.closest('form');
-
-            if (!window.confirm(`Kirim lamaran untuk posisi "${title}"?`)) {
-                return;
-            }
-
-            button.disabled = true;
-            button.textContent = 'Mengirim...';
-            form.submit();
-        }
     </script>
 
-    <script>
-        @if (session('success'))
-            window.alert(@json(session('success')));
-        @endif
+    <!-- MODAL 1: Notifikasi Belum Login -->
+    <div id="modalBelumLogin" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mx-auto mb-4 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">
+                    Masuk ke Akun Diperlukan
+                </h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Anda harus masuk (login) ke akun Anda terlebih dahulu untuk dapat melamar posisi <span id="modalLoginJobTitle" class="font-semibold text-slate-800"></span>.
+                </p>
+            </div>
+            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="tutupModalBelumLogin()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                    Batal
+                </button>
+                <a href="{{ route('guest.login') }}?required=1" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#B11116] hover:bg-[#940e13] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                    Masuk Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
 
-        @if (session('error'))
-            window.alert(@json(session('error')));
-        @endif
+    <!-- MODAL 2: Notifikasi Belum Isi Biodata -->
+    <div id="modalBelumBiodata" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mx-auto mb-4 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">
+                    Lengkapi Biodata Anda
+                </h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Anda harus melengkapi data biodata pelamar terlebih dahulu sebelum dapat melamar posisi <span id="modalBiodataJobTitle" class="font-semibold text-slate-800"></span>.
+                </p>
+            </div>
+            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="tutupModalBelumBiodata()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                    Batal
+                </button>
+                <a href="{{ route('biodata.create') }}?required=1" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#B11116] hover:bg-[#940e13] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                    Isi Biodata Sekarang
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: Konfirmasi Lamar (Sudah Login & Biodata Terisi) -->
+    <div id="modalKonfirmasiLamar" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#B11116] mx-auto mb-4 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">
+                    Kirim Lamaran Pekerjaan?
+                </h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Apakah Anda yakin ingin mengirimkan lamaran untuk posisi <span id="modalLamarJobTitle" class="font-semibold text-slate-800"></span>?
+                </p>
+            </div>
+            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                <button type="button" onclick="tutupModalLamar()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                    Batal
+                </button>
+                <button type="button" id="btnSubmitLamar" class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#B11116] hover:bg-[#940e13] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                    Ya, Kirim Lamaran
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: Akun Administrator Tidak Dapat Melamar -->
+    <div id="modalAkunAdmin" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+            <div class="p-6 text-center">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mx-auto mb-4 shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                    </svg>
+                </div>
+                <h3 class="text-base font-semibold text-slate-900">
+                    Akses Dibatasi
+                </h3>
+                <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                    Anda sedang masuk sebagai <span class="font-semibold text-slate-800">Administrator</span>. Akun Administrator tidak dapat melamar lowongan pekerjaan. Silakan gunakan akun Pelamar untuk melamar lowongan.
+                </p>
+            </div>
+            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end">
+                <button type="button" onclick="tutupModalAkunAdmin()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs transition cursor-pointer">
+                    Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getJobTitle(trigger) {
+            if (typeof trigger === 'string') return trigger;
+            return (trigger && trigger.dataset && trigger.dataset.title) ? trigger.dataset.title : '';
+        }
+
+        function handleBelumLogin(trigger) {
+            const title = getJobTitle(trigger);
+            const titleEl = document.getElementById('modalLoginJobTitle');
+            if (titleEl) titleEl.textContent = title;
+            const modal = document.getElementById('modalBelumLogin');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function tutupModalBelumLogin() {
+            const modal = document.getElementById('modalBelumLogin');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function handleBelumBiodata(trigger) {
+            const title = getJobTitle(trigger);
+            const titleEl = document.getElementById('modalBiodataJobTitle');
+            if (titleEl) titleEl.textContent = title;
+            const modal = document.getElementById('modalBelumBiodata');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function tutupModalBelumBiodata() {
+            const modal = document.getElementById('modalBelumBiodata');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function handleAkunAdmin() {
+            const modal = document.getElementById('modalAkunAdmin');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function tutupModalAkunAdmin() {
+            const modal = document.getElementById('modalAkunAdmin');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        let pendingLamarForm = null;
+        let pendingLamarButton = null;
+
+        function konfirmasiLamar(button) {
+            const title = getJobTitle(button);
+            pendingLamarButton = button;
+            pendingLamarForm = button.closest('form');
+
+            const titleEl = document.getElementById('modalLamarJobTitle');
+            if (titleEl) {
+                titleEl.textContent = title;
+            }
+
+            const modal = document.getElementById('modalKonfirmasiLamar');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function tutupModalLamar() {
+            const modal = document.getElementById('modalKonfirmasiLamar');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+            pendingLamarForm = null;
+            pendingLamarButton = null;
+        }
+
+        document.getElementById('btnSubmitLamar')?.addEventListener('click', function() {
+            if (pendingLamarForm && pendingLamarButton) {
+                this.disabled = true;
+                this.textContent = 'Mengirim...';
+                pendingLamarButton.disabled = true;
+                pendingLamarButton.textContent = 'Mengirim...';
+                pendingLamarForm.submit();
+            }
+        });
+
+        // Tutup modal ketika klik area background (backdrop)
+        ['modalBelumLogin', 'modalBelumBiodata', 'modalKonfirmasiLamar', 'modalAkunAdmin'].forEach(function(id) {
+            const modalEl = document.getElementById(id);
+            if (modalEl) {
+                modalEl.addEventListener('click', function(e) {
+                    if (e.target === modalEl) {
+                        modalEl.classList.add('hidden');
+                        modalEl.classList.remove('flex');
+                    }
+                });
+            }
+        });
+
+        // Tutup modal ketika tombol Escape ditekan
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                tutupModalBelumLogin();
+                tutupModalBelumBiodata();
+                tutupModalLamar();
+                tutupModalAkunAdmin();
+            }
+        });
     </script>
 @endsection

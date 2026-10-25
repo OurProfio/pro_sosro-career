@@ -5,6 +5,7 @@ namespace App\Http\Requests\Admin;
 use App\Models\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateAdminRequest extends FormRequest
 {
@@ -24,14 +25,24 @@ class UpdateAdminRequest extends FormRequest
     public function rules(): array
     {
         $admin = $this->route('admin');
-        $userId = $admin instanceof Admin ? $admin->user_id : $admin;
+        if (! $admin instanceof Admin) {
+            $admin = Admin::find($admin);
+        }
+        $userId = $admin?->user_id;
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$userId],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($userId),
+            ],
             'password' => ['nullable', 'string', 'min:8'],
             'office_id' => ['required', 'exists:offices,id'],
             'role' => ['required', 'in:admin,superadmin'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 

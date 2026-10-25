@@ -8,11 +8,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 // #[Fillable(['user_id', 'cabang_id', 'role'])]
-#[Fillable(['user_id', 'office_id', 'name', 'role'])]
+#[Fillable(['user_id', 'office_id', 'name', 'role', 'is_active'])]
 class Admin extends Model
 {
     /** @use HasFactory<AdminFactory> */
     use HasFactory;
+
+    protected function casts(): array
+    {
+        return [
+            'is_active' => 'boolean',
+        ];
+    }
 
     public function user()
     {

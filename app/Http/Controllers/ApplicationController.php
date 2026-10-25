@@ -42,7 +42,7 @@ class ApplicationController extends Controller
     public function store(StoreApplicationRequest $request)
     {
         if (! auth()->user()->applicant) {
-            return redirect()->route('biodata.index')->with('error', 'Anda harus melengkapi profil terlebih dahulu sebelum melamar pekerjaan.');
+            return redirect()->route('biodata.create')->with('warning', 'Silakan lengkapi biodata Anda terlebih dahulu sebelum melamar pekerjaan.');
         }
 
         $job = Job::findOrFail($request->job_id);

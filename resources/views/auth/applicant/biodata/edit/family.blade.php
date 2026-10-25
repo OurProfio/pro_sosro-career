@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Data Keluarga Pelamar')
 
@@ -752,7 +752,9 @@
         function addChildRow(data = null) {
             const currentChildrenCount = document.querySelectorAll('[id^="child_row_"]').length;
             if (currentChildrenCount >= maxChildren) {
-                alert('Maksimal data anak yang dapat ditambahkan adalah ' + maxChildren);
+                if (typeof showToast === 'function') {
+                    showToast('warning', 'Batas Maksimum Tercapai', 'Maksimal data anak yang dapat ditambahkan adalah ' + maxChildren);
+                }
                 return;
             }
 

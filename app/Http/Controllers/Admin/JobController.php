@@ -48,13 +48,25 @@ class JobController extends Controller
      */
     public function store(StoreJobRequest $request)
     {
-        Job::create($request->validated() + [
-            'admin_id' => auth()->user()->admin->id,
+        $admin = auth()->user()->admin;
+        $status = $admin?->role === 'superadmin' ? 'aktif' : 'pending';
+
+        $data = $request->validated();
+        if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+            $data['office_id'] = $admin->office_id;
+        }
+
+        Job::create($data + [
+            'admin_id' => $admin->id,
             'opening_date' => today(),
-            'status' => 'aktif',
+            'status' => $status,
         ]);
 
-        return redirect()->route('job.index');
+        $message = $status === 'aktif'
+            ? 'Lowongan berhasil dibuat dan dipublikasikan.'
+            : 'Lowongan berhasil dibuat dan berstatus ditunda (menunggu persetujuan Superadmin).';
+
+        return redirect()->route('job.index')->with('success', $message);
     }
 
     /**
@@ -102,10 +114,15 @@ class JobController extends Controller
      */
     public function update(UpdateJobRequest $request, Job $job)
     {
+        $admin = auth()->user()->admin;
         $data = $request->validated();
 
-        if ($job->status !== 'aktif') {
-            $data['status'] = 'nonaktif';
+        if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+            $data['office_id'] = $admin->office_id;
+        }
+
+        if (! isset($data['status'])) {
+            $data['status'] = $job->status;
         }
 
         $job->update($data);
@@ -114,11 +131,28 @@ class JobController extends Controller
     }
 
     /**
+     * Approve the specified job (Superadmin only).
+     */
+    public function approve(Job $job)
+    {
+        if (auth()->user()->admin?->role !== 'superadmin') {
+            abort(403, 'Hanya superadmin yang dapat menyetujui lowongan.');
+        }
+
+        $job->update([
+            'status' => 'aktif',
+            'opening_date' => today(),
+        ]);
+
+        return redirect()->back()->with('success', 'Lowongan "'.$job->title.'" berhasil disetujui dan sekarang aktif.');
+    }
+
+    /**
      * Close the specified job (cannot be deleted or reopened once closed).
      */
     public function destroy(Job $job)
     {
-        if ($job->status === 'aktif') {
+        if (in_array($job->status, ['aktif', 'pending'])) {
             $job->update([
                 'status' => 'nonaktif',
                 'closing_date' => today(),

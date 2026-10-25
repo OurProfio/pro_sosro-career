@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Edit Biodata Pelamar')
 
@@ -1251,14 +1251,18 @@
                         e.preventDefault();
                         nikInput.focus();
                         validateNik();
-                        alert('NIK harus terdiri dari tepat 16 digit angka.');
+                        if (typeof showToast === 'function') {
+                            showToast('warning', 'Validasi Gagal', 'NIK harus terdiri dari tepat 16 digit angka.');
+                        }
                         return false;
                     }
                     if (phoneInput && (phoneInput.value.length < 10 || phoneInput.value.length > 15)) {
                         e.preventDefault();
                         phoneInput.focus();
                         validatePhone(phoneInput, msgPhone, true);
-                        alert('Nomor telepon harus antara 10 sampai 15 digit angka.');
+                        if (typeof showToast === 'function') {
+                            showToast('warning', 'Validasi Gagal', 'Nomor telepon harus antara 10 sampai 15 digit angka.');
+                        }
                         return false;
                     }
                     if (salaryInput) {

@@ -5,9 +5,16 @@
 @section('content')
     <div class="space-y-6 font-sans" x-data="{
         openCreateModal: {{ $errors->any() ? 'true' : 'false' }},
+        openApproveModal: false,
+        approveData: { id: '', title: '' },
+        openApprove(id, title) {
+            this.approveData = { id, title };
+            this.openApproveModal = true;
+        },
         search: '',
         selectedOffice: '',
         sortBy: 'latest',
+        activeTab: '{{ request('status', 'all') }}',
         visibleJobsCount: {{ $jobs->count() }},
         applyFilters() {
             this.$nextTick(() => {
@@ -15,15 +22,26 @@
                 let count = 0;
                 const q = (this.search || '').trim().toLowerCase();
                 const office = this.selectedOffice;
+                const tab = this.activeTab;
 
                 rows.forEach(r => {
                     const haystack = (r.dataset.haystack || '').toLowerCase();
                     const rOffice = r.dataset.office || '';
+                    const rStatus = r.dataset.status || '';
 
                     const matchSearch = !q || haystack.includes(q);
                     const matchOffice = !office || rOffice === office;
 
-                    if (matchSearch && matchOffice) {
+                    let matchStatus = true;
+                    if (tab === 'dibuka' || tab === 'aktif') {
+                        matchStatus = (rStatus === 'aktif');
+                    } else if (tab === 'ditunda' || tab === 'pending') {
+                        matchStatus = (rStatus === 'pending');
+                    } else if (tab === 'ditutup' || tab === 'nonaktif') {
+                        matchStatus = (rStatus !== 'aktif' && rStatus !== 'pending');
+                    }
+
+                    if (matchSearch && matchOffice && matchStatus) {
                         r.style.display = '';
                         count++;
                     } else {
@@ -63,7 +81,9 @@
     x-init="
         $watch('search', () => applyFilters());
         $watch('selectedOffice', () => applyFilters());
+        $watch('activeTab', () => applyFilters());
         $watch('sortBy', () => applySort());
+        applyFilters();
     ">
         <!-- Header Section: Title & Action Button -->
         <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-3.5 border-b border-slate-200" data-purpose="page-title-and-actions">
@@ -71,14 +91,14 @@
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
                     <a href="{{ route('admin.dashboard') }}" class="hover:text-[#9b1b1f] transition">Portal Karir</a>
                     <span class="material-symbols-outlined text-xs">chevron_right</span>
-                    <span class="text-[#9b1b1f] font-bold">Manajemen Lowongan</span>
+                    <span class="text-[#9b1b1f] font-semibold">Manajemen Lowongan</span>
                 </nav>
-                <h1 class="text-xl font-bold tracking-tight text-slate-900">Manajemen Lowongan</h1>
+                <h1 class="text-xl font-semibold tracking-tight text-slate-900">Manajemen Lowongan</h1>
                 <p class="text-xs text-slate-500">Kelola permohonan, pantau jadwal posting, dan verifikasi kebutuhan posisi kerja.</p>
             </div>
             <div class="flex items-center gap-3">
                 <!-- Tambah Lowongan Primary CTA -->
-                <button type="button" @click="openCreateModal = true" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#A6192E] hover:bg-[#7f1d1d] text-white text-xs font-bold shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
+                <button type="button" @click="openCreateModal = true" class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#A6192E] hover:bg-[#7f1d1d] text-white text-xs font-semibold shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
@@ -91,22 +111,44 @@
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden" data-purpose="content-card">
             <!-- Status Filter Tabs -->
             <div class="px-6 pt-5 pb-3 border-b border-slate-100 flex flex-wrap items-center gap-2" data-purpose="status-tab-group">
-                <!-- Tab 1: Semua Lowongan (Default Active) -->
-                <a href="{{ route('job.index') }}"
-                    class="px-4 py-2 text-xs font-bold rounded-full bg-red-50 text-[#A6192E] border border-red-200/70 shadow-sm transition cursor-pointer">
-                    Semua Lowongan
-                </a>
-                <!-- Tab 2: Lowongan Dibuka -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
-                    Lowongan Dibuka
+                <!-- Tab 1: Semua Lowongan -->
+                <button type="button" @click="activeTab = 'all'"
+                    :class="activeTab === 'all' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
+                    class="px-4 py-2 text-xs rounded-full border transition cursor-pointer flex items-center gap-1.5">
+                    <span>Semua Lowongan</span>
+                    <span :class="activeTab === 'all' ? 'bg-[#A6192E]/10 text-[#A6192E]' : 'bg-slate-100 text-slate-600'" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                        {{ $jobs->count() }}
+                    </span>
                 </button>
-                <!-- Tab 3: Lowongan Ditunda -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
-                    Lowongan Ditunda
+                <!-- Tab 2: Lowongan Dibuka -->
+                <button type="button" @click="activeTab = 'dibuka'"
+                    :class="activeTab === 'dibuka' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
+                    class="px-4 py-2 text-xs rounded-full border transition cursor-pointer flex items-center gap-1.5">
+                    <span>Lowongan Dibuka</span>
+                    <span :class="activeTab === 'dibuka' ? 'bg-[#A6192E]/10 text-[#A6192E]' : 'bg-slate-100 text-slate-600'" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                        {{ $jobs->where('status', 'aktif')->count() }}
+                    </span>
+                </button>
+                <!-- Tab 3: Lowongan Ditunda (Pending Approval) -->
+                @php
+                    $pendingJobsTotal = $jobs->where('status', 'pending')->count();
+                @endphp
+                <button type="button" @click="activeTab = 'ditunda'"
+                    :class="activeTab === 'ditunda' ? 'bg-amber-50 text-amber-800 border-amber-200 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
+                    class="px-4 py-2 text-xs rounded-full border transition cursor-pointer flex items-center gap-1.5">
+                    <span>Lowongan Ditunda</span>
+                    <span :class="activeTab === 'ditunda' ? 'bg-amber-200 text-amber-900' : ($pendingJobsTotal > 0 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600')" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                        {{ $pendingJobsTotal }}
+                    </span>
                 </button>
                 <!-- Tab 4: Lowongan Ditutup -->
-                <button class="px-4 py-2 text-xs font-medium rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition cursor-default" type="button">
-                    Lowongan Ditutup
+                <button type="button" @click="activeTab = 'ditutup'"
+                    :class="activeTab === 'ditutup' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
+                    class="px-4 py-2 text-xs rounded-full border transition cursor-pointer flex items-center gap-1.5">
+                    <span>Lowongan Ditutup</span>
+                    <span :class="activeTab === 'ditutup' ? 'bg-[#A6192E]/10 text-[#A6192E]' : 'bg-slate-100 text-slate-600'" class="px-2 py-0.5 rounded-full text-[10px] font-semibold">
+                        {{ $jobs->whereIn('status', ['nonaktif', 'selesai', 'dihapus'])->count() }}
+                    </span>
                 </button>
             </div>
 
@@ -170,7 +212,7 @@
             <div class="overflow-x-auto" data-purpose="data-table-container">
                 <table class="w-full text-left border-collapse" id="job-vacancies-table">
                     <thead>
-                        <tr class="bg-rose-50/40 border-y border-rose-100/60 text-[11px] font-bold uppercase tracking-wider text-[#7f1d1d]">
+                        <tr class="bg-rose-50/40 border-y border-rose-100/60 text-[11px] font-semibold uppercase tracking-wider text-[#7f1d1d]">
                             <th class="py-3 px-5 text-center w-12" scope="col">No.</th>
                             <th class="py-3 px-6 text-center" scope="col">Informasi Lowongan</th>
                             <th class="py-3 px-4 text-center" scope="col">Kandidat</th>
@@ -209,11 +251,12 @@
                                 data-created="{{ $createdTimestamp }}"
                                 data-closing="{{ $closingTimestamp }}"
                                 data-applicants="{{ $applicantsTotal }}"
+                                data-status="{{ $job->status }}"
                                 class="job-row hover:bg-slate-50/70 transition-colors"
                             >
                                 <td class="py-4 px-5 text-center text-slate-400 font-semibold row-number">{{ $index + 1 }}</td>
                                 <td class="py-4 px-6">
-                                    <a href="{{ route('job.show', $job) }}" class="font-bold text-slate-800 hover:text-[#A6192E] transition-colors text-[13px] block">
+                                    <a href="{{ route('job.show', $job) }}" class="font-semibold text-slate-800 hover:text-[#A6192E] transition-colors text-[13px] block">
                                         {{ $job->title }}
                                     </a>
                                     <div class="text-[11px] text-slate-400 mt-0.5">
@@ -221,7 +264,7 @@
                                     </div>
                                 </td>
                                 <td class="py-4 px-4 text-center">
-                                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold text-xs">
+                                    <span class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-semibold text-xs">
                                         {{ $job->applications_count ?? $job->applications->count() }}
                                     </span>
                                 </td>
@@ -237,6 +280,11 @@
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                             Aktif
                                         </span>
+                                    @elseif ($job->status === 'pending')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                            Ditunda (Pending)
+                                        </span>
                                     @else
                                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
                                             <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
@@ -246,6 +294,16 @@
                                 </td>
                                 <td class="py-4 px-6 text-center whitespace-nowrap">
                                     <div class="inline-flex items-center justify-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200/80">
+                                        @if (auth()->user()->admin?->role === 'superadmin' && $job->status === 'pending')
+                                            <button type="button"
+                                                @click="openApprove('{{ $job->id }}', '{{ addslashes($job->title) }}')"
+                                                class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-md transition cursor-pointer"
+                                                title="Setujui (ACC) Lowongan">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </button>
+                                        @endif
                                         <a href="{{ route('job.show', $job) }}"
                                             class="p-1.5 text-slate-500 hover:text-[#A6192E] hover:bg-white rounded-md transition cursor-pointer"
                                             title="Lihat Detail Lowongan">
@@ -326,8 +384,8 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <h3 class="text-lg font-bold text-slate-900 leading-tight" id="modal-title">Tambah Lowongan Baru</h3>
-                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-[#A6192E] border border-red-100/70">HR Portal</span>
+                                <h3 class="text-lg font-semibold text-slate-900 leading-tight" id="modal-title">Tambah Lowongan Baru</h3>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-50 text-[#A6192E] border border-red-100/70">HR Portal</span>
                             </div>
                             <p class="text-xs text-slate-500 mt-0.5">Isi formulir berikut untuk mempublikasikan lowongan kerja baru.</p>
                         </div>
@@ -347,12 +405,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Informasi Dasar</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Informasi Dasar</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_title" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Judul Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                                    Judul Lowongan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="text" name="title" id="modal_title" value="{{ old('title') }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('title') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
@@ -365,22 +423,34 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="modal_office_id" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Kantor / Cabang <span class="text-[#A6192E] font-bold">*</span>
+                                        Kantor / Cabang <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
-                                    <div class="relative">
-                                        <select name="office_id" id="modal_office_id"
-                                            class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
-                                            required>
-                                            <option value="" disabled {{ old('office_id') ? '' : 'selected' }}>-- Pilih Kantor / Cabang --</option>
-                                            @if (isset($offices))
-                                                @foreach ($offices as $office)
-                                                    <option value="{{ $office->id }}" {{ old('office_id') == $office->id ? 'selected' : '' }}>
-                                                        {{ $office->name }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
+                                    @if (auth()->user()->admin?->role === 'superadmin')
+                                        <div class="relative">
+                                            <select name="office_id" id="modal_office_id"
+                                                class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                                required>
+                                                <option value="" disabled {{ old('office_id') ? '' : 'selected' }}>-- Pilih Kantor / Cabang --</option>
+                                                @if (isset($offices))
+                                                    @foreach ($offices as $office)
+                                                        <option value="{{ $office->id }}" {{ old('office_id') == $office->id ? 'selected' : '' }}>
+                                                            {{ $office->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    @else
+                                        <input type="hidden" name="office_id" value="{{ auth()->user()->admin?->office_id }}">
+                                        <div class="relative">
+                                            <input type="text"
+                                                id="modal_office_id"
+                                                value="{{ auth()->user()->admin?->office?->name ?? 'Kantor Cabang Anda' }}"
+                                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-100/80 text-slate-700 font-semibold cursor-not-allowed select-none"
+                                                readonly
+                                                tabindex="-1">
+                                        </div>
+                                    @endif
                                     @error('office_id')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
@@ -388,7 +458,7 @@
 
                                 <div class="space-y-1.5">
                                     <label for="modal_category" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Kategori Lowongan <span class="text-[#A6192E] font-bold">*</span>
+                                        Kategori Lowongan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="category" id="modal_category"
@@ -410,7 +480,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="modal_occupation" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Bidang Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                        Bidang Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="occupation" id="modal_occupation"
@@ -433,7 +503,7 @@
 
                                 <div class="space-y-1.5">
                                     <label for="modal_type" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                        Tipe Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                        Tipe Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
                                     <div class="relative">
                                         <select name="type" id="modal_type"
@@ -454,7 +524,7 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_location" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Lokasi Kerja <span class="text-[#A6192E] font-bold">*</span>
+                                    Lokasi Kerja <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="text" name="location" id="modal_location" value="{{ old('location') }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
@@ -469,12 +539,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Rincian Posisi</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Rincian Posisi</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_description" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Deskripsi Pekerjaan <span class="text-[#A6192E] font-bold">*</span>
+                                    Deskripsi Pekerjaan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <x-forms.rich-textarea
                                     name="description"
@@ -492,7 +562,7 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_qualification" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Kualifikasi Pelamar <span class="text-[#A6192E] font-bold">*</span>
+                                    Kualifikasi Pelamar <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <x-forms.rich-textarea
                                     name="qualification"
@@ -513,12 +583,12 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                 <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
-                                <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
+                                <h4 class="text-xs font-semibold text-slate-700 uppercase tracking-wider">Periode Waktu Publikasi</h4>
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="modal_closing_date" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Tanggal Tutup <span class="text-[#A6192E] font-bold">*</span>
+                                    Tanggal Tutup <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
                                 <input type="date" name="closing_date" id="modal_closing_date" value="{{ old('closing_date') }}"
                                     class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('closing_date') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 transition"
@@ -535,7 +605,7 @@
                         <button type="button" @click="openCreateModal = false" class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition duration-150 cursor-pointer">
                             Batal
                         </button>
-                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
+                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
                             </svg>
@@ -547,5 +617,61 @@
         </div>
         </template>
         <!-- END: Modal Tambah Lowongan -->
+
+        <!-- BEGIN: Modal Konfirmasi Persetujuan Lowongan (Alpine.js) -->
+        <template x-teleport="body">
+            <div x-show="openApproveModal"
+                x-cloak
+                style="display: none;"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="approve-job-modal-title"
+                @keydown.escape.window="openApproveModal = false">
+
+                <div x-show="openApproveModal"
+                    x-transition:enter="ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-150"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    @click.outside="openApproveModal = false"
+                    class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+
+                    <div class="p-6 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 mx-auto mb-4 shadow-2xs">
+                            <span class="material-symbols-outlined text-2xl">check_circle</span>
+                        </div>
+
+                        <h3 class="text-base font-semibold text-slate-900" id="approve-job-modal-title">
+                            Setujui dan Aktifkan Lowongan?
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                            Apakah Anda yakin ingin menyetujui lowongan <span class="font-semibold text-slate-800" x-text="approveData.title"></span>?
+                            Lowongan ini akan segera aktif dan dapat dilamar oleh para pencari kerja.
+                        </p>
+                    </div>
+
+                    <form :action="'{{ url('admin/job') }}/' + approveData.id + '/approve'" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                        @csrf
+                        @method('PATCH')
+                        <button type="button" @click="openApproveModal = false"
+                            class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Ya, Setujui Lowongan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+        <!-- END: Modal Konfirmasi Persetujuan Lowongan -->
     </div>
 @endsection
