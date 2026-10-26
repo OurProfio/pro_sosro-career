@@ -2,17 +2,33 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreApplicantEducationRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
         return true;
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->uppercaseInput([
+            'educations.*.institution_name',
+            'educations.*.major',
+            'trainings.*.training_name',
+            'trainings.*.organizer',
+        ]);
     }
 
     /**

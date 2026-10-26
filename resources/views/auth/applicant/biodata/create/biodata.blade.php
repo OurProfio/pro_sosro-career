@@ -155,7 +155,7 @@
                             <input id="name" name="name" type="text" required
                                 value="{{ old('name', auth()->user()->applicant->name ?? '') }}"
                                 placeholder="Nama Lengkap Sesuai KTP"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('name')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -200,7 +200,7 @@
                                     </label>
                                     <textarea id="address_ktp" name="address_ktp" rows="3" required
                                         placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', auth()->user()->applicant->address_ktp ?? '') }}</textarea>
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', auth()->user()->applicant->address_ktp ?? '') }}</textarea>
                                     @error('address_ktp')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
@@ -238,7 +238,7 @@
                                     <div class="space-y-1.5 md:col-span-2">
                                         <textarea id="address_domisili" name="address_domisili" rows="2" required
                                             placeholder="Alamat Domisili Tempat Tinggal Saat Ini"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', auth()->user()->applicant->address_domisili ?? '') }}</textarea>
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', auth()->user()->applicant->address_domisili ?? '') }}</textarea>
                                         @error('address_domisili')
                                             <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                         @enderror
@@ -315,7 +315,7 @@
                             <input id="place_of_birth" name="place_of_birth" type="text" required
                                 value="{{ old('place_of_birth', auth()->user()->applicant->place_of_birth ?? '') }}"
                                 placeholder="Kota Lahir"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('place_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('place_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('place_of_birth')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -519,7 +519,7 @@
                                     <input id="emergency_contact_name" name="emergency_contact_name" type="text" required
                                         value="{{ old('emergency_contact_name', auth()->user()->applicant->emergency_contact_name ?? '') }}"
                                         placeholder="Nama Lengkap Kerabat"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('emergency_contact_name')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
@@ -591,7 +591,7 @@
                             </label>
                             <textarea id="medical_history" name="medical_history" rows="2"
                                 placeholder="Tuliskan riwayat penyakit kronis/serius yang pernah atau sedang diderita, atau kosongkan jika tidak ada"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('medical_history') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('medical_history', auth()->user()->applicant->medical_history ?? '') }}</textarea>
+                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('medical_history') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('medical_history', auth()->user()->applicant->medical_history ?? '') }}</textarea>
                             @error('medical_history')
                                 <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                             @enderror
@@ -670,7 +670,7 @@
                                 <input id="reference_by" name="reference_by" type="text"
                                     value="{{ old('reference_by', auth()->user()->applicant->expectation->reference_by ?? '') }}"
                                     placeholder="Masukkan Nama Lengkap Karyawan"
-                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('reference_by') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('reference_by') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 @error('reference_by')
                                     <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                 @enderror
@@ -684,7 +684,7 @@
                                 </label>
                                 <textarea id="facility_expectation" name="facility_expectation" rows="2"
                                     placeholder="Tuliskan ekspektasi fasilitas seperti tunjangan kesehatan, mess, laptop kantor, dll."
-                                    class="w-full px-4 py-2.5 bg-white rounded-xl border @error('facility_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('facility_expectation', auth()->user()->applicant->expectation->facility_expectation ?? '') }}</textarea>
+                                    class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('facility_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('facility_expectation', auth()->user()->applicant->expectation->facility_expectation ?? '') }}</textarea>
                                 @error('facility_expectation')
                                     <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                 @enderror

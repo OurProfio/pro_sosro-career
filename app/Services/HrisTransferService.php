@@ -166,6 +166,7 @@ class HrisTransferService
             ThrmAppJobExp::create([
                 'APPLICANT_ID' => $applicantId,
                 'COMPANY_NAME' => $work->company_name,
+                'COMPANY_ADDR' => $work->company_address,
                 'JOB_POSITION' => $work->position,
                 'LAST_SALARY' => $work->salary ? (float) $work->salary : null,
                 'START_YEAR' => $startYear,

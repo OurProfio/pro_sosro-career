@@ -150,7 +150,7 @@
                                         Lengkap Ayah <span class="text-[#B11116]">*</span></label>
                                     <input type="text" name="families[father][name]" required
                                         value="{{ old('families.father.name', $father?->name) }}" placeholder="Nama Lengkap Ayah Kandung"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.name')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
@@ -175,7 +175,7 @@
                                         Lahir <span class="text-[#B11116]">*</span></label>
                                     <input type="text" name="families[father][place_of_birth]" required
                                         value="{{ old('families.father.place_of_birth', $father?->place_of_birth) }}" placeholder="Kota Lahir Ayah"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.place_of_birth')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
@@ -213,7 +213,7 @@
                                     <input type="text" name="families[father][work]" required
                                         value="{{ old('families.father.work', $father?->work) }}"
                                         placeholder="Contoh: PNS / Wirausaha / Pensiunan"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.work')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
@@ -248,7 +248,7 @@
                                          Lengkap Ibu <span class="text-[#B11116]">*</span></label>
                                      <input type="text" name="families[mother][name]" required
                                          value="{{ old('families.mother.name', $mother?->name) }}" placeholder="Nama Lengkap Ibu Kandung"
-                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                      @error('families.mother.name')
                                          <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                      @enderror
@@ -273,7 +273,7 @@
                                         Lahir <span class="text-[#B11116]">*</span></label>
                                     <input type="text" name="families[mother][place_of_birth]" required
                                         value="{{ old('families.mother.place_of_birth', $mother?->place_of_birth) }}" placeholder="Kota Lahir Ibu"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.place_of_birth')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
@@ -311,7 +311,7 @@
                                     <input type="text" name="families[mother][work]" required
                                         value="{{ old('families.mother.work', $mother?->work) }}"
                                         placeholder="Contoh: Ibu Rumah Tangga / Wirausaha"
-                                        class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.work')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
@@ -367,7 +367,7 @@
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
-                                                    <input type="text" name="families[siblings][{{ $sIndex }}][name]" required value="{{ $sibling['name'] ?? '' }}" placeholder="Nama Lengkap Saudara Kandung" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    <input type="text" name="families[siblings][{{ $sIndex }}][name]" required value="{{ $sibling['name'] ?? '' }}" placeholder="Nama Lengkap Saudara Kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -379,7 +379,7 @@
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                                                    <input type="text" name="families[siblings][{{ $sIndex }}][place_of_birth]" required value="{{ $sibling['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    <input type="text" name="families[siblings][{{ $sIndex }}][place_of_birth]" required value="{{ $sibling['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
@@ -396,7 +396,7 @@
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                                                    <input type="text" name="families[siblings][{{ $sIndex }}][work]" required value="{{ $sibling['work'] ?? '' }}" placeholder="Pekerjaan / Pelajar" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                    <input type="text" name="families[siblings][{{ $sIndex }}][work]" required value="{{ $sibling['work'] ?? '' }}" placeholder="Pekerjaan / Pelajar" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 </div>
                                                 <div class="space-y-1.5 md:col-span-2">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
@@ -451,7 +451,7 @@
                                         <input type="text" name="families[spouse][name]" required
                                             value="{{ old('families.spouse.name', $spouse?->name) }}"
                                             placeholder="Nama Lengkap Suami / Istri"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.name')
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -463,7 +463,7 @@
                                         <input type="text" name="families[spouse][place_of_birth]" required
                                             value="{{ old('families.spouse.place_of_birth', $spouse?->place_of_birth) }}"
                                             placeholder="Kota Lahir Pasangan"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.place_of_birth')
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -503,7 +503,7 @@
                                             <span class="text-[#B11116]">*</span></label>
                                         <input type="text" name="families[spouse][work]" required
                                             value="{{ old('families.spouse.work', $spouse?->work) }}" placeholder="Pekerjaan Pasangan"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.work')
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -693,7 +693,7 @@
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -705,7 +705,7 @@
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
@@ -722,7 +722,7 @@
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     </div>
                                                     <div class="space-y-1.5 md:col-span-2">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
@@ -811,7 +811,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
-                            <input type="text" name="families[siblings][${siblingIndex}][name]" required placeholder="Nama Lengkap Saudara Kandung" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[siblings][${siblingIndex}][name]" required placeholder="Nama Lengkap Saudara Kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -823,7 +823,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                            <input type="text" name="families[siblings][${siblingIndex}][place_of_birth]" required placeholder="Kota Lahir" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[siblings][${siblingIndex}][place_of_birth]" required placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
@@ -846,7 +846,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                            <input type="text" name="families[siblings][${siblingIndex}][work]" required placeholder="Pekerjaan / Pelajar" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[siblings][${siblingIndex}][work]" required placeholder="Pekerjaan / Pelajar" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
@@ -884,7 +884,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
-                            <input type="text" name="families[children][${childIndex}][name]" required placeholder="Nama Lengkap Anak" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[children][${childIndex}][name]" required placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
@@ -896,7 +896,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                            <input type="text" name="families[children][${childIndex}][place_of_birth]" required placeholder="Kota Lahir" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[children][${childIndex}][place_of_birth]" required placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
@@ -918,7 +918,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                            <input type="text" name="families[children][${childIndex}][work]" required placeholder="Contoh: Pelajar / Belum Bekerja" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="text" name="families[children][${childIndex}][work]" required placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>

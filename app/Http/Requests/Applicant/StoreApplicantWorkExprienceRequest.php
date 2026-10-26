@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreApplicantWorkExprienceRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -20,6 +23,17 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $this->uppercaseInput([
+            'experiences.*.company_name',
+            'experiences.*.company_address',
+            'experiences.*.position',
+            'experiences.*.division',
+            'experiences.*.facility',
+            'experiences.*.reason_for_leaving',
+            'experiences.*.reference_name',
+            'experiences.*.reference_position',
+        ]);
+
         if ($this->has('experiences') && is_array($this->input('experiences'))) {
             $experiences = $this->input('experiences');
             foreach ($experiences as $key => $exp) {
@@ -45,7 +59,7 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'previous_applied_year' => ['required_if:has_applied_sosro,y', 'nullable', 'digits:4', 'integer'],
             'experiences' => ['nullable', 'array', 'max:3'],
             'experiences.*.company_name' => ['nullable', 'string', 'max:255'],
-            'experiences.*.company_address' => ['nullable', 'string'],
+            'experiences.*.company_address' => ['nullable', 'string', 'max:255'],
             'experiences.*.company_phone' => ['nullable', 'string', 'max:20'],
             'experiences.*.position' => ['nullable', 'string', 'max:255'],
             'experiences.*.division' => ['nullable', 'string', 'max:255'],
