@@ -100,3 +100,45 @@ it('resends the verification email', function () {
 
     Notification::assertSentTo($user, VerifyEmail::class);
 });
+
+it('verifies the email after a guest opens the link and logs in', function () {
+    $user = User::factory()->unverified()->create();
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $user->id,
+        'hash' => sha1($user->email),
+    ]);
+
+    $this->get($url)->assertRedirect(route('guest.login'));
+
+    $this->post(route('guest.login.post'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect($url);
+
+    $this->get($url)->assertRedirect(route('applicant.dashboard'));
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+});
+
+it('forbids verifying another users email', function () {
+    $owner = User::factory()->unverified()->create();
+    $intruder = User::factory()->unverified()->create();
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $owner->id,
+        'hash' => sha1($owner->email),
+    ]);
+
+    $this->actingAs($intruder)->get($url)->assertForbidden();
+
+    expect($owner->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+it('sends an unverified applicant to the notice page after login', function () {
+    $user = User::factory()->unverified()->create();
+
+    $this->post(route('guest.login.post'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect(route('applicant.dashboard'));
+
+    $this->get(route('applicant.dashboard'))->assertRedirect(route('verification.notice'));
+});
