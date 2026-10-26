@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Admin;
+use App\Models\Application;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -42,6 +44,25 @@ it('blocks unverified applicants from applicant routes', function () {
     $this->actingAs($user)
         ->get(route('applicant.dashboard'))
         ->assertRedirect(route('verification.notice'));
+});
+
+it('prevents unverified applicants from submitting an application', function () {
+    $user = User::factory()->unverified()->create();
+
+    $this->actingAs($user)
+        ->post(route('applications.store'), ['job_id' => 1])
+        ->assertRedirect(route('verification.notice'));
+
+    expect(Application::count())->toBe(0);
+});
+
+it('does not require email verification for admin routes', function () {
+    $adminUser = User::factory()->admin()->unverified()->create();
+    Admin::factory()->create(['user_id' => $adminUser->id]);
+
+    $this->actingAs($adminUser)
+        ->get(route('admin.dashboard'))
+        ->assertOk();
 });
 
 it('verifies the email through the signed link', function () {
