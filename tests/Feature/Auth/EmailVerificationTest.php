@@ -1,7 +1,9 @@
 <?php
 
 use App\Models\Admin;
+use App\Models\Applicant;
 use App\Models\Application;
+use App\Models\Job;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -48,9 +50,14 @@ it('blocks unverified applicants from applicant routes', function () {
 
 it('prevents unverified applicants from submitting an application', function () {
     $user = User::factory()->unverified()->create();
+    Applicant::factory()->create(['user_id' => $user->id]);
+    $job = Job::factory()->create([
+        'status' => 'aktif',
+        'closing_date' => now()->addDays(14)->toDateString(),
+    ]);
 
     $this->actingAs($user)
-        ->post(route('applications.store'), ['job_id' => 1])
+        ->post(route('applications.store'), ['job_id' => $job->id])
         ->assertRedirect(route('verification.notice'));
 
     expect(Application::count())->toBe(0);
