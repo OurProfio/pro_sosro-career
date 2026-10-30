@@ -1,5 +1,9 @@
 <?php
 
+use App\Models\Admin;
+use App\Models\Applicant;
+use App\Models\Application;
+use App\Models\Job;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Auth\Notifications\VerifyEmail;
@@ -44,6 +48,30 @@ it('blocks unverified applicants from applicant routes', function () {
         ->assertRedirect(route('verification.notice'));
 });
 
+it('prevents unverified applicants from submitting an application', function () {
+    $user = User::factory()->unverified()->create();
+    Applicant::factory()->create(['user_id' => $user->id]);
+    $job = Job::factory()->create([
+        'status' => 'aktif',
+        'closing_date' => now()->addDays(14)->toDateString(),
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('applications.store'), ['job_id' => $job->id])
+        ->assertRedirect(route('verification.notice'));
+
+    expect(Application::count())->toBe(0);
+});
+
+it('does not require email verification for admin routes', function () {
+    $adminUser = User::factory()->admin()->unverified()->create();
+    Admin::factory()->create(['user_id' => $adminUser->id]);
+
+    $this->actingAs($adminUser)
+        ->get(route('admin.dashboard'))
+        ->assertOk();
+});
+
 it('verifies the email through the signed link', function () {
     Event::fake([Verified::class]);
     $user = User::factory()->unverified()->create();
@@ -78,4 +106,46 @@ it('resends the verification email', function () {
     $this->actingAs($user)->post(route('verification.send'))->assertRedirect();
 
     Notification::assertSentTo($user, VerifyEmail::class);
+});
+
+it('verifies the email after a guest opens the link and logs in', function () {
+    $user = User::factory()->unverified()->create();
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $user->id,
+        'hash' => sha1($user->email),
+    ]);
+
+    $this->get($url)->assertRedirect(route('guest.login'));
+
+    $this->post(route('guest.login.post'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect($url);
+
+    $this->get($url)->assertRedirect(route('applicant.dashboard'));
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+});
+
+it('forbids verifying another users email', function () {
+    $owner = User::factory()->unverified()->create();
+    $intruder = User::factory()->unverified()->create();
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $owner->id,
+        'hash' => sha1($owner->email),
+    ]);
+
+    $this->actingAs($intruder)->get($url)->assertForbidden();
+
+    expect($owner->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+it('sends an unverified applicant to the notice page after login', function () {
+    $user = User::factory()->unverified()->create();
+
+    $this->post(route('guest.login.post'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])->assertRedirect(route('applicant.dashboard'));
+
+    $this->get(route('applicant.dashboard'))->assertRedirect(route('verification.notice'));
 });

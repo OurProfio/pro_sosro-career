@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreApplicantEducationRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -20,41 +23,14 @@ class StoreApplicantEducationRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        $merge = [];
-
-        if ($this->has('educations') && is_array($this->input('educations'))) {
-            $educations = $this->input('educations');
-            $upperEduFields = ['institution_name', 'city', 'major', 'degree_level'];
-            foreach ($educations as $k => $edu) {
-                if (is_array($edu)) {
-                    foreach ($upperEduFields as $f) {
-                        if (isset($edu[$f]) && is_string($edu[$f])) {
-                            $educations[$k][$f] = mb_strtoupper(trim($edu[$f]), 'UTF-8');
-                        }
-                    }
-                }
-            }
-            $merge['educations'] = $educations;
-        }
-
-        if ($this->has('trainings') && is_array($this->input('trainings'))) {
-            $trainings = $this->input('trainings');
-            $upperTrainFields = ['training_name', 'organizer'];
-            foreach ($trainings as $k => $tr) {
-                if (is_array($tr)) {
-                    foreach ($upperTrainFields as $f) {
-                        if (isset($tr[$f]) && is_string($tr[$f])) {
-                            $trainings[$k][$f] = mb_strtoupper(trim($tr[$f]), 'UTF-8');
-                        }
-                    }
-                }
-            }
-            $merge['trainings'] = $trainings;
-        }
-
-        if (! empty($merge)) {
-            $this->merge($merge);
-        }
+        $this->uppercaseInput([
+            'educations.*.institution_name',
+            'educations.*.city',
+            'educations.*.degree_level',
+            'educations.*.major',
+            'trainings.*.training_name',
+            'trainings.*.organizer',
+        ]);
     }
 
     /**

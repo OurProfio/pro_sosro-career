@@ -2,11 +2,14 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreApplicantFamilyRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -20,36 +23,36 @@ class StoreApplicantFamilyRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        if ($this->has('families') && is_array($this->input('families'))) {
-            $families = $this->input('families');
-            $upperFields = ['name', 'place_of_birth', 'work'];
-
-            foreach (['father', 'mother', 'spouse', 'father_in_law', 'mother_in_law'] as $rel) {
-                if (isset($families[$rel]) && is_array($families[$rel])) {
-                    foreach ($upperFields as $f) {
-                        if (isset($families[$rel][$f]) && is_string($families[$rel][$f])) {
-                            $families[$rel][$f] = mb_strtoupper(trim($families[$rel][$f]), 'UTF-8');
-                        }
-                    }
-                }
-            }
-
-            foreach (['siblings', 'children'] as $listKey) {
-                if (isset($families[$listKey]) && is_array($families[$listKey])) {
-                    foreach ($families[$listKey] as $k => $item) {
-                        if (is_array($item)) {
-                            foreach ($upperFields as $f) {
-                                if (isset($item[$f]) && is_string($item[$f])) {
-                                    $families[$listKey][$k][$f] = mb_strtoupper(trim($item[$f]), 'UTF-8');
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $this->merge(['families' => $families]);
-        }
+        $this->uppercaseInput([
+            'families.father.name',
+            'families.father.place_of_birth',
+            'families.father.education',
+            'families.father.work',
+            'families.mother.name',
+            'families.mother.place_of_birth',
+            'families.mother.education',
+            'families.mother.work',
+            'families.siblings.*.name',
+            'families.siblings.*.place_of_birth',
+            'families.siblings.*.education',
+            'families.siblings.*.work',
+            'families.spouse.name',
+            'families.spouse.place_of_birth',
+            'families.spouse.education',
+            'families.spouse.work',
+            'families.children.*.name',
+            'families.children.*.place_of_birth',
+            'families.children.*.education',
+            'families.children.*.work',
+            'families.father_in_law.name',
+            'families.father_in_law.place_of_birth',
+            'families.father_in_law.education',
+            'families.father_in_law.work',
+            'families.mother_in_law.name',
+            'families.mother_in_law.place_of_birth',
+            'families.mother_in_law.education',
+            'families.mother_in_law.work',
+        ]);
     }
 
     /**
@@ -137,140 +140,16 @@ class StoreApplicantFamilyRequest extends FormRequest
         return $rules;
     }
 
-    public function attributes(): array
-    {
-        return [
-            // Ayah Kandung
-            'families.father.name' => 'nama lengkap ayah',
-            'families.father.status' => 'status kondisi ayah',
-            'families.father.place_of_birth' => 'tempat lahir ayah',
-            'families.father.date_of_birth' => 'tanggal lahir ayah',
-            'families.father.education' => 'pendidikan terakhir ayah',
-            'families.father.work' => 'pekerjaan ayah',
-            'families.father.phone_number' => 'nomor telepon ayah',
-
-            // Ibu Kandung
-            'families.mother.name' => 'nama lengkap ibu',
-            'families.mother.status' => 'status kondisi ibu',
-            'families.mother.place_of_birth' => 'tempat lahir ibu',
-            'families.mother.date_of_birth' => 'tanggal lahir ibu',
-            'families.mother.education' => 'pendidikan terakhir ibu',
-            'families.mother.work' => 'pekerjaan ibu',
-            'families.mother.phone_number' => 'nomor telepon ibu',
-
-            // Saudara Kandung
-            'families.siblings' => 'data saudara kandung',
-            'families.siblings.*.name' => 'nama saudara kandung',
-            'families.siblings.*.gender' => 'jenis kelamin saudara kandung',
-            'families.siblings.*.place_of_birth' => 'tempat lahir saudara kandung',
-            'families.siblings.*.date_of_birth' => 'tanggal lahir saudara kandung',
-            'families.siblings.*.education' => 'pendidikan terakhir saudara kandung',
-            'families.siblings.*.work' => 'pekerjaan saudara kandung',
-            'families.siblings.*.phone_number' => 'nomor telepon saudara kandung',
-
-            // Pasangan
-            'families.spouse.name' => 'nama lengkap pasangan',
-            'families.spouse.place_of_birth' => 'tempat lahir pasangan',
-            'families.spouse.date_of_birth' => 'tanggal lahir pasangan',
-            'families.spouse.education' => 'pendidikan terakhir pasangan',
-            'families.spouse.work' => 'pekerjaan pasangan',
-            'families.spouse.phone_number' => 'nomor telepon pasangan',
-
-            // Anak
-            'families.children' => 'data anak',
-            'families.children.*.name' => 'nama anak',
-            'families.children.*.gender' => 'jenis kelamin anak',
-            'families.children.*.place_of_birth' => 'tempat lahir anak',
-            'families.children.*.date_of_birth' => 'tanggal lahir anak',
-            'families.children.*.education' => 'pendidikan anak',
-            'families.children.*.work' => 'pekerjaan anak',
-            'families.children.*.phone_number' => 'nomor telepon anak',
-
-            // Mertua
-            'families.father_in_law.name' => 'nama lengkap ayah mertua',
-            'families.father_in_law.place_of_birth' => 'tempat lahir ayah mertua',
-            'families.father_in_law.date_of_birth' => 'tanggal lahir ayah mertua',
-            'families.father_in_law.education' => 'pendidikan ayah mertua',
-            'families.father_in_law.work' => 'pekerjaan ayah mertua',
-            'families.father_in_law.phone_number' => 'nomor telepon ayah mertua',
-
-            'families.mother_in_law.name' => 'nama lengkap ibu mertua',
-            'families.mother_in_law.place_of_birth' => 'tempat lahir ibu mertua',
-            'families.mother_in_law.date_of_birth' => 'tanggal lahir ibu mertua',
-            'families.mother_in_law.education' => 'pendidikan ibu mertua',
-            'families.mother_in_law.work' => 'pekerjaan ibu mertua',
-            'families.mother_in_law.phone_number' => 'nomor telepon ibu mertua',
-        ];
-    }
-
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
-            // Ayah Kandung
-            'families.father.name.required' => 'Nama lengkap ayah kandung wajib diisi.',
-            'families.father.status.required' => 'Status kondisi ayah kandung wajib dipilih.',
-            'families.father.status.in' => 'Pilihan status ayah tidak valid.',
-            'families.father.place_of_birth.required' => 'Tempat lahir ayah kandung wajib diisi.',
             'families.father.date_of_birth.required' => 'Tanggal lahir ayah kandung wajib diisi.',
-            'families.father.date_of_birth.date' => 'Format tanggal lahir ayah tidak valid.',
-            'families.father.date_of_birth.before' => 'Tanggal lahir ayah harus sebelum hari ini.',
-            'families.father.education.required' => 'Pendidikan terakhir ayah kandung wajib dipilih.',
-            'families.father.work.string' => 'Pekerjaan ayah harus berupa teks.',
-            'families.father.phone_number.string' => 'Format nomor telepon ayah tidak valid.',
-
-            // Ibu Kandung
-            'families.mother.name.required' => 'Nama lengkap ibu kandung wajib diisi.',
-            'families.mother.status.required' => 'Status kondisi ibu kandung wajib dipilih.',
-            'families.mother.status.in' => 'Pilihan status ibu tidak valid.',
-            'families.mother.place_of_birth.required' => 'Tempat lahir ibu kandung wajib diisi.',
             'families.mother.date_of_birth.required' => 'Tanggal lahir ibu kandung wajib diisi.',
-            'families.mother.date_of_birth.date' => 'Format tanggal lahir ibu tidak valid.',
-            'families.mother.date_of_birth.before' => 'Tanggal lahir ibu harus sebelum hari ini.',
-            'families.mother.education.required' => 'Pendidikan terakhir ibu kandung wajib dipilih.',
-            'families.mother.work.string' => 'Pekerjaan ibu harus berupa teks.',
-            'families.mother.phone_number.string' => 'Format nomor telepon ibu tidak valid.',
-
-            // Saudara Kandung
-            'families.siblings.*.name.required' => 'Nama lengkap saudara kandung wajib diisi.',
-            'families.siblings.*.gender.required' => 'Jenis kelamin saudara kandung wajib dipilih.',
-            'families.siblings.*.place_of_birth.required' => 'Tempat lahir saudara kandung wajib diisi.',
-            'families.siblings.*.date_of_birth.required' => 'Tanggal lahir saudara kandung wajib diisi.',
-            'families.siblings.*.date_of_birth.date' => 'Format tanggal lahir saudara kandung tidak valid.',
-            'families.siblings.*.date_of_birth.before' => 'Tanggal lahir saudara kandung harus sebelum hari ini.',
-            'families.siblings.*.education.required' => 'Pendidikan terakhir saudara kandung wajib dipilih.',
-            'families.siblings.*.work.required' => 'Pekerjaan saudara kandung wajib diisi.',
-            'families.siblings.*.phone_number.required' => 'Nomor telepon saudara kandung wajib diisi.',
-            'families.siblings.*.phone_number.numeric' => 'Nomor telepon saudara kandung harus berupa angka.',
-            'families.siblings.*.phone_number.digits_between' => 'Nomor telepon saudara kandung harus antara 1 sampai 15 digit.',
-
-            // Pasangan
-            'families.spouse.name.required' => 'Nama lengkap pasangan wajib diisi.',
-            'families.spouse.place_of_birth.required' => 'Tempat lahir pasangan wajib diisi.',
-            'families.spouse.date_of_birth.required' => 'Tanggal lahir pasangan wajib diisi.',
-            'families.spouse.date_of_birth.date' => 'Format tanggal lahir pasangan tidak valid.',
-            'families.spouse.date_of_birth.before' => 'Tanggal lahir pasangan harus sebelum hari ini.',
-            'families.spouse.education.required' => 'Pendidikan terakhir pasangan wajib dipilih.',
-            'families.spouse.work.required' => 'Pekerjaan pasangan wajib diisi.',
-            'families.spouse.phone_number.required' => 'Nomor telepon pasangan wajib diisi.',
-            'families.spouse.phone_number.numeric' => 'Nomor telepon pasangan harus berupa angka.',
-            'families.spouse.phone_number.digits_between' => 'Nomor telepon pasangan harus antara 10 sampai 15 digit.',
-
-            // Anak
-            'families.children.max' => 'Maksimal data anak yang dapat dimasukkan adalah :max anak.',
-            'families.children.*.name.required' => 'Nama anak wajib diisi.',
-            'families.children.*.place_of_birth.required' => 'Tempat lahir anak wajib diisi.',
-            'families.children.*.date_of_birth.required' => 'Tanggal lahir anak wajib diisi.',
-            'families.children.*.date_of_birth.date' => 'Format tanggal lahir anak tidak valid.',
-            'families.children.*.date_of_birth.before' => 'Tanggal lahir anak harus sebelum hari ini.',
-            'families.children.*.education.required' => 'Pendidikan anak wajib dipilih.',
-            'families.children.*.work.required' => 'Pekerjaan / status anak wajib diisi.',
-            'families.children.*.phone_number.required' => 'Nomor telepon anak wajib diisi (isi 0 jika belum ada).',
-            'families.children.*.phone_number.numeric' => 'Nomor telepon anak harus berupa angka.',
-            'families.children.*.phone_number.digits_between' => 'Nomor telepon anak harus antara 1 sampai 15 digit.',
-
-            // Mertua
-            'families.father_in_law.date_of_birth.before' => 'Tanggal lahir ayah mertua harus sebelum hari ini.',
-            'families.mother_in_law.date_of_birth.before' => 'Tanggal lahir ibu mertua harus sebelum hari ini.',
 
             // Fallback generic
             'required' => ':attribute wajib diisi.',
@@ -281,7 +160,51 @@ class StoreApplicantFamilyRequest extends FormRequest
             'digits_between' => ':attribute harus berisi antara :min sampai :max digit.',
             'in' => 'Pilihan :attribute tidak valid.',
             'array' => ':attribute harus berupa format array.',
-            'max' => ':attribute tidak boleh melebihi :max data.',
+            'max' => ':attribute tidak boleh lebih dari :max karakter.',
+            'families.children.max' => ':attribute tidak boleh lebih dari :max data.',
         ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        $labels = [
+            'name' => 'nama lengkap',
+            'status' => 'kondisi/status',
+            'place_of_birth' => 'tempat lahir',
+            'date_of_birth' => 'tanggal lahir',
+            'education' => 'pendidikan terakhir',
+            'work' => 'pekerjaan',
+            'phone_number' => 'nomor telepon',
+            'gender' => 'jenis kelamin',
+            'relationship' => 'hubungan keluarga',
+            'family_type' => 'tipe keluarga',
+        ];
+
+        $members = [
+            'father' => 'ayah',
+            'mother' => 'ibu',
+            'spouse' => 'pasangan',
+            'siblings.*' => 'saudara kandung ke-:position',
+            'children.*' => 'anak ke-:position',
+        ];
+
+        $attributes = [
+            'families.siblings' => 'data saudara kandung',
+            'families.children' => 'data anak',
+            'redirect_step' => 'langkah tujuan',
+        ];
+
+        foreach ($members as $member => $memberLabel) {
+            foreach ($labels as $field => $label) {
+                $attributes["families.{$member}.{$field}"] = "{$label} {$memberLabel}";
+            }
+        }
+
+        return $attributes;
     }
 }

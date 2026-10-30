@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Applicant;
 
+use App\Http\Requests\Concerns\UppercasesInput;
 use App\Models\Applicant;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -9,6 +10,8 @@ use Illuminate\Validation\Rule;
 
 class UpdateApplicantRequest extends FormRequest
 {
+    use UppercasesInput;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,6 +25,17 @@ class UpdateApplicantRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $this->uppercaseInput([
+            'name',
+            'address_ktp',
+            'address_domisili',
+            'place_of_birth',
+            'medical_history',
+            'emergency_contact_name',
+            'facility_expectation',
+            'reference_by',
+        ]);
+
         $merge = [];
 
         $uppercaseFields = [
