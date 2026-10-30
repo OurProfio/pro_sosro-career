@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Applicant;
+use App\Models\ApplicantEducation;
 use App\Models\ApplicantFamily;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -103,9 +104,22 @@ it('renders print view with gender and family correctly', function () {
         'work' => 'Guru',
     ]);
 
+    ApplicantEducation::create([
+        'applicant_id' => $this->applicant->id,
+        'institution_name' => 'Universitas Indonesia',
+        'city' => 'Depok',
+        'degree_level' => 'S1',
+        'major' => 'Ilmu Komputer',
+        'gpa' => 3.75,
+        'entry_year' => 2018,
+        'graduation_year' => 2022,
+    ]);
+
     $this->actingAs($this->user)
         ->get(route('biodata.print'))
         ->assertOk()
         ->assertSee('FORMULIR BIODATA CALON KARYAWAN')
-        ->assertSee('KAKAK PEREMPUAN');
+        ->assertSee('KAKAK PEREMPUAN')
+        ->assertSee('UNIVERSITAS INDONESIA')
+        ->assertSee('DEPOK');
 });

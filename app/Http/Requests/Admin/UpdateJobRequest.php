@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Job;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateJobRequest extends FormRequest
 {
@@ -42,7 +44,7 @@ class UpdateJobRequest extends FormRequest
             'category' => ['required', 'string', 'max:255'],
             'occupation' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', Rule::in(Job::CITIES)],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
             'closing_date' => ['required', 'date'],

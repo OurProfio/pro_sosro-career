@@ -27,6 +27,7 @@ class HrisTransferService
             'educations',
             'workExperiences',
             'trainings',
+            'expectation',
         ]);
 
         $applicantId = $this->generateApplicantId($applicant);
@@ -70,9 +71,7 @@ class HrisTransferService
      */
     protected function syncPersonalData(Applicant $applicant, string $applicantId, array $extraData): ThrmAppPersonalData
     {
-        $nameParts = explode(' ', trim($applicant->name ?? ''), 2);
-        $firstName = $nameParts[0] ?? '';
-        $lastName = $nameParts[1] ?? '';
+        $name = $this->splitName($applicant->name ?? '');
 
         $genderVal = match (strtolower((string) $applicant->gender)) {
             'l' => 1,
@@ -83,22 +82,33 @@ class HrisTransferService
         return ThrmAppPersonalData::updateOrCreate(
             ['APPLICANT_ID' => $applicantId],
             [
-                'FIRST_NAME' => $firstName,
-                'LAST_NAME' => $lastName,
+                'FIRST_NAME' => $name['first'],
+                'MIDDLE_NAME' => $name['middle'],
+                'LAST_NAME' => $name['last'],
                 'GENDER' => $genderVal,
                 'RELIGION_ID' => $applicant->religion,
                 'BIRTH_PLACE' => $applicant->place_of_birth,
                 'DATE_OF_BIRTH' => $applicant->date_of_birth ? date('Y-m-d H:i:s', strtotime($applicant->date_of_birth)) : null,
                 'MARITAL_STATUS' => $this->mapMaritalStatus($applicant->marital_status),
                 'ADDRESS1' => $applicant->address_ktp,
+                'ZIPCODE1' => $applicant->postal_code_ktp,
+                'COUNTRY1' => 'INDONESIA',
                 'ADDRESS2' => $applicant->address_domisili,
+                'ZIPCODE2' => $applicant->postal_code_domisili,
+                'COUNTRY2' => 'INDONESIA',
                 'NRIC' => $applicant->nik,
                 'PHONE' => $applicant->phone_number,
                 'MOBILE_PHONE' => $applicant->phone_number,
                 'EMAIL' => $applicant->email ?? $applicant->user?->email,
                 'HEIGHT' => (string) ($applicant->height ?? ''),
                 'WEIGHT' => (string) ($applicant->weight ?? ''),
+                'BLOOD_TYPE' => $applicant->blood_type,
                 'MEDICAL_AWARE' => $applicant->medical_history,
+                'EMERGENCY_CONTACT_NAME' => $applicant->emergency_contact_name,
+                'EMERGENCY_CONTACT_RELATIONSHIP' => $applicant->emergency_contact_relationship,
+                'EMERGENCY_CONTACT_PHONE' => $applicant->emergency_contact_phone,
+                'EXPECTED_SALARY' => $applicant->expectation?->salary_expectation,
+                'REFERRAL_NAME' => $applicant->expectation?->reference_by,
                 'STATUSAPP' => 'ACCEPTED',
                 'IS_ACTIVE' => '1',
                 'CREATEDBY' => auth()->user()?->email ?? 'SYSTEM',
@@ -118,13 +128,14 @@ class HrisTransferService
             ThrmAppFamily::create([
                 'APPLICANT_ID' => $applicantId,
                 'APPFAMILY_NAME' => $family->name,
+                'APPFAMILY_GENDER' => $family->gender,
                 'APPFAMILY_BIRTHPLACE' => $family->place_of_birth,
                 'APPFAMILY_DOB' => $family->date_of_birth ? date('Y-m-d H:i:s', strtotime($family->date_of_birth)) : null,
                 'APPFAMILY_LASTEDUCATION' => $family->education,
                 'APPFAMILY_PHONE' => $family->phone_number,
                 'APPFAMILY_OCCUPATION' => $family->work,
                 'APPFAMILY_RELATIONSHIP2' => $family->relationship,
-                'ALIVE_STATUS' => 1,
+                'ALIVE_STATUS' => $family->status === 'deceased' ? 0 : 1,
             ]);
         }
     }
@@ -140,6 +151,8 @@ class HrisTransferService
             ThrmAppEducation::create([
                 'APPLICANT_ID' => $applicantId,
                 'EDU_NAME' => $education->institution_name,
+                'CITY' => $education->city,
+                'COUNTRY' => 'INDONESIA',
                 'MAJOR' => $education->major,
                 'GPA' => $education->gpa ? (float) $education->gpa : null,
                 'START_YEAR' => $education->entry_year ? (int) $education->entry_year : null,
@@ -166,6 +179,8 @@ class HrisTransferService
             ThrmAppJobExp::create([
                 'APPLICANT_ID' => $applicantId,
                 'COMPANY_NAME' => $work->company_name,
+                'COMPANY_ADDR' => $work->company_address,
+                'COMPANY_PHONE' => $work->company_phone,
                 'JOB_POSITION' => $work->position,
                 'LAST_SALARY' => $work->salary ? (float) $work->salary : null,
                 'START_YEAR' => $startYear,
@@ -175,6 +190,8 @@ class HrisTransferService
                 'FACILITIES' => $work->facility,
                 'TERMINATION_REASON' => $work->reason_for_leaving,
                 'SUPERIOR_NAME' => $work->reference_name,
+                'SUPERIOR_POSITION' => $work->reference_position,
+                'PHONE' => $work->reference_phone,
             ]);
         }
     }
@@ -227,5 +244,50 @@ class HrisTransferService
             'widowed' => 4,
             default => null,
         };
+    }
+
+    /**
+     * Split full name into FIRST_NAME, MIDDLE_NAME, and LAST_NAME according to standard conventions.
+     *
+     * @return array{first: string, middle: ?string, last: ?string}
+     */
+    public function splitName(string $fullName): array
+    {
+        $parts = preg_split('/\s+/', trim($fullName), -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        $count = count($parts);
+
+        if ($count === 0) {
+            return [
+                'first' => '',
+                'middle' => null,
+                'last' => null,
+            ];
+        }
+
+        if ($count === 1) {
+            return [
+                'first' => $parts[0],
+                'middle' => null,
+                'last' => null,
+            ];
+        }
+
+        if ($count === 2) {
+            return [
+                'first' => $parts[0],
+                'middle' => null,
+                'last' => $parts[1],
+            ];
+        }
+
+        $first = array_shift($parts);
+        $last = array_pop($parts);
+        $middle = implode(' ', $parts);
+
+        return [
+            'first' => $first,
+            'middle' => $middle ?: null,
+            'last' => $last,
+        ];
     }
 }

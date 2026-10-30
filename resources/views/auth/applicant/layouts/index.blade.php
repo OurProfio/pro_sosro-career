@@ -15,6 +15,16 @@
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 
     @include('auth.applicant.layouts.components.style')
+
+    @if (request()->routeIs('biodata.*'))
+        <style>
+            /* Otomatis teks huruf kapital (uppercase) untuk input teks formulir biodata */
+            input[type="text"]:not([data-no-uppercase]):not([name="email"]):not([name="instagram"]):not([name="linkedin"]):not([name*="phone"]):not([name*="nik"]):not([name*="postal"]):not([name*="code"]):not([name*="date"]):not([name*="gpa"]):not([name*="year"]),
+            textarea:not([data-no-uppercase]) {
+                text-transform: uppercase;
+            }
+        </style>
+    @endif
 </head>
 
 <body>
@@ -33,6 +43,39 @@
         document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();
         });
+
+        @if (request()->routeIs('biodata.*'))
+            document.addEventListener('input', function(e) {
+                const el = e.target;
+                if (!el || !['INPUT', 'TEXTAREA'].includes(el.tagName)) return;
+                if (el.tagName === 'INPUT' && el.type !== 'text') return;
+                if (el.dataset.noUppercase !== undefined) return;
+                const name = (el.name || '').toLowerCase();
+                if (
+                    name.includes('email') ||
+                    name.includes('instagram') ||
+                    name.includes('linkedin') ||
+                    name.includes('phone') ||
+                    name.includes('nik') ||
+                    name.includes('postal') ||
+                    name.includes('code') ||
+                    name.includes('date') ||
+                    name.includes('gpa') ||
+                    name.includes('year')
+                ) {
+                    return;
+                }
+                const start = el.selectionStart;
+                const end = el.selectionEnd;
+                const upper = el.value.toUpperCase();
+                if (el.value !== upper) {
+                    el.value = upper;
+                    if (start !== null && end !== null) {
+                        el.setSelectionRange(start, end);
+                    }
+                }
+            });
+        @endif
     </script>
 </body>
 

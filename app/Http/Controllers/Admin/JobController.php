@@ -22,17 +22,31 @@ class JobController extends Controller
             ->whereDate('closing_date', '<', today())
             ->update(['status' => 'nonaktif']);
 
-        $jobs = Job::with('office')->withCount('applications')->latest()->get();
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
 
-        if (auth()->user()->admin->role === 'superadmin') {
+        $jobsQuery = Job::with('office')->withCount('applications')->latest();
+
+        if (! $isSuperAdmin) {
+            $jobsQuery->where('office_id', $admin?->office_id);
+        }
+
+        $jobs = $jobsQuery->get();
+
+        if ($isSuperAdmin) {
             $offices = Office::orderBy('name')->get();
+            $assignableOffices = Office::whereHas('admin', fn ($q) => $q->where('is_active', true))
+                ->orderBy('name')
+                ->get();
         } else {
-            $offices = Office::where('id', auth()->user()->admin->office_id)->orderBy('name')->get();
+            $offices = Office::where('id', $admin?->office_id)->orderBy('name')->get();
+            $assignableOffices = Office::where('id', $admin?->office_id)->get();
         }
 
         $divisions = Division::all();
+        $cities = Job::CITIES;
 
-        return view('auth.admin.job.index', compact('jobs', 'offices', 'divisions'));
+        return view('auth.admin.job.index', compact('jobs', 'offices', 'assignableOffices', 'divisions', 'cities'));
     }
 
     /**
@@ -74,6 +88,13 @@ class JobController extends Controller
      */
     public function show(Job $job)
     {
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+
+        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
+            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
+        }
+
         if ($job->status === 'aktif' && $job->closing_date && Carbon::parse($job->closing_date)->isPast() && ! Carbon::parse($job->closing_date)->isToday()) {
             $job->update(['status' => 'nonaktif']);
         }
@@ -90,15 +111,21 @@ class JobController extends Controller
             ->orderBy('step')
             ->get();
 
-        if (auth()->user()->admin->role === 'superadmin') {
+        if ($isSuperAdmin) {
             $offices = Office::orderBy('name')->get();
+            $assignableOffices = Office::whereHas('admin', fn ($q) => $q->where('is_active', true))
+                ->orWhere('id', $job->office_id)
+                ->orderBy('name')
+                ->get();
         } else {
-            $offices = Office::where('id', auth()->user()->admin->office_id)->orderBy('name')->get();
+            $offices = Office::where('id', $admin?->office_id)->orderBy('name')->get();
+            $assignableOffices = Office::where('id', $admin?->office_id)->get();
         }
 
         $divisions = Division::all();
+        $cities = Job::CITIES;
 
-        return view('auth.admin.job.show', compact('job', 'stages', 'offices', 'divisions'));
+        return view('auth.admin.job.show', compact('job', 'stages', 'offices', 'assignableOffices', 'divisions', 'cities'));
     }
 
     /**
@@ -115,9 +142,15 @@ class JobController extends Controller
     public function update(UpdateJobRequest $request, Job $job)
     {
         $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+
+        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
+            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
+        }
+
         $data = $request->validated();
 
-        if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+        if ($admin && ! $isSuperAdmin && $admin->office_id) {
             $data['office_id'] = $admin->office_id;
         }
 
@@ -152,6 +185,13 @@ class JobController extends Controller
      */
     public function destroy(Job $job)
     {
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+
+        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
+            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
+        }
+
         if (in_array($job->status, ['aktif', 'pending'])) {
             $job->update([
                 'status' => 'nonaktif',

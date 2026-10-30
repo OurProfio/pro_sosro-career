@@ -16,6 +16,48 @@ class StoreApplicantEducationRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+
+        if ($this->has('educations') && is_array($this->input('educations'))) {
+            $educations = $this->input('educations');
+            $upperEduFields = ['institution_name', 'city', 'major', 'degree_level'];
+            foreach ($educations as $k => $edu) {
+                if (is_array($edu)) {
+                    foreach ($upperEduFields as $f) {
+                        if (isset($edu[$f]) && is_string($edu[$f])) {
+                            $educations[$k][$f] = mb_strtoupper(trim($edu[$f]), 'UTF-8');
+                        }
+                    }
+                }
+            }
+            $merge['educations'] = $educations;
+        }
+
+        if ($this->has('trainings') && is_array($this->input('trainings'))) {
+            $trainings = $this->input('trainings');
+            $upperTrainFields = ['training_name', 'organizer'];
+            foreach ($trainings as $k => $tr) {
+                if (is_array($tr)) {
+                    foreach ($upperTrainFields as $f) {
+                        if (isset($tr[$f]) && is_string($tr[$f])) {
+                            $trainings[$k][$f] = mb_strtoupper(trim($tr[$f]), 'UTF-8');
+                        }
+                    }
+                }
+            }
+            $merge['trainings'] = $trainings;
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
@@ -38,6 +80,24 @@ class StoreApplicantEducationRequest extends FormRequest
             'trainings.*.organizer' => ['required_with:trainings', 'string', 'max:255'],
             'trainings.*.finished' => ['required_with:trainings', 'date', 'before_or_equal:today'],
             'redirect_step' => ['nullable', 'string', 'in:personal,family,education,workExperience,index'],
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'educations' => 'riwayat pendidikan',
+            'educations.*.institution_name' => 'nama sekolah / universitas',
+            'educations.*.city' => 'kota/kabupaten sekolah',
+            'educations.*.degree_level' => 'jenjang pendidikan',
+            'educations.*.major' => 'jurusan / program studi',
+            'educations.*.gpa' => 'IPK / nilai rata-rata',
+            'educations.*.entry_year' => 'tahun masuk',
+            'educations.*.graduation_year' => 'tahun lulus',
+            'trainings' => 'riwayat pelatihan / kursus',
+            'trainings.*.training_name' => 'nama pelatihan / kursus',
+            'trainings.*.organizer' => 'penyelenggara pelatihan',
+            'trainings.*.finished' => 'tanggal selesai pelatihan',
         ];
     }
 

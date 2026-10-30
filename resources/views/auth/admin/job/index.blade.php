@@ -178,19 +178,26 @@
                     </button>
                 </div>
                 <div class="flex flex-wrap items-center gap-3 self-end md:self-auto text-xs text-slate-500">
-                    <!-- Dropdown Semua Wilayah dari Database (Office) -->
-                    <div class="relative">
-                        <select
-                            x-model="selectedOffice"
-                            @change="applyFilters()"
-                            aria-label="Filter Wilayah"
-                            class="bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full px-3.5 py-2 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]/20 focus:border-[#b91c1c] transition cursor-pointer">
-                            <option value="">Semua Wilayah</option>
-                            @foreach ($offices as $office)
-                                <option value="{{ $office->id }}">{{ $office->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    {{-- Filter Wilayah / Kantor --}}
+                    @if (auth()->user()->admin?->role === 'superadmin')
+                        <div class="relative">
+                            <select
+                                x-model="selectedOffice"
+                                @change="applyFilters()"
+                                aria-label="Filter Wilayah"
+                                class="bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full px-3.5 py-2 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]/20 focus:border-[#b91c1c] transition cursor-pointer">
+                                <option value="">Semua Wilayah</option>
+                                @foreach ($offices as $office)
+                                    <option value="{{ $office->id }}">{{ $office->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @else
+                        <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 border border-rose-200/80 rounded-full text-xs font-semibold text-[#b91c1c]">
+                            <span class="material-symbols-outlined text-[16px]">location_on</span>
+                            <span>{{ auth()->user()->admin?->office?->name ?? 'Kantor Cabang' }}</span>
+                        </div>
+                    @endif
 
                     <!-- Dropdown Urutkan -->
                     <div class="flex items-center gap-1.5">
@@ -430,16 +437,29 @@
                                             <select name="office_id" id="modal_office_id"
                                                 class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
                                                 required>
-                                                <option value="" disabled {{ old('office_id') ? '' : 'selected' }}>-- Pilih Kantor / Cabang --</option>
-                                                @if (isset($offices))
-                                                    @foreach ($offices as $office)
+                                                @if (isset($assignableOffices) && $assignableOffices->isNotEmpty())
+                                                    <option value="" disabled {{ old('office_id') ? '' : 'selected' }}>-- Pilih Kantor / Cabang --</option>
+                                                    @foreach ($assignableOffices as $office)
                                                         <option value="{{ $office->id }}" {{ old('office_id') == $office->id ? 'selected' : '' }}>
                                                             {{ $office->name }}
                                                         </option>
                                                     @endforeach
+                                                @else
+                                                    <option value="" disabled selected>-- Belum ada kantor dengan admin aktif --</option>
                                                 @endif
                                             </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </div>
                                         </div>
+                                        @if (isset($assignableOffices) && $assignableOffices->isEmpty())
+                                            <p class="text-[11px] text-amber-600 mt-1 flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[14px]">warning</span>
+                                                <span>Harap daftarkan/tugaskan admin pada kantor cabang terlebih dahulu di menu Admin.</span>
+                                            </p>
+                                        @endif
                                     @else
                                         <input type="hidden" name="office_id" value="{{ auth()->user()->admin?->office_id }}">
                                         <div class="relative">
@@ -524,11 +544,27 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_location" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Lokasi Kerja <span class="text-[#A6192E] font-semibold">*</span>
+                                    Kota / Wilayah Penempatan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
-                                <input type="text" name="location" id="modal_location" value="{{ old('location') }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
-                                    placeholder="Contoh: Jakarta Selatan" required>
+                                <div class="relative">
+                                    <select name="location" id="modal_location"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled {{ old('location') ? '' : 'selected' }}>-- Pilih Kota / Wilayah Penempatan --</option>
+                                        @if (isset($cities))
+                                            @foreach ($cities as $city)
+                                                <option value="{{ $city }}" {{ old('location') == $city ? 'selected' : '' }}>
+                                                    {{ $city }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
                                 @error('location')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror

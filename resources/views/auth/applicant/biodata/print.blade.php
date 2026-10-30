@@ -295,7 +295,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <table style="width:692px;margin-left:-18px"><tr><th style="width:10%">Jenjang<th style="width:32%">Nama Sekolah<th style="width:9%">Kota<th style="width:6%">Th.<br>Masuk<th style="width:6%">Th.<br>Lulus<th style="width:18%">Fakultas / Jurusan<th style="width:19%">Keterangan / IPK</tr>
 @for ($i = 0; $i < 4; $i++)
 @php $edu = $applicant->educations->get($i); @endphp
-<tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell('') . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
+<tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell($edu?->city) . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
 @endfor
 </table>
 <div style="margin:14px 0 3px 6px"><b>2. RIWAYAT PENDIDIKAN INFORMAL (TRAINING / KURSUS)</b></div>

@@ -23,6 +23,23 @@ class StoreApplicantRequest extends FormRequest
     {
         $merge = [];
 
+        $uppercaseFields = [
+            'name',
+            'place_of_birth',
+            'address_ktp',
+            'address_domisili',
+            'emergency_contact_name',
+            'facility_expectation',
+            'reference_by',
+            'medical_history',
+        ];
+
+        foreach ($uppercaseFields as $field) {
+            if ($this->has($field) && is_string($this->input($field))) {
+                $merge[$field] = mb_strtoupper(trim($this->input($field)), 'UTF-8');
+            }
+        }
+
         if ($this->has('salary_expectation') && is_string($this->input('salary_expectation'))) {
             $cleanedSalary = preg_replace('/[^0-9]/', '', $this->input('salary_expectation'));
             $merge['salary_expectation'] = $cleanedSalary !== '' ? (int) $cleanedSalary : null;
@@ -79,8 +96,8 @@ class StoreApplicantRequest extends FormRequest
             'gender' => ['required', 'in:l,p'],
             'place_of_birth' => ['required', 'string', 'max:255'],
             'date_of_birth' => ['required', 'date', 'before_or_equal:'.now()->subYears(15)->format('Y-m-d')],
-            'height' => ['required', 'integer', 'min:150', 'max:250'],
-            'weight' => ['required', 'integer', 'min:40', 'max:250'],
+            'height' => ['required', 'integer', 'min:100', 'max:250'],
+            'weight' => ['required', 'integer', 'min:30', 'max:250'],
             'blood_type' => ['required', 'in:A,B,AB,O'],
             'phone_number' => ['required', 'string', 'between:10,15'],
             'religion' => ['required', 'string', 'exists:treligion,RELIGION_ID'],
@@ -108,6 +125,46 @@ class StoreApplicantRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'name' => 'nama lengkap',
+            'email' => 'alamat email',
+            'nik' => 'NIK',
+            'address_ktp' => 'alamat sesuai KTP',
+            'postal_code_ktp' => 'kode pos KTP',
+            'address_domisili' => 'alamat domisili',
+            'postal_code_domisili' => 'kode pos domisili',
+            'gender' => 'jenis kelamin',
+            'place_of_birth' => 'tempat lahir',
+            'date_of_birth' => 'tanggal lahir',
+            'height' => 'tinggi badan',
+            'weight' => 'berat badan',
+            'blood_type' => 'golongan darah',
+            'phone_number' => 'nomor telepon / WhatsApp',
+            'religion' => 'agama',
+            'medical_history' => 'riwayat penyakit',
+            'is_smoker' => 'status perokok',
+            'has_tattoo' => 'status bertato',
+            'marital_status' => 'status pernikahan',
+            'marital_date' => 'tahun pernikahan',
+            'emergency_contact_name' => 'nama kontak darurat',
+            'emergency_contact_relationship' => 'hubungan kontak darurat',
+            'emergency_contact_phone' => 'nomor telepon kontak darurat',
+            'instagram' => 'akun Instagram',
+            'linkedin' => 'akun LinkedIn',
+            'driver_licenses' => 'kepemilikan SIM',
+            'division_preferences' => 'minat divisi',
+            'salary_expectation' => 'ekspektasi gaji',
+            'facility_expectation' => 'ekspektasi fasilitas',
+            'ready_to_relocate' => 'kesiapan relokasi',
+            'ready_to_travel' => 'kesiapan perjalanan dinas',
+            'job_source' => 'sumber informasi lowongan',
+            'reference_by' => 'nama karyawan referensi',
+            'photo' => 'pas foto',
+        ];
+    }
+
     public function messages(): array
     {
         return [
@@ -124,8 +181,10 @@ class StoreApplicantRequest extends FormRequest
             'nik.unique' => 'NIK ini sudah terdaftar oleh pelamar lain.',
             'address_ktp.required' => 'Alamat sesuai KTP wajib diisi.',
             'address_ktp.string' => 'Alamat sesuai KTP harus berupa teks.',
+            'postal_code_ktp.max' => 'Kode pos KTP maksimal 10 karakter.',
             'address_domisili.required' => 'Alamat domisili wajib diisi.',
             'address_domisili.string' => 'Alamat domisili harus berupa teks.',
+            'postal_code_domisili.max' => 'Kode pos domisili maksimal 10 karakter.',
             'gender.required' => 'Jenis kelamin wajib diisi.',
             'gender.in' => 'Pilihan jenis kelamin tidak valid.',
             'place_of_birth.required' => 'Tempat lahir wajib diisi.',
@@ -134,7 +193,6 @@ class StoreApplicantRequest extends FormRequest
             'date_of_birth.required' => 'Tanggal lahir wajib diisi.',
             'date_of_birth.date' => 'Format tanggal lahir tidak valid.',
             'date_of_birth.before_or_equal' => 'Usia pelamar minimal harus 15 tahun.',
-            'date_of_birth.before' => 'Tanggal lahir harus sebelum hari ini.',
             'date_of_birth.before' => 'Tanggal lahir harus sebelum hari ini.',
             'height.required' => 'Tinggi badan wajib diisi.',
             'height.integer' => 'Tinggi badan harus berupa angka bulat.',
@@ -151,13 +209,17 @@ class StoreApplicantRequest extends FormRequest
             'phone_number.between' => 'Nomor telepon harus memiliki panjang 10 hingga 15 digit.',
             'religion.required' => 'Agama wajib diisi.',
             'religion.string' => 'Format agama tidak valid.',
-            'religion.in' => 'Pilihan agama tidak valid.',
+            'religion.exists' => 'Pilihan agama tidak valid atau tidak terdaftar.',
             'medical_history.string' => 'Riwayat penyakit harus berupa teks.',
             'is_smoker.required' => 'Status perokok wajib diisi.',
             'is_smoker.in' => 'Pilihan status perokok tidak valid.',
             'has_tattoo.required' => 'Status bertato wajib diisi.',
             'has_tattoo.in' => 'Pilihan status bertato tidak valid.',
             'marital_status.required' => 'Status pernikahan wajib diisi.',
+            'marital_status.in' => 'Pilihan status pernikahan tidak valid.',
+            'marital_date.digits' => 'Tahun pernikahan harus terdiri dari 4 digit angka.',
+            'marital_date.min' => 'Tahun pernikahan tidak valid (minimal tahun 1950).',
+            'marital_date.max' => 'Tahun pernikahan tidak boleh melebihi tahun saat ini.',
             'marital_status.in' => 'Pilihan status pernikahan tidak valid.',
             'instagram.url' => 'Format URL Instagram tidak valid (gunakan format http:// atau https://).',
             'linkedin.url' => 'Format URL LinkedIn tidak valid (gunakan format http:// atau https://).',
@@ -182,6 +244,7 @@ class StoreApplicantRequest extends FormRequest
             'job_source.in' => 'Pilihan sumber informasi lowongan tidak valid.',
             'reference_by.required_if' => 'Nama lengkap karyawan pemberi referensi wajib diisi jika memilih Referral.',
             'reference_by.max' => 'Nama referensi maksimal 255 karakter.',
+            'photo.required' => 'Pas foto wajib diunggah.',
             'photo.image' => 'Berkas yang diunggah harus berupa gambar.',
             'photo.mimes' => 'Format pas foto harus berupa JPEG, PNG, atau JPG.',
             'photo.max' => 'Ukuran pas foto tidak boleh melebihi 2MB.',

@@ -704,14 +704,19 @@
                                                 class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('office_id') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
                                                 required>
                                                 <option value="" disabled>-- Pilih Kantor / Cabang --</option>
-                                                @if (isset($offices))
-                                                    @foreach ($offices as $office)
+                                                @if (isset($assignableOffices))
+                                                    @foreach ($assignableOffices as $office)
                                                         <option value="{{ $office->id }}" {{ old('office_id', $job->office_id) == $office->id ? 'selected' : '' }}>
                                                             {{ $office->name ?? $office->title }}
                                                         </option>
                                                     @endforeach
                                                 @endif
                                             </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </div>
                                         </div>
                                     @else
                                         <input type="hidden" name="office_id" value="{{ $job->office_id ?? auth()->user()->admin?->office_id }}">
@@ -797,11 +802,27 @@
 
                             <div class="space-y-1.5">
                                 <label for="modal_edit_location" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Lokasi Kerja <span class="text-[#A6192E] font-semibold">*</span>
+                                    Kota / Wilayah Penempatan <span class="text-[#A6192E] font-semibold">*</span>
                                 </label>
-                                <input type="text" name="location" id="modal_edit_location" value="{{ old('location', $job->location) }}"
-                                    class="w-full px-4 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
-                                    placeholder="Contoh: Jakarta Selatan" required>
+                                <div class="relative">
+                                    <select name="location" id="modal_edit_location"
+                                        class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                        required>
+                                        <option value="" disabled>-- Pilih Kota / Wilayah Penempatan --</option>
+                                        @if (isset($cities))
+                                            @foreach ($cities as $city)
+                                                <option value="{{ $city }}" {{ old('location', $job->location) == $city ? 'selected' : '' }}>
+                                                    {{ $city }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </div>
                                 @error('location')
                                     <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                 @enderror

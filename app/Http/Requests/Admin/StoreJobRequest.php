@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Models\Job;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreJobRequest extends FormRequest
 {
@@ -37,12 +39,16 @@ class StoreJobRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'office_id' => ['required', 'exists:offices,id'],
+            'office_id' => [
+                'required',
+                'exists:offices,id',
+                Rule::exists('admins', 'office_id')->where('is_active', true),
+            ],
             'title' => ['required', 'string', 'max:255'],
             'category' => ['required', 'in:profesional,management_trainee,internship,magang'],
             'occupation' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', Rule::in(Job::CITIES)],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
             'closing_date' => ['required', 'date', 'after_or_equal:today'],
@@ -52,8 +58,8 @@ class StoreJobRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'office_id.required' => 'Kantor/Cabang penempatan wajib dipilih.',
-            'office_id.exists' => 'Kantor/Cabang yang dipilih tidak valid.',
+            'office_id.required' => 'Kantor / Cabang penempatan wajib dipilih.',
+            'office_id.exists' => 'Kantor yang dipilih belum memiliki admin aktif atau tidak valid.',
             'title.required' => 'Judul lowongan wajib diisi.',
             'title.string' => 'Judul lowongan harus berupa teks.',
             'title.max' => 'Judul lowongan tidak boleh lebih dari 255 karakter.',
@@ -65,9 +71,8 @@ class StoreJobRequest extends FormRequest
             'type.required' => 'Tipe pekerjaan wajib diisi.',
             'type.string' => 'Tipe pekerjaan harus berupa teks.',
             'type.max' => 'Tipe pekerjaan tidak boleh lebih dari 255 karakter.',
-            'location.required' => 'Lokasi kerja wajib diisi.',
-            'location.string' => 'Lokasi kerja harus berupa teks.',
-            'location.max' => 'Lokasi kerja tidak boleh lebih dari 255 karakter.',
+            'location.required' => 'Kota / Wilayah penempatan wajib dipilih.',
+            'location.in' => 'Kota / Wilayah yang dipilih tidak valid.',
             'description.required' => 'Deskripsi pekerjaan wajib diisi.',
             'description.string' => 'Deskripsi pekerjaan harus berupa teks.',
             'qualification.required' => 'Kualifikasi pelamar wajib diisi.',

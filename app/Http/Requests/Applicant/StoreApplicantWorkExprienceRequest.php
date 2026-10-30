@@ -20,15 +20,40 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $merge = [];
+
+        if ($this->has('previous_applied_position') && is_string($this->input('previous_applied_position'))) {
+            $merge['previous_applied_position'] = mb_strtoupper(trim($this->input('previous_applied_position')), 'UTF-8');
+        }
+
         if ($this->has('experiences') && is_array($this->input('experiences'))) {
             $experiences = $this->input('experiences');
+            $upperFields = [
+                'company_name',
+                'company_address',
+                'position',
+                'division',
+                'facility',
+                'reason_for_leaving',
+                'reference_name',
+                'reference_position',
+            ];
             foreach ($experiences as $key => $exp) {
                 if (isset($exp['salary']) && is_string($exp['salary'])) {
                     $cleaned = preg_replace('/[^0-9]/', '', $exp['salary']);
                     $experiences[$key]['salary'] = $cleaned !== '' ? (int) $cleaned : null;
                 }
+                foreach ($upperFields as $f) {
+                    if (isset($exp[$f]) && is_string($exp[$f])) {
+                        $experiences[$key][$f] = mb_strtoupper(trim($exp[$f]), 'UTF-8');
+                    }
+                }
             }
-            $this->merge(['experiences' => $experiences]);
+            $merge['experiences'] = $experiences;
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
         }
     }
 
@@ -61,11 +86,37 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'has_applied_sosro' => 'riwayat melamar di Sosro',
+            'previous_applied_position' => 'posisi yang pernah dilamar',
+            'previous_applied_year' => 'tahun melamar',
+            'experiences' => 'riwayat pengalaman kerja',
+            'experiences.*.company_name' => 'nama perusahaan',
+            'experiences.*.company_address' => 'alamat perusahaan',
+            'experiences.*.company_phone' => 'nomor telepon perusahaan',
+            'experiences.*.position' => 'jabatan / posisi',
+            'experiences.*.division' => 'divisi / departemen',
+            'experiences.*.salary' => 'gaji terakhir',
+            'experiences.*.start_date' => 'tanggal mulai bekerja',
+            'experiences.*.end_date' => 'tanggal selesai bekerja',
+            'experiences.*.facility' => 'fasilitas / tunjangan',
+            'experiences.*.reason_for_leaving' => 'alasan berhenti',
+            'experiences.*.reference_name' => 'nama referensi atasan',
+            'experiences.*.reference_position' => 'jabatan referensi atasan',
+            'experiences.*.reference_phone' => 'nomor telepon referensi atasan',
+        ];
+    }
+
     public function messages(): array
     {
         return [
             'experiences.*.company_name.string' => 'Nama perusahaan harus berupa teks.',
             'experiences.*.company_name.max' => 'Nama perusahaan maksimal 255 karakter.',
+            'experiences.*.company_address.string' => 'Alamat perusahaan harus berupa teks.',
+            'experiences.*.company_address.max' => 'Alamat perusahaan maksimal 255 karakter.',
+            'experiences.*.company_phone.max' => 'Nomor telepon perusahaan maksimal 20 karakter.',
             'experiences.*.position.string' => 'Jabatan / posisi harus berupa teks.',
             'experiences.*.position.max' => 'Jabatan / posisi maksimal 255 karakter.',
             'experiences.*.division.string' => 'Divisi / departemen harus berupa teks.',
@@ -78,8 +129,11 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.end_date.after_or_equal' => 'Tanggal selesai bekerja harus sama atau setelah tanggal mulai.',
             'experiences.*.facility.string' => 'Fasilitas harus berupa teks.',
             'experiences.*.facility.max' => 'Fasilitas maksimal 255 karakter.',
-            'experiences.*.reference_name.string' => 'Nama & telepon referensi harus berupa teks.',
-            'experiences.*.reference_name.max' => 'Nama & telepon referensi maksimal 255 karakter.',
+            'experiences.*.reference_name.string' => 'Nama referensi atasan harus berupa teks.',
+            'experiences.*.reference_name.max' => 'Nama referensi atasan maksimal 255 karakter.',
+            'experiences.*.reference_position.string' => 'Jabatan referensi atasan harus berupa teks.',
+            'experiences.*.reference_position.max' => 'Jabatan referensi atasan maksimal 255 karakter.',
+            'experiences.*.reference_phone.max' => 'Nomor telepon referensi atasan maksimal 20 karakter.',
             'experiences.*.reason_for_leaving.string' => 'Alasan berhenti harus berupa teks.',
             'experiences.*.reason_for_leaving.max' => 'Alasan berhenti maksimal 255 karakter.',
             'experiences.max' => 'Maksimal riwayat pengalaman kerja yang dapat dimasukkan adalah 3.',

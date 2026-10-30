@@ -14,6 +14,39 @@ class Job extends Model
     /** @use HasFactory<JobFactory> */
     use HasFactory, SoftDeletes;
 
+    public const CITIES = [
+        'Bandar Lampung',
+        'Batam',
+        'Bekasi',
+        'Belitung',
+        'Bengkulu',
+        'Binjai',
+        'Bukit Tinggi',
+        'Cakung',
+        'Cikarang',
+        'Daan Mogot',
+        'Jakarta Barat',
+        'Jakarta Pusat',
+        'Jakarta Utara',
+        'Jambi',
+        'Kelapa Gading',
+        'Kisaran',
+        'Lahat',
+        'Medan',
+        'Padang',
+        'Padang Sidempuan',
+        'Palembang',
+        'Pangkal Pinang',
+        'Parung Panjang',
+        'Pekanbaru',
+        'Pluit',
+        'Rantau Prapat',
+        'Sawangan',
+        'Tangerang',
+        'Tanjung Mulia',
+        'Tanjung Pinang',
+    ];
+
     public function office()
     {
         return $this->belongsTo(Office::class, 'office_id');
