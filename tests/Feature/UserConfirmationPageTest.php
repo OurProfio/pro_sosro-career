@@ -7,9 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-const LOCK_MESSAGE = 'Proses seleksi kandidat ini sudah dilanjutkan oleh tim rekrutmen.';
-
 beforeEach(function () {
+    $this->lockMessage = 'Proses seleksi kandidat ini sudah dilanjutkan oleh tim rekrutmen.';
     $this->stage = Stage::factory()->create(['name' => 'konfirmasi user', 'step' => 4]);
     $this->application = Application::factory()->create([
         'stages_id' => $this->stage->id,
@@ -90,12 +89,12 @@ it('locks the form once the application moved on', function (string $change) {
     };
 
     $this->put(route('user-confirmation.update', 'valid-token'), ['decision' => 'approved'])
-        ->assertSessionHas('error', LOCK_MESSAGE);
+        ->assertSessionHas('error', $this->lockMessage);
 
     expect($this->confirmation->fresh()->decision)->toBe('pending');
 
     $this->get(route('user-confirmation.show', 'valid-token'))
         ->assertOk()
-        ->assertSee(LOCK_MESSAGE)
+        ->assertSee($this->lockMessage)
         ->assertDontSee('name="decision"', false);
 })->with(['stage' => 'stage', 'accepted' => 'accepted', 'rejected' => 'rejected']);

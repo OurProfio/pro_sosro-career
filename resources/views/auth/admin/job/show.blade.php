@@ -564,6 +564,18 @@
                                                 @if ($userConfirmation->note)
                                                     <div class="max-w-[140px] mx-auto truncate text-slate-500" title="{{ $userConfirmation->note }}">{{ $userConfirmation->note }}</div>
                                                 @endif
+                                                @if ($application->status === 'progress' && $application->stage?->isUserConfirmation())
+                                                    <button type="button"
+                                                        class="resend-user-confirmation mt-1 text-[10px] font-semibold text-[#991b1b] hover:underline"
+                                                        data-stage-url="{{ route('application.updateStage', $application) }}"
+                                                        data-stage-id="{{ $application->stages_id }}"
+                                                        data-stage-name="{{ $application->stage->name }}"
+                                                        data-user-email="{{ $userConfirmation->email }}"
+                                                        data-applicant-name="{{ $applicant->name ?? '-' }}"
+                                                        data-applicant-email="{{ $applicant->email ?? '-' }}">
+                                                        Kirim ulang
+                                                    </button>
+                                                @endif
                                             </div>
                                         @endif
                                     </td>
@@ -1085,6 +1097,56 @@
             stageModal.classList.add('flex');
         }
 
+        function openStageDetailModal(trigger, stageId, stageName) {
+            const normalizedStageName = stageName.trim().toLowerCase();
+
+            openStageModal(trigger, 'Data Tahapan Applicant');
+            stageForm.action = trigger.dataset.stageUrl;
+
+            stageIdInput.disabled = false;
+            stageIdInput.value = stageId;
+            statusInput.disabled = true;
+            document.getElementById('modal-stage-wrapper').classList.remove('hidden');
+            document.getElementById('modal-stage-name').value = stageName;
+
+            switch (normalizedStageName.startsWith('interview') ? 'interview' : normalizedStageName) {
+                case 'psikotes':
+                    showFields('fields-psikotes');
+                    break;
+
+                case 'interview':
+                    showFields('fields-interview');
+                    break;
+
+                case 'mcu':
+                    showFields('fields-mcu');
+                    break;
+
+                case 'konfirmasi user':
+                    showFields('fields-konfirmasi-user');
+                    break;
+
+                case 'study case':
+                    showFields('fields-study-case');
+                    break;
+
+                case 'panel bod':
+                    showFields('fields-panel-bod');
+                    break;
+
+                case 'offering':
+                    showFields('fields-offering');
+                    break;
+
+                default:
+                    showFields('fields-none');
+                    break;
+            }
+
+            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
+        }
+
         function closeStageModal() {
             if (activeStageSelect) {
                 activeStageSelect.value = activeStageSelect.dataset.current;
@@ -1150,54 +1212,19 @@
                 }
 
                 // Pilihan stage (format value: stage:123)
-                const rawStageId = this.value.replace('stage:', '');
-                const stageName = this.options[this.selectedIndex].dataset.stageName;
+                openStageDetailModal(
+                    this,
+                    this.value.replace('stage:', ''),
+                    this.options[this.selectedIndex].dataset.stageName
+                );
+            });
+        });
 
-                openStageModal(this, 'Data Tahapan Applicant');
-                stageForm.action = this.dataset.stageUrl;
-
-                stageIdInput.disabled = false;
-                stageIdInput.value = rawStageId;
-                statusInput.disabled = true;
-                document.getElementById('modal-stage-wrapper').classList.remove('hidden');
-                document.getElementById('modal-stage-name').value = stageName;
-
-                switch (stageName.startsWith('interview') ? 'interview' : stageName) {
-                    case 'psikotes':
-                        showFields('fields-psikotes');
-                        break;
-
-                    case 'interview':
-                        showFields('fields-interview');
-                        break;
-
-                    case 'mcu':
-                        showFields('fields-mcu');
-                        break;
-
-                    case 'konfirmasi user':
-                        showFields('fields-konfirmasi-user');
-                        break;
-
-                    case 'study case':
-                        showFields('fields-study-case');
-                        break;
-
-                    case 'panel bod':
-                        showFields('fields-panel-bod');
-                        break;
-
-                    case 'offering':
-                        showFields('fields-offering');
-                        break;
-
-                    default:
-                        showFields('fields-none');
-                        break;
-                }
-
-                toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
-                toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
+        document.querySelectorAll('.resend-user-confirmation').forEach(button => {
+            button.addEventListener('click', function() {
+                activeStageSelect = null;
+                openStageDetailModal(this, this.dataset.stageId, this.dataset.stageName);
+                document.getElementById('user_email').value = this.dataset.userEmail;
             });
         });
 

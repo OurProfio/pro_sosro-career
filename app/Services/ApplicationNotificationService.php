@@ -122,6 +122,8 @@ class ApplicationNotificationService
             ]
         );
 
+        $confirmation->setRelation('application', $application);
+
         $mailable = new UserConfirmationMail($confirmation, route('user-confirmation.show', $token));
 
         try {

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Mail\MailController;
 use App\Mail\UserConfirmationMail;
 use App\Models\Application;
+use App\Models\Stage;
 use App\Models\User;
 use App\Models\UserConfirmation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -53,3 +54,20 @@ it('offers the user confirmation email as a test template', function () {
     Mail::assertSent(UserConfirmationMail::class, fn ($mail) => $mail->hasTo('tester@example.com'));
     expect(UserConfirmation::count())->toBe(0);
 });
+
+it('shows the resend button only while at the user confirmation stage in progress', function (string $stageName, string $status, bool $visible) {
+    $stage = Stage::factory()->create(['name' => $stageName, 'step' => 4]);
+    $application = Application::factory()->create(['stages_id' => $stage->id, 'status' => $status]);
+    UserConfirmation::factory()->for($application)->create();
+
+    $response = $this->actingAs(User::factory()->admin()->create())
+        ->get(route('job.show', $application->job))
+        ->assertOk();
+
+    $visible ? $response->assertSee('Kirim ulang') : $response->assertDontSee('Kirim ulang');
+})->with([
+    'at stage and progress' => ['konfirmasi user', 'progress', true],
+    'other stage' => ['offering', 'progress', false],
+    'accepted' => ['konfirmasi user', 'accepted', false],
+    'rejected' => ['konfirmasi user', 'rejected', false],
+]);
