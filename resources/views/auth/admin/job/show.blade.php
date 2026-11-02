@@ -545,6 +545,27 @@
                                                 <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
                                             </svg>
                                         </div>
+                                        @if ($application->userConfirmation)
+                                            @php
+                                                $userConfirmation = $application->userConfirmation;
+                                                [$userBadgeLabel, $userBadgeClass] = match (true) {
+                                                    $userConfirmation->decision === 'approved' => ['Disetujui user', 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                                                    $userConfirmation->decision === 'rejected' => ['Ditolak user', 'bg-red-50 text-red-700 border-red-200'],
+                                                    $userConfirmation->isExpired() => ['Link kedaluwarsa', 'bg-slate-100 text-slate-600 border-slate-200'],
+                                                    default => ['Menunggu user', 'bg-amber-50 text-amber-700 border-amber-200'],
+                                                };
+                                            @endphp
+                                            <div class="mt-1.5 text-[10px] leading-tight">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border {{ $userBadgeClass }}">{{ $userBadgeLabel }}</span>
+                                                <div class="mt-0.5 text-slate-400">{{ $userConfirmation->email }}</div>
+                                                @if ($userConfirmation->decided_at)
+                                                    <div class="text-slate-400">{{ $userConfirmation->decided_at->format('d M Y H:i') }}</div>
+                                                @endif
+                                                @if ($userConfirmation->note)
+                                                    <div class="max-w-[140px] mx-auto truncate text-slate-500" title="{{ $userConfirmation->note }}">{{ $userConfirmation->note }}</div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </td>
 
                                     <td class="py-3.5 px-3 text-center whitespace-nowrap">

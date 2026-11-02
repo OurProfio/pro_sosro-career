@@ -105,6 +105,7 @@ class JobController extends Controller
             'applications.applicant.educations',
             'applications.applicant.workExperiences',
             'applications.stage',
+            'applications.userConfirmation',
         ]);
 
         $stages = Stage::where('type', $job->category)
