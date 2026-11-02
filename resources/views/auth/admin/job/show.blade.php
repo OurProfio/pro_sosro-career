@@ -1154,6 +1154,10 @@
                         showFields('fields-mcu');
                         break;
 
+                    case 'konfirmasi user':
+                        showFields('fields-konfirmasi-user');
+                        break;
+
                     case 'study case':
                         showFields('fields-study-case');
                         break;

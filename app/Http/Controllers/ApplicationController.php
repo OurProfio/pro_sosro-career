@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreApplicationRequest;
 use App\Http\Requests\UpdateApplicationStageRequest;
 use App\Http\Requests\UpdateApplicationStatusRequest;
+use App\Mail\UserConfirmationMail;
 use App\Models\Application;
 use App\Models\Job;
 use App\Services\ApplicationNotificationService;
@@ -127,7 +128,9 @@ class ApplicationController extends Controller
         $mailable = $notificationService->sendStageNotification($application, $request->validated());
 
         $message = "Stage lamaran berhasil diperbarui ke {$stage->name}.";
-        if ($mailable) {
+        if ($mailable instanceof UserConfirmationMail) {
+            $message .= ' Email konfirmasi telah dikirim ke user.';
+        } elseif ($mailable) {
             $message .= ' Email notifikasi telah dikirim ke applicant.';
         }
 

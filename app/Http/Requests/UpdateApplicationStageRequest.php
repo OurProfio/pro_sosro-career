@@ -33,6 +33,10 @@ class UpdateApplicationStageRequest extends FormRequest
             return $rules;
         }
 
+        if ($stage->isUserConfirmation()) {
+            return $rules + ['user_email' => ['required', 'email', 'max:255']];
+        }
+
         $stageName = strtolower(trim($stage->name));
 
         if (str_starts_with($stageName, 'interview')) {

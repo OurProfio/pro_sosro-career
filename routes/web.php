@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Guest\GuestController;
+use App\Http\Controllers\Guest\UserConfirmationController;
 use App\Http\Controllers\Mail\MailController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +78,11 @@ Route::group(['middleware' => ['auth']], function () {
     });
 
     Route::post('logout', [AuthController::class, 'logout'])->name('auth.logout');
+});
+
+Route::middleware('throttle:10,1')->group(function () {
+    Route::get('konfirmasi-user/{token}', [UserConfirmationController::class, 'show'])->name('user-confirmation.show');
+    Route::put('konfirmasi-user/{token}', [UserConfirmationController::class, 'update'])->name('user-confirmation.update');
 });
 
 // Fitur Sementara: Feedback (Kritik & Saran)
