@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Data Pendidikan & Pelatihan Pelamar')
 
@@ -208,7 +208,7 @@
                                         </label>
                                         <div class="relative">
                                             <input type="text"
-                                                class="combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.institution_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                                                class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.institution_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
                                                 placeholder="Ketik untuk mencari sekolah / universitas..."
                                                 autocomplete="off"
                                                 value="{{ $edu['institution_name'] ?? '' }}"
@@ -241,7 +241,7 @@
                                         <div class="manual-school-input-wrapper space-y-1.5 pt-1 hidden">
                                             <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Sekolah</span>
                                             <input type="text"
-                                                class="manual-school-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                                                class="uppercase placeholder:normal-case manual-school-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
                                                 placeholder="Ketik nama lengkap sekolah / universitas..."
                                                 value="{{ $edu['institution_name'] ?? '' }}"
                                                 oninput="syncManualValue(this, 'school')">
@@ -260,7 +260,7 @@
                                         <input type="text" name="educations[{{ $index }}][city]" required
                                             value="{{ $edu['city'] ?? '' }}"
                                             placeholder="Contoh: Jakarta Selatan, Surabaya, Kab. Slawi"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.city") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.city") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("educations.{$index}.city")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
@@ -273,7 +273,7 @@
                                         </label>
                                         <div class="relative">
                                             <input type="text"
-                                                class="combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.major") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                                                class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.major") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
                                                 placeholder="Ketik untuk mencari jurusan..."
                                                 autocomplete="off"
                                                 value="{{ $edu['major'] ?? '' }}"
@@ -306,7 +306,7 @@
                                         <div class="manual-major-input-wrapper space-y-1.5 pt-1 hidden">
                                             <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Jurusan</span>
                                             <input type="text"
-                                                class="manual-major-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                                                class="uppercase placeholder:normal-case manual-major-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
                                                 placeholder="Ketik nama lengkap jurusan / program studi..."
                                                 value="{{ $edu['major'] ?? '' }}"
                                                 oninput="syncManualValue(this, 'major')">
@@ -466,7 +466,11 @@
                                             </label>
                                             <input type="text" name="trainings[{{ $tIndex }}][organizer]" required
                                                 value="{{ $tr['organizer'] ?? '' }}" placeholder="Contoh: Dicoding Indonesia / BNSP"
+<<<<<<< HEAD
                                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+=======
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+>>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                                             @error("trainings.{$tIndex}.organizer")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -580,7 +584,7 @@
                     </label>
                     <div class="relative">
                         <input type="text"
-                            class="combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                            class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
                             placeholder="Ketik untuk mencari sekolah / universitas..."
                             autocomplete="off"
                             onfocus="openCombobox(this)"
@@ -606,7 +610,7 @@
                     <div class="manual-school-input-wrapper space-y-1.5 pt-1 hidden">
                         <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Sekolah</span>
                         <input type="text"
-                            class="manual-school-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                            class="uppercase placeholder:normal-case manual-school-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
                             placeholder="Ketik nama lengkap sekolah / universitas..."
                             oninput="syncManualValue(this, 'school')">
                     </div>
@@ -619,7 +623,11 @@
                     </label>
                     <input type="text" name="educations[{INDEX}][city]" required
                         placeholder="Contoh: Jakarta Selatan, Surabaya, Kab. Slawi"
+<<<<<<< HEAD
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+=======
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+>>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                 </div>
 
                 <!-- Jurusan Combobox -->
@@ -629,7 +637,7 @@
                     </label>
                     <div class="relative">
                         <input type="text"
-                            class="combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                            class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
                             placeholder="Ketik untuk mencari jurusan..."
                             autocomplete="off"
                             onfocus="openCombobox(this)"
@@ -655,7 +663,7 @@
                     <div class="manual-major-input-wrapper space-y-1.5 pt-1 hidden">
                         <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Jurusan</span>
                         <input type="text"
-                            class="manual-major-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                            class="uppercase placeholder:normal-case manual-major-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
                             placeholder="Ketik nama lengkap jurusan / program studi..."
                             oninput="syncManualValue(this, 'major')">
                     </div>
