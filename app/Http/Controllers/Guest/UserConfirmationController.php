@@ -22,6 +22,32 @@ class UserConfirmationController extends Controller
         ]);
     }
 
+    /**
+     * Tampilkan detail lengkap kandidat untuk user, seperti halaman detail admin.
+     */
+    public function detail(string $token): View
+    {
+        $application = $this->resolveConfirmation($token)->application;
+
+        return view('guest.user-confirmation-detail', [
+            ...$application->applicant->profileViewData($application),
+            'token' => $token,
+        ]);
+    }
+
+    /**
+     * Tampilkan formulir biodata kandidat untuk dicetak oleh user.
+     */
+    public function print(string $token): View
+    {
+        $application = $this->resolveConfirmation($token)->application;
+
+        return view('auth.applicant.biodata.print', [
+            ...$application->applicant->biodataPrintData($application->job),
+            'showJobTitle' => true,
+        ]);
+    }
+
     public function update(UpdateUserConfirmationRequest $request, string $token): RedirectResponse
     {
         $confirmation = $this->resolveConfirmation($token);

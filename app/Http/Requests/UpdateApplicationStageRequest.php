@@ -26,6 +26,7 @@ class UpdateApplicationStageRequest extends FormRequest
                 'required',
                 Rule::exists('stages', 'id')->where('type', $this->route('application')->job->category),
             ],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ];
 
         $stage = $this->selectedStage();

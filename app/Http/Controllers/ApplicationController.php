@@ -121,6 +121,7 @@ class ApplicationController extends Controller
         $application->update([
             'stages_id' => $stage->id,
             'status' => 'progress',
+            ...$request->has('notes') ? ['notes' => $request->validated('notes')] : [],
         ]);
 
         $application->load(['stage', 'applicant', 'job.office']);

@@ -229,3 +229,37 @@ it('releases quota when an application is rejected so applicant can apply to ano
     expect(Application::where('applicant_id', $applicant->id)->count())->toBe(4);
     expect(Application::where('applicant_id', $applicant->id)->where('status', '!=', 'rejected')->count())->toBe(3);
 });
+
+it('stores the HR notes written while moving the stage', function () {
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $this->administrationStage->id,
+            'notes' => 'Lulus interview, komunikasi baik',
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($this->application->fresh()->notes)->toBe('Lulus interview, komunikasi baik');
+});
+
+it('keeps the HR notes when the stage form does not send them', function () {
+    $this->application->update(['notes' => 'Catatan lama']);
+
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $this->administrationStage->id,
+        ])
+        ->assertSessionHasNoErrors();
+
+    expect($this->application->fresh()->notes)->toBe('Catatan lama');
+});
+
+it('rejects HR notes longer than 2000 characters', function () {
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $this->administrationStage->id,
+            'notes' => str_repeat('a', 2001),
+        ])
+        ->assertSessionHasErrors('notes');
+
+    expect($this->application->fresh()->stages_id)->toBeNull();
+});

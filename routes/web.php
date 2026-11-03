@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 Route::middleware('throttle:10,1')->group(function () {
     Route::get('konfirmasi-user/{token}', [UserConfirmationController::class, 'show'])->name('user-confirmation.show');
+    Route::get('konfirmasi-user/{token}/detail', [UserConfirmationController::class, 'detail'])->name('user-confirmation.detail');
+    Route::get('konfirmasi-user/{token}/cetak', [UserConfirmationController::class, 'print'])->name('user-confirmation.print');
     Route::put('konfirmasi-user/{token}', [UserConfirmationController::class, 'update'])->name('user-confirmation.update');
 });
 

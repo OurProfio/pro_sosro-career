@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Applicant;
 use App\Models\Division;
-use App\Models\Stage;
 use Illuminate\Http\Request;
 
 class ApplicantController extends Controller
@@ -48,31 +47,7 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
-        $applicant = $applicant->load([
-            'workExperiences',
-            'educations',
-            'families',
-            'trainings',
-            'expectation',
-            'interest',
-            'applications.job',
-            'applications.stage',
-        ]);
-
-        $interestIds = collect($applicant->interest?->interests ?? [])
-            ->filter(fn ($interest) => is_scalar($interest) && is_numeric($interest))
-            ->map(fn ($interest) => (int) $interest)
-            ->values();
-        $interestNames = Division::query()
-            ->whereIn('id', $interestIds)
-            ->pluck('name', 'id');
-
-        $latestApplication = $applicant->applications->sortByDesc('created_at')->first();
-        $stages = $latestApplication?->job?->category
-            ? Stage::where('type', $latestApplication->job->category)->orderBy('step')->get()
-            : collect();
-
-        return view('auth.admin.applicant.show', compact('applicant', 'interestNames', 'latestApplication', 'stages'));
+        return view('auth.admin.applicant.show', $applicant->profileViewData());
     }
 
     /**

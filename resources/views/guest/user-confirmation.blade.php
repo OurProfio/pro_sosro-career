@@ -66,6 +66,11 @@
                 @endforelse
             </div>
 
+            <a href="{{ route('user-confirmation.detail', request()->route('token')) }}"
+                class="mb-6 flex w-full items-center justify-center rounded-lg border border-red-600 py-3 font-bold text-red-600 transition-all hover:bg-red-50">
+                Lihat Detail Pelamar
+            </a>
+
             @if ($confirmation->decided_at)
                 <div class="mb-6 rounded-lg bg-gray-50 border border-gray-200 px-4 py-3 text-sm text-gray-700">
                     Keputusan Anda saat ini:

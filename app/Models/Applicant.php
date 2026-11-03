@@ -6,6 +6,7 @@ use Database\Factories\ApplicantFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 #[Fillable([
@@ -104,14 +105,54 @@ class Applicant extends Model
     }
 
     /**
+     * Data untuk partial detail profil kandidat (admin dan halaman detail konfirmasi user).
+     *
+     * Tanpa $application, lamaran yang ditampilkan adalah lamaran terbaru pelamar.
+     *
+     * @return array{applicant: self, interestNames: Collection<int, string>, latestApplication: ?Application, stages: Collection<int, Stage>}
+     */
+    public function profileViewData(?Application $application = null): array
+    {
+        $this->load([
+            'workExperiences',
+            'educations',
+            'families',
+            'trainings',
+            'expectation',
+            'interest',
+            'applications.job.office',
+            'applications.stage',
+        ]);
+
+        $interestIds = collect($this->interest?->interests ?? [])
+            ->filter(fn ($interest) => is_scalar($interest) && is_numeric($interest))
+            ->map(fn ($interest) => (int) $interest)
+            ->values();
+
+        $latestApplication = $application?->loadMissing(['job.office', 'stage'])
+            ?? $this->applications->sortByDesc('created_at')->first();
+
+        return [
+            'applicant' => $this,
+            'interestNames' => Division::query()->whereIn('id', $interestIds)->pluck('name', 'id'),
+            'latestApplication' => $latestApplication,
+            'stages' => $latestApplication?->job?->category
+                ? Stage::where('type', $latestApplication->job->category)->orderBy('step')->get()
+                : collect(),
+        ];
+    }
+
+    /**
      * Data untuk formulir biodata (HC-ODR.FRM.001.00) yang dicetak.
+     *
+     * Dengan $job, posisi yang dicetak diambil dari lowongan tersebut.
      *
      * @return array<string, mixed>
      */
-    public function biodataPrintData(): array
+    public function biodataPrintData(?Job $job = null): array
     {
-        $jobTitle = null;
-        if (request()->filled('job_id')) {
+        $jobTitle = $job?->title;
+        if (! $jobTitle && request()->filled('job_id')) {
             $jobTitle = Job::find(request('job_id'))?->title;
         }
         if (! $jobTitle) {

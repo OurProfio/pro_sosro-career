@@ -520,6 +520,7 @@
                                                 data-applicant-name="{{ $applicant->name ?? '-' }}"
                                                 data-applicant-email="{{ $applicant->email ?? '-' }}"
                                                 data-office-type="{{ $job->office->type ?? '-' }}"
+                                                data-notes="{{ $application->notes }}"
                                                 @disabled(in_array($application->status, ['accepted', 'rejected', 'cancelled']))>
                                                 <option value="">Pilih Stage</option>
 
@@ -571,6 +572,7 @@
                                                         data-stage-id="{{ $application->stages_id }}"
                                                         data-stage-name="{{ $application->stage->name }}"
                                                         data-user-email="{{ $userConfirmation->email }}"
+                                                        data-notes="{{ $application->notes }}"
                                                         data-applicant-name="{{ $applicant->name ?? '-' }}"
                                                         data-applicant-email="{{ $applicant->email ?? '-' }}">
                                                         Kirim ulang
@@ -1092,6 +1094,7 @@
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-applicant-name').textContent = trigger.dataset.applicantName;
             document.getElementById('modal-applicant-email').textContent = trigger.dataset.applicantEmail;
+            toggleNotesField(false);
 
             stageModal.classList.remove('hidden');
             stageModal.classList.add('flex');
@@ -1108,6 +1111,7 @@
             statusInput.disabled = true;
             document.getElementById('modal-stage-wrapper').classList.remove('hidden');
             document.getElementById('modal-stage-name').value = stageName;
+            toggleNotesField(true, trigger.dataset.notes);
 
             switch (normalizedStageName.startsWith('interview') ? 'interview' : normalizedStageName) {
                 case 'psikotes':
@@ -1231,6 +1235,14 @@
         stageModal.querySelectorAll('[data-modal-hide]').forEach(button => {
             button.addEventListener('click', closeStageModal);
         });
+
+        function toggleNotesField(isVisible, notes = '') {
+            const notesField = document.getElementById('modal-notes');
+
+            document.getElementById('modal-notes-wrapper').classList.toggle('hidden', !isVisible);
+            notesField.disabled = !isVisible;
+            notesField.value = isVisible ? (notes ?? '') : '';
+        }
 
         function toggleMethodFields(selectId, virtualFieldId, offlineFieldId) {
             const isVirtual = document.getElementById(selectId).value === 'virtual';
