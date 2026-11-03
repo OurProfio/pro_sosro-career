@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('location');
             $table->date('opening_date');
             $table->date('closing_date');
-            $table->string('description');
-            $table->string('qualification');
+            $table->text('description');
+            $table->text('qualification');
             $table->enum('status', ['pending', 'aktif', 'nonaktif', 'dihapus', 'selesai'])->default('aktif');
             $table->softDeletes();
             $table->timestamps();
