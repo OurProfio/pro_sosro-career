@@ -561,6 +561,7 @@
                                                 data-applicant-name="{{ $applicant->name ?? '-' }}"
                                                 data-applicant-email="{{ $applicant->email ?? '-' }}"
                                                 data-office-type="{{ $job->office->type ?? '-' }}"
+                                                data-notes="{{ $application->notes }}"
                                                 @disabled(in_array($application->status, ['accepted', 'rejected', 'cancelled']))>
                                                 <option value="">Pilih Stage</option>
 
@@ -591,6 +592,40 @@
                                                     stroke-width="2"></path>
                                             </svg>
                                         </div>
+                                        @if ($application->userConfirmation)
+                                            @php
+                                                $userConfirmation = $application->userConfirmation;
+                                                [$userBadgeLabel, $userBadgeClass] = match (true) {
+                                                    $userConfirmation->decision === 'approved' => ['Disetujui user', 'bg-emerald-50 text-emerald-700 border-emerald-200'],
+                                                    $userConfirmation->decision === 'rejected' => ['Ditolak user', 'bg-red-50 text-red-700 border-red-200'],
+                                                    $userConfirmation->isExpired() => ['Link kedaluwarsa', 'bg-slate-100 text-slate-600 border-slate-200'],
+                                                    default => ['Menunggu user', 'bg-amber-50 text-amber-700 border-amber-200'],
+                                                };
+                                            @endphp
+                                            <div class="mt-1.5 text-[10px] leading-tight">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold border {{ $userBadgeClass }}">{{ $userBadgeLabel }}</span>
+                                                <div class="mt-0.5 text-slate-400">{{ $userConfirmation->email }}</div>
+                                                @if ($userConfirmation->decided_at)
+                                                    <div class="text-slate-400">{{ $userConfirmation->decided_at->format('d M Y H:i') }}</div>
+                                                @endif
+                                                @if ($userConfirmation->note)
+                                                    <div class="max-w-[140px] mx-auto truncate text-slate-500" title="{{ $userConfirmation->note }}">{{ $userConfirmation->note }}</div>
+                                                @endif
+                                                @if ($application->status === 'progress' && $application->stage?->isUserConfirmation())
+                                                    <button type="button"
+                                                        class="resend-user-confirmation mt-1 text-[10px] font-semibold text-[#991b1b] hover:underline"
+                                                        data-stage-url="{{ route('application.updateStage', $application) }}"
+                                                        data-stage-id="{{ $application->stages_id }}"
+                                                        data-stage-name="{{ $application->stage->name }}"
+                                                        data-user-email="{{ $userConfirmation->email }}"
+                                                        data-notes="{{ $application->notes }}"
+                                                        data-applicant-name="{{ $applicant->name ?? '-' }}"
+                                                        data-applicant-email="{{ $applicant->email ?? '-' }}">
+                                                        Kirim ulang
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </td>
 
                                     <td class="py-3.5 px-3 text-center whitespace-nowrap">
@@ -1138,9 +1173,61 @@
             document.getElementById('modal-title').textContent = title;
             document.getElementById('modal-applicant-name').textContent = trigger.dataset.applicantName;
             document.getElementById('modal-applicant-email').textContent = trigger.dataset.applicantEmail;
+            toggleNotesField(false);
 
             stageModal.classList.remove('hidden');
             stageModal.classList.add('flex');
+        }
+
+        function openStageDetailModal(trigger, stageId, stageName) {
+            const normalizedStageName = stageName.trim().toLowerCase();
+
+            openStageModal(trigger, 'Data Tahapan Applicant');
+            stageForm.action = trigger.dataset.stageUrl;
+
+            stageIdInput.disabled = false;
+            stageIdInput.value = stageId;
+            statusInput.disabled = true;
+            document.getElementById('modal-stage-wrapper').classList.remove('hidden');
+            document.getElementById('modal-stage-name').value = stageName;
+            toggleNotesField(true, trigger.dataset.notes);
+
+            switch (normalizedStageName.startsWith('interview') ? 'interview' : normalizedStageName) {
+                case 'psikotes':
+                    showFields('fields-psikotes');
+                    break;
+
+                case 'interview':
+                    showFields('fields-interview');
+                    break;
+
+                case 'mcu':
+                    showFields('fields-mcu');
+                    break;
+
+                case 'konfirmasi user':
+                    showFields('fields-konfirmasi-user');
+                    break;
+
+                case 'study case':
+                    showFields('fields-study-case');
+                    break;
+
+                case 'panel bod':
+                    showFields('fields-panel-bod');
+                    break;
+
+                case 'offering':
+                    showFields('fields-offering');
+                    break;
+
+                default:
+                    showFields('fields-none');
+                    break;
+            }
+
+            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
         }
 
         function closeStageModal() {
@@ -1208,56 +1295,33 @@
                 }
 
                 // Pilihan stage (format value: stage:123)
-                const rawStageId = this.value.replace('stage:', '');
-                const stageName = this.options[this.selectedIndex].dataset.stageName;
+                openStageDetailModal(
+                    this,
+                    this.value.replace('stage:', ''),
+                    this.options[this.selectedIndex].dataset.stageName
+                );
+            });
+        });
 
-                openStageModal(this, 'Data Tahapan Applicant');
-                stageForm.action = this.dataset.stageUrl;
-
-                stageIdInput.disabled = false;
-                stageIdInput.value = rawStageId;
-                statusInput.disabled = true;
-                document.getElementById('modal-stage-wrapper').classList.remove('hidden');
-                document.getElementById('modal-stage-name').value = stageName;
-
-                switch (stageName.startsWith('interview') ? 'interview' : stageName) {
-                    case 'psikotes':
-                        showFields('fields-psikotes');
-                        break;
-
-                    case 'interview':
-                        showFields('fields-interview');
-                        break;
-
-                    case 'mcu':
-                        showFields('fields-mcu');
-                        break;
-
-                    case 'study case':
-                        showFields('fields-study-case');
-                        break;
-
-                    case 'panel bod':
-                        showFields('fields-panel-bod');
-                        break;
-
-                    case 'offering':
-                        showFields('fields-offering');
-                        break;
-
-                    default:
-                        showFields('fields-none');
-                        break;
-                }
-
-                toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
-                toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
+        document.querySelectorAll('.resend-user-confirmation').forEach(button => {
+            button.addEventListener('click', function() {
+                activeStageSelect = null;
+                openStageDetailModal(this, this.dataset.stageId, this.dataset.stageName);
+                document.getElementById('user_email').value = this.dataset.userEmail;
             });
         });
 
         stageModal.querySelectorAll('[data-modal-hide]').forEach(button => {
             button.addEventListener('click', closeStageModal);
         });
+
+        function toggleNotesField(isVisible, notes = '') {
+            const notesField = document.getElementById('modal-notes');
+
+            document.getElementById('modal-notes-wrapper').classList.toggle('hidden', !isVisible);
+            notesField.disabled = !isVisible;
+            notesField.value = isVisible ? (notes ?? '') : '';
+        }
 
         function toggleMethodFields(selectId, virtualFieldId, offlineFieldId) {
             const isVirtual = document.getElementById(selectId).value === 'virtual';

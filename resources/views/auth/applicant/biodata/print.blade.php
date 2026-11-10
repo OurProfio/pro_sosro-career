@@ -77,7 +77,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
         return '<td><div class="cell-data"' . ($style ? ' style="' . $style . '"' : '') . '>' . $display . '</div></td>';
     };
 
-    $isAdmin = auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->admin !== null);
+    $showJobTitle = ($showJobTitle ?? false) || (auth()->check() && (auth()->user()->role === 'admin' || auth()->user()->admin !== null));
 
     $genderLabel = ['l' => 'LAKI-LAKI', 'p' => 'PEREMPUAN'][$applicant->gender] ?? '';
     $marital = $applicant->marital_status;
@@ -250,7 +250,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 
 <div class="pg"><div class="fn">No Form: HC-ODR.FRM.001.00</div><div class="lg"><img src="{{ asset('assets/images/header-sosro-rekso.png') }}" alt="Sinar Sosro Rekso"></div><div class="pn">1</div>
 <div class="ttl">FORMULIR BIODATA CALON KARYAWAN</div><div class="hr"></div>
-@if ($isAdmin)
+@if ($showJobTitle)
 <div class="g" style="margin-top:12px;height:18px"><b style="font-size:12.5px;margin-left:11px;white-space:nowrap">Jabatan yang dilamar :&nbsp;</b>{!! $I(0, $jobTitle ?? '') !!}</div><div class="hr" style="margin-top:9px"></div>
 @endif
 <div style="margin:10px 0 6px 8px"><b><u>A.&nbsp;&nbsp; IDENTITAS DIRI</u></b></div>

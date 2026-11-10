@@ -26,11 +26,16 @@ class UpdateApplicationStageRequest extends FormRequest
                 'required',
                 Rule::exists('stages', 'id')->where('type', $this->route('application')->job->category),
             ],
+            'notes' => ['nullable', 'string', 'max:2000'],
         ];
 
         $stage = $this->selectedStage();
         if (! $stage) {
             return $rules;
+        }
+
+        if ($stage->isUserConfirmation()) {
+            return $rules + ['user_email' => ['required', 'email', 'max:255']];
         }
 
         $stageName = strtolower(trim($stage->name));

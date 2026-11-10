@@ -10,10 +10,13 @@ use App\Mail\MedicalCheckUpMail;
 use App\Mail\OfferingLetterMail;
 use App\Mail\psikotesMail;
 use App\Mail\RejectedMail;
+use App\Mail\UserConfirmationMail;
 use App\Models\Application;
+use App\Models\UserConfirmation;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Throwable;
 
 class ApplicationNotificationService
@@ -61,6 +64,8 @@ class ApplicationNotificationService
             );
         } elseif ($stageName === 'offering') {
             $mailable = new OfferingLetterMail($application);
+        } elseif ($stage->isUserConfirmation()) {
+            return $this->sendUserConfirmation($application, $data['user_email']);
         }
 
         if ($mailable) {
@@ -93,6 +98,41 @@ class ApplicationNotificationService
 
         if ($mailable) {
             $this->dispatchEmail($application, $mailable);
+        }
+
+        return $mailable;
+    }
+
+    /**
+     * Create (or reset) the user confirmation and email its tokenized link to the user.
+     */
+    protected function sendUserConfirmation(Application $application, string $email): UserConfirmationMail
+    {
+        $token = Str::random(64);
+
+        $confirmation = UserConfirmation::updateOrCreate(
+            ['application_id' => $application->id],
+            [
+                'email' => $email,
+                'token' => hash('sha256', $token),
+                'expires_at' => now()->addDays(7),
+                'decision' => 'pending',
+                'note' => null,
+                'decided_at' => null,
+            ]
+        );
+
+        $confirmation->setRelation('application', $application);
+
+        $mailable = new UserConfirmationMail($confirmation, route('user-confirmation.show', $token));
+
+        try {
+            Mail::to($email)->send($mailable);
+        } catch (Throwable $e) {
+            Log::error('Failed to send user confirmation email: '.$e->getMessage(), [
+                'application_id' => $application->id,
+                'recipient' => $email,
+            ]);
         }
 
         return $mailable;

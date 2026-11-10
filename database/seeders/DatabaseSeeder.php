@@ -3,11 +3,19 @@
 namespace Database\Seeders;
 
 use App\Models\Admin;
+use App\Models\Applicant;
+use App\Models\ApplicantExpectation;
+use App\Models\ApplicantInterest;
+use App\Models\Application;
 use App\Models\Division;
+use App\Models\Job;
 use App\Models\Office;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseSeeder extends Seeder
 {
@@ -135,5 +143,218 @@ class DatabaseSeeder extends Seeder
             // ApplicantExpectationSeeder::class,
             // ApplicationSeeder::class,
         ]);
+
+        // Salin foto profil pelamar dari public/assets/images ke storage/app/public/applicants
+        $photoRelativePath = 'applicants/karyawan-3.png';
+        $sourcePhotoPath = public_path('assets/images/karyawan-3.png');
+
+        if (! File::exists($sourcePhotoPath)) {
+            $sourcePhotoPath = public_path('assets/images/default profile.webp');
+            $photoRelativePath = 'applicants/default-profile.webp';
+        }
+
+        if (File::exists($sourcePhotoPath)) {
+            Storage::disk('public')->put($photoRelativePath, File::get($sourcePhotoPath));
+        }
+
+        // 1. Buat 1 Lowongan Pekerjaan Aktif (untuk pengujian tahapan/stage)
+        $superAdmin = Admin::where('role', 'superadmin')->first() ?? Admin::first();
+        $kantorPusatId = Office::where('name', 'Kantor Pusat')->value('id') ?? Office::value('id');
+
+        $job = Job::updateOrCreate(
+            [
+                'title' => 'Staff IT Support',
+                'office_id' => $kantorPusatId,
+            ],
+            [
+                'admin_id' => $superAdmin->id,
+                'category' => 'profesional',
+                'occupation' => 'Information Technology',
+                'type' => 'Full-Time',
+                'location' => 'Jakarta',
+                'opening_date' => now()->subDays(5)->toDateString(),
+                'closing_date' => now()->addMonths(2)->toDateString(),
+                'description' => 'Bertanggung jawab atas pemeliharaan infrastruktur IT, jaringan, perangkat keras, serta dukungan teknis operasional harian di lingkungan Kantor Pusat PT Sinar Sosro Gunung Slamat.',
+                'qualification' => "1. Pendidikan minimal D3/S1 Teknik Informatika, Sistem Informasi, atau Ilmu Komputer.\n2. Memahami troubleshooting hardware, software, dan jaringan (LAN/WAN).\n3. Teliti, komunikatif, dan mampu bekerja sama dalam tim.\n4. Bersedia ditempatkan di Kantor Pusat (Jakarta).",
+                'status' => 'aktif',
+            ],
+        );
+
+        // 2. Buat 1 Akun Pelamar & Biodata Lengkap (Step 1 - 4)
+        $applicantUser = User::updateOrCreate(
+            ['email' => 'applicant1@applicant.test'],
+            [
+                'password' => 'password',
+                'role' => 'user',
+                'is_active' => true,
+                'email_verified_at' => now(),
+            ],
+        );
+
+        $religionId = DB::table('treligion')
+            ->where('RELIGION_NAME_ID', 'LIKE', '%Islam%')
+            ->value('RELIGION_ID') ?? 'Islam';
+
+        $applicant = Applicant::updateOrCreate(
+            ['user_id' => $applicantUser->id],
+            [
+                'name' => 'Budi Santoso',
+                'email' => $applicantUser->email,
+                'nik' => '3171011505990001',
+                'address_ktp' => 'Jl. Raya Sultan Agung KM 28, Medan Satria, Bekasi',
+                'address_domisili' => 'Jl. Raya Sultan Agung KM 28, Medan Satria, Bekasi',
+                'postal_code_ktp' => '17132',
+                'postal_code_domisili' => '17132',
+                'gender' => 'l',
+                'place_of_birth' => 'Jakarta',
+                'date_of_birth' => '1999-05-15',
+                'height' => 172,
+                'weight' => 65,
+                'blood_type' => 'O',
+                'phone_number' => '081234567890',
+                'religion' => (string) $religionId,
+                'medical_history' => null,
+                'is_smoker' => 'n',
+                'has_tattoo' => 'n',
+                'instagram' => '@budisantoso',
+                'linkedin' => 'https://linkedin.com/in/budi-santoso',
+                'driver_licenses' => ['A', 'C'],
+                'marital_status' => 'single',
+                'marital_date' => null,
+                'emergency_contact_name' => 'Bambang Santoso',
+                'emergency_contact_relationship' => 'Ayah',
+                'emergency_contact_phone' => '081198765432',
+                'has_applied_sosro' => 'n',
+                'previous_applied_position' => null,
+                'previous_applied_year' => null,
+                'photo_url' => $photoRelativePath,
+                'is_completed' => true,
+            ],
+        );
+
+        // Minat Divisi & Ekspektasi Gaji (Bagian Step 1)
+        $divisionIds = Division::orderBy('id')->limit(3)->pluck('id')->all();
+        ApplicantInterest::updateOrCreate(
+            ['applicant_id' => $applicant->id],
+            ['interests' => $divisionIds],
+        );
+
+        ApplicantExpectation::updateOrCreate(
+            ['applicant_id' => $applicant->id],
+            [
+                'salary_expectation' => 7000000,
+                'facility_expectation' => 'BPJS Kesehatan & Ketenagakerjaan, Tunjangan Transportasi',
+                'ready_to_relocate' => true,
+                'ready_to_travel' => true,
+                'job_source' => 'Website Resmi Sosro',
+                'reference_by' => null,
+            ],
+        );
+
+        // Step 2: Data Keluarga
+        if ($applicant->families()->doesntExist()) {
+            $applicant->families()->createMany([
+                [
+                    'relationship' => 'father',
+                    'name' => 'Bambang Santoso',
+                    'gender' => 'l',
+                    'place_of_birth' => 'Semarang',
+                    'date_of_birth' => '1968-03-15',
+                    'education' => 'D4/S1',
+                    'phone_number' => '081198765432',
+                    'work' => 'Wiraswasta',
+                    'family_type' => 'biological',
+                    'status' => 'alive',
+                ],
+                [
+                    'relationship' => 'mother',
+                    'name' => 'Sri Wahyuni',
+                    'gender' => 'p',
+                    'place_of_birth' => 'Yogyakarta',
+                    'date_of_birth' => '1971-08-21',
+                    'education' => 'SMA/SMK',
+                    'phone_number' => '081298765433',
+                    'work' => 'Ibu Rumah Tangga',
+                    'family_type' => 'biological',
+                    'status' => 'alive',
+                ],
+                [
+                    'relationship' => 'sibling',
+                    'name' => 'Rina Santoso',
+                    'gender' => 'p',
+                    'place_of_birth' => 'Jakarta',
+                    'date_of_birth' => '2003-11-10',
+                    'education' => 'SMA/SMK',
+                    'phone_number' => '081398765434',
+                    'work' => 'Mahasiswa',
+                    'family_type' => 'biological',
+                    'status' => 'alive',
+                ],
+            ]);
+        }
+
+        // Step 3: Riwayat Pendidikan
+        if ($applicant->educations()->doesntExist()) {
+            $applicant->educations()->createMany([
+                [
+                    'institution_name' => 'SMA Negeri 8 Jakarta',
+                    'city' => 'Jakarta',
+                    'degree_level' => 'SMA/SMK',
+                    'major' => 'IPA',
+                    'gpa' => 88.50,
+                    'entry_year' => 2014,
+                    'graduation_year' => 2017,
+                ],
+                [
+                    'institution_name' => 'Universitas Indonesia',
+                    'city' => 'Depok',
+                    'degree_level' => 'D4/S1',
+                    'major' => 'Teknik Informatika',
+                    'gpa' => 3.65,
+                    'entry_year' => 2017,
+                    'graduation_year' => 2021,
+                ],
+            ]);
+        }
+
+        // Step 4: Pengalaman Kerja & Pelatihan
+        if ($applicant->workExperiences()->doesntExist()) {
+            $applicant->workExperiences()->create([
+                'company_name' => 'PT Nusantara Digital Solusi',
+                'company_address' => 'Jl. Jend. Sudirman Kav. 52, Jakarta Selatan',
+                'company_phone' => '0215551234',
+                'position' => 'IT Support Specialist',
+                'division' => 'Information Technology',
+                'salary' => 6000000,
+                'start_date' => '2022-01-10',
+                'end_date' => '2024-12-20',
+                'facility' => 'BPJS Kesehatan, Ketenagakerjaan, Laptop Kerja',
+                'reason_for_leaving' => 'Mengembangkan karier di industri FMCG skala nasional',
+                'reference_name' => 'Hendra Kusuma',
+                'reference_position' => 'IT Manager',
+                'reference_phone' => '081511223344',
+            ]);
+        }
+
+        if ($applicant->trainings()->doesntExist()) {
+            $applicant->trainings()->create([
+                'training_name' => 'Cisco Certified Network Associate (CCNA)',
+                'organizer' => 'Cisco Networking Academy',
+                'finished' => '2023-06-15',
+            ]);
+        }
+
+        // 3. Buat 1 Riwayat Lamaran dari Pelamar ke Lowongan (siap untuk ditest dropdown stage)
+        Application::updateOrCreate(
+            [
+                'applicant_id' => $applicant->id,
+                'job_id' => $job->id,
+            ],
+            [
+                'status' => 'pending',
+                'stages_id' => null,
+                'notes' => null,
+            ],
+        );
     }
 }

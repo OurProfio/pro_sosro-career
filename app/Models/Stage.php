@@ -21,6 +21,14 @@ class Stage extends Model
         return str_starts_with($this->name, 'interview');
     }
 
+    /**
+     * Determine whether the stage is the "konfirmasi user" stage.
+     */
+    public function isUserConfirmation(): bool
+    {
+        return strtolower(trim($this->name)) === 'konfirmasi user';
+    }
+
     public function applications()
     {
         return $this->hasMany(Application::class, 'stages_id');

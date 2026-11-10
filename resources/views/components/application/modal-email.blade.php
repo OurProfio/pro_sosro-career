@@ -178,6 +178,17 @@
                             </div>
                         </div>
 
+                        <div id="fields-konfirmasi-user" class="stage-fields hidden space-y-4">
+                            <div>
+                                <label for="user_email" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Email User
+                                </label>
+                                <input type="email" name="user_email" id="user_email" placeholder="contoh: manager@sosro.co.id"
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                <p class="mt-1.5 text-xs text-slate-500">Link konfirmasi akan dikirim ke email ini, bukan ke kandidat.</p>
+                            </div>
+                        </div>
+
                         <div id="fields-offering" class="stage-fields hidden space-y-4">
                             <div class="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
                                 <p class="text-sm text-amber-700">
@@ -304,6 +315,16 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div id="modal-notes-wrapper" class="hidden">
+                        <label for="modal-notes" class="block mb-2 text-sm font-semibold text-slate-700">
+                            Catatan HR
+                        </label>
+                        <textarea name="notes" id="modal-notes" rows="3" maxlength="2000" disabled
+                            placeholder="Contoh: hasil interview, kekuatan & kekurangan kandidat"
+                            class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
+                        <p class="mt-1 text-xs text-slate-400">Catatan ini terlihat di detail pelamar dan oleh user saat konfirmasi.</p>
                     </div>
 
                 </div>

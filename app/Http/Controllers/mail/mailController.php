@@ -15,8 +15,10 @@ use App\Mail\psikotesMail;
 use App\Mail\RejectedMail;
 use App\Mail\StudyCaseMail;
 use App\Mail\tesKepribadianMail;
+use App\Mail\UserConfirmationMail;
 use App\Mail\VerifyEmailMail;
 use App\Models\Application;
+use App\Models\UserConfirmation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Mailable;
@@ -49,6 +51,7 @@ class MailController extends Controller
             'panel-bod' => 'Panel BOD (MT)',
             'document-collection' => 'Pengumpulan Berkas',
             'verify-email' => 'Verifikasi Email',
+            'user-confirmation' => 'Konfirmasi User',
         ];
     }
 
@@ -103,6 +106,10 @@ class MailController extends Controller
             'study-case' => new StudyCaseMail($application, $data['study_case_topic'], $data['study_case_deadline'], $data['study_case_link']),
             'panel-bod' => new PanelBodMail($application, $data['panel_bod_date'], $data['panel_bod_time']),
             'document-collection' => new DocumentCollectionMail($application, $data['document_deadline']),
+            'user-confirmation' => new UserConfirmationMail(
+                (new UserConfirmation(['email' => 'user@contoh.test', 'expires_at' => now()->addDays(7)]))->setRelation('application', $application),
+                route('user-confirmation.show', 'contoh-token'),
+            ),
             'verify-email' => new VerifyEmailMail(
                 name: $application->applicant?->name ?? 'Kandidat',
                 url: URL::temporarySignedRoute('verification.verify', now()->addMinutes((int) config('auth.verification.expire')), [
