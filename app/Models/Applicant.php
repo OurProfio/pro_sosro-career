@@ -40,6 +40,7 @@ use Illuminate\Support\Facades\DB;
     'previous_applied_position',
     'previous_applied_year',
     'photo_url',
+    'is_completed',
 ])]
 class Applicant extends Model
 {
@@ -48,7 +49,42 @@ class Applicant extends Model
 
     protected $casts = [
         'driver_licenses' => 'array',
+        'is_completed' => 'boolean',
     ];
+
+    /**
+     * Menentukan route langkah create pertama yang belum dipenuhi.
+     */
+    public function incompleteStepRoute(): ?string
+    {
+        if ($this->families()->doesntExist()) {
+            return route('biodata.family.create');
+        }
+
+        if ($this->educations()->doesntExist()) {
+            return route('biodata.education.create');
+        }
+
+        if (! $this->is_completed) {
+            if ($this->workExperiences()->exists()) {
+                $this->updateQuietly(['is_completed' => true]);
+
+                return null;
+            }
+
+            return route('biodata.workExperience.create');
+        }
+
+        return null;
+    }
+
+    /**
+     * Memeriksa apakah seluruh tahapan biodata telah lengkap.
+     */
+    public function isProfileComplete(): bool
+    {
+        return $this->incompleteStepRoute() === null;
+    }
 
     public function user()
     {

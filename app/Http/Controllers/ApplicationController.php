@@ -45,6 +45,10 @@ class ApplicationController extends Controller
             return redirect()->route('biodata.create')->with('warning', 'Silakan lengkapi biodata Anda terlebih dahulu sebelum melamar pekerjaan.');
         }
 
+        if (! auth()->user()->applicant->isProfileComplete()) {
+            return redirect()->route('biodata.index')->with('warning', 'Silakan lengkapi seluruh tahapan biodata Anda terlebih dahulu sebelum melamar pekerjaan.');
+        }
+
         $job = Job::findOrFail($request->job_id);
 
         if ($job->closing_date && Carbon::parse($job->closing_date)->isPast() && ! Carbon::parse($job->closing_date)->isToday()) {

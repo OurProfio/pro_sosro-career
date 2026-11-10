@@ -51,8 +51,18 @@ class AdminDashboardController extends Controller
             ->count();
 
         $applicantsCount = Applicant::query()
-            ->when(! $isSuperAdmin, function (Builder $query) use ($officeId): void {
-                $query->whereHas('applications.job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+            ->where(function (Builder $query): void {
+                $query->where('is_completed', true)
+                    ->orWhere(function (Builder $subQuery): void {
+                        $subQuery->has('families')
+                            ->has('educations')
+                            ->has('workExperiences');
+                    });
+            })
+            ->whereHas('applications', function (Builder $appQuery) use ($isSuperAdmin, $officeId): void {
+                $appQuery->when(! $isSuperAdmin && $officeId, function (Builder $query) use ($officeId): void {
+                    $query->whereHas('job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+                });
             })
             ->count();
 

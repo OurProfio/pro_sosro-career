@@ -36,6 +36,17 @@ class ApplicantFactory extends Factory
             'has_tattoo' => 'n',
             'marital_status' => 'single',
             'photo_url' => 'photos/default.jpg',
+            'is_completed' => true,
         ];
+    }
+
+    /**
+     * Indicate that the applicant has not completed all steps.
+     */
+    public function incomplete(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_completed' => false,
+        ]);
     }
 }

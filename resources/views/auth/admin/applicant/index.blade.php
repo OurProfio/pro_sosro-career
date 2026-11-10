@@ -26,7 +26,7 @@
                     </span>
                 </div>
                 <p class="text-xs text-slate-500">
-                    Kelola profil lengkap, riwayat pendidikan, rekam jejak pengalaman kerja, dan histori kandidat PT Sinar Sosro & Gunung Slamat.
+                    Kelola profil lengkap dan riwayat pelamar yang telah melengkapi biodata serta memiliki riwayat lamaran pekerjaan di PT Sinar Sosro & Gunung Slamat.
                 </p>
             </div>
         </section>
@@ -426,7 +426,7 @@
                         @empty
                             <tr>
                                 <td colspan="8" class="py-12 text-center text-slate-400">
-                                    Belum ada data pelamar yang terdaftar.
+                                    Belum ada data pelamar dengan biodata lengkap yang memiliki riwayat lamaran pekerjaan.
                                 </td>
                             </tr>
                         @endforelse

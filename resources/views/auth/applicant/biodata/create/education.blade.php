@@ -466,11 +466,7 @@
                                             </label>
                                             <input type="text" name="trainings[{{ $tIndex }}][organizer]" required
                                                 value="{{ $tr['organizer'] ?? '' }}" placeholder="Contoh: Dicoding Indonesia / BNSP"
-<<<<<<< HEAD
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-=======
                                                 class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
->>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                                             @error("trainings.{$tIndex}.organizer")
                                                 <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                             @enderror
@@ -623,11 +619,7 @@
                     </label>
                     <input type="text" name="educations[{INDEX}][city]" required
                         placeholder="Contoh: Jakarta Selatan, Surabaya, Kab. Slawi"
-<<<<<<< HEAD
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-=======
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
->>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                 </div>
 
                 <!-- Jurusan Combobox -->
@@ -921,11 +913,25 @@
         }
 
         /* --- COMBOBOX AUTOCOMPLETE & OTHER LOGIC --- */
+        function normalizeSearchText(str) {
+            return (str || '')
+                .toLowerCase()
+                .replace(/["'’`]/g, '')
+                .replace(/ss/g, 's')
+                .trim();
+        }
+
         function openCombobox(input) {
             closeAllComboboxes();
             const wrapper = input.closest('[data-field]');
             const dropdown = wrapper.querySelector('.combobox-dropdown');
             const fieldType = wrapper.dataset.field;
+
+            if (input.value === 'Lainnya / Input Manual') {
+                input.value = '';
+                input.classList.remove('bg-gray-100', 'text-gray-500');
+            }
+
             filterCombobox(input, fieldType);
             dropdown.classList.remove('hidden');
         }
@@ -944,29 +950,45 @@
             const wrapper = input.closest('[data-field]');
             const listEl = wrapper.querySelector('.combobox-list');
             const valInput = wrapper.querySelector('.combobox-value-input');
-            const query = input.value.trim().toLowerCase();
+            const queryRaw = input.value.trim();
+            const queryNorm = normalizeSearchText(queryRaw);
+            const queryWords = queryNorm.split(/\s+/).filter(Boolean);
             const items = type === 'school' ? masterSchools : masterMajors;
             const nameProp = type === 'school' ? 'EDU_NAME' : 'MAJOR_NAME';
+
+            if (input.classList.contains('bg-gray-100')) {
+                input.classList.remove('bg-gray-100', 'text-gray-500');
+            }
 
             // By default sync search input with value input
             valInput.value = input.value;
 
             const filtered = items.filter(item => {
-                const name = item[nameProp] || '';
-                return name.toLowerCase().includes(query);
-            }).slice(0, 40);
+                const rawName = item[nameProp] || '';
+                if (!queryNorm) return true;
+                const normName = normalizeSearchText(rawName);
+                return queryWords.every(word => normName.includes(word));
+            }).slice(0, 50);
+
+            listEl.innerHTML = '';
 
             if (filtered.length === 0) {
-                listEl.innerHTML = `<li class="p-3 text-xs text-gray-400 text-center italic">Tidak ditemukan "${input.value}". Silakan klik pilihan Lainnya di atas untuk mengisi manual.</li>`;
+                const emptyLi = document.createElement('li');
+                emptyLi.className = 'p-3 text-xs text-gray-400 text-center italic';
+                emptyLi.textContent = `Tidak ditemukan "${queryRaw}". Silakan klik pilihan Lainnya di atas untuk mengisi manual.`;
+                listEl.appendChild(emptyLi);
             } else {
-                listEl.innerHTML = filtered.map(item => {
-                    const name = item[nameProp];
-                    const safeName = name.replace(/'/g, "\\'");
-                    return `<li class="p-2.5 px-3 hover:bg-red-50 hover:text-[#B11116] cursor-pointer transition-colors text-xs font-medium"
-                                onclick="selectItemCombobox(this, '${safeName}', '${type}')">
-                                ${name}
-                            </li>`;
-                }).join('');
+                filtered.forEach(item => {
+                    const name = item[nameProp] || '';
+                    const li = document.createElement('li');
+                    li.className = 'p-2.5 px-3 hover:bg-red-50 hover:text-[#B11116] cursor-pointer transition-colors text-xs font-medium';
+                    li.textContent = name;
+                    li.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        selectItemCombobox(this, name, type);
+                    });
+                    listEl.appendChild(li);
+                });
             }
         }
 
@@ -978,6 +1000,7 @@
             const manualWrapper = wrapper.querySelector(`.manual-${type}-input-wrapper`);
 
             searchInput.value = name;
+            searchInput.classList.remove('bg-gray-100', 'text-gray-500');
             valInput.value = name;
             dropdown.classList.add('hidden');
 
@@ -1045,7 +1068,7 @@
                     if (val) {
                         const items = type === 'school' ? masterSchools : masterMajors;
                         const nameProp = type === 'school' ? 'EDU_NAME' : 'MAJOR_NAME';
-                        const found = items.some(i => (i[nameProp] || '').trim().toLowerCase() === val.toLowerCase());
+                        const found = items.some(i => normalizeSearchText(i[nameProp]) === normalizeSearchText(val));
                         if (!found) {
                             // Berarti data manual / previously other
                             searchInput.value = 'Lainnya / Input Manual';

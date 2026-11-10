@@ -25,8 +25,17 @@ class ApplicantEducationController extends Controller
     public function create()
     {
         $applicant = auth()->user()->applicant;
-        $educations = $applicant?->educations ?? collect();
-        $trainings = $applicant?->trainings ?? collect();
+
+        if (! $applicant) {
+            return redirect()->route('biodata.create');
+        }
+
+        if ($applicant->families()->doesntExist()) {
+            return redirect()->route('biodata.family.create');
+        }
+
+        $educations = $applicant->educations ?? collect();
+        $trainings = $applicant->trainings ?? collect();
 
         $educationTypes = DB::table('thrm_education')
             ->select('EDUTYPE_ID', 'EDUTYPE_NAME_ID', 'EDUTYPE_NAME_EN', 'EDUTYPE_LEVEL')

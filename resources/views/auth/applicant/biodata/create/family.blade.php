@@ -80,6 +80,7 @@
                 foreach ($existingSiblings as $idx => $sib) {
                     $oldSiblings[$idx + 1] = [
                         'name' => $sib->name,
+                        'gender' => $sib->gender,
                         'place_of_birth' => $sib->place_of_birth,
                         'date_of_birth' => $sib->date_of_birth ? \Carbon\Carbon::parse($sib->date_of_birth)->format('Y-m-d') : '',
                         'education' => $sib->education,
@@ -95,6 +96,7 @@
                 foreach ($existingChildren as $cIdx => $c) {
                     $oldChildren[$cIdx + 1] = [
                         'name' => $c->name,
+                        'gender' => $c->gender,
                         'place_of_birth' => $c->place_of_birth,
                         'date_of_birth' => $c->date_of_birth ? \Carbon\Carbon::parse($c->date_of_birth)->format('Y-m-d') : '',
                         'education' => $c->education,

@@ -19,16 +19,22 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        if (! auth()->user()->applicant) {
+        $applicant = auth()->user()->applicant;
+
+        if (! $applicant) {
             return redirect()->route('biodata.create');
         }
 
-        $applicant = Applicant::with([
+        if ($incompleteRoute = $applicant->incompleteStepRoute()) {
+            return redirect($incompleteRoute);
+        }
+
+        $applicant->load([
             'workExperiences',
             'educations',
             'families',
             'trainings',
-        ])->where('user_id', auth()->id())->firstOrFail();
+        ]);
 
         return view('auth.applicant.biodata.index', compact('applicant'));
     }
@@ -38,7 +44,15 @@ class ApplicantController extends Controller
      */
     public function print()
     {
-        $applicant = Applicant::where('user_id', auth()->id())->firstOrFail();
+        $applicant = auth()->user()->applicant;
+
+        if (! $applicant) {
+            return redirect()->route('biodata.create');
+        }
+
+        if ($incompleteRoute = $applicant->incompleteStepRoute()) {
+            return redirect($incompleteRoute);
+        }
 
         return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
     }

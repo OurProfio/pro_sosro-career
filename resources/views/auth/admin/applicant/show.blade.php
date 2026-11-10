@@ -1,4 +1,4 @@
-﻿@extends('auth.admin.layouts.index')
+@extends('auth.admin.layouts.index')
 
 @section('title', 'Detail Profil Kandidat - ' . ($applicant->name ?? 'Pelamar'))
 
@@ -61,7 +61,7 @@
         $remMonths = ((int) $totalMonths) % 12;
         $totalExpText = $totalMonths > 0
             ? trim(($totalYears > 0 ? $totalYears . ' Tahun ' : '') . ($remMonths > 0 ? $remMonths . ' Bulan' : ''))
-            : 'Fresh Graduate';
+            : 'Lulusan Baru (Fresh Graduate)';
 
         $interests = $applicant->interest?->interests;
         $interests = is_array($interests) ? array_slice($interests, 0, 5) : (filled($interests) ? [$interests] : []);
@@ -92,13 +92,13 @@
                 <a class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-white border border-slate-200 text-slate-700 hover:text-[#9b1b1f] text-xs font-semibold shadow-2xs transition-all hover:bg-slate-100"
                     href="{{ route('applicant.print', $applicant) }}" target="_blank">
                     <span class="material-symbols-outlined text-[16px] text-[#9b1b1f]">picture_as_pdf</span>
-                    PDF Resume
+                    Cetak Biodata (PDF)
                 </a>
                 @if ($latestApplication)
                     <div class="relative inline-block text-left">
                         <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#9b1b1f] text-white shadow-2xs font-bold text-xs tracking-wide">
                             <span class="w-1.5 h-1.5 rounded-full bg-red-200 animate-pulse"></span>
-                            <span>Tahap: {{ $latestApplication->stage?->name ? ucwords($latestApplication->stage->name) : ucfirst($latestApplication->status ?? 'Pending') }}</span>
+                            <span>Tahap: {{ $latestApplication->stage?->name ? ucwords($latestApplication->stage->name) : match($latestApplication->status) { 'accepted' => 'Diterima', 'rejected' => 'Ditolak', 'cancelled' => 'Dibatalkan', 'progress' => 'Sedang Diproses', default => 'Menunggu Review' } }}</span>
                         </span>
                     </div>
                 @endif
@@ -176,7 +176,7 @@
                             @if ($waPhone)
                                 <a class="px-2 py-0.5 rounded text-[10px] font-bold bg-[#9b1b1f] text-white hover:bg-[#83161a] transition-colors shrink-0"
                                     href="https://wa.me/{{ $waPhone }}" target="_blank" rel="noopener noreferrer">
-                                    Chat WA
+                                    Hubungi via WhatsApp
                                 </a>
                             @endif
                         </div>
@@ -354,7 +354,7 @@
                             <span class="material-symbols-outlined text-[#9b1b1f] text-[15px]">target</span>
                             Prioritas Minat Karir
                         </h3>
-                        <span class="text-[10px] font-medium text-slate-400">Top 5</span>
+                        <span class="text-[10px] font-medium text-slate-400">5 Teratas</span>
                     </div>
 
                     @if (count($interests))
@@ -423,7 +423,7 @@
                                     <p class="text-xs font-semibold text-slate-600 mt-0.5 flex flex-wrap items-center gap-2">
                                         <span class="flex items-center gap-1">
                                             <span class="material-symbols-outlined text-[13px] text-slate-400">factory</span>
-                                            {{ $latestApplication->job->office ?? $latestApplication->job->location ?? '-' }}
+                                            {{ $latestApplication->job->office?->name ?? $latestApplication->job->location ?? '-' }}
                                         </span>
                                         <span>•</span>
                                         <span class="flex items-center gap-1">
@@ -445,7 +445,10 @@
                                 </span>
                                 @if ($latestApplication->job)
                                     <a class="no-print text-[11px] font-bold text-[#9b1b1f] hover:underline inline-flex items-center gap-0.5"
-                                        href="{{ route('job.show', $latestApplication->job) }}">
+                                        href="{{ route('job.show', $latestApplication->job) }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="Buka rincian lowongan di tab baru">
                                         Detail Lowongan
                                         <span class="material-symbols-outlined text-[13px]">arrow_forward</span>
                                     </a>
@@ -457,7 +460,7 @@
                         @if ($stages->count())
                             <div class="py-3">
                                 <div class="flex items-center justify-between text-xs mb-2">
-                                    <span class="font-bold text-slate-800 text-[11px]">Pipeline Seleksi Rekrutmen</span>
+                                    <span class="font-bold text-slate-800 text-[11px]">Tahapan Seleksi Rekrutmen</span>
                                     <span class="font-semibold text-[#9b1b1f] text-[11px]">
                                         Tahap {{ $currentStep }} dari {{ $totalSteps }} ({{ $progressPercent }}%)
                                     </span>
@@ -511,7 +514,7 @@
                         <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2.5 {{ $stages->count() ? '' : 'mt-3' }}">
                             <span class="material-symbols-outlined text-[#9b1b1f] text-[17px] mt-0.5">sticky_note_2</span>
                             <div class="text-xs min-w-0 flex-1">
-                                <span class="font-bold text-slate-800 text-[11px]">Catatan HR Reviewer:</span>
+                                <span class="font-bold text-slate-800 text-[11px]">Catatan Peninjau HR:</span>
                                 <p class="text-slate-600 leading-snug mt-0.5 text-[11px]">
                                     {{ filled($latestApplication->notes) ? '"' . $latestApplication->notes . '"' : 'Belum ada catatan khusus untuk lamaran terbaru kandidat ini.' }}
                                 </p>
@@ -714,8 +717,20 @@
                                 </thead>
                                 <tbody class="divide-y divide-slate-100 font-medium text-slate-700 text-[11px]">
                                     @foreach ($applicant->families as $family)
+                                        @php
+                                            $relationLabel = match (strtolower((string) $family->relationship)) {
+                                                'father' => 'Ayah',
+                                                'mother' => 'Ibu',
+                                                'sibling' => 'Saudara Kandung',
+                                                'spouse' => 'Suami / Istri',
+                                                'child' => 'Anak',
+                                                'father_in_law' => 'Ayah Mertua',
+                                                'mother_in_law' => 'Ibu Mertua',
+                                                default => ucfirst(str_replace('_', ' ', (string) $family->relationship)),
+                                            };
+                                        @endphp
                                         <tr class="hover:bg-slate-50/50">
-                                            <td class="py-1.5 px-2 font-bold text-slate-900 capitalize">{{ $family->relationship ?? '-' }}</td>
+                                            <td class="py-1.5 px-2 font-bold text-slate-900">{{ $relationLabel }}</td>
                                             <td class="py-1.5 px-2 font-semibold text-slate-900">
                                                 <div class="flex items-center gap-1.5">
                                                     <span>{{ $family->name ?? '-' }}</span>
@@ -800,7 +815,7 @@
                                 <div class="text-[11px] font-bold text-slate-800">
                                     {{ $applicant->expectation->reference_by ?: 'Tidak Ada Referensi' }}
                                 </div>
-                                <p class="text-[10px] text-slate-500">Kenalan / Referral Internal</p>
+                                <p class="text-[10px] text-slate-500">Kenalan / Rekomendasi Internal</p>
                             </div>
 
                             <div class="p-2.5 rounded bg-slate-50 border border-slate-100 space-y-1">
@@ -823,7 +838,7 @@
                                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Sumber Informasi &amp; Fasilitas</span>
                                 <p class="text-[11px] font-bold text-slate-800 truncate">{{ $applicant->expectation->job_source ?: '-' }}</p>
                                 <p class="text-[10px] text-slate-500 leading-tight pt-0.5">
-                                    Fasilitas diharapkan: {{ $applicant->expectation->facility_expectation ?: '-' }}
+                                    Fasilitas yang diharapkan: {{ $applicant->expectation->facility_expectation ?: '-' }}
                                 </p>
                             </div>
                         </div>

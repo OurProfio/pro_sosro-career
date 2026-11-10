@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Dashboard Pelamar')
 
@@ -15,22 +15,45 @@
                 </p>
             </div>
 
+            @php
+                $applicant = auth()->user()->applicant;
+                $isBiodataComplete = $applicant && $applicant->isProfileComplete();
+                $inProgressApp = $applicant ? $applicant->applications()->where('status', 'progress')->with(['job', 'stage'])->latest()->first() : null;
+                $hasApplications = $applicant && $applicant->applications()->exists();
+            @endphp
+
             <div class="inline-flex items-center px-5 py-2.5 bg-white border border-gray-100 rounded-2xl shadow-sm">
-                <div class="relative flex h-3 w-3 mr-4">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full bg-amber-400 opacity-75 rounded-full"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
-                </div>
+                @if ($isBiodataComplete)
+                    <div class="relative flex h-3 w-3 mr-4">
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                    </div>
 
-                <div class="flex flex-col">
-                    <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
-                        Status Profil
-                    </span>
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
+                            Status Profil
+                        </span>
 
-                    <span class="text-sm font-bold text-gray-700 leading-none">
-                        Perlu Dilengkapi
-                    </span>
-                </div>
+                        <span class="text-sm font-bold text-emerald-600 leading-none">
+                            Lengkap & Siap Melamar
+                        </span>
+                    </div>
+                @else
+                    <div class="relative flex h-3 w-3 mr-4">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full bg-amber-400 opacity-75 rounded-full"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-[10px] uppercase tracking-widest font-bold text-gray-400 leading-none mb-1">
+                            Status Profil
+                        </span>
+
+                        <span class="text-sm font-bold text-gray-700 leading-none">
+                            Perlu Dilengkapi
+                        </span>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -44,43 +67,153 @@
 
                     <div class="relative">
 
-                        <h3 class="text-xl font-bold text-gray-800 mb-4">
-                            Langkah Persiapan
+                        <h3 class="text-xl font-bold text-gray-800 mb-5 flex items-center justify-between">
+                            <span>Langkah Persiapan</span>
+                            <span class="text-xs font-semibold text-gray-400">
+                                {{ $isBiodataComplete ? '1 dari 2 Langkah Selesai' : '0 dari 2 Langkah Selesai' }}
+                            </span>
                         </h3>
 
-                        <div class="space-y-4">
+                        <div class="space-y-5">
+                            {{-- LANGKAH 1: LENGKAPI BIODATA --}}
                             <div class="flex items-start">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 bg-red-600 text-white rounded-lg flex items-center justify-center font-bold text-sm">
-                                    1
-                                </div>
+                                @if ($isBiodataComplete)
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 bg-emerald-600 text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-xs">
+                                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
 
-                                <div class="ml-4">
-                                    <p class="text-gray-800 font-bold">
-                                        Lengkapi Profil Biodata
-                                    </p>
+                                    <div class="ml-4 flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-gray-900 font-bold">
+                                                Lengkapi Profil Biodata
+                                            </p>
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                                <svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                Selesai
+                                            </span>
+                                        </div>
 
-                                    <p class="text-gray-500 text-sm">
-                                        Pastikan data pribadi dan riwayat pendidikan sudah benar.
-                                    </p>
-                                </div>
+                                        <p class="text-gray-500 text-sm mt-0.5">
+                                            Data pribadi, keluarga, pendidikan, dan pengalaman kerja Anda sudah lengkap.
+                                        </p>
+
+                                        <a href="{{ route('biodata.index') }}"
+                                            class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 hover:text-emerald-800 mt-1 hover:underline">
+                                            <span>Lihat / perbarui profil biodata</span>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                @else
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 bg-[#B11116] text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-xs">
+                                        1
+                                    </div>
+
+                                    <div class="ml-4 flex-1">
+                                        <div class="flex items-center gap-2">
+                                            <p class="text-gray-800 font-bold">
+                                                Lengkapi Profil Biodata
+                                            </p>
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                Wajib Diisi
+                                            </span>
+                                        </div>
+
+                                        <p class="text-gray-500 text-sm mt-0.5">
+                                            Pastikan data identitas pribadi, susunan keluarga, riwayat pendidikan, dan pengalaman kerja terisi dengan benar.
+                                        </p>
+
+                                        <a href="{{ route('biodata.index') }}"
+                                            class="inline-flex items-center gap-1 text-xs font-bold text-[#B11116] hover:text-red-800 mt-1 hover:underline">
+                                            <span>Mulai lengkapi biodata sekarang</span>
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
 
-                            <div class="flex items-start">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 bg-gray-200 text-gray-400 rounded-lg flex items-center justify-center font-bold text-sm">
-                                    2
-                                </div>
+                            {{-- LANGKAH 2: UNGGAH DOKUMEN (DINAMIS SESUAI TAHAP ACC / PROSES HRD) --}}
+                            <div class="flex items-start pt-3 border-t border-gray-100">
+                                @if ($inProgressApp)
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 bg-[#B11116] text-white rounded-lg flex items-center justify-center font-bold text-sm shadow-xs animate-pulse">
+                                        2
+                                    </div>
 
-                                <div class="ml-4">
-                                    <p class="text-gray-400 font-bold">
-                                        Unggah Dokumen Pendukung
-                                    </p>
+                                    <div class="ml-4 flex-1">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <p class="text-gray-900 font-bold">
+                                                Unggah Dokumen Pendukung
+                                            </p>
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-[#B11116] border border-red-200">
+                                                Tahap Seleksi Berkas
+                                            </span>
+                                        </div>
 
-                                    <p class="text-gray-400 text-sm">
-                                        Siapkan CV, Ijazah, dan berkas lainnya dalam format PDF.
-                                    </p>
-                                </div>
+                                        <p class="text-gray-600 text-sm mt-0.5">
+                                            Lamaran Anda untuk posisi <strong class="text-gray-900">{{ $inProgressApp->job?->title }}</strong> sedang diproses
+                                            @if ($inProgressApp->stage)
+                                                (Tahap: <span class="text-[#B11116] font-semibold">{{ ucwords($inProgressApp->stage->name) }}</span>)
+                                            @endif.
+                                            Siapkan berkas scan (KTP, Ijazah, Transkrip, SKCK) dalam format PDF/JPG.
+                                        </p>
+
+                                        <div class="mt-2">
+                                            <a href="{{ route('applications.index') }}"
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#B11116] hover:bg-red-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all active:scale-95">
+                                                <span>Lihat Status &amp; Unggah Berkas</span>
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div
+                                        class="flex-shrink-0 w-8 h-8 bg-gray-100 text-gray-400 border border-gray-200 rounded-lg flex items-center justify-center font-bold text-sm">
+                                        2
+                                    </div>
+
+                                    <div class="ml-4 flex-1">
+                                        <div class="flex items-center gap-2 flex-wrap">
+                                            <p class="text-gray-700 font-bold">
+                                                Unggah Dokumen Pendukung
+                                            </p>
+                                            <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-500 border border-gray-200">
+                                                Tahap Seleksi
+                                            </span>
+                                        </div>
+
+                                        <p class="text-gray-500 text-sm mt-0.5 leading-relaxed">
+                                            Unggah berkas (KTP, Ijazah, Transkrip, SKCK) akan dibuka secara otomatis jika lamaran pekerjaan Anda telah lolos seleksi awal dan disetujui (ACC) oleh tim HRD.
+                                        </p>
+
+                                        @if ($hasApplications)
+                                            <div class="mt-2 inline-flex items-center gap-1.5 text-[11px] font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                                                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                <span>Lamaran Anda sedang dalam tahap peninjauan awal. Anda akan dihubungi jika berkas fisik/digital diperlukan.</span>
+                                            </div>
+                                        @else
+                                            <div class="mt-2">
+                                                <a href="{{ route('guest.lowongan') }}"
+                                                    class="inline-flex items-center gap-1 text-xs font-semibold text-[#B11116] hover:underline">
+                                                    <span>Lamar posisi pekerjaan untuk memulai &rarr;</span>
+                                                </a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -114,7 +247,7 @@
                     </a>
 
 
-                    <a href="{{ route('guest.index') }}/#lowongan"
+                    <a href="{{ route('guest.lowongan') }}"
                         class="group flex items-center p-5 bg-white border border-gray-200 rounded-full shadow-lg hover:shadow-md hover:border-red-500 transition-all duration-200 active:scale-95">
 
                         <div

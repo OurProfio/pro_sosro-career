@@ -20,6 +20,7 @@ use App\Http\Controllers\Mail\MailController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('guest.index');
+Route::get('/lowongan', [GuestController::class, 'lowongan'])->name('guest.lowongan');
 Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
     Route::get('login', fn () => view('guest.login'))->name('login');
     Route::post('login', [AuthController::class, 'login'])->name('login.post');
@@ -52,6 +53,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::group(['middleware' => ['role:superadmin']], function () {
                 Route::patch('/job/{job}/approve', [JobController::class, 'approve'])->name('job.approve');
                 Route::patch('/admin/{admin}/toggle-status', [AdminController::class, 'toggleStatus'])->name('admin.toggleStatus');
+                Route::patch('/user/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggleStatus');
                 Route::resource('office', OfficeController::class);
                 Route::resource('division', DivisionController::class);
                 Route::resource('admin', AdminController::class);
@@ -60,7 +62,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    Route::group(['middleware' => ['role:applicant', 'verified']], function () {
+    Route::group(['middleware' => ['role:applicant']], function () {
         Route::get('/dashboard', fn () => view('auth.applicant.index'))->name('applicant.dashboard');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');

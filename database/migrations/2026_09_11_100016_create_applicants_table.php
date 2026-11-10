@@ -44,6 +44,7 @@ return new class extends Migration
             $table->string('previous_applied_position')->nullable();
             $table->string('previous_applied_year', 10)->nullable();
             $table->string('photo_url');
+            $table->boolean('is_completed')->default(false);
             $table->timestamps();
         });
     }

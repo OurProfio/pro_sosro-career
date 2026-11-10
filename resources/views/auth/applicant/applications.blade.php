@@ -81,7 +81,7 @@
                         Kembali ke Dashboard
                     </a>
 
-                    <a href="{{ route('guest.index') }}/#lowongan"
+                    <a href="{{ route('guest.lowongan') }}"
                         class="w-full sm:w-auto px-6 py-2.5 bg-[#B11116] hover:bg-red-800 text-white font-bold text-xs rounded-xl shadow-md transition-all inline-flex items-center justify-center gap-2 cursor-pointer active:scale-95">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -183,7 +183,7 @@
                     Kembali ke Dashboard
                 </a>
 
-                <a href="{{ route('guest.index') }}/#lowongan"
+                <a href="{{ route('guest.lowongan') }}"
                     class="px-6 py-2.5 bg-[#B11116] hover:bg-red-800 text-white font-bold text-xs rounded-xl shadow-md transition-all inline-flex items-center gap-2 cursor-pointer active:scale-95">
                     Cari Lowongan Lainnya
                 </a>

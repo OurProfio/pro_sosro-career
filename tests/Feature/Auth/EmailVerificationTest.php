@@ -14,19 +14,20 @@ use Illuminate\Support\Facades\URL;
 
 uses(RefreshDatabase::class);
 
-it('sends a verification email and shows the notice page after registration', function () {
+it('redirects to login page without sending email after registration', function () {
     Notification::fake();
 
     $this->post(route('guest.register.post'), [
         'email' => 'kandidat@example.com',
         'password' => 'password123',
         'password_confirmation' => 'password123',
-    ])->assertRedirect(route('verification.notice'));
+    ])->assertRedirect(route('guest.login'));
 
     $user = User::where('email', 'kandidat@example.com')->firstOrFail();
 
     expect($user->hasVerifiedEmail())->toBeFalse();
-    Notification::assertSentTo($user, VerifyEmail::class);
+    Notification::assertNothingSent();
+    expect(auth()->check())->toBeFalse();
 });
 
 it('renders the verification email from the career template', function () {
@@ -139,13 +140,32 @@ it('forbids verifying another users email', function () {
     expect($owner->fresh()->hasVerifiedEmail())->toBeFalse();
 });
 
-it('sends an unverified applicant to the notice page after login', function () {
-    $user = User::factory()->unverified()->create();
+it('sends verification email and redirects an unverified applicant to notice page after login', function () {
+    Notification::fake();
+    $user = User::factory()->unverified()->create([
+        'password' => bcrypt('password123'),
+    ]);
 
     $this->post(route('guest.login.post'), [
         'email' => $user->email,
-        'password' => 'password',
+        'password' => 'password123',
+    ])->assertRedirect(route('verification.notice'));
+
+    Notification::assertSentTo($user, VerifyEmail::class);
+    expect(auth()->check())->toBeTrue();
+});
+
+it('does not send verification email and redirects to dashboard when verified applicant logs in', function () {
+    Notification::fake();
+    $user = User::factory()->create([
+        'password' => bcrypt('password123'),
+    ]);
+
+    $this->post(route('guest.login.post'), [
+        'email' => $user->email,
+        'password' => 'password123',
     ])->assertRedirect(route('applicant.dashboard'));
 
-    $this->get(route('applicant.dashboard'))->assertRedirect(route('verification.notice'));
+    Notification::assertNothingSent();
+    expect(auth()->check())->toBeTrue();
 });

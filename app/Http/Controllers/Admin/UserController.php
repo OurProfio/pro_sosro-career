@@ -83,14 +83,48 @@ class UserController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Deactivate the specified user.
      */
     public function destroy(User $user)
     {
-        $user->delete();
+        if ($user->id === auth()->id()) {
+            return redirect()
+                ->route('user.index')
+                ->with('error', 'Tidak dapat menonaktifkan akun Anda sendiri.');
+        }
+
+        $user->update(['is_active' => false]);
+
+        if ($user->admin) {
+            $user->admin->update(['is_active' => false]);
+        }
 
         return redirect()
             ->route('user.index')
-            ->with('success', 'Berhasil menghapus akun user.');
+            ->with('success', 'Berhasil menonaktifkan akun user.');
+    }
+
+    /**
+     * Toggle active/inactive status of the specified user.
+     */
+    public function toggleStatus(User $user)
+    {
+        if ($user->id === auth()->id()) {
+            return redirect()
+                ->route('user.index')
+                ->with('error', 'Tidak dapat mengubah status akun Anda sendiri.');
+        }
+
+        $user->update(['is_active' => ! $user->is_active]);
+
+        if ($user->admin) {
+            $user->admin->update(['is_active' => $user->is_active]);
+        }
+
+        $statusText = $user->is_active ? 'diaktifkan kembali' : 'dinonaktifkan';
+
+        return redirect()
+            ->route('user.index')
+            ->with('success', "Akun user berhasil {$statusText}.");
     }
 }

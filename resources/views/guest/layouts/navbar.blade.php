@@ -1,35 +1,37 @@
 @php
     $isHome = request()->routeIs('guest.index');
+    $isLowongan = request()->routeIs('guest.lowongan');
+    $isTransparentNav = $isHome || $isLowongan;
 @endphp
 
 <header id="main-header"
-    class="{{ $isHome ? 'fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-transparent' : 'sticky top-0 z-50 bg-[#B11116] shadow-md' }}">
+    class="{{ $isTransparentNav ? 'fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-transparent' : 'sticky top-0 z-50 bg-[#B11116] shadow-md' }}">
     <nav class="max-w-7xl mx-auto px-6 md:px-10 py-3.5 flex justify-between items-center text-white">
         <!-- Logo Brand -->
         <a href="{{ route('guest.index') }}" class="flex items-center gap-2 group transition-transform active:scale-95">
             <img src="{{ asset('assets/images/SGS Logo-Putih.webp') }}" alt="Logo Sinar Sosro Gunung Slamat" class="h-10 md:h-11 object-contain drop-shadow-sm">
         </a>
 
-        <!-- Center Nav Links (Khusus Guest Index / Sesuai Desain Gambar) -->
+        <!-- Center Nav Links -->
         <div class="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
             <a href="{{ route('guest.index') }}#beranda" data-i18n-key="nav_home"
-                class="text-white hover:text-white/80 transition pb-0.5 border-b-2 {{ $isHome ? 'border-white font-semibold' : 'border-transparent' }} drop-shadow-sm">
+                class="py-1 border-b-2 {{ $isHome ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Beranda
             </a>
             <a href="{{ $isHome ? '#tentang' : route('guest.index') . '#tentang' }}" data-i18n-key="nav_about"
-                class="text-white/90 hover:text-white transition drop-shadow-sm">
+                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
                 Tentang
             </a>
-            <a href="{{ $isHome ? '#program' : route('guest.index') . '#program' }}" data-i18n-key="nav_program"
-                class="text-white/90 hover:text-white transition drop-shadow-sm">
+            <a href="{{ $isHome ? '#program' : route('guest.index') . '#program-kami' }}" data-i18n-key="nav_program"
+                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
                 Program
             </a>
-            <a href="{{ $isHome ? '#lowongan' : route('guest.index') . '#lowongan' }}" data-i18n-key="nav_vacancies"
-                class="text-white/90 hover:text-white transition drop-shadow-sm">
+            <a href="{{ route('guest.lowongan') }}" data-i18n-key="nav_vacancies"
+                class="py-1 border-b-2 {{ $isLowongan ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Lowongan
             </a>
-            <a href="{{ $isHome ? '#kontak' : route('guest.index') . '#kontak' }}" data-i18n-key="nav_contact"
-                class="text-white/90 hover:text-white transition drop-shadow-sm">
+            <a href="#kontak" data-i18n-key="nav_contact"
+                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
                 Kontak
             </a>
         </div>
@@ -210,7 +212,19 @@
             btn_login: 'Masuk',
             btn_register: 'Daftar',
             hero_title: 'Work Together As A Team',
-            hero_desc: 'Bergabunglah dengan tim kami, baik sebagai talenta muda maupun profesional berpengalaman. Pilih kategori yang sesuai untuk mengembangkan potensi karirmu.',
+            hero_desc: 'Bergabunglah bersama kami, talenta muda maupun profesional berpengalaman. Kembangkan potensi terbaikmu dan ciptakan karya berharga di industri FMCG terkemuka Indonesia.',
+            hero_tag_1: 'Lingkungan Kolaboratif',
+            hero_tag_2: 'Pengembangan Karir',
+            hero_tag_3: 'Peluang Nasional',
+            hero_kicker_2: 'Warisan & Masa Depan Sosro',
+            hero_title_2: 'Be Part of Something Bigger.',
+            hero_desc_2: 'Wujudkan ide terbaikmu dan kembangkan potensi tanpa batas bersama keluarga besar Rekso dalam memajukan industri kebanggaan nusantara.',
+            hero_title_3: 'Kenali Lebih Dekat Keluarga Sosro',
+            hero_desc_3: 'Saksikan bagaimana kebersamaan, dedikasi, dan inovasi mengalir nyata di setiap langkah perjalanan kami menghadirkan yang terbaik bagi Indonesia.',
+            hero_btn_explore: 'Jelajahi Lowongan',
+            hero_btn_about: 'Tentang Kami',
+            hero_company_line: 'PT Sinar Sosro • PT Gunung Slamat • Rekso Group',
+            hero_cta_2: 'Lihat Posisi',
             hero_btn: 'Lihat Lowongan',
             section_career_label: 'Karier bersama kami',
             section_career_title: 'Temukan lowongan yang sesuai',
@@ -232,7 +246,19 @@
             btn_login: 'Sign In',
             btn_register: 'Register',
             hero_title: 'Work Together As A Team',
-            hero_desc: 'Join our team as young talent or experienced professionals. Choose the right path to unleash your potential.',
+            hero_desc: 'Join our team as young talent or experienced professionals. Unleash your greatest potential and build a meaningful career with Indonesia\'s leading FMCG family.',
+            hero_tag_1: 'Collaborative Culture',
+            hero_tag_2: 'Career Growth',
+            hero_tag_3: 'Nationwide Opportunities',
+            hero_kicker_2: 'Sosro Legacy & Future',
+            hero_title_2: 'Be Part of Something Bigger.',
+            hero_desc_2: 'Bring your greatest ideas to life and unlock boundless potential together with the Rekso family in empowering Indonesia\'s proud industry.',
+            hero_title_3: 'Get Closer to the Sosro Family',
+            hero_desc_3: 'Experience how togetherness, dedication, and innovation come to life in our journey to bring natural goodness to Indonesia.',
+            hero_btn_explore: 'Explore Vacancies',
+            hero_btn_about: 'About Us',
+            hero_company_line: 'PT Sinar Sosro • PT Gunung Slamat • Rekso Group',
+            hero_cta_2: 'Explore Roles',
             hero_btn: 'Explore Vacancies',
             section_career_label: 'Career with us',
             section_career_title: 'Find the right opportunity for you',
@@ -295,6 +321,10 @@
             if (dict[key]) {
                 if (el.tagName === 'INPUT') {
                     el.placeholder = dict[key];
+                } else if (el.querySelector('svg')) {
+                    // Jika elemen berisi icon SVG, update atribut aksesibilitas, jangan timpa SVG-nya
+                    el.setAttribute('aria-label', dict[key]);
+                    el.setAttribute('title', dict[key]);
                 } else {
                     el.textContent = dict[key];
                 }

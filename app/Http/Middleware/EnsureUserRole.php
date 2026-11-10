@@ -22,12 +22,14 @@ class EnsureUserRole
         $user = auth()->user();
         $userRole = $user->role;
 
-        if ($userRole === 'admin' && $user->admin && ! $user->admin->is_active) {
+        if (! $user->is_active || ($userRole === 'admin' && $user->admin && ! $user->admin->is_active)) {
+            $isAdminRoute = $request->is('admin', 'admin/*');
             auth()->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('admin.login')->with('error', 'Akun Admin Anda telah dinonaktifkan.');
+            return redirect()->route($isAdminRoute ? 'admin.login' : 'guest.login')
+                ->with('error', $userRole === 'admin' ? 'Akun Admin Anda telah dinonaktifkan.' : 'Akun Anda telah dinonaktifkan.');
         }
 
         // Map role aliases if necessary (e.g. 'applicant' corresponds to 'user' in DB)

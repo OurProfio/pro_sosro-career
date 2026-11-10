@@ -181,7 +181,7 @@
                                 No. Telepon / WA <span class="text-[#B11116]">*</span>
                             </label>
                             <input id="phone_number" name="phone_number" type="tel" inputmode="numeric" required
-                                maxlength="15"
+                                maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                 value="{{ old('phone_number', auth()->user()->applicant->phone_number ?? '') }}"
                                 placeholder="Contoh: 081234567890"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('phone_number') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -544,7 +544,7 @@
                                         No. Telepon / WA <span class="text-[#B11116]">*</span>
                                     </label>
                                     <input id="emergency_contact_phone" name="emergency_contact_phone" type="tel" inputmode="numeric" required
-                                        maxlength="15"
+                                        maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
                                         value="{{ old('emergency_contact_phone', auth()->user()->applicant->emergency_contact_phone ?? '') }}"
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">

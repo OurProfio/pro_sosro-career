@@ -230,8 +230,9 @@
                                         No. Telepon Perusahaan / Kantor
                                     </label>
                                     <input id="previous_sosro_company_phone" name="experiences[0][company_phone]" type="tel"
+                                        inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="20"
                                         value="{{ old('experiences.0.company_phone', $sosroExp?->company_phone ?? '') }}"
-                                        placeholder="Contoh: (021) 1234567 atau 0812345678"
+                                        placeholder="Contoh: 0211234567 atau 0812345678"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_phone')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
@@ -477,24 +478,11 @@
                                             No. Telepon Perusahaan
                                         </label>
                                         <input type="tel" name="experiences[{{ $index }}][company_phone]"
+                                            inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="20"
                                             value="{{ $exp['company_phone'] ?? '' }}"
-                                            placeholder="Contoh: (021) 1234567 atau 0812345678"
+                                            placeholder="Contoh: 0211234567 atau 0812345678"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_phone")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-
-                                    <!-- Alamat Perusahaan -->
-                                    <div class="space-y-1.5 md:col-span-2">
-                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                            Alamat Perusahaan
-                                        </label>
-                                        <input type="text" name="experiences[{{ $index }}][company_address]"
-                                            value="{{ $exp['company_address'] ?? '' }}"
-                                            placeholder="Contoh: Jl. Jend. Sudirman No. 10, Jakarta Selatan"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_address") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error("experiences.{$index}.company_address")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -737,34 +725,20 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Perusahaan</label>
-<<<<<<< HEAD
-                    <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT. Sinar Sosro"
+                    <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT Sinar Sosro Gunung Slamat"
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon Perusahaan</label>
-                    <input type="tel" name="experiences[{INDEX}][company_phone]" placeholder="Contoh: (021) 1234567 atau 0812345678"
+                    <input type="tel" name="experiences[{INDEX}][company_phone]" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="20" placeholder="Contoh: 0211234567 atau 0812345678"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-=======
-                    <input type="text" name="experiences[{INDEX}][company_name]" placeholder="Contoh: PT Sinar Sosro Gunung Slamat"
-                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
->>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                 </div>
 
                 <div class="space-y-1.5 md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Perusahaan</label>
                     <input type="text" name="experiences[{INDEX}][company_address]" placeholder="Contoh: Jl. Jend. Sudirman No. 10, Jakarta Selatan"
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-<<<<<<< HEAD
-=======
-                </div>
-
-                <div class="space-y-1.5">
-                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon Perusahaan</label>
-                    <input type="tel" name="experiences[{INDEX}][company_phone]" placeholder="Contoh: (021) 1234567 atau 0812345678"
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
->>>>>>> 722da4e94b325030ffc1844dd3a0edb673563660
                 </div>
 
                 <div class="space-y-1.5">

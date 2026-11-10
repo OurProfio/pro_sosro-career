@@ -15,12 +15,35 @@ class ApplicantController extends Controller
      */
     public function index()
     {
-        $applicants = Applicant::with([
-            'educations',
-            'workExperiences',
-            'applications.stage',
-            'interest',
-        ])->get();
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+        $officeId = $admin?->office_id;
+
+        $applicants = Applicant::query()
+            // Hanya pelamar yang biodatanya sudah lengkap terisi
+            ->where(function ($query) {
+                $query->where('is_completed', true)
+                    ->orWhere(function ($subQuery) {
+                        $subQuery->has('families')
+                            ->has('educations')
+                            ->has('workExperiences');
+                    });
+            })
+            // Hanya pelamar yang sudah pernah melamar minimal 1 lowongan
+            ->whereHas('applications', function ($appQuery) use ($isSuperAdmin, $officeId) {
+                $appQuery->when(! $isSuperAdmin && $officeId, function ($query) use ($officeId) {
+                    $query->whereHas('job', fn ($jobQuery) => $jobQuery->where('office_id', $officeId));
+                });
+            })
+            ->with([
+                'educations',
+                'workExperiences',
+                'applications.stage',
+                'applications.job',
+                'interest',
+            ])
+            ->latest()
+            ->get();
 
         $divisions = Division::all();
 
@@ -48,6 +71,20 @@ class ApplicantController extends Controller
      */
     public function show(Applicant $applicant)
     {
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+        $officeId = $admin?->office_id;
+
+        // Hanya pelamar yang sudah pernah melamar lowongan
+        abort_if($applicant->applications()->doesntExist(), 404);
+
+        if (! $isSuperAdmin && $officeId) {
+            $hasBranchApplication = $applicant->applications()
+                ->whereHas('job', fn ($q) => $q->where('office_id', $officeId))
+                ->exists();
+            abort_unless($hasBranchApplication, 403);
+        }
+
         $applicant = $applicant->load([
             'workExperiences',
             'educations',
@@ -80,6 +117,19 @@ class ApplicantController extends Controller
      */
     public function print(Applicant $applicant)
     {
+        $admin = auth()->user()->admin;
+        $isSuperAdmin = $admin?->role === 'superadmin';
+        $officeId = $admin?->office_id;
+
+        abort_if($applicant->applications()->doesntExist(), 404);
+
+        if (! $isSuperAdmin && $officeId) {
+            $hasBranchApplication = $applicant->applications()
+                ->whereHas('job', fn ($q) => $q->where('office_id', $officeId))
+                ->exists();
+            abort_unless($hasBranchApplication, 403);
+        }
+
         return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
     }
 

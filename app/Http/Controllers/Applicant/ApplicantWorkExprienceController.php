@@ -24,7 +24,20 @@ class ApplicantWorkExprienceController extends Controller
     public function create()
     {
         $applicant = auth()->user()->applicant;
-        $workExperiences = $applicant?->workExperiences ?? collect();
+
+        if (! $applicant) {
+            return redirect()->route('biodata.create');
+        }
+
+        if ($applicant->families()->doesntExist()) {
+            return redirect()->route('biodata.family.create');
+        }
+
+        if ($applicant->educations()->doesntExist()) {
+            return redirect()->route('biodata.education.create');
+        }
+
+        $workExperiences = $applicant->workExperiences ?? collect();
 
         return view('auth.applicant.biodata.create.workExperience', compact('applicant', 'workExperiences'));
     }
@@ -38,6 +51,7 @@ class ApplicantWorkExprienceController extends Controller
 
         DB::transaction(function () use ($request, $applicant) {
             $applicant->update([
+                'is_completed' => true,
                 'has_applied_sosro' => $request->input('has_applied_sosro', 'n'),
                 'previous_applied_position' => $request->input('has_applied_sosro') === 'y' ? $request->input('previous_applied_position') : null,
                 'previous_applied_year' => $request->input('has_applied_sosro') === 'y' ? $request->input('previous_applied_year') : null,

@@ -7,6 +7,8 @@
         $totalUsers = $users->count();
         $adminCount = $users->where('role', 'admin')->count();
         $applicantCount = $users->where('role', '!=', 'admin')->count();
+        $activeCount = $users->where('is_active', true)->count();
+        $inactiveCount = $totalUsers - $activeCount;
         $verifiedCount = $users->whereNotNull('email_verified_at')->count();
         $percentVerified = $totalUsers > 0 ? round(($verifiedCount / $totalUsers) * 100, 1) : 0;
 
@@ -24,14 +26,21 @@
         x-data="{
             search: '',
             selectedRole: 'all',
+            selectedStatus: 'all',
             openCreateModal: {{ $errors->any() && !old('_method') ? 'true' : 'false' }},
             openEditModal: {{ $errors->any() && old('_method') === 'PUT' ? 'true' : 'false' }},
-            openDeleteModal: false,
+            openDeactivateModal: false,
+            openActivateModal: false,
             editData: {
                 id: '{{ old('edit_id') }}',
                 email: '{{ old('email') }}'
             },
-            deleteData: {
+            deactivateData: {
+                id: null,
+                email: '',
+                role: ''
+            },
+            activateData: {
                 id: null,
                 email: '',
                 role: ''
@@ -43,17 +52,26 @@
                 };
                 this.openEditModal = true;
             },
-            openDelete(user) {
-                this.deleteData = {
+            openDeactivate(user) {
+                this.deactivateData = {
                     id: user.id,
                     email: user.email,
                     role: user.role
                 };
-                this.openDeleteModal = true;
+                this.openDeactivateModal = true;
+            },
+            openActivate(user) {
+                this.activateData = {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role
+                };
+                this.openActivateModal = true;
             },
             resetFilters() {
                 this.search = '';
                 this.selectedRole = 'all';
+                this.selectedStatus = 'all';
             }
         }">
 
@@ -189,7 +207,7 @@
                 </div>
 
                 <!-- Role Filter -->
-                <div class="relative min-w-[200px]">
+                <div class="relative min-w-[180px]">
                     <select x-model="selectedRole"
                         class="w-full appearance-none pl-3.5 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition">
                         <option value="all">Semua Role Pengguna</option>
@@ -203,8 +221,23 @@
                     </span>
                 </div>
 
+                <!-- Status Filter -->
+                <div class="relative min-w-[150px]">
+                    <select x-model="selectedStatus"
+                        class="w-full appearance-none pl-3.5 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition">
+                        <option value="all">Semua Status</option>
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
+                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-slate-400">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                    </span>
+                </div>
+
                 <!-- Reset Button -->
-                <button type="button" x-show="search !== '' || selectedRole !== 'all'" @click="resetFilters()"
+                <button type="button" x-show="search !== '' || selectedRole !== 'all' || selectedStatus !== 'all'" @click="resetFilters()"
                     class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#A6192E] hover:bg-slate-100 transition cursor-pointer shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -227,6 +260,7 @@
                             <th scope="col" class="px-6 py-3.5">Akun Pengguna / Email</th>
                             <th scope="col" class="px-5 py-3.5">Role &amp; Hak Akses</th>
                             <th scope="col" class="px-5 py-3.5">Profil Terkait</th>
+                            <th scope="col" class="px-5 py-3.5 text-center">Status</th>
                             <th scope="col" class="px-5 py-3.5">Tanggal Bergabung</th>
                             <th scope="col" class="px-5 py-3.5 text-center w-28">Aksi</th>
                         </tr>
@@ -239,9 +273,11 @@
                                 $palette = $avatarPalettes[$index % count($avatarPalettes)];
                                 $initials = strtoupper(substr($profileName ?: $user->email, 0, 2));
                                 $searchableText = strtolower(addslashes($user->email . ' ' . $profileName . ' ' . ($user->admin?->office?->name ?? '')));
+                                $userStatus = $user->is_active ? 'active' : 'inactive';
                             @endphp
                             <tr class="hover:bg-slate-50/80 transition"
                                 x-show="(selectedRole === 'all' || selectedRole === '{{ $role }}') &&
+                                        (selectedStatus === 'all' || selectedStatus === '{{ $userStatus }}') &&
                                         ('{{ $searchableText }}'.includes(search.toLowerCase().trim()))">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
@@ -295,10 +331,23 @@
                                         </div>
                                     @endif
                                 </td>
+                                <td class="px-5 py-4 text-center whitespace-nowrap">
+                                    @if ($user->is_active)
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            Aktif
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500 border border-slate-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            Nonaktif
+                                        </span>
+                                    @endif
+                                </td>
                                 <td class="px-5 py-4 text-slate-500 whitespace-nowrap">
                                     {{ \Carbon\Carbon::parse($user->created_at)->translatedFormat('d M Y, H:i') }}
                                 </td>
-                                <td class="px-5 py-4 text-center">
+                                <td class="px-5 py-4 text-center whitespace-nowrap">
                                     <div class="inline-flex items-center justify-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200/80">
                                         <button type="button"
                                             @click="openEdit({{ json_encode(['id' => $user->id, 'email' => $user->email, 'role' => $user->role]) }})"
@@ -309,20 +358,32 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125 16.875 4.5" />
                                             </svg>
                                         </button>
-                                        <button type="button"
-                                            @click="openDelete({{ json_encode(['id' => $user->id, 'email' => $user->email, 'role' => $user->role]) }})"
-                                            class="p-1.5 text-slate-500 hover:text-red-600 hover:bg-white rounded-md transition cursor-pointer"
-                                            title="Hapus Akun Pengguna">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
+
+                                        @if ($user->is_active)
+                                            <button type="button"
+                                                @click="openDeactivate({{ json_encode(['id' => $user->id, 'email' => $user->email, 'role' => $user->role]) }})"
+                                                class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-white rounded-md transition cursor-pointer"
+                                                title="Nonaktifkan Akun Pengguna">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
+                                                </svg>
+                                            </button>
+                                        @else
+                                            <button type="button"
+                                                @click="openActivate({{ json_encode(['id' => $user->id, 'email' => $user->email, 'role' => $user->role]) }})"
+                                                class="p-1.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50 rounded-md transition cursor-pointer"
+                                                title="Aktifkan Kembali Akun Pengguna">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                                </svg>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-slate-400">
+                                <td colspan="6" class="px-6 py-12 text-center text-slate-400">
                                     <div class="flex flex-col items-center justify-center gap-2">
                                         <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
@@ -518,57 +579,114 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Hapus Akun -->
+        <!-- MODAL 3: Konfirmasi Nonaktifkan Akun -->
         <template x-teleport="body">
-            <div x-show="openDeleteModal"
+            <div x-show="openDeactivateModal"
                 x-cloak
                 style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
                 role="dialog"
                 aria-modal="true"
-                aria-labelledby="delete-user-modal-title"
-                @keydown.escape.window="openDeleteModal = false">
+                aria-labelledby="deactivate-user-modal-title"
+                @keydown.escape.window="openDeactivateModal = false">
 
-                <div x-show="openDeleteModal"
+                <div x-show="openDeactivateModal"
                     x-transition:enter="ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95"
                     x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-150"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    @click.outside="openDeleteModal = false"
+                    @click.outside="openDeactivateModal = false"
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">
-                        <div class="w-12 h-12 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center text-[#A6192E] mx-auto mb-4 shadow-2xs">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mx-auto mb-4 shadow-2xs">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
                             </svg>
                         </div>
 
-                        <h3 class="text-base font-bold text-slate-900" id="delete-user-modal-title">
-                            Hapus Akun Pengguna?
+                        <h3 class="text-base font-bold text-slate-900" id="deactivate-user-modal-title">
+                            Nonaktifkan Akun Pengguna?
                         </h3>
 
                         <p class="text-xs text-slate-500 mt-2 leading-relaxed">
-                            Apakah Anda yakin ingin menghapus akun <span class="font-bold text-slate-800" x-text="deleteData.email"></span>?
-                            Seluruh data profil atau akses terkait akun ini tidak dapat dipulihkan kembali.
+                            Apakah Anda yakin ingin menonaktifkan akun <span class="font-bold text-slate-800" x-text="deactivateData.email"></span>?
+                            Pengguna tidak akan dapat masuk atau mengakses portal sistem hingga akun diaktifkan kembali.
                         </p>
                     </div>
 
-                    <form :action="'{{ url('admin/user') }}/' + deleteData.id" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                    <form :action="'{{ url('admin/user') }}/' + deactivateData.id + '/toggle-status'" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
                         @csrf
-                        @method('DELETE')
-                        <button type="button" @click="openDeleteModal = false"
+                        @method('PATCH')
+                        <button type="button" @click="openDeactivateModal = false"
                             class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
                             Batal
                         </button>
                         <button type="submit"
-                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-[#A6192E] hover:bg-[#7f1d1d] text-white font-bold text-xs shadow-sm transition cursor-pointer">
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-sm transition cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 0 0 5.636 5.636m12.728 12.728A9 9 0 0 1 5.636 5.636m12.728 12.728L5.636 5.636" />
                             </svg>
-                            Ya, Hapus Akun
+                            Ya, Nonaktifkan Akun
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </template>
+
+        <!-- MODAL 4: Konfirmasi Aktifkan Kembali Akun -->
+        <template x-teleport="body">
+            <div x-show="openActivateModal"
+                x-cloak
+                style="display: none;"
+                class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="activate-user-modal-title"
+                @keydown.escape.window="openActivateModal = false">
+
+                <div x-show="openActivateModal"
+                    x-transition:enter="ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-95"
+                    x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-150"
+                    x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    @click.outside="openActivateModal = false"
+                    class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+
+                    <div class="p-6 text-center">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mx-auto mb-4 shadow-2xs">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+
+                        <h3 class="text-base font-bold text-slate-900" id="activate-user-modal-title">
+                            Aktifkan Kembali Akun Pengguna?
+                        </h3>
+
+                        <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+                            Apakah Anda yakin ingin mengaktifkan kembali akun <span class="font-bold text-slate-800" x-text="activateData.email"></span>?
+                            Pengguna akan dapat masuk kembali ke portal sistem.
+                        </p>
+                    </div>
+
+                    <form :action="'{{ url('admin/user') }}/' + activateData.id + '/toggle-status'" method="POST" class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5">
+                        @csrf
+                        @method('PATCH')
+                        <button type="button" @click="openActivateModal = false"
+                            class="px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                            Ya, Aktifkan Akun
                         </button>
                     </form>
                 </div>

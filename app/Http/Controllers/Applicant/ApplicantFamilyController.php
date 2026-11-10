@@ -24,7 +24,12 @@ class ApplicantFamilyController extends Controller
     public function create()
     {
         $applicant = auth()->user()->applicant;
-        $families = $applicant?->families ?? collect();
+
+        if (! $applicant) {
+            return redirect()->route('biodata.create');
+        }
+
+        $families = $applicant->families ?? collect();
 
         return view('auth.applicant.biodata.create.family', compact('applicant', 'families'));
     }

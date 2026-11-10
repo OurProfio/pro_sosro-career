@@ -15,10 +15,10 @@
                 <p class="text-gray-500 mt-2 font-medium">Selamat datang kembali! Silakan masuk untuk melanjutkan.</p>
             </div>
 
-            @if (session('status'))
+            @if (session('error'))
                 <div
-                    class="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 font-medium text-sm text-green-700 text-center">
-                    {{ session('status') }}
+                    class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 font-medium text-sm text-red-700 text-center">
+                    {{ session('error') }}
                 </div>
             @endif
 
