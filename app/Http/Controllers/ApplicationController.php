@@ -128,7 +128,7 @@ class ApplicationController extends Controller
             ...$request->has('notes') ? ['notes' => $request->validated('notes')] : [],
         ]);
 
-        $application->load(['stage', 'applicant', 'job.office']);
+        $application->load(['stage', 'applicant.user', 'job.office']);
 
         $mailable = $notificationService->sendStageNotification($application, $request->validated());
 
@@ -162,7 +162,7 @@ class ApplicationController extends Controller
 
             $application->update(['status' => $newStatus]);
 
-            $application->load(['stage', 'applicant', 'job.office']);
+            $application->load(['stage', 'applicant.user', 'job.office']);
 
             $mailable = $notificationService->sendStatusNotification($application, $validatedData);
         });

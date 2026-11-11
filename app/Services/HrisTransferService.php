@@ -99,7 +99,7 @@ class HrisTransferService
                 'NRIC' => $applicant->nik,
                 'PHONE' => $applicant->phone_number,
                 'MOBILE_PHONE' => $applicant->phone_number,
-                'EMAIL' => $applicant->email ?? $applicant->user?->email,
+                'EMAIL' => $applicant->user?->email ?? $applicant->email,
                 'HEIGHT' => (string) ($applicant->height ?? ''),
                 'WEIGHT' => (string) ($applicant->weight ?? ''),
                 'BLOOD_TYPE' => $applicant->blood_type,

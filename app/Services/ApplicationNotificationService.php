@@ -143,7 +143,9 @@ class ApplicationNotificationService
      */
     protected function dispatchEmail(Application $application, Mailable $mailable): void
     {
-        $recipientEmail = $application->applicant?->email ?? $application->applicant?->user?->email;
+        $application->loadMissing('applicant.user');
+
+        $recipientEmail = $application->applicant?->user?->email ?? $application->applicant?->email;
 
         if (! $recipientEmail) {
             Log::warning('Recipient email not found for application ID: '.$application->id);

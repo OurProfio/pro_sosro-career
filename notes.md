@@ -21,6 +21,7 @@ DONE
 * tanggal buka hapus aja(lagi ditest)
 * bisa cancel apply pas sebagai applicant(lagi di test)
 * persetujuan upload lowongan bagusnya namanya apa
+* kalo dicreate jangan ada tombol Kembali ke petinjau sebelum semua/step 4 selesai
 
 
 
@@ -28,12 +29,6 @@ DONE
 
 
 ON GOING
-* kalo dicreate jangan ada tombol Kembali ke petinjau sebelum semua/step 4 selesai
-
 * status lowongan apus aja yg di create lowongan
-
-
-* sebelum bisa balik ke dashboard cek dulu data biodata yg di create uda keisii apa blm
-* bug kalo edit misal dari belum menikah jadi menikah terus di arahin url ke dashboard jadinya data pasangan masi kosong
-* users gabisa dihapus tapi nonaktif aja
 * simpan ip yg login
+* bulking data kode psikotes
