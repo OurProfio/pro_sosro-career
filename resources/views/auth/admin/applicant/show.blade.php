@@ -65,6 +65,8 @@
 
         $interests = $applicant->interest?->interests;
         $interests = is_array($interests) ? array_slice($interests, 0, 5) : (filled($interests) ? [$interests] : []);
+
+        $applicantEmail = $applicant->user?->email ?? $applicant->email;
     @endphp
 
     <div class="applicant-show-page flex flex-col w-full pb-8">
@@ -158,11 +160,11 @@
                         <div class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-slate-50 border border-slate-100">
                             <div class="flex items-center gap-2 min-w-0">
                                 <span class="material-symbols-outlined text-[14px] text-slate-500">mail</span>
-                                <span class="font-medium text-slate-700 truncate text-[11px]">{{ $applicant->email ?? '-' }}</span>
+                                <span class="font-medium text-slate-700 truncate text-[11px]">{{ $applicantEmail ?? '-' }}</span>
                             </div>
-                            @if ($applicant->email)
+                            @if ($applicantEmail)
                                 <button class="text-slate-400 hover:text-[#9b1b1f] transition-colors p-0.5"
-                                    onclick="navigator.clipboard.writeText('{{ $applicant->email }}')" title="Salin Email" type="button">
+                                    onclick="navigator.clipboard.writeText('{{ $applicantEmail }}')" title="Salin Email" type="button">
                                     <span class="material-symbols-outlined text-[14px]">content_copy</span>
                                 </button>
                             @endif

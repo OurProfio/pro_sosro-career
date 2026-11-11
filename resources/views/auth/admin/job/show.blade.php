@@ -463,6 +463,7 @@
 
                                     $currentStage = $stages->firstWhere('id', $application->stages_id);
                                     $currentStep = $currentStage?->step ?? 0;
+                                    $displayEmail = $applicant?->user?->email ?? $applicant?->email ?? '';
 
                                     $searchText = strtolower(
                                         trim(
@@ -470,7 +471,7 @@
                                                 ' ' .
                                                 ($applicant->nik ?? '') .
                                                 ' ' .
-                                                ($applicant->email ?? ''),
+                                                $displayEmail,
                                         ),
                                     );
                                     $stageText = strtolower((string) ($currentStage->name ?? ''));
@@ -508,7 +509,7 @@
                                                     {{ $applicant->name ?? '-' }}
                                                 </p>
                                                 <p class="text-[11px] text-slate-500 truncate">
-                                                    {{ $applicant->email ?? '-' }} • {{ $appAge ? $appAge . ' Th' : '-' }}
+                                                    {{ $displayEmail ?: '-' }} • {{ $appAge ? $appAge . ' Th' : '-' }}
                                                     • <span class="text-slate-400">{{ $appGender }}</span>
                                                 </p>
                                             </div>
@@ -559,7 +560,7 @@
                                                 data-status-url="{{ route('application.updateStatus', $application) }}"
                                                 data-current="{{ $application->status === 'accepted' ? 'status:accepted' : ($application->status === 'rejected' ? 'status:rejected' : ($application->stages_id ? 'stage:' . $application->stages_id : '')) }}"
                                                 data-applicant-name="{{ $applicant->name ?? '-' }}"
-                                                data-applicant-email="{{ $applicant->email ?? '-' }}"
+                                                data-applicant-email="{{ $displayEmail ?: '-' }}"
                                                 data-office-type="{{ $job->office->type ?? '-' }}"
                                                 data-notes="{{ $application->notes }}"
                                                 @disabled(in_array($application->status, ['accepted', 'rejected', 'cancelled']))>
@@ -620,7 +621,7 @@
                                                         data-user-email="{{ $userConfirmation->email }}"
                                                         data-notes="{{ $application->notes }}"
                                                         data-applicant-name="{{ $applicant->name ?? '-' }}"
-                                                        data-applicant-email="{{ $applicant->email ?? '-' }}">
+                                                        data-applicant-email="{{ $displayEmail ?: '-' }}">
                                                         Kirim ulang
                                                     </button>
                                                 @endif

@@ -104,6 +104,7 @@ class JobController extends Controller
             'admin.user',
             'applications.applicant.educations',
             'applications.applicant.workExperiences',
+            'applications.applicant.user',
             'applications.stage',
             'applications.userConfirmation',
         ]);

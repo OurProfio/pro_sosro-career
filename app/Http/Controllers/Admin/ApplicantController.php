@@ -86,6 +86,7 @@ class ApplicantController extends Controller
         }
 
         $applicant = $applicant->load([
+            'user',
             'workExperiences',
             'educations',
             'families',

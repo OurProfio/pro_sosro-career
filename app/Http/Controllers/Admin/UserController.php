@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -75,7 +76,13 @@ class UserController extends Controller
             unset($data['password']);
         }
 
-        $user->update($data);
+        DB::transaction(function () use ($user, $data) {
+            $user->update($data);
+
+            if (! empty($data['email']) && $user->applicant) {
+                $user->applicant->update(['email' => $data['email']]);
+            }
+        });
 
         return redirect()
             ->route('user.index')

@@ -63,7 +63,7 @@ Route::group(['middleware' => ['auth']], function () {
         });
     });
 
-    Route::group(['middleware' => ['role:applicant']], function () {
+    Route::group(['middleware' => ['role:applicant', 'verified']], function () {
         Route::get('/dashboard', fn () => view('auth.applicant.index'))->name('applicant.dashboard');
         Route::get('/biodata/keluarga', [ApplicantFamilyController::class, 'create'])->name('biodata.family.create');
         Route::post('/biodata/keluarga', [ApplicantFamilyController::class, 'store'])->name('biodata.family.store');
