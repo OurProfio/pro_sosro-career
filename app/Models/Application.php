@@ -38,4 +38,11 @@ class Application extends Model
     {
         return $this->hasOne(PsikotesLink::class);
     }
+
+    public function canBeInvitedToPsikotes(Stage $psikotesStage): bool
+    {
+        return in_array($this->status, ['pending', 'progress'], true)
+            && $this->psikotesLink === null
+            && ($this->stage === null || $this->stage->step < $psikotesStage->step);
+    }
 }

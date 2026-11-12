@@ -72,4 +72,13 @@ class Job extends Model
     {
         return Stage::where('type', $this->category)->where('name', 'psikotes')->first();
     }
+
+    public function isManageableBy(?Admin $admin): bool
+    {
+        if ($admin?->role === 'superadmin') {
+            return true;
+        }
+
+        return ! ($admin?->office_id && $this->office_id !== $admin->office_id);
+    }
 }

@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth']], function () {
             Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
             Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
             Route::post('/job/{job}/psikotes-links', [PsikotesLinkController::class, 'import'])->name('job.psikotesLinks.import');
+            Route::post('/job/{job}/psikotes-invitations', [PsikotesLinkController::class, 'invite'])->name('job.psikotesInvitations.store');
 
             // Khusus Super Admin
             Route::group(['middleware' => ['role:superadmin']], function () {

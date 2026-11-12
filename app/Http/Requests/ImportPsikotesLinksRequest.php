@@ -10,12 +10,11 @@ class ImportPsikotesLinksRequest extends FormRequest
 
     public function authorize(): bool
     {
-        $admin = $this->user()?->admin;
-        $isSuperAdmin = $admin?->role === 'superadmin';
-
-        if (! $isSuperAdmin && $admin?->office_id && $this->route('job')->office_id !== $admin->office_id) {
-            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
-        }
+        abort_unless(
+            $this->route('job')->isManageableBy($this->user()?->admin),
+            403,
+            'Akses tidak diizinkan untuk kantor cabang lain.'
+        );
 
         return true;
     }
