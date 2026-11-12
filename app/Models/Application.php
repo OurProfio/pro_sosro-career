@@ -33,4 +33,9 @@ class Application extends Model
     {
         return $this->belongsTo(Stage::class, 'stages_id');
     }
+
+    public function psikotesLink(): HasOne
+    {
+        return $this->hasOne(PsikotesLink::class);
+    }
 }

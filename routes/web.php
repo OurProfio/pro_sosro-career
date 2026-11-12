@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ApplicantController as AdminApplicantController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\OfficeController;
+use App\Http\Controllers\Admin\PsikotesLinkController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Applicant\ApplicantController;
 use App\Http\Controllers\Applicant\ApplicantEducationController;
@@ -49,6 +50,7 @@ Route::group(['middleware' => ['auth']], function () {
 
             Route::patch('/application/{application}/stage', [ApplicationController::class, 'updateStage'])->name('application.updateStage');
             Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
+            Route::post('/job/{job}/psikotes-links', [PsikotesLinkController::class, 'import'])->name('job.psikotesLinks.import');
 
             // Khusus Super Admin
             Route::group(['middleware' => ['role:superadmin']], function () {
