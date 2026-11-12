@@ -5,6 +5,8 @@ use App\Models\Application;
 use App\Models\Stage;
 use App\Services\ApplicationNotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Mail\MailManager;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
@@ -48,4 +50,16 @@ it('hides the code line when no code is given', function () {
 
 it('shows the code line when a code is given', function () {
     (new psikotesMail($this->application, code: 'ABC123'))->assertSeeInHtml('<strong>Kode Tes:</strong> ABC123', false);
+});
+
+it('queues the psikotes email into the queue_jobs table, not the job postings table', function () {
+    Mail::swap(new MailManager(app()));
+    config(['queue.default' => 'database']);
+
+    $jobPostings = DB::table('jobs')->count();
+
+    Mail::to('x@example.com')->queue(new psikotesMail($this->application, link: 'https://careeratsosro.com/?kode=X'));
+
+    $this->assertDatabaseCount('queue_jobs', 1);
+    expect(DB::table('jobs')->count())->toBe($jobPostings);
 });

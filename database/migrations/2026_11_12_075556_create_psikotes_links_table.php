@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('job_id')->constrained('jobs')->cascadeOnDelete();
             $table->string('link')->unique();
-            $table->foreignId('application_id')->nullable()->unique()->constrained('applications')->nullOnDelete();
+            $table->foreignId('application_id')->nullable()->unique()->constrained('applications')->cascadeOnDelete();
             $table->timestamp('assigned_at')->nullable();
             $table->timestamps();
         });

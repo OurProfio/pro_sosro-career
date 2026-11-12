@@ -50,12 +50,13 @@ it('imports links from the Link Tes column', function () {
         [3, 'C', ''],
         [4, 'D', 'bukan-url'],
         [5, 'E', 'https://careeratsosro.com/?kode=EXIST00001'],
+        [6, 'F', 'https://careeratsosro.com/?kode='.str_repeat('X', 250)],
     ]);
 
     $this->actingAs($this->adminA)
         ->post(route('job.psikotesLinks.import', $this->job), ['file' => $file])
         ->assertRedirect()
-        ->assertSessionHas('info', '2 link psikotes ditambahkan, 2 dilewati (duplikat/tidak valid).');
+        ->assertSessionHas('info', '2 link psikotes ditambahkan, 3 dilewati (duplikat/tidak valid).');
 
     expect($this->job->psikotesLinks()->pluck('link')->all())->toEqualCanonicalizing([
         'https://careeratsosro.com/?kode=118067XQF0',

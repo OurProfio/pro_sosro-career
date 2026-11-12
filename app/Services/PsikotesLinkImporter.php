@@ -53,7 +53,7 @@ class PsikotesLinkImporter
                         continue;
                     }
 
-                    if (filter_var($value, FILTER_VALIDATE_URL) === false) {
+                    if (mb_strlen($value) > 255 || filter_var($value, FILTER_VALIDATE_URL) === false) {
                         $skipped++;
 
                         continue;

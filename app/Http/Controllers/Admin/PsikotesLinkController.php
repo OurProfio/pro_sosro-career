@@ -27,26 +27,40 @@ class PsikotesLinkController extends Controller
         $applicationIds = $request->validated('application_ids');
         $needed = count($applicationIds);
 
-        $invited = DB::transaction(function () use ($job, $psikotesStage, $applicationIds, $needed) {
+        $outcome = DB::transaction(function () use ($job, $psikotesStage, $applicationIds, $needed): array {
+            $applications = Application::whereIn('id', $applicationIds)
+                ->where('job_id', $job->id)
+                ->with(['stage', 'psikotesLink'])
+                ->orderBy('id')
+                ->lockForUpdate()
+                ->get();
+
+            $hasIneligible = $applications->count() !== $needed
+                || $applications->contains(fn (Application $application): bool => ! $application->canBeInvitedToPsikotes($psikotesStage));
+
+            if ($hasIneligible) {
+                return ['error' => 'Beberapa pelamar sudah diundang psikotes atau sudah melewati tahap tersebut.'];
+            }
+
             $links = $job->psikotesLinks()->available()->orderBy('id')->limit($needed)->lockForUpdate()->get();
 
             if ($links->count() < $needed) {
-                return $links->count();
+                return ['error' => "Stok link psikotes tidak cukup: butuh {$needed}, tersedia {$links->count()}."];
             }
 
-            $applications = Application::whereIn('id', $applicationIds)->orderBy('id')->get();
-
-            foreach ($applications as $index => $application) {
+            foreach ($applications->values() as $index => $application) {
                 $links[$index]->update(['application_id' => $application->id, 'assigned_at' => now()]);
                 $application->update(['stages_id' => $psikotesStage->id, 'status' => 'progress']);
             }
 
-            return $applications;
+            return ['applications' => $applications];
         });
 
-        if (is_int($invited)) {
-            return back()->with('error', "Stok link psikotes tidak cukup: butuh {$needed}, tersedia {$invited}.");
+        if (isset($outcome['error'])) {
+            return back()->withErrors(['application_ids' => $outcome['error']], 'psikotesInvite');
         }
+
+        $invited = $outcome['applications'];
 
         $invited->load(['stage', 'psikotesLink', 'applicant.user', 'job.office']);
 

@@ -22,7 +22,7 @@
         approveModalOpen: false,
         uploadPsikotesModalOpen: {{ $errors->psikotesImport->any() ? 'true' : 'false' }},
         invitePsikotesModalOpen: {{ $errors->psikotesInvite->any() ? 'true' : 'false' }},
-        selectedApplicationIds: [],
+        selectedApplicationIds: @js(array_map('intval', (array) old('application_ids', []))),
         availablePsikotesLinks: {{ $availablePsikotesLinkCount }},
         toggleAllVisible(checked) {
             if (!checked) {
@@ -70,7 +70,9 @@
                 this.selectedApplicationIds = this.selectedApplicationIds.filter(id => !hiddenIds.includes(id));
             });
         }
-    }" x-init="$watch('searchQuery', () => filterApplicants());
+    }" x-init="const renderedIds = Array.from(document.querySelectorAll('.psikotes-checkbox')).map(cb => Number(cb.value));
+    selectedApplicationIds = selectedApplicationIds.filter(id => renderedIds.includes(id));
+    $watch('searchQuery', () => filterApplicants());
     $watch('stageFilter', () => filterApplicants());
     $watch('eduFilter', () => filterApplicants());">
 

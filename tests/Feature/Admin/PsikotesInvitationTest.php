@@ -76,7 +76,7 @@ it('changes nothing when there are not enough links', function () {
     PsikotesLink::factory()->count(2)->create(['job_id' => $this->job->id]);
 
     ($this->invite)($this->applications->pluck('id')->all())
-        ->assertSessionHas('error', 'Stok link psikotes tidak cukup: butuh 3, tersedia 2.');
+        ->assertSessionHasErrorsIn('psikotesInvite', ['application_ids' => 'Stok link psikotes tidak cukup: butuh 3, tersedia 2.']);
 
     expect(Application::where('stages_id', $this->administration->id)->count())->toBe(3)
         ->and($this->job->psikotesLinks()->available()->count())->toBe(2);
@@ -91,6 +91,19 @@ it('rejects applications from another job', function () {
 
     expect($other->refresh()->stages_id)->toBe($this->administration->id)
         ->and($this->job->psikotesLinks()->available()->count())->toBe(3);
+});
+
+it('rejects applications with a final status', function () {
+    PsikotesLink::factory()->count(3)->create(['job_id' => $this->job->id]);
+    $rejected = $this->applications->first();
+    $rejected->update(['status' => 'rejected']);
+
+    ($this->invite)([$rejected->id])->assertSessionHasErrorsIn('psikotesInvite', 'application_ids.0');
+
+    expect($rejected->refresh()->stages_id)->toBe($this->administration->id)
+        ->and($rejected->status)->toBe('rejected')
+        ->and($this->job->psikotesLinks()->available()->count())->toBe(3);
+    Mail::assertNothingQueued();
 });
 
 it('rejects duplicate application ids', function () {

@@ -64,3 +64,11 @@ it('hides the psikotes bulk tools for jobs without a psikotes stage', function (
         ->assertDontSee('Upload Link Psikotes')
         ->assertDontSee('class="psikotes-checkbox"', false);
 });
+
+it('keeps the previously selected applicants after an invite error', function () {
+    $this->actingAs($this->superAdmin)
+        ->withSession(['_old_input' => ['application_ids' => [$this->eligible->id]]])
+        ->get(route('job.show', $this->job))
+        ->assertOk()
+        ->assertSee("selectedApplicationIds: JSON.parse('[{$this->eligible->id}]')", false);
+});
