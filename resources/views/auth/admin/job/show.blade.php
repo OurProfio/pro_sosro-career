@@ -802,8 +802,24 @@
                                 <p class="text-xs text-slate-500 mt-0.5">File .xlsx dari program psikotes. Hanya kolom "Link Tes" yang dibaca.</p>
                             </div>
                             <div class="px-6 py-5 space-y-2">
-                                <input type="file" name="file" accept=".xlsx" required
-                                    class="block w-full text-xs text-slate-700 border border-slate-200 rounded-lg p-2 bg-white">
+                                <div x-data="{ fileName: '', isDragging: false }"
+                                    :class="isDragging ? 'border-[#991b1b] bg-red-50/60' : (fileName ? 'border-slate-300 bg-white' : 'border-slate-300 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-400')"
+                                    class="relative flex items-center gap-3 rounded-xl border border-dashed px-4 py-4 transition focus-within:ring-2 focus-within:ring-red-100 focus-within:border-[#991b1b]">
+                                    <input type="file" name="file" id="psikotes_link_file" accept=".xlsx" required
+                                        aria-describedby="upload-psikotes-hint"
+                                        @change="fileName = $event.target.files[0]?.name ?? ''"
+                                        @dragenter="isDragging = true" @dragleave="isDragging = false" @drop="isDragging = false"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <span class="material-symbols-outlined shrink-0 text-2xl"
+                                        :class="fileName ? 'text-emerald-600' : 'text-slate-400'"
+                                        x-text="fileName ? 'task' : 'upload_file'">upload_file</span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-semibold text-slate-800 truncate"
+                                            x-text="fileName || 'Pilih file .xlsx'">Pilih file .xlsx</p>
+                                        <p class="text-xs text-slate-500" id="upload-psikotes-hint"
+                                            x-text="fileName ? 'Klik untuk ganti file' : 'Klik atau seret file ke sini'">Klik atau seret file ke sini</p>
+                                    </div>
+                                </div>
                                 @if ($errors->psikotesImport->first('file'))
                                     <p class="text-xs text-red-500">{{ $errors->psikotesImport->first('file') }}</p>
                                 @endif
