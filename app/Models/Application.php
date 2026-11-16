@@ -39,6 +39,14 @@ class Application extends Model
         return $this->hasOne(PsikotesLink::class);
     }
 
+    /**
+     * Determine whether the application already reached a final status.
+     */
+    public function isClosed(): bool
+    {
+        return in_array($this->status, ['accepted', 'rejected', 'cancelled'], true);
+    }
+
     public function canBeInvitedToPsikotes(Stage $psikotesStage): bool
     {
         return in_array($this->status, ['pending', 'progress'], true)

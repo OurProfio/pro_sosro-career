@@ -17,7 +17,7 @@
     @endphp
 
     <div class="flex flex-col w-full space-y-6 pb-8 font-sans" x-data="{
-        openEditModal: {{ $errors->any() ? 'true' : 'false' }},
+        openEditModal: {{ $errors->hasAny(['office_id', 'title', 'category', 'occupation', 'type', 'location', 'description', 'qualification', 'closing_date']) ? 'true' : 'false' }},
         closeModalOpen: false,
         approveModalOpen: false,
         uploadPsikotesModalOpen: {{ $errors->psikotesImport->any() ? 'true' : 'false' }},
@@ -864,16 +864,16 @@
                                     <p class="text-xs text-red-500">{{ $message }}</p>
                                 @endforeach
                                 <div class="space-y-1.5">
-                                    <label for="psikotes_date"
+                                    <label for="invite_psikotes_date"
                                         class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Periode Tes</label>
-                                    <input type="date" id="psikotes_date" name="psikotes_date"
+                                    <input type="date" id="invite_psikotes_date" name="psikotes_date"
                                         value="{{ old('psikotes_date') }}"
                                         class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label for="psikotes_time"
+                                    <label for="invite_psikotes_time"
                                         class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Waktu</label>
-                                    <input type="text" id="psikotes_time" name="psikotes_time"
+                                    <input type="text" id="invite_psikotes_time" name="psikotes_time"
                                         value="{{ old('psikotes_time') }}" placeholder="Contoh: 08:00 - 17:00 WIB"
                                         class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
                                 </div>

@@ -263,14 +263,6 @@
                             </div>
                         </div>
 
-                        <div id="fields-offering" class="stage-fields hidden space-y-4">
-                            <div class="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
-                                <p class="text-sm text-blue-700">
-                                    Email Offering Letter akan dikirimkan secara otomatis kepada kandidat untuk mengonfirmasi penawaran kerja.
-                                </p>
-                            </div>
-                        </div>
-
                         <div id="fields-accept" class="stage-fields hidden space-y-4">
 
                             <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
