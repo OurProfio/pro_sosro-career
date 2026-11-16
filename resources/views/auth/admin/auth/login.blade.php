@@ -20,13 +20,6 @@
                 </p>
             </div>
 
-            @if (session('status'))
-                <div
-                    class="mb-4 p-3 rounded-lg bg-green-50 border border-green-200 font-medium text-sm text-green-700 text-center">
-                    {{ session('status') }}
-                </div>
-            @endif
-
             <form method="POST" action="{{ route('admin.login.post') }}" onsubmit="return disableButton(this)" class="space-y-5">
                 @csrf
 

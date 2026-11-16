@@ -333,7 +333,7 @@
                                     @endif
                                 </td>
                                 <td class="px-5 py-4 text-slate-500 whitespace-nowrap">
-                                    {{ \Carbon\Carbon::parse($user->created_at)->translatedFormat('d M Y, H:i') }}
+                                    {{ \Carbon\Carbon::parse($user->created_at)->translatedFormat('d M Y, H:i') }} WIB
                                 </td>
                                 <td class="px-5 py-4 text-center whitespace-nowrap">
                                     <div class="inline-flex items-center justify-center gap-1 bg-slate-50 p-1 rounded-lg border border-slate-200/80">

@@ -234,8 +234,9 @@
 
                     <div>
                         <label for="contactName" class="sr-only">Nama Lengkap</label>
-                        <input id="contactName" name="name" type="text" value="{{ old('name') }}" required
-                            placeholder="Nama Lengkap"
+                        <input id="contactName" name="name" type="text"
+                            value="{{ old('name', auth()->user()?->applicant?->name ?? auth()->user()?->admin?->name ?? '') }}"
+                            required placeholder="Nama Lengkap"
                             class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition">
                         @error('name')
                             <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
@@ -244,8 +245,8 @@
 
                     <div>
                         <label for="contactEmail" class="sr-only">Email</label>
-                        <input id="contactEmail" name="email" type="email" value="{{ old('email') }}" required
-                            placeholder="Email"
+                        <input id="contactEmail" name="email" type="email"
+                            value="{{ old('email', auth()->user()?->email ?? '') }}" required placeholder="Email"
                             class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition">
                         @error('email')
                             <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>

@@ -173,7 +173,7 @@ class DatabaseSeeder extends Seeder
                 'occupation' => 'Information Technology',
                 'type' => 'Full-Time',
                 'location' => 'Jakarta',
-                'opening_date' => now()->subDays(5)->toDateString(),
+                'opening_date' => today()->toDateString(),
                 'closing_date' => now()->addMonths(2)->toDateString(),
                 'description' => 'Bertanggung jawab atas pemeliharaan infrastruktur IT, jaringan, perangkat keras, serta dukungan teknis operasional harian di lingkungan Kantor Pusat PT Sinar Sosro Gunung Slamat.',
                 'qualification' => "1. Pendidikan minimal D3/S1 Teknik Informatika, Sistem Informasi, atau Ilmu Komputer.\n2. Memahami troubleshooting hardware, software, dan jaringan (LAN/WAN).\n3. Teliti, komunikatif, dan mampu bekerja sama dalam tim.\n4. Bersedia ditempatkan di Kantor Pusat (Jakarta).",

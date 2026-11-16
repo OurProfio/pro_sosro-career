@@ -15,13 +15,6 @@
                 <p class="text-gray-500 mt-2 font-medium">Selamat datang kembali! Silakan masuk untuk melanjutkan.</p>
             </div>
 
-            @if (session('error'))
-                <div
-                    class="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 font-medium text-sm text-red-700 text-center">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             <form method="POST" action="{{ route('guest.login.post') }}" onsubmit="return disableButton(this)" class="space-y-5">
                 @csrf
 

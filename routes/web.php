@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\ApplicantController as AdminApplicantController;
+use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\OfficeController;
@@ -63,6 +64,8 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::resource('division', DivisionController::class);
                 Route::resource('admin', AdminController::class);
                 Route::resource('user', UserController::class);
+                Route::resource('contact-message', ContactMessageController::class)->only(['index', 'destroy']);
+                Route::patch('/contact-message/{contact_message}/status', [ContactMessageController::class, 'updateStatus'])->name('contact-message.updateStatus');
             });
         });
     });

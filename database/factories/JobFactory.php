@@ -27,7 +27,7 @@ class JobFactory extends Factory
             'occupation' => fake()->word(),
             'type' => 'magang',
             'location' => fake()->randomElement(Job::CITIES),
-            'opening_date' => now()->subDay()->toDateString(),
+            'opening_date' => today()->toDateString(),
             'closing_date' => now()->addMonth()->toDateString(),
             'description' => fake()->sentence(),
             'qualification' => fake()->sentence(),

@@ -125,6 +125,30 @@
                          <span class="w-1.5 h-4 bg-[#A6192E] rounded-full"></span>
                      @endif
                  </a>
+
+                 @php
+                     $isContactMessageActive = request()->routeIs('contact-message.*');
+                     $unreadContactCount = \App\Models\ContactMessage::where('status', 'unread')->count();
+                 @endphp
+                 <a class="flex items-center justify-between px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors group {{ $isContactMessageActive ? 'bg-red-50 text-[#A6192E] font-semibold border border-red-100/70 shadow-sm' : 'text-slate-600 hover:text-red-800 hover:bg-slate-50' }}"
+                     href="{{ route('contact-message.index') }}">
+                     <div class="flex items-center gap-3">
+                         <svg class="w-5 h-5 {{ $isContactMessageActive ? 'text-[#A6192E]' : 'text-slate-400 group-hover:text-red-700' }}" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                         </svg>
+                         <span>Pesan Masuk</span>
+                     </div>
+                     <div class="flex items-center gap-1.5">
+                         @if ($unreadContactCount > 0)
+                             <span class="inline-flex items-center justify-center px-2 py-0.5 text-[10px] font-bold leading-none text-white bg-[#A6192E] rounded-full">
+                                 {{ $unreadContactCount }}
+                             </span>
+                         @endif
+                         @if ($isContactMessageActive)
+                             <span class="w-1.5 h-4 bg-[#A6192E] rounded-full"></span>
+                         @endif
+                     </div>
+                 </a>
              @endif
          </nav>
      </div>

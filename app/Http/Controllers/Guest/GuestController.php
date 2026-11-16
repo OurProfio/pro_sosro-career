@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Guest;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContactMessage;
 use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class GuestController extends Controller
@@ -73,24 +73,16 @@ class GuestController extends Controller
             'message.required' => 'Pesan wajib diisi.',
         ]);
 
-        $contactEntry = [
-            'id' => uniqid('msg_', true),
+        ContactMessage::create([
+            'user_id' => auth()->id(),
             'name' => $validated['name'],
             'email' => $validated['email'],
             'region' => $validated['region'],
             'message' => $validated['message'],
-            'created_at' => now()->toIso8601String(),
-        ];
-
-        $currentMessages = [];
-        if (Storage::disk('local')->exists('contact_messages.json')) {
-            $currentMessages = json_decode(Storage::disk('local')->get('contact_messages.json'), true) ?: [];
-        }
-        $currentMessages[] = $contactEntry;
-        Storage::disk('local')->put(
-            'contact_messages.json',
-            json_encode($currentMessages, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-        );
+            'status' => 'unread',
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
 
         return back()->with('success', 'Pesan Anda berhasil dikirim! Tim rekrutmen kami akan segera menindaklanjutinya.');
     }
