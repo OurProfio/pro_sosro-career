@@ -8,8 +8,11 @@
     <p>
         <strong>Periode Tes:</strong> {{ $date ? \Carbon\Carbon::parse($date)->locale('id')->translatedFormat('l, d F Y') : 'Sesuai jadwal yang diinformasikan' }}<br>
         <strong>Durasi:</strong> ± 2 – 3 Jam<br>
-        <strong>Link Tes:</strong> <a href="{{ $link ?? 'https://joinsosro.com/psikotest' }}">{{ $link ?? 'joinsosro.com/psikotest' }}</a><br>
-        <strong>Kode Tes:</strong> {{ $code ?? '(lihat pada menu Riwayat Lamaran akun Sosro Career Anda)' }}
+        <strong>Link Tes:</strong> <a href="{{ $link ?? 'https://joinsosro.com/psikotest' }}">{{ $link ?? 'joinsosro.com/psikotest' }}</a>
+        @if ($code)
+            <br>
+            <strong>Kode Tes:</strong> {{ $code }}
+        @endif
     </p>
 
     <p>Anda bisa mengerjakan tes kapan saja selama periode di atas, dapat diakses hingga 23.00 WIB pada hari terakhir periode tes. Setelah periode berakhir, link tes tidak dapat diakses kembali.</p>

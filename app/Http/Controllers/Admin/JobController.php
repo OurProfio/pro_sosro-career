@@ -107,11 +107,16 @@ class JobController extends Controller
             'applications.applicant.user',
             'applications.stage',
             'applications.userConfirmation',
+            'applications.psikotesLink',
         ]);
 
         $stages = Stage::where('type', $job->category)
             ->orderBy('step')
             ->get();
+
+        $psikotesStage = $job->psikotesStage();
+        $availablePsikotesLinkCount = $job->psikotesLinks()->available()->count();
+        $usedPsikotesLinkCount = $job->psikotesLinks()->whereNotNull('application_id')->count();
 
         if ($isSuperAdmin) {
             $offices = Office::orderBy('name')->get();
@@ -127,7 +132,7 @@ class JobController extends Controller
         $divisions = Division::all();
         $cities = Job::CITIES;
 
-        return view('auth.admin.job.show', compact('job', 'stages', 'offices', 'assignableOffices', 'divisions', 'cities'));
+        return view('auth.admin.job.show', compact('job', 'stages', 'offices', 'assignableOffices', 'divisions', 'cities', 'psikotesStage', 'availablePsikotesLinkCount', 'usedPsikotesLinkCount'));
     }
 
     /**

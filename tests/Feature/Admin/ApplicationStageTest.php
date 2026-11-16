@@ -5,6 +5,7 @@ use App\Mail\AcceptedKpwMail;
 use App\Mail\InterviewOfflineMail;
 use App\Mail\InterviewOnlineMail;
 use App\Mail\RejectedMail;
+use App\Models\Admin;
 use App\Models\Applicant;
 use App\Models\Application;
 use App\Models\Job;
@@ -262,4 +263,76 @@ it('rejects HR notes longer than 2000 characters', function () {
         ->assertSessionHasErrors('notes');
 
     expect($this->application->fresh()->stages_id)->toBeNull();
+});
+
+it('shows the validation error instead of the edit job modal when accepting without details', function () {
+    $job = Job::factory()->create();
+    $application = Application::factory()->for($job)->create();
+
+    $this->actingAs($this->admin)
+        ->from(route('job.show', $job))
+        ->followingRedirects()
+        ->patch(route('application.updateStatus', $application), ['status' => 'accepted'])
+        ->assertSee('openEditModal: false', false)
+        ->assertSee('role="alert"', false);
+
+    expect($application->fresh()->status)->not->toBe('accepted');
+});
+
+it('forbids a branch admin from changing an application of another office', function () {
+    $branchAdmin = Admin::factory()->create(['office_id' => Office::factory()->create()->id])->user;
+
+    $this->actingAs($branchAdmin)
+        ->patch(route('application.updateStage', $this->application), ['stages_id' => $this->administrationStage->id])
+        ->assertForbidden();
+
+    $this->actingAs($branchAdmin)
+        ->patch(route('application.updateStatus', $this->application), ['status' => 'rejected'])
+        ->assertForbidden();
+
+    expect($this->application->fresh())->stages_id->toBeNull()->status->not->toBe('rejected');
+});
+
+it('does not change an application that already reached a final status', function (string $status) {
+    $this->application->update(['status' => $status]);
+
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), ['stages_id' => $this->administrationStage->id])
+        ->assertSessionHasErrors('application');
+
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStatus', $this->application), [
+            'status' => 'accepted',
+            'start_date' => now()->addWeek()->toDateString(),
+            'work_address' => 'Graha Rekso Lt.8',
+        ])
+        ->assertSessionHasErrors('application');
+
+    expect($this->application->fresh()->status)->toBe($status);
+    $this->assertDatabaseCount('thrm_app_personal_data', 0);
+    Mail::assertNothingSent();
+})->with(['accepted', 'rejected', 'cancelled']);
+
+it('validates the mcu schedule', function () {
+    $mcuStage = Stage::factory()->create(['name' => 'mcu', 'step' => 3]);
+
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $mcuStage->id,
+            'mcu_date' => now()->subDay()->toDateString(),
+            'mcu_time' => 'pagi hari',
+        ])
+        ->assertSessionHasErrors(['mcu_date', 'mcu_time']);
+});
+
+it('limits the length of stage links and addresses', function () {
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $this->interviewStage->id,
+            'interview_type' => 'virtual',
+            'interview_date' => now()->addDay()->toDateString(),
+            'interview_time' => '09:00',
+            'interview_link' => 'https://meet.google.com/'.str_repeat('a', 2100),
+        ])
+        ->assertSessionHasErrors('interview_link');
 });

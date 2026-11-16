@@ -17,9 +17,22 @@
     @endphp
 
     <div class="flex flex-col w-full space-y-6 pb-8 font-sans" x-data="{
-        openEditModal: {{ $errors->any() ? 'true' : 'false' }},
+        openEditModal: {{ $errors->hasAny(['office_id', 'title', 'category', 'occupation', 'type', 'location', 'description', 'qualification', 'closing_date']) ? 'true' : 'false' }},
         closeModalOpen: false,
         approveModalOpen: false,
+        uploadPsikotesModalOpen: {{ $errors->psikotesImport->any() ? 'true' : 'false' }},
+        invitePsikotesModalOpen: {{ $errors->psikotesInvite->any() ? 'true' : 'false' }},
+        selectedApplicationIds: @js(array_map('intval', (array) old('application_ids', []))),
+        availablePsikotesLinks: {{ $availablePsikotesLinkCount }},
+        toggleAllVisible(checked) {
+            if (!checked) {
+                this.selectedApplicationIds = [];
+                return;
+            }
+            this.selectedApplicationIds = Array.from(document.querySelectorAll('.psikotes-checkbox'))
+                .filter(cb => cb.closest('.applicant-row').style.display !== 'none')
+                .map(cb => Number(cb.value));
+        },
         searchQuery: '',
         stageFilter: '',
         eduFilter: '',
@@ -31,16 +44,16 @@
                 const q = (this.searchQuery || '').trim().toLowerCase();
                 const stage = (this.stageFilter || '').trim().toLowerCase();
                 const edu = (this.eduFilter || '').trim().toLowerCase();
-    
+
                 rows.forEach(r => {
                     const search = (r.dataset.search || '').toLowerCase();
                     const rStage = (r.dataset.stage || '').toLowerCase();
                     const rEdu = (r.dataset.edu || '').toLowerCase();
-    
+
                     const matchSearch = !q || search.includes(q);
                     const matchStage = !stage || rStage.includes(stage);
                     const matchEdu = !edu || rEdu.includes(edu);
-    
+
                     if (matchSearch && matchStage && matchEdu) {
                         r.style.display = '';
                         count++;
@@ -48,11 +61,18 @@
                         r.style.display = 'none';
                     }
                 });
-    
+
                 this.visibleApplicantsCount = count;
+
+                const hiddenIds = Array.from(document.querySelectorAll('.psikotes-checkbox'))
+                    .filter(cb => cb.closest('.applicant-row').style.display === 'none')
+                    .map(cb => Number(cb.value));
+                this.selectedApplicationIds = this.selectedApplicationIds.filter(id => !hiddenIds.includes(id));
             });
         }
-    }" x-init="$watch('searchQuery', () => filterApplicants());
+    }" x-init="const renderedIds = Array.from(document.querySelectorAll('.psikotes-checkbox')).map(cb => Number(cb.value));
+    selectedApplicationIds = selectedApplicationIds.filter(id => renderedIds.includes(id));
+    $watch('searchQuery', () => filterApplicants());
     $watch('stageFilter', () => filterApplicants());
     $watch('eduFilter', () => filterApplicants());">
 
@@ -397,6 +417,27 @@
                 </div>
             </div>
 
+            @if ($psikotesStage)
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <p class="text-xs text-slate-600">
+                        Link psikotes: <b class="text-slate-900">{{ $availablePsikotesLinkCount }}</b> tersedia · <b class="text-slate-900">{{ $usedPsikotesLinkCount }}</b> terpakai
+                    </p>
+                    <div class="flex items-center gap-2">
+                        <button type="button" @click="uploadPsikotesModalOpen = true"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-100 font-semibold text-xs transition duration-150 cursor-pointer">
+                            <span class="material-symbols-outlined text-base">upload_file</span>
+                            Upload Link Psikotes
+                        </button>
+                        <button type="button" x-show="selectedApplicationIds.length > 0" x-cloak
+                            @click="invitePsikotesModalOpen = true"
+                            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#991b1b] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm transition duration-150 cursor-pointer">
+                            <span class="material-symbols-outlined text-base">send</span>
+                            Undang Psikotes (<span x-text="selectedApplicationIds.length"></span>)
+                        </button>
+                    </div>
+                </div>
+            @endif
+
             @if ($job->applications->isEmpty())
                 <div class="px-6 py-12 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
                     <span class="material-symbols-outlined text-3xl text-slate-300">group_off</span>
@@ -413,7 +454,14 @@
                         <thead>
                             <tr
                                 class="bg-red-50/60 text-[11px] font-semibold text-[#7f1d1d] uppercase tracking-wider rounded-lg">
-                                <th class="py-3 px-3 rounded-l-lg w-12 text-center">NO</th>
+                                @if ($psikotesStage)
+                                    <th class="py-3 px-3 rounded-l-lg w-10 text-center">
+                                        <input type="checkbox" aria-label="Pilih semua pelamar yang tampil"
+                                            @change="toggleAllVisible($event.target.checked)"
+                                            class="rounded border-slate-300 text-[#991b1b] focus:ring-[#991b1b]/30">
+                                    </th>
+                                @endif
+                                <th class="py-3 px-3 {{ $psikotesStage ? '' : 'rounded-l-lg' }} w-12 text-center">NO</th>
                                 <th class="py-3 px-4 text-center">KANDIDAT / PELAMAR</th>
                                 <th class="py-3 px-4 text-center">PENDIDIKAN TERAKHIR</th>
                                 <th class="py-3 px-4 text-center">PENGALAMAN KERJA</th>
@@ -467,6 +515,15 @@
                                         (!stageFilter || @js($stageText).includes(stageFilter.toLowerCase().trim())) &&
                                         (!eduFilter || @js($eduText).includes(eduFilter.toLowerCase().trim()))
                                     ">
+                                    @if ($psikotesStage)
+                                        <td class="py-3.5 px-3 text-center">
+                                            @if ($application->canBeInvitedToPsikotes($psikotesStage))
+                                                <input type="checkbox" class="psikotes-checkbox" value="{{ $application->id }}"
+                                                    x-model.number="selectedApplicationIds"
+                                                    aria-label="Pilih {{ $applicant->name ?? 'pelamar' }} untuk psikotes">
+                                            @endif
+                                        </td>
+                                    @endif
                                     <td class="py-3.5 px-3 text-center font-semibold text-slate-400">
                                         {{ $loop->iteration }}
                                     </td>
@@ -677,7 +734,7 @@
                             <tr id="applicants-empty-row"
                                 x-show="visibleApplicantsCount === 0 && {{ $job->applications->count() }} > 0"
                                 style="display: none;">
-                                <td colspan="8" class="py-12 px-6 text-center text-slate-400">
+                                <td colspan="{{ $psikotesStage ? 9 : 8 }}" class="py-12 px-6 text-center text-slate-400">
                                     <div class="flex flex-col items-center justify-center gap-2">
                                         <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor"
                                             stroke-width="1.5" viewBox="0 0 24 24">
@@ -705,6 +762,115 @@
                 </div>
             @endif
         </section>
+
+        @if ($psikotesStage)
+            <template x-teleport="body">
+                <div x-show="uploadPsikotesModalOpen" x-cloak style="display: none;"
+                    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                    role="dialog" aria-modal="true" aria-labelledby="upload-psikotes-title"
+                    @keydown.escape.window="uploadPsikotesModalOpen = false">
+                    <div x-show="uploadPsikotesModalOpen" @click.outside="uploadPsikotesModalOpen = false"
+                        class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+                        <form method="POST" action="{{ route('job.psikotesLinks.import', $job) }}"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <div class="px-6 py-5 border-b border-slate-100">
+                                <h3 class="text-lg font-semibold text-slate-900" id="upload-psikotes-title">Upload Link Psikotes</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">File .xlsx dari program psikotes. Hanya kolom "Link Tes" yang dibaca.</p>
+                            </div>
+                            <div class="px-6 py-5 space-y-2">
+                                <div x-data="{ fileName: '', isDragging: false }"
+                                    :class="isDragging ? 'border-[#991b1b] bg-red-50/60' : (fileName ? 'border-slate-300 bg-white' : 'border-slate-300 bg-slate-50/60 hover:bg-slate-50 hover:border-slate-400')"
+                                    class="relative flex items-center gap-3 rounded-xl border border-dashed px-4 py-4 transition focus-within:ring-2 focus-within:ring-red-100 focus-within:border-[#991b1b]">
+                                    <input type="file" name="file" id="psikotes_link_file" accept=".xlsx" required
+                                        aria-describedby="upload-psikotes-hint"
+                                        @change="fileName = $event.target.files[0]?.name ?? ''"
+                                        @dragenter="isDragging = true" @dragleave="isDragging = false" @drop="isDragging = false"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <span class="material-symbols-outlined shrink-0 text-2xl"
+                                        :class="fileName ? 'text-emerald-600' : 'text-slate-400'"
+                                        x-text="fileName ? 'task' : 'upload_file'">upload_file</span>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="text-sm font-semibold text-slate-800 truncate"
+                                            x-text="fileName || 'Pilih file .xlsx'">Pilih file .xlsx</p>
+                                        <p class="text-xs text-slate-500" id="upload-psikotes-hint"
+                                            x-text="fileName ? 'Klik untuk ganti file' : 'Klik atau seret file ke sini'">Klik atau seret file ke sini</p>
+                                    </div>
+                                </div>
+                                @if ($errors->psikotesImport->first('file'))
+                                    <p class="text-xs text-red-500">{{ $errors->psikotesImport->first('file') }}</p>
+                                @endif
+                            </div>
+                            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-3">
+                                <button type="button" @click="uploadPsikotesModalOpen = false"
+                                    class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs transition cursor-pointer">
+                                    Batal
+                                </button>
+                                <button type="submit"
+                                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#991b1b] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm transition cursor-pointer">
+                                    Upload
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </template>
+
+            <template x-teleport="body">
+                <div x-show="invitePsikotesModalOpen" x-cloak style="display: none;"
+                    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+                    role="dialog" aria-modal="true" aria-labelledby="invite-psikotes-title"
+                    @keydown.escape.window="invitePsikotesModalOpen = false">
+                    <div x-show="invitePsikotesModalOpen" @click.outside="invitePsikotesModalOpen = false"
+                        class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
+                        <form method="POST" action="{{ route('job.psikotesInvitations.store', $job) }}">
+                            @csrf
+                            <template x-for="id in selectedApplicationIds" :key="id">
+                                <input type="hidden" name="application_ids[]" :value="id">
+                            </template>
+                            <div class="px-6 py-5 border-b border-slate-100">
+                                <h3 class="text-lg font-semibold text-slate-900" id="invite-psikotes-title">Undang Psikotes</h3>
+                                <p class="text-xs text-slate-500 mt-0.5">
+                                    <span x-text="selectedApplicationIds.length"></span> pelamar dipilih · {{ $availablePsikotesLinkCount }} link tersedia
+                                </p>
+                            </div>
+                            <div class="px-6 py-5 space-y-4">
+                                @foreach ($errors->psikotesInvite->all() as $message)
+                                    <p class="text-xs text-red-500">{{ $message }}</p>
+                                @endforeach
+                                <div class="space-y-1.5">
+                                    <label for="invite_psikotes_date"
+                                        class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Periode Tes</label>
+                                    <input type="date" id="invite_psikotes_date" name="psikotes_date"
+                                        value="{{ old('psikotes_date') }}"
+                                        class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="invite_psikotes_time"
+                                        class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">Waktu</label>
+                                    <input type="text" id="invite_psikotes_time" name="psikotes_time"
+                                        value="{{ old('psikotes_time') }}" placeholder="Contoh: 08:00 - 17:00 WIB"
+                                        class="w-full px-3 py-2 text-xs rounded-lg border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
+                                </div>
+                                <p x-show="selectedApplicationIds.length > availablePsikotesLinks" x-cloak
+                                    class="text-xs font-semibold text-red-600">Stok link tidak cukup.</p>
+                            </div>
+                            <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-3">
+                                <button type="button" @click="invitePsikotesModalOpen = false"
+                                    class="px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-semibold text-xs transition cursor-pointer">
+                                    Batal
+                                </button>
+                                <button type="submit"
+                                    :disabled="selectedApplicationIds.length === 0 || selectedApplicationIds.length > availablePsikotesLinks"
+                                    class="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#991b1b] hover:bg-[#7f1d1d] text-white font-semibold text-xs shadow-sm transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Kirim Undangan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </template>
+        @endif
 
         <template x-teleport="body">
             <div x-show="openEditModal" x-cloak style="display: none;"

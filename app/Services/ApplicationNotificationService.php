@@ -23,8 +23,10 @@ class ApplicationNotificationService
 {
     /**
      * Resolve and dispatch notification email for an application stage change.
+     *
+     * @param  array<string, mixed>  $data
      */
-    public function sendStageNotification(Application $application, array $data): ?Mailable
+    public function sendStageNotification(Application $application, array $data, bool $queue = false): ?Mailable
     {
         $stage = $application->stage;
         if (! $stage) {
@@ -69,7 +71,7 @@ class ApplicationNotificationService
         }
 
         if ($mailable) {
-            $this->dispatchEmail($application, $mailable);
+            $this->dispatchEmail($application, $mailable, $queue);
         }
 
         return $mailable;
@@ -139,9 +141,9 @@ class ApplicationNotificationService
     }
 
     /**
-     * Dispatch email safely to the applicant.
+     * Dispatch email safely to the applicant, either immediately or through the queue.
      */
-    protected function dispatchEmail(Application $application, Mailable $mailable): void
+    protected function dispatchEmail(Application $application, Mailable $mailable, bool $queue = false): void
     {
         $application->loadMissing('applicant.user');
 
@@ -154,7 +156,13 @@ class ApplicationNotificationService
         }
 
         try {
-            Mail::to($recipientEmail)->send($mailable);
+            $pendingMail = Mail::to($recipientEmail);
+
+            if ($queue) {
+                $pendingMail->queue($mailable);
+            } else {
+                $pendingMail->send($mailable);
+            }
         } catch (Throwable $e) {
             Log::error('Failed to send application email: '.$e->getMessage(), [
                 'application_id' => $application->id,
