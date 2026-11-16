@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Feedback & Kritik Saran - Sosro Career Hub</title>
 
-    <!-- Google Font: Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -18,7 +17,6 @@
 
 <body class="bg-[#F8F9FA] text-[#141D23] font-sans antialiased min-h-screen py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-2xl mx-auto">
-        <!-- Header -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center mb-3">
                 <img src="{{ asset('assets/images/SGS Logo-Color.webp') }}" class="h-10 w-auto" alt="Logo Sosro" />
@@ -34,7 +32,6 @@
             </p>
         </div>
 
-        <!-- Success Alert -->
         @if (session('success'))
             <div class="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-start gap-3 shadow-xs">
                 <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -47,7 +44,6 @@
             </div>
         @endif
 
-        <!-- Error Summary -->
         @if ($errors->any())
             <div class="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-3 shadow-xs">
                 <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -60,12 +56,10 @@
             </div>
         @endif
 
-        <!-- Card Form -->
         <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm">
             <form action="{{ route('feedback.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
-                <!-- Upload Screenshot (Optional) -->
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <label for="screenshot" class="block text-sm font-semibold text-slate-800">
@@ -91,7 +85,6 @@
                             </p>
                         </div>
 
-                        <!-- Image Preview Container -->
                         <div id="preview-container" class="hidden flex-col items-center justify-center gap-3">
                             <img id="image-preview" src="#" alt="Preview Screenshot" class="max-h-56 rounded-xl border border-slate-200 shadow-xs object-contain" />
                             <p id="file-name" class="text-xs font-medium text-slate-600 truncate max-w-xs"></p>
@@ -104,7 +97,6 @@
                     @enderror
                 </div>
 
-                <!-- Textarea Penjelasan -->
                 <div>
                     <label for="notes" class="block text-sm font-semibold text-slate-800 mb-2">
                         Penjelasan Kritik / Saran <span class="text-[#B42C33]">*</span>
@@ -122,7 +114,6 @@
                     @enderror
                 </div>
 
-                <!-- Action Button -->
                 <div class="pt-2">
                     <button type="submit"
                         class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#B42C33] hover:bg-[#92101e] active:bg-[#780d19] text-white text-sm font-semibold rounded-2xl shadow-sm hover:shadow transition-all duration-200 cursor-pointer">
@@ -135,7 +126,6 @@
             </form>
         </div>
 
-        <!-- Footer note -->
         <p class="text-center text-xs text-slate-400 mt-6">
             Halaman ini adalah utilitas pengujian internal sementara (akses langsung via URL).
         </p>

@@ -5,7 +5,6 @@
 @section('content')
     <div class="max-w-2xl mx-auto space-y-6 font-sans">
 
-        <!-- HEADER / BREADCRUMB -->
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-xl font-bold text-slate-800">Edit Data Kantor</h2>
@@ -21,13 +20,11 @@
             </a>
         </div>
 
-        <!-- FORM CARD -->
         <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs">
             <form action="{{ route('office.update', $office->id) }}" method="POST" class="space-y-5">
                 @csrf
                 @method('PUT')
 
-                <!-- INPUT 1: NAMA KANTOR -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-slate-700 mb-1.5">
                         Nama Kantor <span class="text-rose-500">*</span>
@@ -38,7 +35,6 @@
                     {{ $errors->has('name') ? 'border-rose-500 focus:ring-2 focus:ring-rose-200' : 'border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100' }}"
                         required>
 
-                    <!-- Pesan Validasi Error -->
                     @error('name')
                         <p class="mt-1.5 text-xs text-rose-500 flex items-center gap-1">
                             <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -70,7 +66,6 @@
                         </option>
                     </select>
 
-                    <!-- Pesan Validasi Error -->
                     @error('type')
                         <p class="mt-1.5 text-xs text-rose-500 flex items-center gap-1">
                             <svg class="w-3.5 h-3.5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -82,7 +77,6 @@
                         </p>
                     @enderror
                 </div>
-                <!-- ACTION BUTTONS -->
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                     <a href="{{ route('office.index') }}"
                         class="px-4 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors">

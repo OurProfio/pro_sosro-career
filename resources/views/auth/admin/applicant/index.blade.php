@@ -11,7 +11,6 @@
         activeTab: 'all',
         sortDesc: true
     }">
-        <!-- Top Navigation & Header Overview Banner -->
         <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3.5 border-b border-slate-200">
             <div class="space-y-0.5">
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
@@ -45,7 +44,6 @@
             $experiencedCount = $applicants->filter(fn($app) => $app->workExperiences->isNotEmpty())->count();
         @endphp
 
-        <!-- Key Metrics & Metric Bar -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/90 flex items-center justify-between">
                 <div>
@@ -121,7 +119,6 @@
             </div>
         </div>
 
-        <!-- Filter Category Tabs & Search Bar -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-4">
             <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-100">
                 <button type="button" @click="activeTab = 'all'"
@@ -160,9 +157,7 @@
                 </button>
             </div>
 
-            <!-- Multi-field Search and Filter Bar -->
             <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mt-4">
-                <!-- Search Input -->
                 <div class="md:col-span-5 relative">
                     <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,7 +169,6 @@
                         placeholder="Cari pelamar berdasarkan nama, keahlian, universitas, atau posisi...">
                 </div>
 
-                <!-- Divisi Dropdown -->
                 <div class="md:col-span-2">
                     <select x-model="selectedDivision"
                         class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition-all">
@@ -187,7 +181,6 @@
                     </select>
                 </div>
 
-                <!-- Pendidikan Dropdown -->
                 <div class="md:col-span-2">
                     <select x-model="selectedEducation"
                         class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition-all">
@@ -200,7 +193,6 @@
                     </select>
                 </div>
 
-                <!-- Status Eks Sosro -->
                 <div class="md:col-span-2">
                     <select x-model="selectedSosro"
                         class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition-all">
@@ -210,7 +202,6 @@
                     </select>
                 </div>
 
-                <!-- Sort By -->
                 <div class="md:col-span-1">
                     <button type="button" @click="sortDesc = !sortDesc"
                         class="w-full py-2.5 px-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer"
@@ -224,7 +215,6 @@
             </div>
         </div>
 
-        <!-- Main Table Container -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden flex flex-col">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -434,7 +424,6 @@
                 </table>
             </div>
 
-            <!-- Table Footer (Tanpa Tombol Pagination) -->
             <div class="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <div class="font-medium">
                     Menampilkan <span class="font-bold text-slate-800">{{ $applicants->count() }}</span> total pelamar

@@ -32,3 +32,11 @@ ON GOING
 * status lowongan apus aja yg di create lowongan
 * simpan ip yg login
 * bulking data kode psikotes
+
+
+graha 
+pabrik
+cukul
+kpw
+
+tehbotol fruitea estea

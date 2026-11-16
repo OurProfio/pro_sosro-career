@@ -8,10 +8,8 @@
             <span class="text-xs font-medium text-gray-400">Langkah 4 dari 4</span>
         </div>
 
-        <!-- Wizard Progress Bar -->
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
-                <!-- Step 1: Data Personal (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
@@ -27,7 +25,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 2: Keluarga (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & kembali ke Data Keluarga"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
@@ -43,7 +40,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 3: Pendidikan (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & kembali ke Data Pendidikan"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
@@ -59,7 +55,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 4: Pengalaman (AKTIF) -->
                 <li class="flex items-center transition-colors text-[#B11116] font-bold">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
@@ -97,7 +92,6 @@
                         $hasAppliedSosro = old('has_applied_sosro', $applicant?->has_applied_sosro ?? 'n');
                     @endphp
 
-                    <!-- PERTANYAAN PERNAH MELAMAR DI SOSRO -->
                     <div class="space-y-3 border-b border-gray-100 pb-4">
                         <div class="space-y-1">
                             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -124,7 +118,6 @@
                             @enderror
                         </div>
 
-                        <!-- DETAIL MELAMAR DI SOSRO -->
                         <div id="appliedSosroDetailCard" class="{{ $hasAppliedSosro === 'y' ? '' : 'hidden' }} p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-4 transition-all">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
@@ -184,7 +177,6 @@
                             @enderror
                         </div>
 
-                        <!-- CARD KONDISIONAL DETAIL SOSRO (Pengalaman ke-0 jika diisi) -->
                         <div id="sosroWorkDetailCard"
                             class="hidden p-5 bg-red-50/50 border border-red-100 rounded-xl space-y-4 transition-all">
                             <div class="flex items-center gap-2 text-[#B11116]">
@@ -267,7 +259,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Tanggal Mulai Bekerja Sosro -->
                                 <div class="space-y-1.5">
                                     <label for="previous_sosro_start_date"
                                         class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -282,7 +273,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Tanggal Selesai Bekerja Sosro -->
                                 <div class="space-y-1.5 md:col-span-2">
                                     <div class="flex items-center justify-between">
                                         <label for="previous_sosro_end_date"
@@ -307,7 +297,6 @@
                                     @enderror
                                 </div>
 
-                                <!-- Bagian Referensi Sosro Terpisah -->
                                 <div class="md:col-span-2 pt-2 border-t border-red-200/60">
                                     <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
                                         Kontak Referensi (Atasan / HRD Sosro)
@@ -359,7 +348,6 @@
                         </div>
                     </div>
 
-                    <!-- Container Card Pengalaman Kerja General -->
                     <div id="experienceContainer" class="space-y-4 pt-0">
                         @php
                             $oldExperiences = old('experiences', []);
@@ -444,7 +432,6 @@
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Nama Perusahaan -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Nama Perusahaan
@@ -458,7 +445,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Alamat Perusahaan -->
                                     <div class="space-y-1.5 md:col-span-2">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Alamat Perusahaan
@@ -472,7 +458,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- No. Telepon Perusahaan -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             No. Telepon Perusahaan
@@ -487,7 +472,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Jabatan / Posisi -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Jabatan / Posisi
@@ -500,7 +484,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Divisi -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Divisi / Departemen
@@ -514,7 +497,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Gaji Terakhir -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Gaji Terakhir (Rp)
@@ -533,7 +515,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Tanggal Mulai -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Tanggal Mulai Bekerja
@@ -546,7 +527,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Tanggal Selesai -->
                                     <div class="space-y-1.5 md:col-span-2">
                                         <div class="flex items-center justify-between">
                                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -570,7 +550,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Fasilitas -->
                                     <div class="space-y-1.5 md:col-span-2">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Fasilitas yang Diterima
@@ -584,7 +563,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Kontak Referensi Terpisah -->
                                     <div class="md:col-span-2 pt-2 border-t border-gray-200/80">
                                         <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
                                             Kontak Referensi (Atasan / HRD Perusahaan Ini)
@@ -629,7 +607,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Alasan Berhenti -->
                                     <div class="space-y-1.5 md:col-span-2">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Alasan Berhenti
@@ -647,7 +624,6 @@
                         @endforeach
                     </div>
 
-                    <!-- Tombol Tambah Card Pengalaman -->
                     <div class="flex justify-start">
                         <button type="button" id="btnAddExperience" onclick="addExperienceCard()"
                             class="inline-flex items-center gap-2 px-4 py-2.5 bg-red-50 hover:bg-red-100 text-[#B11116] rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-sm">
@@ -659,7 +635,6 @@
                         </button>
                     </div>
 
-                    <!-- Actions Bottom -->
                     <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
                         <div class="flex items-center gap-3 w-full sm:w-auto">
                             <a href="{{ route('biodata.education.create') }}"
@@ -695,7 +670,6 @@
         </form>
     </div>
 
-    <!-- Template JS untuk Tambah Card Pengalaman -->
     <template id="experienceCardTemplate">
         <div class="experience-card bg-gray-50/70 rounded-2xl p-5 md:p-6 border border-gray-200 space-y-4 relative transition-all"
             data-index="{INDEX}">
@@ -797,7 +771,6 @@
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <!-- Kontak Referensi Terpisah -->
                 <div class="md:col-span-2 pt-2 border-t border-gray-200/80">
                     <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">
                         Kontak Referensi (Atasan / HRD Perusahaan Ini)

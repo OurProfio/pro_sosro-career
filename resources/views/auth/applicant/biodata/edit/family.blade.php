@@ -90,7 +90,6 @@
                             </div>
                         </div>
 
-                        <!-- Data Ayah -->
                         <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-4">
                             <h3 class="text-xs font-bold text-[#B11116] uppercase tracking-wider flex items-center gap-2">
                                 <span>1. Data Ayah Kandung</span>
@@ -203,7 +202,6 @@
                             </div>
                         </div>
 
-                        <!-- Data Ibu -->
                         <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-4">
                             <h3 class="text-xs font-bold text-[#B11116] uppercase tracking-wider flex items-center gap-2">
                                 <span>2. Data Ibu Kandung</span>
@@ -317,7 +315,6 @@
                             </div>
                         </div>
 
-                        <!-- Data Saudara -->
                         <div class="space-y-4 pt-2">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -364,7 +361,6 @@
                                 </div>
                             </div>
 
-                            <!-- Data Pasangan -->
                             <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-4">
                                 <h3
                                     class="text-xs font-bold text-[#B11116] uppercase tracking-wider flex items-center gap-2">
@@ -473,7 +469,6 @@
                                 </div>
                             </div>
 
-                            <!-- Data Orang Tua Mertua (Opsional) -->
                             <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-6">
                                 <div class="border-b border-gray-200/80 pb-3">
                                     <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
@@ -483,7 +478,6 @@
                                     <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
                                 </div>
 
-                                <!-- Ayah Mertua -->
                                 <div class="space-y-4">
                                     <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
                                         <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
@@ -601,7 +595,6 @@
                                 </div>
                             </div>
 
-                            <!-- Data Anak -->
                             <div class="space-y-4 pt-2">
                                 <div class="flex items-center justify-between">
                                     <div>

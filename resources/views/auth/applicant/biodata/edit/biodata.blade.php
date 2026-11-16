@@ -6,7 +6,6 @@
     <div class="py-8 md:py-12 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto font-figtree">
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
-                <!-- Step 1: Data Personal (AKTIF) -->
                 <li class="flex items-center transition-colors text-[#B11116] font-bold">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
@@ -17,7 +16,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 2: Keluarga (BELUM) -->
                 <li class="flex items-center transition-colors text-gray-400">
                     <button type="button" data-next-step="family"
                         class="flex items-center hover:text-[#B11116] transition-colors cursor-pointer">
@@ -31,7 +29,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 3: Pendidikan (BELUM) -->
                 <li class="flex items-center transition-colors text-gray-400">
                     <button type="button" data-next-step="education"
                         class="flex items-center hover:text-[#B11116] transition-colors cursor-pointer">
@@ -45,7 +42,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 4: Pengalaman (BELUM) -->
                 <li class="flex items-center transition-colors text-gray-400">
                     <button type="button" data-next-step="work"
                         class="flex items-center hover:text-[#B11116] transition-colors cursor-pointer">

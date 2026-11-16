@@ -3,7 +3,6 @@
 @section('title', 'Lowongan Pekerjaan')
 
 @section('content')
-    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,17 +25,14 @@
         }
     </style>
 
-    <!-- JUMBOTRON SECTION (Single Slide / Non-Slider Sesuai Desain Jumbotron Beranda) -->
     <section id="beranda-lowongan"
         class="relative w-full min-h-[560px] sm:min-h-[600px] md:min-h-[640px] lg:min-h-[680px] bg-[#B11116] overflow-hidden flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-10">
 
-        <!-- Background Native Red SVG Curves & Ambient Glow -->
         <div class="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden">
             <div class="absolute inset-0 bg-gradient-to-br from-[#c8102e] via-[#B11116] to-[#7f0b0f]"></div>
             <div class="absolute -top-32 -left-32 w-[600px] md:w-[800px] h-[600px] md:h-[800px] rounded-full bg-radial from-[#e81928]/40 via-[#c8102e]/20 to-transparent blur-2xl"></div>
             <div class="absolute -bottom-20 -right-20 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full bg-radial from-[#660508]/60 to-transparent blur-3xl"></div>
 
-            <!-- SVG Kurva Merah Sesuai Jumbotron Beranda -->
             <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <linearGradient id="curveMainLowongan" x1="0%" y1="0%" x2="100%" y2="80%">
@@ -60,39 +56,32 @@
                 <path d="M0,480 C260,450 500,515 800,488 C1100,460 1300,505 1440,495 L1440,600 L0,600 Z" fill="url(#waveBottomLowongan)" opacity="0.92" />
             </svg>
 
-            <!-- Ornamen Daun & Botol Sosro -->
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                 class="absolute -left-6 top-14 md:left-4 md:top-18 w-44 sm:w-56 md:w-68 lg:w-76 object-contain pointer-events-none select-none opacity-20 transform -rotate-12">
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                 class="absolute right-4 bottom-2 md:right-16 md:bottom-4 w-32 sm:w-40 md:w-48 object-contain pointer-events-none select-none opacity-20 transform rotate-45">
         </div>
 
-        <!-- Konten Jumbotron Teks -->
         <div class="relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center my-auto pt-8">
             <div class="max-w-xl lg:max-w-3xl text-left py-8 md:py-12">
-                <!-- Main Title -->
                 <h1 style="font-weight: 800;"
                     class="font-display-title text-2xl sm:text-3xl md:text-4xl lg:text-[3.25rem] text-white font-extrabold uppercase leading-[1.14] tracking-tight drop-shadow-md">
                     BERSAMA KAMI, MENJADI BAGIAN SINAR SOSRO GUNUNG SLAMAT
                 </h1>
 
-                <!-- Description -->
                 <p class="text-white/95 text-sm sm:text-base md:text-lg mt-4 md:mt-5 max-w-2xl font-normal leading-relaxed drop-shadow-sm">
                     Bergabunglah dengan kami, baik sebagai talenta muda maupun profesional berpengalaman. Pilih kategori yang sesuai untuk mengembangkan potensi karirmu.
                 </p>
             </div>
         </div>
 
-        <!-- Floating Search & Filter Bar (Themed Dropdowns + Real-Time Search) -->
         <div class="relative z-30 max-w-6xl mx-auto px-4 sm:px-6 w-full mt-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 sm:gap-3">
-                <!-- Search Input Pill -->
                 <div class="h-11 sm:h-12 flex-1 relative flex items-center bg-white rounded-full shadow-lg shadow-black/10 pl-5 pr-3 transition-all duration-200 hover:shadow-xl focus-within:ring-2 focus-within:ring-[#B11116]/30">
                     <label for="jobSearch" class="sr-only">Cari lowongan</label>
                     <input id="jobSearch" type="search" placeholder="Cari lowongan berdasarkan posisi, lokasi, divisi..."
                         class="w-full bg-transparent pr-2 text-xs sm:text-sm text-slate-800 placeholder:text-[#c77a87] focus:outline-none font-semibold border-0 focus:ring-0 [&::-webkit-search-cancel-button]:hidden" />
 
-                    <!-- Clear Button -->
                     <button type="button" id="btnClearSearch" aria-label="Hapus kata kunci pencarian" title="Hapus teks pencarian"
                         class="hidden cursor-pointer p-1 rounded-full text-slate-400 hover:text-red-700 hover:bg-red-50 transition active:scale-90">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,7 +90,6 @@
                     </button>
                 </div>
 
-                <!-- Hidden native selects to retain full JS compatibility -->
                 <select id="filterLocation" class="hidden">
                     <option value="">Semua Lokasi</option>
                     @foreach ($jobs->pluck('location')->unique()->filter()->values() as $loc)
@@ -123,7 +111,6 @@
                     @endforeach
                 </select>
 
-                <!-- Location Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterLocation">
                     <button type="button" class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
                         <span class="dropdown-label truncate" data-default="Semua Lokasi">Semua Lokasi</span>
@@ -147,7 +134,6 @@
                     </div>
                 </div>
 
-                <!-- Category Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterCategory">
                     <button type="button" class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
                         <span class="dropdown-label truncate" data-default="Semua Kategori">Semua Kategori</span>
@@ -171,7 +157,6 @@
                     </div>
                 </div>
 
-                <!-- Occupation / Bidang Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterBidang">
                     <button type="button" class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
                         <span class="dropdown-label truncate" data-default="Semua Bidang">Semua Bidang</span>
@@ -195,7 +180,6 @@
                     </div>
                 </div>
 
-                <!-- HCI Search Action Button -->
                 <button type="button" id="btnSearch"
                     class="h-11 sm:h-12 px-6 rounded-full bg-slate-900 hover:bg-black text-white text-xs sm:text-sm font-bold shadow-lg shadow-black/15 transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer hover:shadow-xl active:scale-95">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -207,7 +191,6 @@
         </div>
     </section>
 
-    <!-- SECTION DAFTAR LOWONGAN -->
     <section class="py-14 sm:py-16 bg-white" id="lowongan">
         <div class="max-w-6xl mx-auto px-6">
             <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -406,7 +389,6 @@
         </div>
     </section>
 
-    <!-- MODAL 1: Notifikasi Belum Login -->
     <div id="modalBelumLogin"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -436,7 +418,6 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Notifikasi Belum Isi Biodata -->
     <div id="modalBelumBiodata"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -466,7 +447,6 @@
         </div>
     </div>
 
-    <!-- MODAL 3: Konfirmasi Lamar -->
     <div id="modalKonfirmasiLamar"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -496,7 +476,6 @@
         </div>
     </div>
 
-    <!-- MODAL 4: Akun Administrator Tidak Dapat Melamar -->
     <div id="modalAkunAdmin"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -523,7 +502,6 @@
         </div>
     </div>
 
-    <!-- SCRIPT FILTER, DROPDOWNS & MODAL LAMAR -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const jobSearch = document.getElementById('jobSearch');

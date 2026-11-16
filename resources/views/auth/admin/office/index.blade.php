@@ -48,7 +48,6 @@
             }
         }">
 
-        <!-- Section 1: Header & Breadcrumb -->
         <section class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-200">
             <div class="space-y-1">
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
@@ -80,9 +79,7 @@
             </div>
         </section>
 
-        <!-- Section 2: Bento Metric Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Card 1: Total Kantor -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -101,7 +98,6 @@
                 </div>
             </div>
 
-            <!-- Card 2: Head Office (HO) -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-red-50 text-[#A6192E] flex items-center justify-center shadow-2xs">
@@ -120,7 +116,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: Pabrik -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shadow-2xs">
@@ -139,7 +134,6 @@
                 </div>
             </div>
 
-            <!-- Card 4: KPW & Lainnya -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center shadow-2xs">
@@ -160,9 +154,7 @@
             </div>
         </div>
 
-        <!-- Section 3: Toolbar Sebaris (Search & Filters) -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/90 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-            <!-- Search Input -->
             <div class="relative flex-1 min-w-[260px]">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -174,9 +166,7 @@
                     placeholder="Cari nama kantor, cabang, atau pabrik...">
             </div>
 
-            <!-- Filters Row -->
             <div class="flex flex-wrap items-center gap-2">
-                <!-- Type Filter -->
                 <div class="min-w-[150px]">
                     <select x-model="selectedType"
                         class="w-full py-2 px-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition cursor-pointer">
@@ -188,7 +178,6 @@
                     </select>
                 </div>
 
-                <!-- Reset Button -->
                 <button type="button" @click="resetFilters()"
                     class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 border border-slate-200 rounded-xl transition cursor-pointer"
                     title="Reset Filter Pencarian">
@@ -199,7 +188,6 @@
             </div>
         </div>
 
-        <!-- Section 4: Tabel Data Kantor Modern -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden flex flex-col">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -329,7 +317,6 @@
                 </table>
             </div>
 
-            <!-- Table Footer -->
             <div class="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <div class="font-medium">
                     Menampilkan <span class="font-bold text-slate-800">{{ $offices->count() }}</span> total kantor &amp; unit kerja
@@ -337,7 +324,6 @@
             </div>
         </div>
 
-        <!-- MODAL 1: Tambah Kantor Baru -->
         <template x-teleport="body">
             <div x-show="openCreateModal"
                 x-cloak
@@ -428,7 +414,6 @@
             </div>
         </template>
 
-        <!-- MODAL 2: Edit Data Kantor -->
         <template x-teleport="body">
             <div x-show="openEditModal"
                 x-cloak
@@ -523,7 +508,6 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Hapus Kantor -->
         <template x-teleport="body">
             <div x-show="openDeleteModal"
                 x-cloak

@@ -21,6 +21,10 @@ use App\Http\Controllers\Mail\MailController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GuestController::class, 'index'])->name('guest.index');
+Route::get('/tentang', [GuestController::class, 'tentang'])->name('guest.tentang');
+Route::get('/program', [GuestController::class, 'program'])->name('guest.program');
+Route::get('/kontak', [GuestController::class, 'kontak'])->name('guest.kontak');
+Route::post('/kontak', [GuestController::class, 'storeKontak'])->middleware('throttle:10,1')->name('guest.kontak.store');
 Route::get('/lowongan', [GuestController::class, 'lowongan'])->name('guest.lowongan');
 Route::group(['middleware' => 'guest', 'as' => 'guest.'], function () {
     Route::get('login', fn () => view('guest.login'))->name('login');

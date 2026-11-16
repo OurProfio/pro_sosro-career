@@ -1,47 +1,46 @@
 @php
     $isHome = request()->routeIs('guest.index');
     $isLowongan = request()->routeIs('guest.lowongan');
-    $isTransparentNav = $isHome || $isLowongan;
+    $isTentang = request()->routeIs('guest.tentang');
+    $isProgram = request()->routeIs('guest.program');
+    $isKontak = request()->routeIs('guest.kontak');
+    $isTransparentNav = $isHome || $isLowongan || $isTentang || $isProgram || $isKontak;
 @endphp
 
 <header id="main-header"
     class="{{ $isTransparentNav ? 'fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-transparent' : 'sticky top-0 z-50 bg-[#B11116] shadow-md' }}">
     <nav class="max-w-7xl mx-auto px-6 md:px-10 py-3.5 flex justify-between items-center text-white">
-        <!-- Logo Brand -->
         <a href="{{ route('guest.index') }}" class="flex items-center gap-2 group transition-transform active:scale-95">
             <img src="{{ asset('assets/images/SGS Logo-Putih.webp') }}" alt="Logo Sinar Sosro Gunung Slamat" class="h-10 md:h-11 object-contain drop-shadow-sm">
         </a>
 
-        <!-- Center Nav Links -->
         <div class="hidden lg:flex items-center gap-8 text-sm font-semibold tracking-wide">
             <a href="{{ route('guest.index') }}#beranda" data-i18n-key="nav_home"
                 class="py-1 border-b-2 {{ $isHome ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Beranda
             </a>
-            <a href="{{ $isHome ? '#tentang' : route('guest.index') . '#tentang' }}" data-i18n-key="nav_about"
-                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
+            <a href="{{ route('guest.tentang') }}" data-i18n-key="nav_about"
+                class="py-1 border-b-2 {{ $isTentang ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Tentang
             </a>
-            <a href="{{ $isHome ? '#program' : route('guest.index') . '#program-kami' }}" data-i18n-key="nav_program"
-                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
+            <a href="{{ route('guest.program') }}" data-i18n-key="nav_program"
+                class="py-1 border-b-2 {{ $isProgram ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Program
             </a>
             <a href="{{ route('guest.lowongan') }}" data-i18n-key="nav_vacancies"
                 class="py-1 border-b-2 {{ $isLowongan ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Lowongan
             </a>
-            <a href="#kontak" data-i18n-key="nav_contact"
-                class="py-1 border-b-2 border-transparent hover:border-white/40 text-white/80 hover:text-white transition-all duration-200 drop-shadow-sm">
+            <a href="{{ route('guest.kontak') }}" data-i18n-key="nav_contact"
+                class="py-1 border-b-2 {{ $isKontak ? 'border-white text-white' : 'border-transparent text-white/80 hover:text-white hover:border-white/40' }} transition-all duration-200 drop-shadow-sm">
                 Kontak
             </a>
         </div>
 
         <div class="flex items-center space-x-4">
-            <!-- Language Dropdown (ID / EN) -->
             <div class="relative" data-lang-menu-root>
                 <button type="button" data-lang-menu-toggle aria-haspopup="true" aria-expanded="false" id="lang-menu-btn"
-                    class="inline-flex items-center gap-2 px-3 py-1.5 md:px-3.5 md:py-2 rounded-full transition-all duration-300 text-sm font-semibold text-white hover:cursor-pointer {{ $isHome ? 'bg-transparent border border-white/20 hover:border-white/40' : 'bg-black/20 hover:bg-black/30 border border-white/20' }}">
-                    <!-- Current Flag & Label -->
+                    class="inline-flex items-center gap-2 px-3 py-1.5 md:px-3.5 md:py-2 rounded-full transition-all duration-300 text-sm font-semibold text-white hover:cursor-pointer {{ $isTransparentNav ? 'bg-transparent border border-white/20 hover:border-white/40' : 'bg-black/20 hover:bg-black/30 border border-white/20' }}">
                     <span id="current-lang-flag" class="inline-block w-5 h-3.5 rounded-[2px] overflow-hidden shadow-xs border border-white/30 bg-white shrink-0">
                         <span class="block h-1.75 bg-red-600"></span>
                         <span class="block h-1.75 bg-white"></span>
@@ -52,7 +51,6 @@
                     </svg>
                 </button>
 
-                <!-- Dropdown Menu -->
                 <div data-lang-menu hidden
                     class="absolute right-0 mt-2 w-40 bg-white rounded-2xl shadow-2xl py-2 z-[70] border border-gray-100 overflow-hidden text-sm font-semibold text-gray-700">
                     <button type="button" onclick="setLanguage('id')"
@@ -235,7 +233,55 @@
             opt_all_categories: 'Semua Kategori',
             opt_all_fields: 'Semua Bidang',
             vacancies_available: 'lowongan tersedia',
-            apply_btn: 'Lamar posisi ini'
+            apply_btn: 'Lamar posisi ini',
+            about_hero_badge: 'The Good Beverage Company',
+            about_hero_title: 'INTIP KESERUAN INSAN SINAR SOSRO GUNUNG SLAMAT',
+            about_hero_desc: 'Berlandaskan ambisi sebagai The Good Beverage Company, Sinar Sosro Gunung Slamat membuka peluang untuk tumbuh dan berkembang bersama para ahlinya.',
+            about_moment_1: 'Kebersamaan & Sportivitas',
+            about_moment_2: 'Tumbuh Bersama Ahli',
+            career_path_kicker: 'JENJANG',
+            career_path_title: 'KARIER',
+            career_path_desc: 'PT Sinar Sosro Gunung Slamat berkomitmen mengembangkan karier setiap karyawan melalui program-program internal yang dirancang untuk meningkatkan kompetensi dan kesiapan talenta dalam menghadapi jenjang karier berikutnya dengan lebih percaya diri.',
+            recruitment_kicker: 'PROSES',
+            recruitment_title: 'REKRUTMEN',
+            step_cv_title: 'Seleksi CV',
+            step_cv_desc: 'Penilaian kesesuaian kualifikasi kandidat dengan posisi yang dilamar.',
+            step_psy_title: 'Psikotes',
+            step_psy_desc: 'Pengukuran aspek psikologis dan kemampuan kognitif kandidat.',
+            step_biodata_title: 'Form Biodata',
+            step_biodata_desc: 'Pengumpulan data diri sebagai kelengkapan administrasi.',
+            step_int_title: 'Interview',
+            step_int_desc: 'Pendalaman kompetensi, motivasi, dan kesesuaian kandidat.',
+            step_case_title: 'Study Case',
+            step_case_desc: 'Evaluasi kemampuan analisis dan pemecahan masalah.',
+            step_mcu_title: 'MCU',
+            step_mcu_desc: 'Medical Check-Up, pemeriksaan kesehatan untuk memastikan kesiapan kerja.',
+            step_onboard_title: 'On-Boarding',
+            step_onboard_desc: 'Proses pengenalan dan penyesuaian karyawan baru dengan perusahaan.',
+            dept_section_title: 'DEPARTEMEN PERUSAHAAN',
+            activities_section_title: 'KEGIATAN PERUSAHAAN',
+            act_1: 'Kolaborasi Tim Insan Sosro',
+            act_2: 'Kebersamaan & Sportivitas Rekso Trofeo',
+            act_3: 'Factory Xperience & Pengembangan Talenta',
+            act_4: 'Aksi Lingkungan Langkah Prima',
+            act_5: 'Kemitraan Pendidikan & Sosial',
+            act_6: 'Produk Kebanggaan Sinar Sosro Gunung Slamat',
+            program_hero_title: 'PELUANG MENANTI, MARI BERKEMBANG BERSAMA',
+            program_hero_desc: 'Ikuti kegiatan dan program kami di PT Sinar Sosro Gunung Slamat untuk berkembang, memperluas jaringan, dan meraih kesuksesan bersama.',
+            prog_mt_testi_title: 'APA KATA MANAGEMENT TRAINEE KAMI?',
+            prog_gm_testi_title: 'APA KATA GURU MAGANG KAMI?',
+            prog_ps_testi_title: 'APA KATA PEMAGANGAN SALES KAMI?',
+            prog_int_testi_title: 'APA KATA INTERNSHIP KAMI?',
+            kontak_hero_title: 'CARI TAHU LEBIH TENTANG KARIER SINAR SOSRO GUNUNG SLAMAT',
+            kontak_hero_subtitle: 'Kami siap membantu!',
+            kontak_hero_desc: 'Hubungi kami melalui form di bawah ini.',
+            kontak_card_title: 'Saluran Resmi Rekrutmen',
+            kontak_hours_label: 'Jam Operasional',
+            kontak_hours_value: 'Senin - Jumat, 08:00 - 17:00 WIB',
+            kontak_office_label: 'Kantor Pusat',
+            kontak_form_title: 'KIRIM PESAN',
+            kontak_submit_btn: 'Kirim Pesan',
+            kontak_faq_title: 'PERTANYAAN YANG SERING DIAJUKAN (FAQ)?'
         },
         en: {
             nav_home: 'Home',
@@ -269,7 +315,55 @@
             opt_all_categories: 'All Categories',
             opt_all_fields: 'All Fields',
             vacancies_available: 'vacancies available',
-            apply_btn: 'Apply for this position'
+            apply_btn: 'Apply for this position',
+            about_hero_badge: 'The Good Beverage Company',
+            about_hero_title: 'DISCOVER THE SPIRIT OF SINAR SOSRO GUNUNG SLAMAT PEOPLE',
+            about_hero_desc: 'Driven by our ambition as The Good Beverage Company, Sinar Sosro Gunung Slamat opens opportunities to grow and thrive alongside industry experts.',
+            about_moment_1: 'Togetherness & Sportsmanship',
+            about_moment_2: 'Grow With The Experts',
+            career_path_kicker: 'CAREER',
+            career_path_title: 'PATH',
+            career_path_desc: 'PT Sinar Sosro Gunung Slamat is committed to developing every employee’s career through internal programs designed to strengthen competencies and prepare talent to advance to the next career level with confidence.',
+            recruitment_kicker: 'RECRUITMENT',
+            recruitment_title: 'PROCESS',
+            step_cv_title: 'CV Screening',
+            step_cv_desc: 'Assessment of candidate qualifications against the applied role.',
+            step_psy_title: 'Psychotest',
+            step_psy_desc: 'Measurement of psychological aspects and cognitive abilities.',
+            step_biodata_title: 'Biodata Form',
+            step_biodata_desc: 'Collection of personal data for administrative completeness.',
+            step_int_title: 'Interview',
+            step_int_desc: 'In-depth evaluation of competency, motivation, and role fit.',
+            step_case_title: 'Case Study',
+            step_case_desc: 'Evaluation of analytical thinking and problem-solving skills.',
+            step_mcu_title: 'MCU',
+            step_mcu_desc: 'Medical Check-Up to ensure health and readiness for work.',
+            step_onboard_title: 'On-Boarding',
+            step_onboard_desc: 'Introduction and adaptation process for new employees in the company.',
+            dept_section_title: 'COMPANY DEPARTMENTS',
+            activities_section_title: 'COMPANY ACTIVITIES',
+            act_1: 'Sosro People Team Collaboration',
+            act_2: 'Rekso Trofeo Togetherness & Sportsmanship',
+            act_3: 'Factory Xperience & Talent Development',
+            act_4: 'Langkah Prima Environmental Action',
+            act_5: 'Education & Social Partnership',
+            act_6: 'Proud Products of Sinar Sosro Gunung Slamat',
+            program_hero_title: 'OPPORTUNITIES AWAIT, LET’S GROW TOGETHER',
+            program_hero_desc: 'Join our activities and programs at PT Sinar Sosro Gunung Slamat to grow, expand your network, and achieve success together.',
+            prog_mt_testi_title: 'WHAT OUR MANAGEMENT TRAINEES SAY?',
+            prog_gm_testi_title: 'WHAT OUR VISITING TEACHERS SAY?',
+            prog_ps_testi_title: 'WHAT OUR SALES APPRENTICES SAY?',
+            prog_int_testi_title: 'WHAT OUR INTERNS SAY?',
+            kontak_hero_title: 'DISCOVER MORE ABOUT CAREERS AT SINAR SOSRO GUNUNG SLAMAT',
+            kontak_hero_subtitle: 'We are here to help!',
+            kontak_hero_desc: 'Contact us through the form below.',
+            kontak_card_title: 'Official Recruitment Channels',
+            kontak_hours_label: 'Operating Hours',
+            kontak_hours_value: 'Monday - Friday, 08:00 - 17:00 WIB',
+            kontak_office_label: 'Head Office',
+            kontak_form_title: 'SEND A MESSAGE',
+            kontak_submit_btn: 'Send Message',
+            kontak_faq_title: 'FREQUENTLY ASKED QUESTIONS (FAQ)?'
         }
     };
 
@@ -336,9 +430,9 @@
     document.addEventListener('DOMContentLoaded', function () {
         const header = document.getElementById('main-header');
         const langBtn = document.getElementById('lang-menu-btn');
-        const isHomePage = {{ $isHome ? 'true' : 'false' }};
+        const isTransparentNav = {{ $isTransparentNav ? 'true' : 'false' }};
 
-        if (header && isHomePage) {
+        if (header && isTransparentNav) {
             const handleScroll = () => {
                 const scrollY = window.scrollY || window.pageYOffset;
                 if (scrollY > 50) {

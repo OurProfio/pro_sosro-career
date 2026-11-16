@@ -75,7 +75,6 @@
             }
         }">
 
-        <!-- Section 1: Header & Breadcrumb -->
         <section class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-200">
             <div class="space-y-1">
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
@@ -107,9 +106,7 @@
             </div>
         </section>
 
-        <!-- Section 2: Bento Metric Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Card 1: Total Pengguna -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -128,7 +125,6 @@
                 </div>
             </div>
 
-            <!-- Card 2: Akun Administrator -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-rose-50 border border-rose-100/70 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -147,7 +143,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: Akun Pelamar (Applicant) -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-100/70 flex items-center justify-center text-emerald-700 shadow-2xs">
@@ -166,7 +161,6 @@
                 </div>
             </div>
 
-            <!-- Card 4: Email Terverifikasi -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-100/70 flex items-center justify-center text-sky-700 shadow-2xs">
@@ -186,10 +180,8 @@
             </div>
         </div>
 
-        <!-- Section 3: Toolbar Sebaris (Search & Filter) -->
         <div class="bg-white rounded-2xl p-3.5 shadow-sm border border-slate-200/90 flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div class="flex-1 flex flex-col sm:flex-row sm:items-center gap-2.5">
-                <!-- Search Input -->
                 <div class="relative flex-1 max-w-md">
                     <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -206,7 +198,6 @@
                     </button>
                 </div>
 
-                <!-- Role Filter -->
                 <div class="relative min-w-[180px]">
                     <select x-model="selectedRole"
                         class="w-full appearance-none pl-3.5 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition">
@@ -221,7 +212,6 @@
                     </span>
                 </div>
 
-                <!-- Status Filter -->
                 <div class="relative min-w-[150px]">
                     <select x-model="selectedStatus"
                         class="w-full appearance-none pl-3.5 pr-8 py-2 text-xs rounded-xl border border-slate-200 bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition">
@@ -236,7 +226,6 @@
                     </span>
                 </div>
 
-                <!-- Reset Button -->
                 <button type="button" x-show="search !== '' || selectedRole !== 'all' || selectedStatus !== 'all'" @click="resetFilters()"
                     class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#A6192E] hover:bg-slate-100 transition cursor-pointer shrink-0">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -251,7 +240,6 @@
             </div>
         </div>
 
-        <!-- Section 4: Modern Table -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-xs text-left text-slate-700 border-collapse">
@@ -399,7 +387,6 @@
             </div>
         </div>
 
-        <!-- MODAL 1: Tambah Pengguna Baru -->
         <template x-teleport="body">
             <div x-show="openCreateModal"
                 x-cloak
@@ -488,7 +475,6 @@
             </div>
         </template>
 
-        <!-- MODAL 2: Perbarui Akun Pengguna -->
         <template x-teleport="body">
             <div x-show="openEditModal"
                 x-cloak
@@ -579,7 +565,6 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Nonaktifkan Akun -->
         <template x-teleport="body">
             <div x-show="openDeactivateModal"
                 x-cloak
@@ -636,7 +621,6 @@
             </div>
         </template>
 
-        <!-- MODAL 4: Konfirmasi Aktifkan Kembali Akun -->
         <template x-teleport="body">
             <div x-show="openActivateModal"
                 x-cloak

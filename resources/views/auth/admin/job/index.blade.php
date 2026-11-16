@@ -82,7 +82,6 @@
     $watch('activeTab', () => applyFilters());
     $watch('sortBy', () => applySort());
     applyFilters();">
-        <!-- Header Section: Title & Action Button -->
         <section class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-3.5 border-b border-slate-200"
             data-purpose="page-title-and-actions">
             <div class="space-y-0.5">
@@ -96,7 +95,6 @@
                     kerja.</p>
             </div>
             <div class="flex items-center gap-3">
-                <!-- Tambah Lowongan Primary CTA -->
                 <button type="button" @click="openCreateModal = true"
                     class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#A6192E] hover:bg-[#7f1d1d] text-white text-xs font-semibold shadow-sm shadow-red-950/20 hover:shadow-md transition duration-150 ease-in-out cursor-pointer">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
@@ -107,12 +105,9 @@
             </div>
         </section>
 
-        <!-- Main Card Container -->
         <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden" data-purpose="content-card">
-            <!-- Status Filter Tabs -->
             <div class="px-6 pt-5 pb-3 border-b border-slate-100 flex flex-wrap items-center gap-2"
                 data-purpose="status-tab-group">
-                <!-- Tab 1: Semua Lowongan -->
                 <button type="button" @click="activeTab = 'all'"
                     :class="activeTab === 'all' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' :
                         'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
@@ -124,7 +119,6 @@
                         {{ $jobs->count() }}
                     </span>
                 </button>
-                <!-- Tab 2: Lowongan Dibuka -->
                 <button type="button" @click="activeTab = 'dibuka'"
                     :class="activeTab === 'dibuka' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' :
                         'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
@@ -136,7 +130,6 @@
                         {{ $jobs->where('status', 'aktif')->count() }}
                     </span>
                 </button>
-                <!-- Tab 3: Lowongan Ditunda (Pending Approval) -->
                 @php
                     $pendingJobsTotal = $jobs->where('status', 'pending')->count();
                 @endphp
@@ -152,7 +145,6 @@
                         {{ $pendingJobsTotal }}
                     </span>
                 </button>
-                <!-- Tab 4: Lowongan Ditutup -->
                 <button type="button" @click="activeTab = 'ditutup'"
                     :class="activeTab === 'ditutup' ? 'bg-red-50 text-[#A6192E] border-red-200/70 font-semibold shadow-sm' :
                         'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-medium border-transparent'"
@@ -166,7 +158,6 @@
                 </button>
             </div>
 
-            <!-- Search Bar and Sorting Toolbar -->
             <div class="p-6 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4"
                 data-purpose="table-controls">
                 <div class="relative w-full md:max-w-md">
@@ -205,7 +196,6 @@
                         </div>
                     @endif
 
-                    <!-- Dropdown Urutkan -->
                     <div class="flex items-center gap-1.5">
                         <span class="font-medium">Urutkan:</span>
                         <select x-model="sortBy" @change="applySort()" aria-label="Urutan Tampilan"
@@ -218,7 +208,6 @@
                 </div>
             </div>
 
-            <!-- BEGIN: RecruitmentDataTable (Static Stitch Data) -->
             <div class="overflow-x-auto" data-purpose="data-table-container">
                 <table class="w-full text-left border-collapse" id="job-vacancies-table">
                     <thead>
@@ -357,7 +346,6 @@
                             </tr>
                         @endforelse
 
-                        <!-- Empty state when search or filter returns 0 results -->
                         <tr id="job-vacancies-empty-row" x-show="visibleJobsCount === 0 && {{ $jobs->count() }} > 0"
                             style="display: none;">
                             <td colspan="7" class="py-12 px-6 text-center text-slate-400">
@@ -377,20 +365,15 @@
                     </tbody>
                 </table>
             </div>
-            <!-- END: RecruitmentDataTable -->
 
-            <!-- BEGIN: TableFooter (Tanpa Tombol Pagination) -->
             <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500"
                 data-purpose="table-footer">
                 <p>Menampilkan <span class="font-semibold text-slate-700"
                         x-text="visibleJobsCount">{{ $jobs->count() }}</span> dari <span
                         class="font-semibold text-slate-700">{{ $jobs->count() }}</span> total lowongan</p>
             </div>
-            <!-- END: TableFooter -->
         </div>
-        <!-- END: Main Card Container -->
 
-        <!-- BEGIN: Modal Tambah Lowongan (Alpine.js) -->
         <template x-teleport="body">
             <div x-show="openCreateModal" x-cloak style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
@@ -403,7 +386,6 @@
                     x-transition:leave-end="opacity-0 scale-95" @click.outside="openCreateModal = false"
                     class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
-                    <!-- Modal Header -->
                     <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
                         <div class="flex items-center gap-3.5">
                             <div
@@ -436,12 +418,10 @@
                         </button>
                     </div>
 
-                    <!-- Form Container -->
                     <form action="{{ route('job.store') }}" method="POST"
                         class="flex flex-col flex-1 min-h-0 overflow-hidden">
                         @csrf
                         <div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
-                            <!-- Group 1: Informasi Dasar -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -623,7 +603,6 @@
                                 </div>
                             </div>
 
-                            <!-- Group 2: Rincian Lowongan -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -658,7 +637,6 @@
                                 </div>
                             </div>
 
-                            <!-- Group 3: Periode Waktu -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -682,7 +660,6 @@
                             </div>
                         </div>
 
-                        <!-- Modal Footer -->
                         <div
                             class="px-8 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
                             <button type="button" @click="openCreateModal = false"
@@ -702,9 +679,7 @@
                 </div>
             </div>
         </template>
-        <!-- END: Modal Tambah Lowongan -->
 
-        <!-- BEGIN: Modal Konfirmasi Persetujuan Lowongan (Alpine.js) -->
         <template x-teleport="body">
             <div x-show="openApproveModal" x-cloak style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
@@ -754,6 +729,5 @@
                 </div>
             </div>
         </template>
-        <!-- END: Modal Konfirmasi Persetujuan Lowongan -->
     </div>
 @endsection

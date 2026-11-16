@@ -112,19 +112,20 @@ class DatabaseSeeder extends Seeder
         }
 
         $divisions = [
-            'Administrasi',
+            'E-Commerce',
+            'Export',
             'Finance & Accounting',
-            'General Affairs',
-            'Human Resources & People Development',
-            'Information Technology',
-            'Internal Audit',
+            'Pabrikan',
+            'Human Capital',
+            'Internal Audit & Business Process Management',
+            'IT',
             'Marketing',
-            'Produksi / Teknik',
-            'Purchasing',
-            'Quality Control',
-            'Research & Development',
             'Sales & Distribution',
-            'Supply Chain & Logistic',
+            'Operations Controller',
+            'Strategic Account & Partnership',
+            'National Development & Promotion',
+            'Supply Chain',
+            'Tea Institute',
         ];
         foreach ($divisions as $name) {
             Division::firstOrCreate(['name' => $name]);

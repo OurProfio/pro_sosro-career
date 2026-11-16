@@ -40,7 +40,6 @@
             }
         }">
 
-        <!-- Section 1: Header & Breadcrumb -->
         <section class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-200">
             <div class="space-y-1">
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
@@ -72,9 +71,7 @@
             </div>
         </section>
 
-        <!-- Section 2: Bento Metric Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <!-- Card 1: Total Divisi -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -93,7 +90,6 @@
                 </div>
             </div>
 
-            <!-- Card 2: Status Akses -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-2xs">
@@ -112,7 +108,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: Standar Rekso -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-red-50 text-[#A6192E] flex items-center justify-center shadow-2xs">
@@ -132,7 +127,6 @@
             </div>
         </div>
 
-        <!-- Section 3: Toolbar Sebaris (Search) -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/90 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div class="relative flex-1 min-w-[260px]">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
@@ -154,7 +148,6 @@
             </button>
         </div>
 
-        <!-- Section 4: Tabel Data Divisi Modern -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden flex flex-col">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -235,7 +228,6 @@
                 </table>
             </div>
 
-            <!-- Table Footer -->
             <div class="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <div class="font-medium">
                     Menampilkan <span class="font-bold text-slate-800">{{ $divisions->count() }}</span> total divisi &amp; departemen
@@ -243,7 +235,6 @@
             </div>
         </div>
 
-        <!-- MODAL 1: Tambah Divisi Baru -->
         <template x-teleport="body">
             <div x-show="openCreateModal"
                 x-cloak
@@ -317,7 +308,6 @@
             </div>
         </template>
 
-        <!-- MODAL 2: Edit Data Divisi -->
         <template x-teleport="body">
             <div x-show="openEditModal"
                 x-cloak
@@ -395,7 +385,6 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Hapus Divisi -->
         <template x-teleport="body">
             <div x-show="openDeleteModal"
                 x-cloak

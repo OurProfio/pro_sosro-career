@@ -8,10 +8,8 @@
             <span class="text-xs font-medium text-gray-400">Langkah 3 dari 4</span>
         </div>
 
-        <!-- Wizard Progress Bar -->
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
-                <!-- Step 1: Data Personal -->
                 <li>
                     <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
@@ -27,7 +25,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 2: Keluarga -->
                 <li>
                     <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & kembali ke Data Keluarga"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
@@ -43,7 +40,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
-                <!-- Step 3: Pendidikan (Aktif) -->
                 <li class="flex items-center text-[#B11116]">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-[#B11116] bg-red-50 text-[#B11116] font-bold mr-2 shadow-sm text-xs ring-4 ring-red-100">
@@ -54,7 +50,6 @@
 
                 <li class="flex-1 border-t-2 border-gray-200 mx-2 sm:mx-4"></li>
 
-                <!-- Step 4: Pengalaman Kerja -->
                 <li>
                     <button type="button" onclick="goToStep('workExperience')"
                         title="Simpan data saat ini & lanjut ke Pengalaman Kerja"
@@ -73,7 +68,6 @@
             @csrf
             <input type="hidden" name="redirect_step" id="redirect_step" value="workExperience">
 
-            <!-- BAGIAN 1: RIWAYAT PENDIDIKAN FORMAL -->
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
                 <div class="space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-4">
@@ -101,7 +95,6 @@
                         </div>
                     @enderror
 
-                    <!-- Container Card Pendidikan -->
                     <div id="educationContainer" class="space-y-6">
                         @php
                             $oldEducations = old('educations');
@@ -166,7 +159,6 @@
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <!-- Jenjang Pendidikan -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Jenjang Pendidikan <span class="text-[#B11116]">*</span>
@@ -201,7 +193,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Nama Sekolah / Universitas (Combobox with Other) -->
                                     <div class="space-y-1.5 school-combobox-wrapper" data-field="school">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Nama Sekolah / Universitas <span class="text-[#B11116]">*</span>
@@ -215,14 +206,12 @@
                                                 onfocus="openCombobox(this)"
                                                 oninput="filterCombobox(this, 'school')">
 
-                                            <!-- Hidden Actual Input -->
                                             <input type="hidden"
                                                 name="educations[{{ $index }}][institution_name]"
                                                 class="combobox-value-input"
                                                 value="{{ $edu['institution_name'] ?? '' }}"
                                                 required>
 
-                                            <!-- Dropdown Menu -->
                                             <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
                                                 <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                                     onclick="selectOtherCombobox(this, 'school')">
@@ -232,12 +221,10 @@
                                                     <span>Lainnya / Tidak Terdaftar di List (Input Manual)</span>
                                                 </div>
                                                 <ul class="combobox-list divide-y divide-gray-50 text-sm text-gray-800">
-                                                    <!-- Dynamic options -->
                                                 </ul>
                                             </div>
                                         </div>
 
-                                        <!-- Container Input Manual Sekolah jika Other -->
                                         <div class="manual-school-input-wrapper space-y-1.5 pt-1 hidden">
                                             <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Sekolah</span>
                                             <input type="text"
@@ -252,7 +239,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Kota / Kabupaten Sekolah (Wajib diisi) -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Kota / Kabupaten Sekolah <span class="text-[#B11116]">*</span>
@@ -266,7 +252,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Jurusan (Combobox with Other) -->
                                     <div class="space-y-1.5 major-combobox-wrapper" data-field="major">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Jurusan / Program Studi <span class="text-[#B11116]">*</span>
@@ -280,14 +265,12 @@
                                                 onfocus="openCombobox(this)"
                                                 oninput="filterCombobox(this, 'major')">
 
-                                            <!-- Hidden Actual Input -->
                                             <input type="hidden"
                                                 name="educations[{{ $index }}][major]"
                                                 class="combobox-value-input"
                                                 value="{{ $edu['major'] ?? '' }}"
                                                 required>
 
-                                            <!-- Dropdown Menu -->
                                             <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
                                                 <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                                     onclick="selectOtherCombobox(this, 'major')">
@@ -297,12 +280,10 @@
                                                     <span>Lainnya / Tidak Terdaftar di List (Input Manual)</span>
                                                 </div>
                                                 <ul class="combobox-list divide-y divide-gray-50 text-sm text-gray-800">
-                                                    <!-- Dynamic options -->
                                                 </ul>
                                             </div>
                                         </div>
 
-                                        <!-- Container Input Manual Jurusan jika Other -->
                                         <div class="manual-major-input-wrapper space-y-1.5 pt-1 hidden">
                                             <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Jurusan</span>
                                             <input type="text"
@@ -317,7 +298,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- IPK / Nilai Rata-rata -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             IPK / Nilai Rata-rata <span class="text-[#B11116]">*</span>
@@ -333,7 +313,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Tahun Masuk -->
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Tahun Masuk <span class="text-[#B11116]">*</span>
@@ -347,7 +326,6 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Tahun Lulus -->
                                     <div class="space-y-1.5">
                                         <div class="flex items-center justify-between">
                                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -374,7 +352,6 @@
                 </div>
             </div>
 
-            <!-- BAGIAN 2: PELATIHAN & KURSUS -->
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
                 <div class="space-y-6">
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-100 gap-4">
@@ -396,7 +373,6 @@
                         </button>
                     </div>
 
-                    <!-- Container Card Pelatihan -->
                     <div id="trainingContainer" class="space-y-6">
                         @php
                             $oldTrainings = old('trainings');
@@ -491,7 +467,6 @@
                 </div>
             </div>
 
-            <!-- Navigasi Bawah Form -->
             <div class="flex items-center justify-between pt-4">
                 <a href="{{ route('biodata.family.create') }}"
                     class="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold rounded-xl text-xs transition-colors cursor-pointer shadow-xs">
@@ -518,7 +493,6 @@
         </form>
     </div>
 
-    <!-- Template JS untuk Tambah Card Pendidikan -->
     <template id="educationCardTemplate">
         <div class="education-card bg-gray-50/70 rounded-2xl p-5 md:p-6 border border-gray-200 space-y-4 relative transition-all"
             data-index="{INDEX}">
@@ -573,7 +547,6 @@
                     </select>
                 </div>
 
-                <!-- Sekolah Combobox -->
                 <div class="space-y-1.5 school-combobox-wrapper" data-field="school">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Nama Sekolah / Universitas <span class="text-[#B11116]">*</span>
@@ -612,7 +585,6 @@
                     </div>
                 </div>
 
-                <!-- Kota / Kabupaten Sekolah -->
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Kota / Kabupaten Sekolah <span class="text-[#B11116]">*</span>
@@ -622,7 +594,6 @@
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <!-- Jurusan Combobox -->
                 <div class="space-y-1.5 major-combobox-wrapper" data-field="major">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Jurusan / Program Studi <span class="text-[#B11116]">*</span>
@@ -699,7 +670,6 @@
         </div>
     </template>
 
-    <!-- Template JS untuk Tambah Card Pelatihan -->
     <template id="trainingCardTemplate">
         <div class="training-card bg-gray-50/70 rounded-2xl p-5 md:p-6 border border-gray-200 space-y-4 relative transition-all"
             data-index="{INDEX}">

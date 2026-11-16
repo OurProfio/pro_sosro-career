@@ -4,7 +4,6 @@
 
 @section('content')
     <div class="flex flex-col w-full font-sans space-y-6" x-data="{ search: '' }">
-        <!-- HEADER & IDENTITAS CABANG (Sesuai Standar HCI Admin) -->
         <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3.5 border-b border-slate-200">
             <div class="space-y-0.5">
                 <nav class="text-xs font-bold text-[#9b1b1f]">
@@ -30,9 +29,7 @@
             </div>
         </section>
 
-        <!-- EMPAT KARTU RINGKASAN (1 Baris Saja / 4 Grid Horizontal) -->
         <section aria-label="Ringkasan rekrutmen" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Kartu 1: Pending -->
             <article class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-red-200 hover:shadow-md transition-all">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-[#A6192E]"></div>
                 <div class="flex items-start justify-between gap-3">
@@ -55,7 +52,6 @@
                 </div>
             </article>
 
-            <!-- Kartu 2: Progress -->
             <article class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-amber-200 hover:shadow-md transition-all">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-amber-500"></div>
                 <div class="flex items-start justify-between gap-3">
@@ -78,7 +74,6 @@
                 </div>
             </article>
 
-            <!-- Kartu 3: Accepted -->
             <article class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-emerald-200 hover:shadow-md transition-all">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-emerald-600"></div>
                 <div class="flex items-start justify-between gap-3">
@@ -102,7 +97,6 @@
                 </div>
             </article>
 
-            <!-- Kartu 4: Active Jobs -->
             <article class="bg-white p-5 rounded-xl border border-slate-200/90 shadow-xs flex flex-col justify-between relative overflow-hidden group hover:border-red-200 hover:shadow-md transition-all">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-[#7f1d1d]"></div>
                 <div class="flex items-start justify-between gap-3">
@@ -126,11 +120,8 @@
             </article>
         </section>
 
-        <!-- AREA UTAMA: TEPAT 2 KOLOM (Grid 8 Kolom Kiri vs 4 Kolom Kanan) -->
         <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-            <!-- KOLOM KIRI (8 Kolom): Tabel Lamaran Terbaru -->
             <section class="xl:col-span-8 bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col overflow-hidden">
-                <!-- Header Tabel -->
                 <div class="p-5 sm:px-6 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div class="flex items-center gap-2.5">
                         <h2 class="text-base sm:text-lg font-bold text-slate-900">
@@ -141,7 +132,6 @@
                         </span>
                     </div>
 
-                    <!-- Input Pencarian Simpel -->
                     <div class="relative w-full sm:w-64">
                         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">search</span>
                         <input
@@ -154,7 +144,6 @@
                 </div>
 
                 @if ($recentApplications->isNotEmpty())
-                    <!-- Tabel Responsif -->
                     <div class="w-full overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
@@ -268,7 +257,6 @@
                     </div>
                 @endif
 
-                <!-- Footer Tabel -->
                 <div class="px-6 py-3.5 bg-slate-50/70 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-slate-500 text-xs font-medium">
                     <span>
                         Menampilkan {{ $recentApplications->count() }} pelamar teratas dari total {{ number_format($totalApplicationsCount, 0, ',', '.') }} lamaran masuk
@@ -281,9 +269,7 @@
                 </div>
             </section>
 
-            <!-- KOLOM KANAN (4 Kolom): Lowongan Segera Berakhir -->
             <section class="xl:col-span-4 bg-white rounded-xl border border-slate-200/90 shadow-xs flex flex-col p-5 sm:p-6">
-                <!-- Header Card -->
                 <div class="flex items-center justify-between gap-3 pb-4 border-b border-slate-100">
                     <div class="flex items-center gap-2.5 min-w-0">
                         <div class="w-8 h-8 rounded-lg bg-red-50 text-[#A6192E] border border-red-100 flex items-center justify-center shrink-0">
@@ -296,7 +282,6 @@
                     </span>
                 </div>
 
-                <!-- List Item Lowongan -->
                 @if ($closingSoonJobs->isNotEmpty())
                     <div class="flex flex-col gap-3 pt-4">
                         @foreach ($closingSoonJobs as $job)

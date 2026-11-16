@@ -56,7 +56,6 @@
     $watch('stageFilter', () => filterApplicants());
     $watch('eduFilter', () => filterApplicants());">
 
-        <!-- Top Bar / Action Controls (UNIFIED HCI PATTERN) -->
         <section class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3.5 border-b border-slate-200">
             <div class="flex items-center gap-3.5">
                 <a class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white border border-slate-200 shadow-2xs text-slate-600 hover:text-[#9b1b1f] hover:bg-slate-100 transition shrink-0"
@@ -75,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="flex flex-wrap items-center gap-2.5">
                 @if ($job->status === 'pending')
                     @if (auth()->user()->admin?->role === 'superadmin')
@@ -125,9 +123,7 @@
             </div>
         </section>
 
-        <!-- Header Banner & Position Summary -->
         <section class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-2xs relative overflow-hidden">
-            <!-- Decorative background glow -->
             <div
                 class="absolute -right-16 -top-16 w-64 h-64 bg-red-100 rounded-full blur-3xl opacity-60 pointer-events-none">
             </div>
@@ -213,7 +209,6 @@
                 </div>
             </div>
 
-            <!-- 6 Position Info Key Attributes -->
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-slate-100">
                 <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100">
                     <p class="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Divisi / Bidang</p>
@@ -250,9 +245,7 @@
             </div>
         </section>
 
-        <!-- Applicant Metrics Bar -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Total Pelamar -->
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Total Pelamar</p>
@@ -270,7 +263,6 @@
                 </div>
             </div>
 
-            <!-- Dalam Proses -->
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Dalam Proses</p>
@@ -285,7 +277,6 @@
                 </div>
             </div>
 
-            <!-- Diterima -->
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Diterima (Accepted)</p>
@@ -300,7 +291,6 @@
                 </div>
             </div>
 
-            <!-- Ditolak / Gugur -->
             <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-2xs flex items-center justify-between">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Tidak Memenuhi</p>
@@ -316,9 +306,7 @@
             </div>
         </section>
 
-        <!-- Job Details: Responsibilities & Qualifications (Split Bento Cards) -->
         <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Kolom Kiri: Deskripsi & Tanggung Jawab -->
             <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs space-y-4">
                 <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
                     <div class="w-8 h-8 rounded-lg bg-red-50 text-[#991b1b] flex items-center justify-center shrink-0">
@@ -340,7 +328,6 @@
                 @endif
             </div>
 
-            <!-- Kolom Kanan: Kualifikasi & Kriteria Pelamar -->
             <div class="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-2xs space-y-4">
                 <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
                     <div class="w-8 h-8 rounded-lg bg-red-50 text-[#991b1b] flex items-center justify-center shrink-0">
@@ -363,9 +350,7 @@
             </div>
         </section>
 
-        <!-- Main Section: Applicants Pipeline & Management Table -->
         <section class="bg-white rounded-2xl border border-slate-200/80 shadow-2xs overflow-hidden space-y-6 p-6">
-            <!-- Header of Applicants Section -->
             <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-2">
@@ -380,9 +365,7 @@
                 </div>
             </div>
 
-            <!-- Filter Bar (Search & Dropdowns) -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-100">
-                <!-- Search Input -->
                 <div class="relative">
                     <span
                         class="material-symbols-outlined text-slate-400 text-lg absolute left-3 top-2 pointer-events-none">search</span>
@@ -391,7 +374,6 @@
                         placeholder="Cari Nama, NIK, atau Email..." type="text">
                 </div>
 
-                <!-- Stage Filter -->
                 <div class="relative">
                     <select x-model="stageFilter" @change="filterApplicants()"
                         class="w-full appearance-none py-2 pl-3 pr-9 text-xs rounded-lg border border-slate-200 bg-white shadow-2xs text-slate-700 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
@@ -403,7 +385,6 @@
                     </select>
                 </div>
 
-                <!-- Education Filter -->
                 <div class="relative">
                     <select x-model="eduFilter" @change="filterApplicants()"
                         class="w-full appearance-none py-2 pl-3 pr-9 text-xs rounded-lg border border-slate-200 bg-white shadow-2xs text-slate-700 focus:ring-2 focus:ring-[#991b1b]/20 focus:border-[#991b1b]">
@@ -416,7 +397,6 @@
                 </div>
             </div>
 
-            <!-- Applicants Table -->
             @if ($job->applications->isEmpty())
                 <div class="px-6 py-12 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
                     <span class="material-symbols-outlined text-3xl text-slate-300">group_off</span>
@@ -694,7 +674,6 @@
                                 </tr>
                             @endforeach
 
-                            <!-- Empty state when search or filter returns 0 results -->
                             <tr id="applicants-empty-row"
                                 x-show="visibleApplicantsCount === 0 && {{ $job->applications->count() }} > 0"
                                 style="display: none;">
@@ -716,7 +695,6 @@
                     </table>
                 </div>
 
-                <!-- Pagination / Counter Controls -->
                 <div
                     class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100 text-xs">
                     <p class="text-slate-500">
@@ -728,7 +706,6 @@
             @endif
         </section>
 
-        <!-- BEGIN: Modal Edit Lowongan (Alpine.js) -->
         <template x-teleport="body">
             <div x-show="openEditModal" x-cloak style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
@@ -741,7 +718,6 @@
                     x-transition:leave-end="opacity-0 scale-95" @click.outside="openEditModal = false"
                     class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
-                    <!-- Modal Header -->
                     <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
                         <div class="flex items-center gap-3.5">
                             <div
@@ -771,13 +747,11 @@
                         </button>
                     </div>
 
-                    <!-- Form Container -->
                     <form action="{{ route('job.update', $job->id) }}" method="POST"
                         class="flex flex-col flex-1 min-h-0 overflow-hidden">
                         @csrf
                         @method('PUT')
                         <div class="flex-1 overflow-y-auto px-8 py-6 space-y-6">
-                            <!-- Group 1: Informasi Dasar -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -948,7 +922,6 @@
                                 </div>
                             </div>
 
-                            <!-- Group 2: Rincian Lowongan -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -984,7 +957,6 @@
                                 </div>
                             </div>
 
-                            <!-- Group 3: Periode Waktu -->
                             <div class="space-y-4">
                                 <div class="flex items-center gap-2 pb-1 border-b border-slate-100">
                                     <span class="w-2 h-2 rounded-full bg-[#A6192E]"></span>
@@ -1008,7 +980,6 @@
                             </div>
                         </div>
 
-                        <!-- Modal Footer -->
                         <div
                             class="px-8 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-3 shrink-0">
                             <button type="button" @click="openEditModal = false"
@@ -1028,9 +999,7 @@
                 </div>
             </div>
         </template>
-        <!-- END: Modal Edit Lowongan -->
 
-        <!-- BEGIN: Modal Konfirmasi Tutup Lowongan (Alpine.js) -->
         <template x-teleport="body">
             <div x-show="closeModalOpen" x-cloak style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
@@ -1088,9 +1057,7 @@
                 </div>
             </div>
         </template>
-        <!-- END: Modal Konfirmasi Tutup Lowongan -->
 
-        <!-- BEGIN: Modal Konfirmasi Persetujuan Lowongan (Alpine.js) -->
         <template x-teleport="body">
             <div x-show="approveModalOpen" x-cloak style="display: none;"
                 class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
@@ -1137,7 +1104,6 @@
                 </div>
             </div>
         </template>
-        <!-- END: Modal Konfirmasi Persetujuan Lowongan -->
     </div>
 
     <x-application.modal-email />

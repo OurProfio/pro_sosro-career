@@ -7,9 +7,7 @@
              $isSuperAdmin = $admin?->role === 'superadmin';
          @endphp
 
-         <!-- Navigation Links -->
          <nav class="p-3 space-y-1" data-purpose="sidebar-menu">
-             <!-- Dashboard (Dapat diakses Superadmin & Admin) -->
              @php
                  $isDashboardActive = request()->routeIs('admin.dashboard');
              @endphp
@@ -26,7 +24,6 @@
                  @endif
              </a>
 
-             <!-- Lowongan (Dapat diakses Superadmin & Admin) -->
              @php
                  $isJobActive = request()->routeIs('job.*') || request()->routeIs('admin.job.*');
              @endphp
@@ -43,7 +40,6 @@
                  @endif
              </a>
 
-             <!-- Pelamar / Applicant (Dapat diakses Superadmin & Admin) -->
              @php
                  $isApplicantAccountActive = request()->routeIs('applicant.*');
              @endphp
@@ -66,7 +62,6 @@
                      <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Superadmin Area</p>
                  </div>
 
-                 <!-- Pengguna (Users) -->
                  @php
                      $isUserActive = request()->routeIs('user.*');
                  @endphp
@@ -83,7 +78,6 @@
                      @endif
                  </a>
 
-                 <!-- Admin -->
                  @php
                      $isAdminActive = request()->routeIs('admin.index', 'admin.create', 'admin.edit', 'admin.show');
                  @endphp
@@ -100,7 +94,6 @@
                      @endif
                  </a>
 
-                 <!-- Kantor -->
                  @php
                      $isOfficeActive = request()->routeIs('office.*') || request()->routeIs('admin.office.*');
                  @endphp
@@ -117,7 +110,6 @@
                      @endif
                  </a>
 
-                 <!-- Divisi -->
                  @php
                      $isDivisionActive = request()->routeIs('division.*');
                  @endphp

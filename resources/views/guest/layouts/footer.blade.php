@@ -1,4 +1,4 @@
-<footer class="bg-[#B11116] text-white pt-16 pb-8 px-6 md:px-16">
+<footer id="kontak" class="bg-[#B11116] text-white pt-16 pb-8 px-6 md:px-16">
     <div class="max-w-7xl mx-auto">
         <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-10 gap-10">
 

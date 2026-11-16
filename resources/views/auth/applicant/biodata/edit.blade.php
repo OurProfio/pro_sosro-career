@@ -17,7 +17,6 @@
 
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
-                <!-- Step 1: Data Personal (AKTIF) -->
                 <li class="flex items-center transition-colors text-[#B11116] font-bold">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white">
@@ -28,7 +27,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 2: Keluarga (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & lanjut ke Data Keluarga"
                         class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
@@ -42,7 +40,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 3: Pendidikan (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & lanjut ke Data Pendidikan"
                         class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
@@ -56,7 +53,6 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <!-- Step 4: Pengalaman (Dapat diklik, simpan dulu) -->
                 <li>
                     <button type="button" onclick="goToStep('workExperience')" title="Simpan data saat ini & lanjut ke Data Pengalaman"
                         class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
@@ -86,13 +82,11 @@
                         </p>
                     </header>
 
-                    <!-- SEKSI UPLOAD FOTO PROFIL -->
                     <div class="mb-8 p-6 bg-gray-50/80 rounded-2xl border border-gray-200/80">
                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">
                             Pas Foto Terbaru
                         </label>
                         <div class="flex flex-col sm:flex-row items-center gap-6">
-                            <!-- Preview Image Container -->
                             <div class="relative group shrink-0">
                                 @php
                                     $savedPhoto = $applicant->photo_url ?? null;
@@ -122,7 +116,6 @@
                                 </button>
                             </div>
 
-                            <!-- File Upload Inputs & Requirements -->
                             <div class="flex-1 space-y-3 text-center sm:text-left">
                                 <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3">
                                     <label for="photo"
@@ -506,7 +499,6 @@
                             @enderror
                         </div>
 
-                        <!-- SEKSI KONTAK DARURAT (EMERGENCY CONTACT) -->
                         <div class="md:col-span-2 p-5 bg-gray-50/90 rounded-2xl border border-gray-200/80 space-y-4">
                             <div class="flex items-center gap-2">
                                 <div class="p-1.5 bg-red-100 text-[#B11116] rounded-lg">
@@ -616,7 +608,6 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Salary Expectation -->
                             <div class="space-y-1.5">
                                 <label for="salary_expectation"
                                     class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -636,7 +627,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Job Source (Sumber Informasi Lowongan) -->
                             <div class="space-y-1.5">
                                 <label for="job_source"
                                     class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -671,7 +661,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Reference By (Tampil Jika Memilih Referral) -->
                             <div id="referralWrapper" class="space-y-1.5 {{ $selectedJobSource === 'Referral' ? '' : 'hidden' }}">
                                 <label for="reference_by"
                                     class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -686,7 +675,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Facility Expectation -->
                             <div class="space-y-1.5 md:col-span-2">
                                 <label for="facility_expectation"
                                     class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -700,7 +688,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Ready to Relocate -->
                             <div class="space-y-1.5">
                                 <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                     Bersedia Ditempatkan Dimana Saja <span class="text-[#B11116]">*</span>
@@ -728,7 +715,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Ready to Travel -->
                             <div class="space-y-1.5">
                                 <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                     Bersedia Perjalanan Dinas? <span class="text-[#B11116]">*</span>

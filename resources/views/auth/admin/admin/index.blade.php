@@ -82,7 +82,6 @@
             }
         }">
 
-        <!-- Section 1: Header & Breadcrumb -->
         <section class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-slate-200">
             <div class="space-y-1">
                 <nav class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
@@ -114,9 +113,7 @@
             </div>
         </section>
 
-        <!-- Section 2: Bento Metric Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            <!-- Card 1: Total Admin -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-slate-100 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -135,7 +132,6 @@
                 </div>
             </div>
 
-            <!-- Card 2: Superadmin -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-red-50 text-[#A6192E] flex items-center justify-center shadow-2xs">
@@ -154,7 +150,6 @@
                 </div>
             </div>
 
-            <!-- Card 3: Admin Cabang & Pabrik -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shadow-2xs">
@@ -173,7 +168,6 @@
                 </div>
             </div>
 
-            <!-- Card 4: Cakupan Unit Kerja -->
             <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200/90 flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition">
                 <div class="flex items-start justify-between relative z-10">
                     <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shadow-2xs">
@@ -204,9 +198,7 @@
             </div>
         </div>
 
-        <!-- Section 3: Toolbar Sebaris (Search & Filters) -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/90 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
-            <!-- Search Input -->
             <div class="relative flex-1 min-w-[260px]">
                 <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,9 +210,7 @@
                     placeholder="Cari nama administrator, email resmi Sosro...">
             </div>
 
-            <!-- Filters Row -->
             <div class="flex flex-wrap items-center gap-2">
-                <!-- Role Filter -->
                 <div class="min-w-[140px]">
                     <select x-model="selectedRole"
                         class="w-full py-2 px-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition cursor-pointer">
@@ -230,7 +220,6 @@
                     </select>
                 </div>
 
-                <!-- Office Filter -->
                 <div class="min-w-[180px]">
                     <select x-model="selectedOffice"
                         class="w-full py-2 px-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition cursor-pointer">
@@ -241,7 +230,6 @@
                     </select>
                 </div>
 
-                <!-- Status Filter -->
                 <div class="min-w-[130px]">
                     <select x-model="selectedStatus"
                         class="w-full py-2 px-3 bg-slate-50/80 border border-slate-200 rounded-xl text-xs text-slate-700 font-medium focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 transition cursor-pointer">
@@ -251,7 +239,6 @@
                     </select>
                 </div>
 
-                <!-- Reset Button -->
                 <button type="button" @click="resetFilters()"
                     class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 border border-slate-200 rounded-xl transition cursor-pointer"
                     title="Reset Filter Pencarian">
@@ -262,7 +249,6 @@
             </div>
         </div>
 
-        <!-- Section 4: Tabel Data Admin Modern -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden flex flex-col">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -419,7 +405,6 @@
                 </table>
             </div>
 
-            <!-- Table Footer -->
             <div class="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
                 <div class="font-medium">
                     Menampilkan <span class="font-bold text-slate-800">{{ $admins->count() }}</span> total administrator
@@ -427,7 +412,6 @@
             </div>
         </div>
 
-        <!-- Section 5: Telemetry Banner (Jika ada kantor cabang belum memiliki admin) -->
         @if ($unassignedCount > 0)
             <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-l-4 border-l-amber-500">
                 <div class="flex items-center gap-3">
@@ -448,7 +432,6 @@
             </div>
         @endif
 
-        <!-- MODAL 1: Tambah Admin Baru (Alpine.js with Teleport & Backdrop Blur) -->
         <template x-teleport="body">
             <div x-show="openCreateModal"
                 x-cloak
@@ -469,7 +452,6 @@
                     @click.outside="openCreateModal = false"
                     class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
-                    <!-- Modal Header -->
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-red-50 border border-red-100/70 flex items-center justify-center text-[#A6192E] shadow-2xs">
@@ -489,11 +471,9 @@
                         </button>
                     </div>
 
-                    <!-- Form Container -->
                     <form action="{{ route('admin.store') }}" method="POST" class="flex flex-col flex-1 min-h-0 overflow-hidden">
                         @csrf
                         <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-                            <!-- Nama Lengkap -->
                             <div class="space-y-1.5">
                                 <label for="create_name" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Nama Lengkap <span class="text-[#A6192E] font-bold">*</span>
@@ -506,7 +486,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Email Resmi -->
                             <div class="space-y-1.5">
                                 <label for="create_email" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Email Resmi <span class="text-[#A6192E] font-bold">*</span>
@@ -519,7 +498,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Password -->
                             <div class="space-y-1.5">
                                 <label for="create_password" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Kata Sandi (Password) <span class="text-[#A6192E] font-bold">*</span>
@@ -532,7 +510,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Role & Office Grid -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="create_role" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
@@ -570,7 +547,6 @@
                             </div>
                         </div>
 
-                        <!-- Modal Footer -->
                         <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0">
                             <button type="button" @click="openCreateModal = false"
                                 class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition duration-150 cursor-pointer">
@@ -589,7 +565,6 @@
             </div>
         </template>
 
-        <!-- MODAL 2: Edit Data Admin (Alpine.js with Teleport & Backdrop Blur) -->
         <template x-teleport="body">
             <div x-show="openEditModal"
                 x-cloak
@@ -610,7 +585,6 @@
                     @click.outside="openEditModal = false"
                     class="bg-white w-full max-w-xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
-                    <!-- Modal Header -->
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100/70 flex items-center justify-center text-amber-700 shadow-2xs">
@@ -631,14 +605,12 @@
                         </button>
                     </div>
 
-                    <!-- Form Container -->
                     <form :action="'{{ url('admin/admin') }}/' + editData.id" method="POST" class="flex flex-col flex-1 min-h-0 overflow-hidden">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="edit_id" :value="editData.id">
 
                         <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
-                            <!-- Nama Lengkap -->
                             <div class="space-y-1.5">
                                 <label for="edit_name" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Nama Lengkap <span class="text-[#A6192E] font-bold">*</span>
@@ -651,7 +623,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Email Resmi -->
                             <div class="space-y-1.5">
                                 <label for="edit_email" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                     Email Resmi <span class="text-[#A6192E] font-bold">*</span>
@@ -664,7 +635,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Password Baru (Opsional) -->
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between">
                                     <label for="edit_password" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
@@ -680,7 +650,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Role & Office Grid -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <div class="space-y-1.5">
                                     <label for="edit_role" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
@@ -718,7 +687,6 @@
                             </div>
                         </div>
 
-                        <!-- Modal Footer -->
                         <div class="px-6 py-4 bg-slate-50/70 border-t border-slate-100 flex items-center justify-end gap-2.5 shrink-0">
                             <button type="button" @click="openEditModal = false"
                                 class="px-4 py-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-800 font-semibold text-xs transition duration-150 cursor-pointer">
@@ -737,7 +705,6 @@
             </div>
         </template>
 
-        <!-- MODAL 3: Konfirmasi Nonaktifkan Admin (Alpine.js with Teleport & Backdrop Blur) -->
         <template x-teleport="body">
             <div x-show="openDeleteModal"
                 x-cloak
@@ -794,7 +761,6 @@
             </div>
         </template>
 
-        <!-- MODAL 4: Konfirmasi Aktifkan Kembali Admin (Alpine.js with Teleport & Backdrop Blur) -->
         <template x-teleport="body">
             <div x-show="openActivateModal"
                 x-cloak

@@ -3,7 +3,6 @@
 @section('title', 'Selamat Datang')
 
 @section('content')
-    <!-- Google Fonts: Plus Jakarta Sans (Standar Tipografi Korporat Modern & Berkelas) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -43,42 +42,194 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
             letter-spacing: -0.025em;
         }
+
+        /* 3D Flip Card Program Kami */
+        .program-flip-card {
+            perspective: 1200px;
+            -webkit-perspective: 1200px;
+        }
+
+        .program-flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+            border-radius: 30px;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.55), 0 12px 28px rgba(0, 0, 0, 0.35);
+        }
+
+        .program-flip-card:hover .program-flip-inner,
+        .program-flip-card.is-flipped .program-flip-inner {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.7), 0 16px 36px rgba(0, 0, 0, 0.45);
+        }
+
+        /* Shadow Tebal di Segala Sisi untuk Card Nilai Perusahaan */
+        .nilai-card {
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.45), 0 10px 25px rgba(60, 4, 8, 0.4);
+            filter: drop-shadow(0 0 16px rgba(0, 0, 0, 0.35));
+            transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+        }
+
+        .nilai-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 0 45px rgba(0, 0, 0, 0.6), 0 16px 32px rgba(60, 4, 8, 0.5);
+            filter: drop-shadow(0 0 22px rgba(0, 0, 0, 0.45));
+        }
+
+        .program-flip-front,
+        .program-flip-back {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .program-flip-front {
+            transform: rotateY(0deg);
+            -webkit-transform: rotateY(0deg);
+            z-index: 2;
+        }
+
+        .program-flip-back {
+            transform: rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            z-index: 1;
+        }
+
+        /* Overlay Indikator "Bisa Di-Flip" Saat Masuk Viewport */
+        .program-flip-overlay {
+            opacity: 0;
+            transform: scale(0.92);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #program-kami.in-view .program-flip-overlay {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .program-flip-card:hover .program-flip-overlay,
+        .program-flip-card.is-flipped .program-flip-overlay {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        /* Teaser Peek Animation (Sekali saat discroll ke section) */
+        @keyframes teaserFlipPeek {
+            0% {
+                transform: rotateY(0deg);
+            }
+
+            40% {
+                transform: rotateY(24deg);
+            }
+
+            100% {
+                transform: rotateY(0deg);
+            }
+        }
+
+        .program-flip-card.teaser-peek .program-flip-inner {
+            animation: teaserFlipPeek 0.85s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        @keyframes spinReverseSlow {
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        .animate-spin-reverse {
+            animation: spinReverseSlow 6s linear infinite;
+        }
+
+        @keyframes subtlePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 18px rgba(177, 17, 22, 0.7);
+            }
+
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 30px rgba(177, 17, 22, 0.95);
+            }
+        }
+
+        .animate-pulse-subtle {
+            animation: subtlePulse 2.4s ease-in-out infinite;
+        }
+
+        @keyframes spinReverseSlow {
+            from {
+                transform: rotate(360deg);
+            }
+
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
+        .animate-spin-reverse {
+            animation: spinReverseSlow 6s linear infinite;
+        }
+
+        @keyframes subtlePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 18px rgba(177, 17, 22, 0.7);
+            }
+
+            50% {
+                transform: scale(1.08);
+                box-shadow: 0 0 30px rgba(177, 17, 22, 0.95);
+            }
+        }
+
+        .animate-pulse-subtle {
+            animation: subtlePulse 2.4s ease-in-out infinite;
+        }
     </style>
 
     <section id="beranda"
         class="relative w-full min-h-[560px] sm:min-h-[600px] md:min-h-[640px] lg:min-h-[680px] bg-[#B11116] overflow-hidden flex flex-col justify-between pt-24 pb-8 md:pt-28 md:pb-10">
 
-        <!-- SLIDES WRAPPER -->
         <div class="absolute inset-0 w-full h-full" id="jumbotronSlider">
 
-            <!-- SLIDE 1 (Text di KIRI, Kurva di KIRI) -->
             <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-100 z-10"
                 data-slide="0">
-                <!-- Native Red SVG Curves (Kiri) -->
                 <div class="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-[#c8102e] via-[#B11116] to-[#7f0b0f]"></div>
-                    <div
-                        class="absolute -top-32 -left-32 w-[600px] md:w-[800px] h-[600px] md:h-[800px] rounded-full bg-radial from-[#e81928]/40 via-[#c8102e]/20 to-transparent blur-2xl">
-                    </div>
-                    <div
-                        class="absolute -bottom-20 -right-20 w-[500px] md:w-[700px] h-[500px] md:h-[700px] rounded-full bg-radial from-[#660508]/60 to-transparent blur-3xl">
-                    </div>
+                    <div class="absolute inset-0 w-full h-full bg-white"></div>
 
-                    <!-- SVG Kurva Kiri -->
                     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="slide1CurveMain" x1="0%" y1="0%" x2="100%"
                                 y2="80%">
-                                <stop offset="0%" stop-color="#df1a26" stop-opacity="0.9" />
-                                <stop offset="40%" stop-color="#B11116" stop-opacity="0.95" />
-                                <stop offset="100%" stop-color="#73080c" stop-opacity="0.85" />
+                                <stop offset="0%" stop-color="#df1a26" />
+                                <stop offset="40%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#73080c" />
                             </linearGradient>
                             <linearGradient id="slide1CurveLayer" x1="20%" y1="0%" x2="80%"
                                 y2="100%">
-                                <stop offset="0%" stop-color="#e8202d" stop-opacity="0.6" />
-                                <stop offset="60%" stop-color="#B11116" stop-opacity="0.75" />
-                                <stop offset="100%" stop-color="#8a0c10" stop-opacity="0.9" />
+                                <stop offset="0%" stop-color="#e8202d" />
+                                <stop offset="60%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#8a0c10" />
                             </linearGradient>
                             <linearGradient id="slide1WaveBottom" x1="0%" y1="0%" x2="100%"
                                 y2="0%">
@@ -94,26 +245,20 @@
                             d="M0,0 L490,0 C350,130 300,250 360,370 C420,490 580,515 820,532 C1060,548 1280,522 1440,535 L1440,600 L0,600 Z"
                             fill="url(#slide1CurveMain)" />
                         <path d="M0,480 C260,450 500,515 800,488 C1100,460 1300,505 1440,495 L1440,600 L0,600 Z"
-                            fill="url(#slide1WaveBottom)" opacity="0.92" />
+                            fill="url(#slide1WaveBottom)" />
                     </svg>
 
-                    <!-- Ornamen Daun & Botol Sosro di Area Kurva Merah Kiri & Gelombang Bawah -->
                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                         class="absolute -left-6 top-14 md:left-4 md:top-18 w-44 sm:w-56 md:w-68 lg:w-76 object-contain pointer-events-none select-none opacity-20 transform -rotate-12">
-                    <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                        class="absolute right-4 bottom-2 md:right-16 md:bottom-4 w-32 sm:w-40 md:w-48 object-contain pointer-events-none select-none opacity-20 transform rotate-45">
                 </div>
 
-                <!-- Konten Slide 1 (Kiri) -->
                 <div class="relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center">
                     <div class="max-w-md lg:max-w-2xl text-left py-8 md:py-12">
-                        <!-- Main Title (Plus Jakarta Sans) -->
                         <h1 data-i18n-key="hero_title"
                             class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.75rem] text-white font-semibold leading-[1.08] tracking-tight drop-shadow-md">
                             Work Together<br>As A Team
                         </h1>
 
-                        <!-- Description -->
                         <p data-i18n-key="hero_desc"
                             class="text-white/95 text-sm sm:text-base md:text-lg mt-3.5 md:mt-4.5 max-w-xl font-normal leading-relaxed drop-shadow-sm">
                             Bergabunglah bersama kami, talenta muda maupun profesional berpengalaman. Kembangkan potensi
@@ -123,61 +268,44 @@
                 </div>
             </div>
 
-            <!-- SLIDE 2 (Struktur Khusus: Impact Card & Skala Heritage Sosro - Berbeda Total dari Slide 1) -->
             <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none z-0"
                 data-slide="1">
-                <!-- Native Red SVG Curves (Aliran Gelombang S-Curve Organik Berbeda dari Slide 1) -->
                 <div class="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-bl from-[#c8102e] via-[#B11116] to-[#7f0b0f]"></div>
-                    <!-- Radial Glow Hangat khas Seduhan Teh Alami Sosro -->
-                    <div
-                        class="absolute -top-24 right-1/4 w-[550px] md:w-[750px] h-[550px] md:h-[750px] rounded-full bg-radial from-[#ff6b35]/25 via-[#c8102e]/20 to-transparent blur-3xl">
-                    </div>
-                    <div
-                        class="absolute -bottom-24 -left-24 w-[450px] md:w-[650px] h-[450px] md:h-[650px] rounded-full bg-radial from-[#590407]/70 to-transparent blur-3xl">
-                    </div>
+                    <div class="absolute inset-0 w-full h-full bg-white"></div>
 
-                    <!-- SVG S-Curve Organik Dinamis Mengalir dari Kanan Atas ke Tengah Bawah -->
                     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="slide2MainFlow" x1="100%" y1="10%" x2="0%" y2="90%">
-                                <stop offset="0%" stop-color="#df1a26" stop-opacity="0.95" />
-                                <stop offset="50%" stop-color="#B11116" stop-opacity="0.95" />
-                                <stop offset="100%" stop-color="#690609" stop-opacity="0.9" />
+                            <linearGradient id="slide2MainFlow" x1="100%" y1="10%" x2="0%"
+                                y2="90%">
+                                <stop offset="0%" stop-color="#df1a26" />
+                                <stop offset="50%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#690609" />
                             </linearGradient>
                             <linearGradient id="slide2RippleLayer" x1="90%" y1="0%" x2="10%"
                                 y2="100%">
-                                <stop offset="0%" stop-color="#ff3b47" stop-opacity="0.5" />
-                                <stop offset="60%" stop-color="#B11116" stop-opacity="0.7" />
-                                <stop offset="100%" stop-color="#73080c" stop-opacity="0.85" />
+                                <stop offset="0%" stop-color="#ff3b47" />
+                                <stop offset="60%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#73080c" />
                             </linearGradient>
                         </defs>
-                        <!-- Layer Belakang S-Curve -->
                         <path d="M1440,0 L760,0 C880,140 640,260 700,390 C760,510 540,550 420,600 L1440,600 Z"
                             fill="url(#slide2RippleLayer)" />
-                        <!-- Layer Depan S-Curve Mengalir -->
                         <path d="M1440,0 L880,0 C990,120 740,230 790,370 C840,490 660,535 520,600 L1440,600 Z"
                             fill="url(#slide2MainFlow)" />
                     </svg>
 
-                    <!-- Ornamen Daun & Botol Sosro Mengikuti Lekukan S-Curve Kanan -->
                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                         class="absolute right-4 top-10 md:right-16 md:top-14 w-40 sm:w-52 md:w-64 object-contain pointer-events-none select-none opacity-25 transform rotate-6">
-                    <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                        class="absolute right-1/3 bottom-4 w-32 sm:w-44 md:w-52 object-contain pointer-events-none select-none opacity-15 transform -rotate-45 hidden md:block">
                 </div>
 
-                <!-- Konten Slide 2 (Kanan: Be Part of Something Bigger) -->
                 <div class="relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center justify-end">
                     <div class="max-w-md lg:max-w-2xl text-left py-8 md:py-12">
-                        <!-- Main Title (Plus Jakarta Sans) -->
                         <h2 data-i18n-key="hero_title_2"
                             class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.75rem] text-white font-semibold leading-[1.08] tracking-tight drop-shadow-md">
                             Be Part of<br>Something Bigger
                         </h2>
 
-                        <!-- Description -->
                         <p data-i18n-key="hero_desc_2"
                             class="text-white/95 text-sm sm:text-base md:text-lg mt-3.5 md:mt-4.5 max-w-xl font-normal leading-relaxed drop-shadow-sm">
                             Wujudkan ide terbaikmu dan kembangkan potensi tanpa batas bersama keluarga besar Rekso dalam
@@ -187,62 +315,64 @@
                 </div>
             </div>
 
-            <!-- SLIDE 3 (Adaptasi Desain Slide 1 & 2: Video Showcase Interaktif & Narasi Sosro) -->
             <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none z-0"
                 data-slide="2">
-                <!-- Native Red SVG Curves & Glow (Harmonis dengan Slide 1 & 2) -->
                 <div class="absolute inset-0 w-full h-full pointer-events-none select-none overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-[#c8102e] via-[#B11116] to-[#72070c]"></div>
-                    <!-- Radial Glow Hangat Merah & Teh -->
-                    <div
-                        class="absolute -top-28 left-1/3 w-[650px] md:w-[850px] h-[650px] md:h-[850px] rounded-full bg-radial from-[#ff5b36]/20 via-[#c8102e]/15 to-transparent blur-3xl">
-                    </div>
-                    <div
-                        class="absolute -bottom-28 right-0 w-[550px] md:w-[750px] h-[550px] md:h-[750px] rounded-full bg-radial from-[#550407]/70 to-transparent blur-3xl">
-                    </div>
+                    <div class="absolute inset-0 w-full h-full bg-white"></div>
 
-                    <!-- SVG Organic Fluid Wave Curves -->
                     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="slide3CurveMain" x1="0%" y1="100%" x2="100%"
-                                y2="0%">
-                                <stop offset="0%" stop-color="#df1a26" stop-opacity="0.9" />
-                                <stop offset="50%" stop-color="#B11116" stop-opacity="0.95" />
-                                <stop offset="100%" stop-color="#690609" stop-opacity="0.85" />
+                            <linearGradient id="slide3CurveMain" x1="0%" y1="0%" x2="100%"
+                                y2="100%">
+                                <stop offset="0%" stop-color="#df1a26" />
+                                <stop offset="45%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#7a060a" />
                             </linearGradient>
-                            <linearGradient id="slide3CurveLayer" x1="10%" y1="90%" x2="90%"
-                                y2="10%">
-                                <stop offset="0%" stop-color="#ff3b47" stop-opacity="0.45" />
-                                <stop offset="50%" stop-color="#B11116" stop-opacity="0.65" />
-                                <stop offset="100%" stop-color="#73080c" stop-opacity="0.85" />
+                            <linearGradient id="slide3CurveLayer" x1="10%" y1="0%" x2="90%"
+                                y2="100%">
+                                <stop offset="0%" stop-color="#f02835" />
+                                <stop offset="55%" stop-color="#B11116" />
+                                <stop offset="100%" stop-color="#8b0a0e" />
+                            </linearGradient>
+                            <linearGradient id="slide3WaveRipple" x1="0%" y1="0%" x2="100%"
+                                y2="0%">
+                                <stop offset="0%" stop-color="#B11116" />
+                                <stop offset="50%" stop-color="#c8102e" />
+                                <stop offset="100%" stop-color="#7f070b" />
                             </linearGradient>
                         </defs>
-                        <path d="M0,600 L0,320 C240,280 480,380 720,340 C960,300 1200,160 1440,180 L1440,600 Z"
+                        <path
+                            d="M0,0 L720,0 C620,160 560,260 620,370 C680,480 880,500 1120,520 C1280,535 1380,515 1440,530 L1440,600 L0,600 Z"
                             fill="url(#slide3CurveLayer)" />
-                        <path d="M0,600 L0,380 C260,330 500,430 760,390 C1020,350 1240,220 1440,230 L1440,600 Z"
+                        <path
+                            d="M0,0 L580,0 C480,150 430,250 490,360 C550,470 740,490 980,515 C1160,535 1320,515 1440,520 L1440,600 L0,600 Z"
                             fill="url(#slide3CurveMain)" />
+                        <path
+                            d="M0,510 C320,470 540,530 840,505 C1140,480 1320,525 1440,510 L1440,600 L0,600 Z"
+                            fill="url(#slide3WaveRipple)" />
                     </svg>
 
-                    <!-- Ornamen Daun Teh & Botol Sosro -->
                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                        class="absolute left-6 bottom-4 md:left-12 md:bottom-8 w-44 sm:w-56 md:w-64 object-contain pointer-events-none select-none opacity-20 transform -rotate-12">
+                        class="absolute -left-10 -bottom-8 md:-left-6 md:-bottom-4 w-48 sm:w-60 md:w-72 object-contain pointer-events-none select-none opacity-25 transform rotate-12">
                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                        class="absolute right-4 top-8 md:right-12 md:top-12 w-44 sm:w-56 md:w-64 object-contain pointer-events-none select-none opacity-20 transform rotate-12">
+                        class="absolute left-1/3 -top-10 w-36 sm:w-44 md:w-52 object-contain pointer-events-none select-none opacity-15 transform -rotate-45 hidden lg:block">
                 </div>
 
-                <!-- Konten Slide 3: 2-Kolom Seimbang (Teks Kiri, Video Card Kanan) -->
                 <div class="relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center py-6 md:py-8">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
-                        <!-- Kolom Teks (Kiri) -->
                         <div class="lg:col-span-6 text-left">
-                            <!-- Main Title (Plus Jakarta Sans) -->
+                            <div
+                                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-semibold tracking-wide mb-3.5 shadow-xs">
+                                <span class="flex h-2 w-2 rounded-full bg-amber-300"></span>
+                                <span>Cerita & Budaya Sosro</span>
+                            </div>
+
                             <h2 data-i18n-key="hero_title_3"
                                 class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white font-semibold leading-[1.1] tracking-tight drop-shadow-md">
                                 Kenali Lebih Dekat<br>Keluarga Sosro
                             </h2>
 
-                            <!-- Description -->
                             <p data-i18n-key="hero_desc_3"
                                 class="text-white/95 text-sm sm:text-base md:text-lg mt-3.5 md:mt-4.5 max-w-xl font-normal leading-relaxed drop-shadow-sm">
                                 Saksikan bagaimana kebersamaan, dedikasi, dan inovasi mengalir nyata di setiap langkah
@@ -250,17 +380,24 @@
                             </p>
                         </div>
 
-                        <!-- Kolom Video Player Card (Kanan) -->
                         <div class="lg:col-span-6 flex justify-center lg:justify-end">
-                            <div
-                                class="relative w-full max-w-md lg:max-w-lg aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-black/40 border-2 border-white/25 bg-black/60 group transition-all duration-300 hover:shadow-red-950/50 hover:border-white/40">
-                                <!-- YouTube Video Embed: Autoplay muted saat slide aktif -->
-                                <iframe id="slideHeroVideoIframe" class="w-full h-full object-cover"
-                                    src="https://www.youtube-nocookie.com/embed/LXb3EKWsInQ?enablejsapi=1&mute=1&loop=1&playlist=LXb3EKWsInQ&controls=1&rel=0&modestbranding=1"
-                                    title="Sosro Story Video" frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowfullscreen>
-                                </iframe>
+                            <div class="relative w-full max-w-md lg:max-w-lg">
+                                <div
+                                    class="absolute -bottom-3 -right-3 w-full h-full rounded-3xl bg-gradient-to-br from-[#B11116]/35 via-red-950/25 to-transparent -z-10 transform rotate-1 hidden sm:block">
+                                </div>
+                                <div
+                                    class="absolute -top-3 -left-3 w-full h-full rounded-3xl border-2 border-white/70 bg-white/20 -z-10 transform -rotate-1 hidden sm:block">
+                                </div>
+
+                                <div
+                                    class="relative aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-black/45 border-2 border-white bg-black group transition-all duration-300 hover:shadow-red-950/45 hover:scale-[1.01]">
+                                    <iframe id="slideHeroVideoIframe" class="w-full h-full object-cover"
+                                        src="https://www.youtube-nocookie.com/embed/LXb3EKWsInQ?enablejsapi=1&mute=1&loop=1&playlist=LXb3EKWsInQ&controls=1&rel=0&modestbranding=1"
+                                        title="Sosro Story Video" frameborder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -269,9 +406,7 @@
 
         </div>
 
-        <!-- Slider Navigation Controls (Dots & Arrows) -->
         <div class="relative z-30 max-w-7xl mx-auto px-6 md:px-12 w-full flex items-center justify-between mb-3 mt-auto">
-            <!-- Slider Dots Indicator -->
             <div class="flex items-center gap-2" id="sliderDots">
                 <button type="button"
                     class="slider-dot w-8 h-2 rounded-full bg-white transition-all duration-300 cursor-pointer shadow-xs"
@@ -284,7 +419,6 @@
                     data-target="2" aria-label="Slide 3"></button>
             </div>
 
-            <!-- Slide Arrows (Left / Right) -->
             <div class="hidden sm:flex items-center gap-2">
                 <button type="button" id="prevSlideBtn" aria-label="Slide Sebelumnya"
                     class="cursor-pointer hover:cursor-pointer flex h-8 w-8 items-center justify-center rounded-full bg-black/20 hover:bg-black/35 text-white backdrop-blur-sm border border-white/20 transition active:scale-95">
@@ -301,10 +435,8 @@
             </div>
         </div>
 
-        <!-- Floating Search & Filter Bar (Desain Mockup + Custom Themed Dropdowns + HCI Search Button) -->
         <div class="relative z-30 max-w-6xl mx-auto px-4 sm:px-6 w-full mt-3">
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 sm:gap-3">
-                <!-- Search Input Pill -->
                 <div
                     class="h-11 sm:h-12 flex-1 relative flex items-center bg-white rounded-full shadow-lg shadow-black/10 pl-5 pr-3 transition-all duration-200 hover:shadow-xl focus-within:ring-2 focus-within:ring-[#B11116]/30">
                     <label for="jobSearch" class="sr-only">Cari lowongan</label>
@@ -312,7 +444,6 @@
                         data-i18n-key="search_placeholder"
                         class="w-full bg-transparent pr-2 text-xs sm:text-sm text-slate-800 placeholder:text-[#c77a87] focus:outline-none font-semibold border-0 focus:ring-0 [&::-webkit-search-cancel-button]:hidden" />
 
-                    <!-- One-Click Clear Button (Nielsen Heuristic: User Control & Freedom) -->
                     <button type="button" id="btnClearSearch" aria-label="Hapus kata kunci pencarian"
                         title="Hapus teks pencarian"
                         class="hidden cursor-pointer p-1 rounded-full text-slate-400 hover:text-red-700 hover:bg-red-50 transition active:scale-90">
@@ -323,7 +454,6 @@
                     </button>
                 </div>
 
-                <!-- Hidden native selects to retain full JS & backend compatibility -->
                 <select id="filterLocation" class="hidden">
                     <option value="">Semua Lokasi</option>
                     @foreach ($jobs->pluck('location')->unique()->filter()->values() as $loc)
@@ -345,7 +475,6 @@
                     @endforeach
                 </select>
 
-                <!-- Location Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterLocation">
                     <button type="button"
                         class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
@@ -355,7 +484,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 9 6 6 6-6" />
                         </svg>
                     </button>
-                    <!-- Custom Themed Option Menu -->
                     <div
                         class="dropdown-menu hidden absolute left-0 top-full mt-2 w-full md:w-56 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-red-100/90 py-1.5 z-50 transform origin-top transition-all duration-200">
                         <div class="dropdown-options max-h-56 overflow-y-auto px-1.5 space-y-0.5">
@@ -384,7 +512,6 @@
                     </div>
                 </div>
 
-                <!-- Category Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterCategory">
                     <button type="button"
                         class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
@@ -394,7 +521,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 9 6 6 6-6" />
                         </svg>
                     </button>
-                    <!-- Custom Themed Option Menu -->
                     <div
                         class="dropdown-menu hidden absolute left-0 top-full mt-2 w-full md:w-60 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-red-100/90 py-1.5 z-50 transform origin-top transition-all duration-200">
                         <div class="dropdown-options max-h-56 overflow-y-auto px-1.5 space-y-0.5">
@@ -423,7 +549,6 @@
                     </div>
                 </div>
 
-                <!-- Bidang Custom Themed Dropdown -->
                 <div class="custom-dropdown relative w-full md:w-auto" data-target="filterBidang">
                     <button type="button"
                         class="dropdown-trigger h-11 sm:h-12 w-full md:w-auto cursor-pointer rounded-full bg-white pl-5 pr-4 text-xs sm:text-sm font-semibold text-[#c77a87] shadow-lg shadow-black/10 hover:shadow-xl transition-all duration-200 flex items-center justify-between gap-3 border border-transparent hover:border-red-100 focus:outline-none focus:ring-2 focus:ring-[#B11116]/30">
@@ -433,7 +558,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="m6 9 6 6 6-6" />
                         </svg>
                     </button>
-                    <!-- Custom Themed Option Menu -->
                     <div
                         class="dropdown-menu hidden absolute left-0 top-full mt-2 w-full md:w-56 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-red-100/90 py-1.5 z-50 transform origin-top transition-all duration-200">
                         <div class="dropdown-options max-h-56 overflow-y-auto px-1.5 space-y-0.5">
@@ -462,7 +586,6 @@
                     </div>
                 </div>
 
-                <!-- Standalone Search CTA Button (Warna Merah Lebih Terang) -->
                 <button type="button" id="btnSearch" aria-label="Cari lowongan" title="Cari (Tekan Enter)"
                     class="h-11 sm:h-12 px-6 sm:px-7 shrink-0 cursor-pointer rounded-full bg-[#dc2626] hover:bg-[#b91c1c] active:bg-[#991b1b] text-white text-xs sm:text-sm font-semibold shadow-lg shadow-black/20 hover:shadow-xl transition-all duration-200 hover:scale-[1.03] active:scale-[0.97] flex items-center justify-center gap-2 border-2 border-white/45 hover:border-white/75 focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-[#B11116]">
                     <svg class="h-4 w-4 sm:h-4.5 sm:w-4.5 text-white shrink-0" fill="none" viewBox="0 0 24 24"
@@ -476,17 +599,13 @@
         </div>
     </section>
 
-    <!-- SECTION: TENTANG KAMI (TEKS STATIS + SLIDER GAMBAR) & NILAI PERUSAHAAN (GRID STATIS) -->
     <section id="tentang" class="relative w-full overflow-hidden">
-        <!-- 1. Bagian Atas: Tentang Kami Showcase (Teks Statis + Slider Khusus Gambar + Pattern Bintik Gradasi & Ornamen Daun Teh) -->
         <div
             class="relative bg-gradient-to-b from-white via-[#fffafa] to-white pt-16 pb-32 sm:pt-20 sm:pb-40 md:pt-24 md:pb-48 overflow-hidden border-t border-red-100/50">
-            <!-- Layer 1: Micro Dot-Matrix Pattern Bintik-Bintik Halus -->
             <div
                 class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1.3px,transparent_1.3px)] [background-size:22px_22px] opacity-60 pointer-events-none select-none">
             </div>
 
-            <!-- Layer 2: Ambient Radial Glow Gradasi Hangat -->
             <div
                 class="absolute -top-28 -left-28 w-[500px] h-[500px] rounded-full bg-radial from-red-100/65 via-rose-50/30 to-transparent blur-3xl pointer-events-none">
             </div>
@@ -497,7 +616,6 @@
                 class="absolute -bottom-24 -right-24 w-[520px] h-[520px] rounded-full bg-radial from-red-100/55 via-amber-50/25 to-transparent blur-3xl pointer-events-none">
             </div>
 
-            <!-- Layer 3: Ornamen Bulet-Bulet (Floating Circles) Halus tanpa Daun Teh -->
             <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
                 <span class="absolute top-12 left-[12%] w-4 h-4 rounded-full bg-amber-300/45"></span>
                 <span class="absolute top-24 left-[18%] w-2.5 h-2.5 rounded-full bg-red-300/40"></span>
@@ -509,7 +627,6 @@
 
             <div class="relative z-10 max-w-6xl mx-auto px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                    <!-- Kolom Teks Quote Kiri (STATIS) -->
                     <div class="lg:col-span-6 flex flex-col justify-center text-left pr-0 lg:pr-4">
                         <div class="relative py-2">
                             <span
@@ -526,10 +643,8 @@
                         </div>
                     </div>
 
-                    <!-- Kolom Gambar Kanan (SLIDER HANYA PADA GAMBAR) -->
                     <div class="lg:col-span-6 flex flex-col items-center w-full" id="aboutPhotoSliderCard">
                         <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] md:aspect-[4/3] max-w-lg lg:max-w-none">
-                            <!-- Dekorasi Pinggiran Foto: Layered Offset Sesuai Warna Utama (#B11116) -->
                             <div
                                 class="absolute -bottom-3.5 -right-3.5 w-full h-full rounded-3xl bg-gradient-to-br from-[#B11116]/25 via-red-200/65 to-rose-200/75 -z-10 transform rotate-2">
                             </div>
@@ -537,15 +652,12 @@
                                 class="absolute -top-3.5 -left-3.5 w-full h-full rounded-3xl border-2 border-[#B11116]/30 bg-red-50/35 -z-10 transform -rotate-1">
                             </div>
 
-                            <!-- Photo Slides Container -->
                             <div
                                 class="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl shadow-red-950/10 border-2 border-white group bg-slate-100">
-                                <!-- Photo 1: Griya Rekso Head Office -->
                                 <div class="about-photo-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-100 z-10"
                                     data-photo-idx="0">
                                     <img src="{{ asset('assets/images/beranda.webp') }}" alt="Griya Rekso Head Office"
                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <!-- Location Badge dengan Map Pin Icon -->
                                     <div
                                         class="absolute bottom-3.5 left-3.5 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-semibold text-slate-800 border border-white/70">
                                         <svg class="w-3.5 h-3.5 text-[#B11116] shrink-0" viewBox="0 0 24 24"
@@ -557,13 +669,11 @@
                                     </div>
                                 </div>
 
-                                <!-- Photo 2: Pabrik & Fasilitas Produksi Slawi -->
                                 <div class="about-photo-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none z-0"
                                     data-photo-idx="1">
                                     <img src="{{ asset('assets/images/tentang-hero.webp') }}"
                                         alt="Pabrik dan Fasilitas Produksi"
                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <!-- Location Badge dengan Map Pin Icon -->
                                     <div
                                         class="absolute bottom-3.5 left-3.5 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-semibold text-slate-800 border border-white/70">
                                         <svg class="w-3.5 h-3.5 text-[#B11116] shrink-0" viewBox="0 0 24 24"
@@ -575,13 +685,11 @@
                                     </div>
                                 </div>
 
-                                <!-- Photo 3: Graha Rekso & Operational Hub -->
                                 <div class="about-photo-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none z-0"
                                     data-photo-idx="2">
                                     <img src="{{ asset('assets/images/header-sosro-rekso.png') }}"
                                         alt="Graha Rekso Operational Hub"
                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <!-- Location Badge dengan Map Pin Icon -->
                                     <div
                                         class="absolute bottom-3.5 left-3.5 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-semibold text-slate-800 border border-white/70">
                                         <svg class="w-3.5 h-3.5 text-[#B11116] shrink-0" viewBox="0 0 24 24"
@@ -593,13 +701,11 @@
                                     </div>
                                 </div>
 
-                                <!-- Photo 4: Pusat Pelatihan & Pengembangan Talenta -->
                                 <div class="about-photo-slide absolute inset-0 w-full h-full transition-opacity duration-700 ease-in-out opacity-0 pointer-events-none z-0"
                                     data-photo-idx="3">
                                     <img src="{{ asset('assets/images/training sosro.webp') }}"
                                         alt="Pusat Pelatihan dan Pengembangan"
                                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <!-- Location Badge dengan Map Pin Icon -->
                                     <div
                                         class="absolute bottom-3.5 left-3.5 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-md shadow-md text-xs font-semibold text-slate-800 border border-white/70">
                                         <svg class="w-3.5 h-3.5 text-[#B11116] shrink-0" viewBox="0 0 24 24"
@@ -611,7 +717,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Prev & Next Arrows (Langsung di Atas Gambar) -->
                                 <button type="button" id="aboutPhotoPrevBtn" aria-label="Foto Sebelumnya"
                                     class="cursor-pointer z-20 absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-black/40 hover:bg-black/65 text-white backdrop-blur-sm border border-white/20 transition active:scale-95 shadow-md">
                                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -629,7 +734,6 @@
                             </div>
                         </div>
 
-                        <!-- Dots Pagination Khusus Slider Gambar -->
                         <div class="flex items-center justify-center gap-2 mt-5 sm:mt-6" id="aboutPhotoDots">
                             <button type="button"
                                 class="about-photo-dot w-7 h-2 rounded-full bg-[#B11116] transition-all duration-300 cursor-pointer shadow-xs"
@@ -649,16 +753,13 @@
             </div>
         </div>
 
-        <!-- 2. Bagian Bawah: NILAI PERUSAHAAN (Tanpa Fill Putih di Atas Kurva Agar Daun Teh Section Sebelumnya Tidak Tertutup) -->
         <div id="nilaiPerusahaanSection"
             class="relative z-10 w-full -mt-24 sm:-mt-32 md:-mt-40 lg:-mt-44 pt-28 pb-24 sm:pt-36 sm:pb-28 md:pt-44 md:pb-32 overflow-hidden bg-transparent">
 
-            <!-- Kurva S-Curve Atas + Pita Gradasi Merah-Coral (Area Atas Kurva 100% Transparan Tanpa Putih) -->
             <div
                 class="absolute top-0 inset-x-0 w-full h-24 sm:h-32 md:h-40 lg:h-44 overflow-hidden leading-none pointer-events-none select-none z-10">
                 <svg class="relative block w-full h-full" viewBox="0 0 1440 220" preserveAspectRatio="none">
                     <defs>
-                        <!-- Gradasi Pita S-Curve (Merah -> Coral Pink Terang -> Merah) -->
                         <linearGradient id="nilaiRibbonGrad" x1="0%" y1="0%" x2="100%"
                             y2="0%">
                             <stop offset="0%" stop-color="#cd1b27" />
@@ -668,57 +769,20 @@
                             <stop offset="78%" stop-color="#e52f40" />
                             <stop offset="100%" stop-color="#cf1d29" />
                         </linearGradient>
-                        <!-- Gradasi Isi Merah di Bawah Pita (Menyatu Mulus dengan Mesh Body di Bawahnya) -->
-                        <linearGradient id="nilaiUnderCurveFill" x1="0%" y1="0%" x2="100%"
-                            y2="0%">
-                            <stop offset="0%" stop-color="#b81a23" />
-                            <stop offset="28%" stop-color="#d41923" />
-                            <stop offset="65%" stop-color="#9e1b20" />
-                            <stop offset="100%" stop-color="#94191e" />
-                        </linearGradient>
-                        <!-- Shadow Halus di Bawah Pita -->
-                        <filter id="ribbonDropShadow" x="-5%" y="-10%" width="110%" height="130%">
-                            <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#5e080c"
-                                flood-opacity="0.35" />
-                        </filter>
                     </defs>
 
-                    <!-- Isi Merah di Bawah Kurva (Area di Atas Kurva Dibiarkan 100% Transparan) -->
-                    <path d="M0,155 C190,39 420,27 700,122 C980,217 1260,205 1440,129 L1440,220 L0,220 Z"
-                        fill="url(#nilaiUnderCurveFill)"></path>
+                    <path d="M0,136 C190,32 420,22 700,102 C980,178 1260,168 1440,110 L1440,220 L0,220 Z"
+                        fill="#B11116"></path>
 
-                    <!-- Pita Gelombang S-Curve Ketebalan Presisi -->
                     <path
-                        d="M0,148 C190,32 420,20 700,115 C980,210 1260,198 1440,122 L1440,164 C1260,240 980,252 700,157 C420,62 190,74 0,190 Z"
-                        fill="url(#nilaiRibbonGrad)" filter="url(#ribbonDropShadow)"></path>
+                        d="M0,128 C190,26 420,16 700,95 C980,172 1260,160 1440,102 L1440,142 C1260,200 980,212 700,135 C420,56 190,66 0,168 Z"
+                        fill="url(#nilaiRibbonGrad)"></path>
                 </svg>
             </div>
 
-            <!-- Pure CSS + JS Silky Mesh Gradient Background (Dimulai Tepat di Bawah Kurva Tanpa Menutupi Area Atas) -->
-            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] lg:top-[175px] pointer-events-none select-none overflow-hidden"
-                style="background-color: #961b1e;">
-                <!-- Base Multi-Stop Linear & Radial Mesh CSS -->
-                <div class="absolute inset-0"
-                    style="background:
-                        radial-gradient(ellipse 65% 48% at 28% 8%, rgba(220, 24, 34, 0.92) 0%, rgba(190, 22, 30, 0.45) 52%, transparent 80%),
-                        radial-gradient(ellipse 55% 45% at 76% 68%, rgba(212, 25, 34, 0.78) 0%, rgba(175, 24, 30, 0.35) 55%, transparent 82%),
-                        radial-gradient(ellipse 60% 50% at 38% 58%, rgba(132, 20, 24, 0.95) 0%, transparent 70%),
-                        radial-gradient(ellipse 50% 40% at 88% 22%, rgba(136, 21, 25, 0.88) 0%, transparent 75%),
-                        linear-gradient(165deg, #b51b23 0%, #981b1f 42%, #8e181c 72%, #9e1b20 100%);">
-                </div>
-
-                <!-- Interactive / Ambient Mesh Glow Blobs (Dikontrol Halus via JS) -->
-                <div id="nilaiMeshGlowLeft"
-                    class="absolute -top-16 left-[8%] w-[55%] h-[60%] rounded-full pointer-events-none transition-transform duration-700 ease-out"
-                    style="background: radial-gradient(circle, rgba(230, 25, 36, 0.55) 0%, rgba(200, 20, 30, 0.2) 50%, transparent 75%); filter: blur(48px);">
-                </div>
-                <div id="nilaiMeshGlowRight"
-                    class="absolute bottom-[5%] right-[10%] w-[50%] h-[50%] rounded-full pointer-events-none transition-transform duration-700 ease-out"
-                    style="background: radial-gradient(circle, rgba(218, 26, 36, 0.5) 0%, rgba(178, 22, 29, 0.18) 55%, transparent 75%); filter: blur(52px);">
-                </div>
+            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] lg:top-[175px] pointer-events-none select-none bg-[#B11116]">
             </div>
 
-            <!-- Ornamen Daun Teh & Botol Sosro di Sisi Kiri Atas, Kiri Bawah & Kanan Bawah Latar Merah (Persis Mockup) -->
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                 class="absolute -left-6 sm:-left-8 top-28 sm:top-36 w-44 sm:w-56 md:w-64 object-contain pointer-events-none select-none opacity-35 transform -rotate-6 z-10">
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -727,7 +791,6 @@
                 class="absolute -right-8 sm:-right-10 bottom-6 sm:bottom-10 w-44 sm:w-56 md:w-64 object-contain pointer-events-none select-none opacity-30 transform -scale-x-100 -rotate-12 z-10">
 
             <div class="relative z-10 max-w-7xl mx-auto px-6">
-                <!-- Section Title: NILAI PERUSAHAAN (Ukuran Tetap Sesuai Instruksi) -->
                 <div class="text-center mb-16 sm:mb-20">
                     <h2
                         class="font-display-title text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] text-white font-bold uppercase tracking-wider drop-shadow-sm">
@@ -735,19 +798,16 @@
                     </h2>
                 </div>
 
-                <!-- 4 Kartu Statis (Skala Tipografi & Ikon Mengikuti Standar Keterbacaan IMK / HCI) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-14 sm:gap-10 lg:gap-7 items-stretch pt-8">
-                    <!-- Kartu 1: NIAT BAIK HASIL BAIK -->
                     <div
-                        class="relative bg-white rounded-[30px] px-6 pt-16 pb-8 drop-shadow-[0_12px_18px_rgba(75,5,8,0.38)] flex flex-col items-center text-center min-h-[340px] transition-transform duration-300 hover:-translate-y-1.5">
-                        <!-- Kubah Bulat Menyatu di Puncak Kartu (Khusus Logo Bulat Niat Baik) -->
+                        class="nilai-card relative bg-white rounded-[30px] px-4 pt-16 pb-8 flex flex-col items-center text-center min-h-[340px]">
                         <div
                             class="absolute -top-13 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full bg-white p-1.5 flex items-center justify-center">
                             <img src="{{ asset('assets/images/nilai-niat-baik.png') }}" alt="Niat Baik Hasil Baik"
                                 class="w-full h-full object-contain">
                         </div>
                         <h3 style="font-weight: 800;"
-                            class="font-display-title text-2xl sm:text-[1.6rem] font-extrabold text-[#9e1b24] leading-[1.15] mt-2 mb-6 uppercase tracking-tight">
+                            class="font-display-title text-[2.4rem] sm:text-[2.75rem] font-extrabold text-[#9e1b24] leading-[1.03] mt-3 mb-4 uppercase tracking-[-0.03em]">
                             NIAT BAIK<br>HASIL BAIK
                         </h3>
                         <p class="text-[#9e1b24] text-sm sm:text-[15px] leading-relaxed font-medium mt-auto">
@@ -756,20 +816,19 @@
                         </p>
                     </div>
 
-                    <!-- Kartu 2: ACCOUNTABLE CARE CREDIBLE -->
                     <div
-                        class="relative bg-white rounded-[30px] px-6 pt-14 pb-8 drop-shadow-[0_12px_18px_rgba(75,5,8,0.38)] flex flex-col items-center text-center min-h-[340px] transition-transform duration-300 hover:-translate-y-1.5">
-                        <!-- Tab Lebar Melengkung Menyatu di Puncak Kartu (Sesuai Figma) -->
+                        class="nilai-card relative bg-white rounded-[30px] px-4 pt-14 pb-8 flex flex-col items-center text-center min-h-[340px]">
                         <div
                             class="absolute -top-8 left-1/2 -translate-x-1/2 w-44 sm:w-48 h-16 rounded-t-[28px] bg-white px-4 pt-3 pb-1 flex items-center justify-center">
-                            <img src="{{ asset('assets/images/nilai-acc.png') }}" alt="Accountable Care Credible"
+                            <img src="{{ asset('assets/images/nilai-acc.png') }}" alt="Accountability Care Credibility"
                                 class="w-full h-full object-contain">
                         </div>
                         <h3 style="font-weight: 800;"
-                            class="font-display-title text-[#9e1b24] uppercase tracking-tight flex flex-col items-center mt-1 mb-6">
-                            <span class="text-base sm:text-[17px] font-extrabold leading-tight">ACCOUNTABLE</span>
-                            <span class="text-4xl sm:text-[2.65rem] font-extrabold leading-[0.95] my-1">CARE</span>
-                            <span class="text-base sm:text-[17px] font-extrabold leading-tight">CREDIBLE</span>
+                            class="font-display-title text-[#9e1b24] uppercase tracking-[-0.03em] flex flex-col items-center mt-2 mb-4">
+                            <span
+                                class="text-[1.45rem] sm:text-[1.6rem] font-extrabold leading-tight">ACCOUNTABILITY</span>
+                            <span class="text-[3.85rem] sm:text-[4.35rem] font-extrabold leading-[0.88] my-1">CARE</span>
+                            <span class="text-[1.45rem] sm:text-[1.6rem] font-extrabold leading-tight">CREDIBILITY</span>
                         </h3>
                         <p class="text-[#9e1b24] text-sm sm:text-[15px] leading-relaxed font-medium mt-auto">
                             Kepedulian terhadap mutu produk, akuntabilitas tugas, serta kredibilitas tinggi di mata
@@ -777,17 +836,15 @@
                         </p>
                     </div>
 
-                    <!-- Kartu 3: TEKAD RENCANA ULAT JELI IMAN -->
                     <div
-                        class="relative bg-white rounded-[30px] px-6 pt-14 pb-8 drop-shadow-[0_12px_18px_rgba(75,5,8,0.38)] flex flex-col items-center text-center min-h-[340px] transition-transform duration-300 hover:-translate-y-1.5">
-                        <!-- Tab Lebar Melengkung Menyatu di Puncak Kartu (Sesuai Figma) -->
+                        class="nilai-card relative bg-white rounded-[30px] px-4 pt-14 pb-8 flex flex-col items-center text-center min-h-[340px]">
                         <div
                             class="absolute -top-8 left-1/2 -translate-x-1/2 w-44 sm:w-48 h-16 rounded-t-[28px] bg-white px-4 pt-3 pb-1 flex items-center justify-center">
                             <img src="{{ asset('assets/images/nilai-teruji.png') }}" alt="Tekad Rencana Ulat Jeli Iman"
                                 class="w-full h-full object-contain">
                         </div>
                         <h3 style="font-weight: 800;"
-                            class="font-display-title text-lg sm:text-[1.3rem] font-extrabold text-[#9e1b24] leading-[1.15] mt-1 mb-5 uppercase tracking-tight">
+                            class="font-display-title text-[2.05rem] sm:text-[2.3rem] font-extrabold text-[#9e1b24] leading-[1.03] mt-2 mb-4 uppercase tracking-[-0.03em]">
                             TEKAD<br>RENCANA<br>ULAT JELI<br>IMAN
                         </h3>
                         <p class="text-[#9e1b24] text-sm sm:text-[15px] leading-relaxed font-medium mt-auto">
@@ -796,17 +853,15 @@
                         </p>
                     </div>
 
-                    <!-- Kartu 4: HUMBLE HUMILITY HUMANITY -->
                     <div
-                        class="relative bg-white rounded-[30px] px-6 pt-14 pb-8 drop-shadow-[0_12px_18px_rgba(75,5,8,0.38)] flex flex-col items-center text-center min-h-[340px] transition-transform duration-300 hover:-translate-y-1.5">
-                        <!-- Tab Lebar Melengkung Menyatu di Puncak Kartu (Sesuai Figma) -->
+                        class="nilai-card relative bg-white rounded-[30px] px-4 pt-14 pb-8 flex flex-col items-center text-center min-h-[340px]">
                         <div
                             class="absolute -top-8 left-1/2 -translate-x-1/2 w-44 sm:w-48 h-16 rounded-t-[28px] bg-white px-3.5 pt-2.5 pb-1 flex items-center justify-center">
                             <img src="{{ asset('assets/images/nilai-3h.png') }}" alt="Humble Humility Humanity"
                                 class="w-full h-full object-contain">
                         </div>
                         <h3 style="font-weight: 800;"
-                            class="font-display-title text-xl sm:text-[1.45rem] font-extrabold text-[#9e1b24] leading-[1.15] mt-1 mb-6 uppercase tracking-tight">
+                            class="font-display-title text-[2.2rem] sm:text-[2.55rem] font-extrabold text-[#9e1b24] leading-[1.03] mt-2 mb-4 uppercase tracking-[-0.03em]">
                             HUMBLE<br>HUMILITY<br>HUMANITY
                         </h3>
                         <p class="text-[#9e1b24] text-sm sm:text-[15px] leading-relaxed font-medium mt-auto">
@@ -819,10 +874,8 @@
         </div>
     </section>
 
-    <!-- SECTION BARU: INFINITE LOOPING SLIDER PRODUK (Bergerak Non-Stop & Bisa Digeser Manual) -->
     <section id="produk"
-        class="relative w-full bg-white py-8 sm:py-10 md:py-12 overflow-hidden border-b border-slate-100 select-none">
-        <!-- Fade Mask Halus di Tepi Kiri & Kanan -->
+        class="relative w-full bg-white py-2 sm:py-3 md:py-3.5 overflow-hidden border-b border-slate-100 select-none">
         <div
             class="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 sm:w-24 bg-gradient-to-r from-white to-transparent">
         </div>
@@ -830,14 +883,18 @@
             class="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-24 bg-gradient-to-l from-white to-transparent">
         </div>
 
-        <!-- Draggable + Auto-Looping Viewport -->
-        <div id="productMarqueeViewport" class="w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y">
-            <!-- Infinite Looping Track (2 Set Identik Agar Looping & Geser Manual 100% Mulus Tanpa Putus) -->
+        <div id="productMarqueeViewport" class="w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y py-3.5 sm:py-4">
             <div id="productMarqueeTrack" class="flex w-max items-center will-change-transform">
                 @for ($loopSet = 0; $loopSet < 2; $loopSet++)
                     <div class="flex items-center gap-10 sm:gap-14 md:gap-16 pr-10 sm:pr-14 md:pr-16 shrink-0"
                         @if ($loopSet === 1) aria-hidden="true" @endif>
-                        <!-- 1. Teh Cap Poci -->
+                        <div
+                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-105 sm:hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-teh-cap-botol.png') }}" alt="Teh Cap Botol"
+                                draggable="false"
+                                class="h-full w-auto max-w-[150px] sm:max-w-[180px] md:max-w-[200px] object-contain pointer-events-none select-none">
+                        </div>
+
                         <div
                             class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
                             <img src="{{ asset('assets/images/produk-teh-poci.png') }}" alt="Teh Cap Poci"
@@ -845,52 +902,6 @@
                                 class="h-full w-auto max-w-[170px] sm:max-w-[200px] md:max-w-[220px] object-contain pointer-events-none select-none">
                         </div>
 
-                        <!-- 2. Kanchā -->
-                        <div
-                            class="flex items-center justify-center h-14 sm:h-16 md:h-20 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-kancha.png') }}" alt="Kancha" draggable="false"
-                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 3. Teh Cap Botol -->
-                        <div
-                            class="flex items-center justify-center h-24 sm:h-28 md:h-32 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-teh-cap-botol.png') }}" alt="Teh Cap Botol"
-                                draggable="false"
-                                class="h-full w-auto max-w-[150px] sm:max-w-[180px] md:max-w-[200px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 4. Prim-A -->
-                        <div
-                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-prima.png') }}" alt="Prim-A" draggable="false"
-                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 5. Country Choice -->
-                        <div
-                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-country-choice.png') }}" alt="Country Choice"
-                                draggable="false"
-                                class="h-full w-auto max-w-[190px] sm:max-w-[220px] md:max-w-[250px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 6. Fruit Tea Sosro -->
-                        <div
-                            class="flex items-center justify-center h-22 sm:h-26 md:h-30 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-fruit-tea.png') }}" alt="Fruit Tea Sosro"
-                                draggable="false"
-                                class="h-full w-auto max-w-[160px] sm:max-w-[190px] md:max-w-[210px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 7. S-Tee -->
-                        <div
-                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
-                            <img src="{{ asset('assets/images/produk-s-tee.png') }}" alt="S-Tee" draggable="false"
-                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
-                        </div>
-
-                        <!-- 8. Tehbotol Sosro -->
                         <div
                             class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
                             <img src="{{ asset('assets/images/produk-tehbotol-sosro.jpg') }}" alt="Tehbotol Sosro"
@@ -898,26 +909,55 @@
                                 class="h-full w-auto max-w-[190px] sm:max-w-[220px] md:max-w-[250px] object-contain rounded-lg pointer-events-none select-none">
                         </div>
 
-                        <!-- 9. Tebs -->
+                        <div
+                            class="flex items-center justify-center h-22 sm:h-26 md:h-30 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-fruit-tea.png') }}" alt="Fruit Tea Sosro"
+                                draggable="false"
+                                class="h-full w-auto max-w-[160px] sm:max-w-[190px] md:max-w-[210px] object-contain pointer-events-none select-none">
+                        </div>
+
+                        <div
+                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-s-tee.png') }}" alt="S-Tee" draggable="false"
+                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
+                        </div>
+
+                        <div
+                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-prima.png') }}" alt="Prim-A" draggable="false"
+                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
+                        </div>
+
                         <div
                             class="flex items-center justify-center h-16 sm:h-20 md:h-24 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
                             <img src="{{ asset('assets/images/produk-tebs.png') }}" alt="Tebs" draggable="false"
                                 class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
                         </div>
 
-                        <!-- 10. Tasseo -->
+                        <div
+                            class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-country-choice.png') }}" alt="Country Choice"
+                                draggable="false"
+                                class="h-full w-auto max-w-[190px] sm:max-w-[220px] md:max-w-[250px] object-contain pointer-events-none select-none">
+                        </div>
+
                         <div
                             class="flex items-center justify-center h-16 sm:h-20 md:h-24 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
                             <img src="{{ asset('assets/images/produk-tasseo.png') }}" alt="Tasseo" draggable="false"
                                 class="h-full w-auto max-w-[190px] sm:max-w-[220px] md:max-w-[250px] object-contain pointer-events-none select-none">
                         </div>
 
-                        <!-- 11. Sosro Heritage -->
                         <div
                             class="flex items-center justify-center h-20 sm:h-24 md:h-28 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
                             <img src="{{ asset('assets/images/produk-heritage.png') }}" alt="Sosro Heritage"
                                 draggable="false"
                                 class="h-full w-auto max-w-[190px] sm:max-w-[220px] md:max-w-[250px] object-contain pointer-events-none select-none">
+                        </div>
+
+                        <div
+                            class="flex items-center justify-center h-14 sm:h-16 md:h-20 w-auto shrink-0 transition-transform duration-300 hover:scale-110">
+                            <img src="{{ asset('assets/images/produk-kancha.png') }}" alt="Kancha" draggable="false"
+                                class="h-full w-auto max-w-[180px] sm:max-w-[210px] md:max-w-[240px] object-contain pointer-events-none select-none">
                         </div>
                     </div>
                 @endfor
@@ -925,13 +965,10 @@
         </div>
     </section>
 
-    <!-- SECTION BARU: IKUTI PERJALANAN KARIER KAMI & PROGRAM KAMI (Sesuai Mockup + Improved Visual Background) -->
     <section id="perjalanan-karier" class="relative w-full overflow-hidden select-none">
-        <!-- 1. BAGIAN ATAS: IKUTI PERJALANAN KARIER KAMI (Gradasi Merah ke Pink-Putih Halus di Bawah) -->
-        <div class="relative w-full pt-14 sm:pt-18 md:pt-22 pb-24 sm:pb-28 md:pb-36 overflow-hidden"
+        <div class="relative w-full pt-16 sm:pt-20 md:pt-24 pb-32 sm:pb-40 md:pb-48 lg:pb-52 overflow-hidden"
             style="background: linear-gradient(180deg, #9e1820 0%, #b81d26 32%, #d4424b 64%, #f4b5b9 86%, #fff5f6 100%);">
 
-            <!-- Subtle Dot Matrix & Radial Highlight di Area Atas -->
             <div class="absolute inset-0 pointer-events-none opacity-25"
                 style="background-image: radial-gradient(rgba(255, 255, 255, 0.5) 1.25px, transparent 1.25px); background-size: 24px 24px; mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 80%); -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 80%);">
             </div>
@@ -939,29 +976,22 @@
                 style="background: radial-gradient(circle, #ff6b72 0%, transparent 70%);">
             </div>
 
-            <!-- Ornamen Daun Teh & Botol Sosro Samar di Kanan Bawah (Sesuai Mockup Figma) -->
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                class="absolute right-12 sm:right-24 bottom-6 sm:bottom-10 w-44 sm:w-56 md:w-64 object-contain pointer-events-none select-none opacity-25 transform -rotate-12">
-            <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                class="absolute -right-8 sm:-right-6 bottom-12 sm:bottom-16 w-36 sm:w-48 md:w-56 object-contain pointer-events-none select-none opacity-20 transform rotate-12">
+                class="absolute -right-6 sm:-right-8 bottom-4 sm:bottom-6 w-48 sm:w-60 md:w-72 object-contain pointer-events-none select-none opacity-25 transform -rotate-12">
 
-            <!-- Konten Utama 2 Kolom: Kiri (Group 418.png) & Kanan (Teks + Ikon Sosmed) -->
             <div class="relative z-20 max-w-6xl mx-auto px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-                    <!-- Kolom Kiri: Collage Sosial Media Group 418.png -->
                     <div
-                        class="lg:col-span-6 flex justify-center lg:justify-start relative z-30 -mb-14 sm:-mb-20 md:-mb-28">
+                        class="lg:col-span-6 flex justify-center lg:justify-start relative z-30 mb-0">
                         <div
                             class="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[490px] transition-transform duration-500 hover:scale-[1.015]">
-                            <!-- Ambient Soft Glow di Belakang Mockup Sosmed -->
                             <div class="absolute inset-6 rounded-3xl bg-red-950/25 blur-2xl -z-10"></div>
-                            <img src="{{ asset('assets/images/Group 418.png') }}"
+                            <img src="{{ asset('assets/images/Group 418.png') }}?v={{ filemtime(public_path('assets/images/Group 418.png')) }}"
                                 alt="Official Social Media Sosro Career - Instagram & LinkedIn"
                                 class="w-full h-auto object-contain drop-shadow-[0_20px_35px_rgba(80,10,14,0.28)]">
                         </div>
                     </div>
 
-                    <!-- Kolom Kanan: Heading & Tombol Instagram / LinkedIn -->
                     <div
                         class="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left lg:pl-8 pt-6 lg:pt-0">
                         <h2 style="font-weight: 800;"
@@ -971,9 +1001,7 @@
                             KARIER KAMI
                         </h2>
 
-                        <!-- Ikon Sosial Media (Instagram & LinkedIn) Sesuai Mockup -->
                         <div class="mt-6 sm:mt-7 flex items-center gap-4 sm:gap-5">
-                            <!-- Instagram @sosrocareer -->
                             <a href="https://www.instagram.com/sosrocareer/" target="_blank" rel="noopener noreferrer"
                                 aria-label="Instagram Sosro Career (@sosrocareer)" title="Ikuti Instagram @sosrocareer"
                                 class="group relative inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white/85 hover:bg-white text-[#b81d26] shadow-lg shadow-red-950/15 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
@@ -984,7 +1012,6 @@
                                 </svg>
                             </a>
 
-                            <!-- LinkedIn PT Sinar Sosro Gunung Slamat -->
                             <a href="https://www.linkedin.com/company/pt-sinar-sosro-gunung-slamat/" target="_blank"
                                 rel="noopener noreferrer" aria-label="LinkedIn PT Sinar Sosro Gunung Slamat"
                                 title="Ikuti LinkedIn PT Sinar Sosro Gunung Slamat"
@@ -1001,16 +1028,13 @@
             </div>
         </div>
 
-        <!-- 2. BAGIAN BAWAH: PROGRAM KAMI -->
         <div id="program-kami"
             class="relative z-10 w-full -mt-20 sm:-mt-24 md:-mt-32 pt-28 sm:pt-36 md:pt-44 pb-20 sm:pb-24 md:pb-28 overflow-hidden">
 
-            <!-- Transisi Gelombang S-Curve Mulus (Tanpa Warna Merah Gelap di Kanan Atas yang Memotong Pattern) -->
             <div
                 class="absolute top-0 inset-x-0 w-full h-24 sm:h-32 md:h-40 overflow-hidden leading-none pointer-events-none select-none z-10">
                 <svg class="relative block w-full h-full" viewBox="0 0 1440 220" preserveAspectRatio="none">
                     <defs>
-                        <!-- Layer Pita Utama (Vibrant Crimson-Coral Merata) -->
                         <linearGradient id="programWaveRibbonGrad" x1="0%" y1="0%" x2="100%"
                             y2="0%">
                             <stop offset="0%" stop-color="#d9202c" />
@@ -1018,57 +1042,23 @@
                             <stop offset="70%" stop-color="#ff4757" />
                             <stop offset="100%" stop-color="#e02430" />
                         </linearGradient>
-                        <filter id="programWaveShadow" x="-5%" y="-15%" width="110%" height="140%">
-                            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#7a0c12"
-                                flood-opacity="0.25" />
-                        </filter>
                     </defs>
 
-                    <!-- Isi di Bawah Kurva (Warna #b81b24 Sama Persis dengan Latar Utama Agar Tanpa Garis Potong) -->
-                    <path d="M0,158 C260,78 540,86 820,146 C1080,202 1290,178 1440,128 L1440,220 L0,220 Z" fill="#b81b24">
+                    <path d="M0,142 C260,68 540,76 820,130 C1080,178 1290,156 1440,110 L1440,220 L0,220 Z" fill="#B11116">
                     </path>
 
-                    <!-- Pita Utama S-Curve -->
                     <path
-                        d="M0,148 C260,66 540,74 820,134 C1080,190 1290,166 1440,116 L1440,156 C1290,206 1080,230 820,174 C540,114 260,106 0,188 Z"
-                        fill="url(#programWaveRibbonGrad)" filter="url(#programWaveShadow)"></path>
+                        d="M0,132 C260,56 540,64 820,118 C1080,166 1290,144 1440,98 L1440,138 C1290,184 1080,204 820,158 C540,104 260,96 0,172 Z"
+                        fill="url(#programWaveRibbonGrad)"></path>
                 </svg>
             </div>
 
-            <!-- Latar Belakang Utama Program Kami: Menyatu Mulus dengan Fill Gelombang (#b81b24) Tanpa Warna Merah Gelap di Kanan Atas -->
-            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] pointer-events-none select-none overflow-hidden"
-                style="background: linear-gradient(180deg, #b81b24 0%, #bd1d26 55%, #a6171f 100%);">
-                <!-- Ambient Spotlight Halus di Tengah -->
-                <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-[80%] h-[65%] rounded-full blur-3xl opacity-45"
-                    style="background: radial-gradient(ellipse, rgba(242, 56, 71, 0.6) 0%, rgba(196, 30, 40, 0.2) 55%, transparent 75%);">
-                </div>
-
-                <!-- Pattern Bintik-Bintik Gradasi Halus (Fade Mulus di Atas Agar Tidak Terpotong Gelombang) -->
-                <div class="absolute inset-0 opacity-22"
-                    style="background-image: radial-gradient(rgba(255, 255, 255, 0.75) 1.5px, transparent 1.5px); background-size: 26px 26px; mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 85%, transparent 100%);">
-                </div>
-
-                <!-- Dekorasi Garis Lengkung Geometris di Latar Merah (Ditempatkan Agar Tidak Terpotong di Atas) -->
-                <svg class="absolute inset-0 w-full h-full opacity-18" viewBox="0 0 1440 600" fill="none"
-                    preserveAspectRatio="none">
-                    <circle cx="140" cy="490" r="220" stroke="white" stroke-width="1.5"
-                        stroke-dasharray="8 8" />
-                    <circle cx="140" cy="490" r="300" stroke="white" stroke-width="1" opacity="0.6" />
-                    <circle cx="1310" cy="360" r="190" stroke="white" stroke-width="1.5"
-                        stroke-dasharray="8 8" />
-                    <circle cx="1310" cy="360" r="260" stroke="white" stroke-width="1" opacity="0.6" />
-                    <!-- Gelombang Ribbon Tipis Melintang di Belakang Kartu -->
-                    <path d="M-60,380 C320,240 680,470 1060,320 C1260,240 1390,290 1500,260" stroke="white"
-                        stroke-width="2" stroke-dasharray="6 10" opacity="0.35" />
-                </svg>
-
-                <!-- Ornamen Daun Teh & Botol Sosro -->
+            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] pointer-events-none select-none overflow-hidden bg-[#B11116]">
                 <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                     class="absolute -left-10 bottom-4 w-48 sm:w-60 md:w-68 object-contain opacity-25 transform rotate-12">
                 <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                     class="absolute -right-8 bottom-6 w-48 sm:w-60 md:w-64 object-contain opacity-25 transform -scale-x-100 -rotate-12">
 
-                <!-- Pernak-Pernik Floating Sparkles & Bintang 4 Sudut -->
                 <svg class="absolute top-16 left-[12%] w-6 h-6 text-rose-200/60 animate-pulse" viewBox="0 0 24 24"
                     fill="currentColor">
                     <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
@@ -1085,218 +1075,353 @@
                 <span class="absolute bottom-20 right-[25%] w-3.5 h-3.5 rounded-full bg-white/20"></span>
             </div>
 
-            <!-- Konten PROGRAM KAMI -->
             <div class="relative z-20 max-w-6xl mx-auto px-6 pt-4 sm:pt-6">
-                <!-- Judul Section + Aksen Garis Dekoratif (Tanpa Tooltip & Tanpa Warna Kuning) -->
                 <div class="text-center mb-12 sm:mb-14">
                     <h2 style="font-weight: 800;"
                         class="font-display-title text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] text-white font-extrabold uppercase tracking-wider drop-shadow-sm">
                         PROGRAM KAMI
                     </h2>
-                    <!-- Aksen Garis Ornamen di Bawah Judul (Warna Merah Utama & Putih) -->
-                    <div class="mt-3 flex items-center justify-center gap-2">
-                        <span class="w-3 h-1.5 rounded-full bg-red-300/75"></span>
-                        <span
-                            class="w-14 h-1.5 rounded-full bg-gradient-to-r from-[#ff4757] via-white to-[#ff4757]"></span>
-                        <span class="w-3 h-1.5 rounded-full bg-red-300/75"></span>
-                    </div>
                 </div>
 
-                <!-- 3 Kartu Program (MANAGEMENT TRAINEE, MAGANG, PROFESSIONAL) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-7 lg:gap-9 items-stretch">
-                    <!-- Kartu 1: MANAGEMENT TRAINEE -->
-                    <div
-                        class="group relative bg-white rounded-[30px] p-7 sm:p-8 lg:p-9 shadow-[0_18px_38px_rgba(70,6,10,0.32)] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_24px_45px_rgba(70,6,10,0.45)] overflow-hidden border border-red-100/80">
-                        <!-- Aksen Top Bar Warna Utama Merah Sosro -->
+
+                    <div class="program-flip-card group [perspective:1200px] h-[480px] sm:h-[500px] cursor-pointer"
+                        data-program="1">
                         <div
-                            class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#B11116] via-[#e62e3a] to-[#B11116]">
-                        </div>
+                            class="program-flip-inner relative w-full h-full rounded-[30px] transition-transform duration-700 [transform-style:preserve-3d]">
 
-                        <!-- Pernak-Pernik Sudut Bawah Kartu: Glow Merah Muda & Siluet Daun/Botol -->
-                        <div
-                            class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-tl from-red-100/70 via-rose-50/40 to-transparent pointer-events-none">
-                        </div>
-                        <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                            class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.08] pointer-events-none select-none transform -rotate-12 group-hover:opacity-[0.14] transition-opacity">
-
-                        <div class="relative z-10">
-                            <h3 style="font-weight: 800;"
-                                class="font-display-title text-lg sm:text-xl lg:text-[1.35rem] font-extrabold text-[#b81d26] uppercase tracking-tight mb-4">
-                                MANAGEMENT TRAINEE
-                            </h3>
-
-                            <!-- Garis Pembatas Aksen Merah -->
                             <div
-                                class="w-12 h-1 rounded-full bg-[#B11116]/25 mb-6 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                class="program-flip-front absolute inset-0 w-full h-full rounded-[30px] overflow-hidden bg-white flex flex-col justify-end [backface-visibility:hidden] select-none">
+                                <img src="{{ asset('assets/images/training sosro.webp') }}"
+                                    alt="Management Trainee PT Sinar Sosro Gunung Slamat"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none">
+
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-white via-white/85 via-22% to-transparent pointer-events-none z-10">
+                                </div>
+
+                                <div class="relative z-20 p-6 sm:p-7">
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl font-extrabold text-[#bd494d] uppercase tracking-tight mb-2">
+                                        MANAGEMENT TRAINEE
+                                    </h3>
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-[#B11116]/30 mb-3 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                    </div>
+                                    <p class="text-[#9e1b24] text-xs sm:text-sm font-medium leading-snug line-clamp-2">
+                                        Jalur percepatan kepemimpinan intensif untuk fresh graduate terbaik.
+                                    </p>
+
+                                    <div
+                                        class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
+                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Rotasi</span>
+                                        <span
+                                            class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
+                                            Balik Kartu
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <ul
-                                class="space-y-4 sm:space-y-5 text-[#9e1b24] text-sm sm:text-[15px] lg:text-base font-medium leading-snug">
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Mentoring langsung dari Direksi Rekso</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Jalur promosi kepemimpinan dipercepat</span>
-                                </li>
-                            </ul>
+                            <div
+                                class="program-flip-back absolute inset-0 w-full h-full rounded-[30px] bg-[#B11116] p-7 sm:p-8 lg:p-9 flex flex-col justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] select-none">
+                                <div
+                                    class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-white/10 pointer-events-none">
+                                </div>
+                                <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
+                                    class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.14] pointer-events-none select-none transform -rotate-12 filter brightness-200">
+
+                                <div class="relative z-10">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider border border-white/30 backdrop-blur-sm">
+                                            Detail Program
+                                        </span>
+                                        <span class="text-xs font-bold text-white/70">01 / 03</span>
+                                    </div>
+
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl lg:text-[1.4rem] font-extrabold text-white uppercase tracking-tight mb-3">
+                                        MANAGEMENT TRAINEE
+                                    </h3>
+
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-white/40 mb-6 group-hover:w-20 group-hover:bg-white transition-all duration-300">
+                                    </div>
+
+                                    <ul
+                                        class="space-y-4 sm:space-y-5 text-white/95 text-xs sm:text-sm lg:text-[15px] font-medium leading-relaxed">
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Mentoring langsung dari Direksi Rekso</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Jalur promosi kepemimpinan dipercepat</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Kartu 2: MAGANG -->
-                    <div
-                        class="group relative bg-white rounded-[30px] p-7 sm:p-8 lg:p-9 shadow-[0_18px_38px_rgba(70,6,10,0.32)] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_24px_45px_rgba(70,6,10,0.45)] overflow-hidden border border-red-100/80">
-                        <!-- Aksen Top Bar Warna Utama Merah Sosro -->
+                    <div class="program-flip-card group [perspective:1200px] h-[480px] sm:h-[500px] cursor-pointer"
+                        data-program="2">
                         <div
-                            class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#B11116] via-[#e62e3a] to-[#B11116]">
-                        </div>
+                            class="program-flip-inner relative w-full h-full rounded-[30px] transition-transform duration-700 [transform-style:preserve-3d]">
 
-                        <!-- Pernak-Pernik Sudut Bawah Kartu: Glow Merah Muda & Siluet Daun/Botol -->
-                        <div
-                            class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-tl from-red-100/70 via-rose-50/40 to-transparent pointer-events-none">
-                        </div>
-                        <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                            class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.08] pointer-events-none select-none transform -rotate-12 group-hover:opacity-[0.14] transition-opacity">
-
-                        <div class="relative z-10">
-                            <h3 style="font-weight: 800;"
-                                class="font-display-title text-lg sm:text-xl lg:text-[1.35rem] font-extrabold text-[#b81d26] uppercase tracking-tight mb-4">
-                                MAGANG
-                            </h3>
-
-                            <!-- Garis Pembatas Aksen Merah -->
                             <div
-                                class="w-12 h-1 rounded-full bg-[#B11116]/25 mb-6 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                class="program-flip-front absolute inset-0 w-full h-full rounded-[30px] overflow-hidden bg-white flex flex-col justify-end [backface-visibility:hidden] select-none">
+                                <img src="{{ asset('assets/images/kegiatan sosial sosro.webp') }}"
+                                    alt="Program Magang PT Sinar Sosro Gunung Slamat"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none">
+
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-white via-white/85 via-22% to-transparent pointer-events-none z-10">
+                                </div>
+
+                                <div class="relative z-20 p-6 sm:p-7">
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl font-extrabold text-[#b81d26] uppercase tracking-tight mb-2">
+                                        MAGANG
+                                    </h3>
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-[#B11116]/30 mb-3 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                    </div>
+                                    <p class="text-[#9e1b24] text-xs sm:text-sm font-medium leading-snug line-clamp-2">
+                                        Pengalaman kerja nyata dan pembimbingan langsung bagi mahasiswa &amp; SMK.
+                                    </p>
+
+                                    <div
+                                        class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
+                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Pembimbingan</span>
+                                        <span
+                                            class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
+                                            Balik Kartu
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <ul
-                                class="space-y-4 sm:space-y-5 text-[#9e1b24] text-sm sm:text-[15px] lg:text-base font-medium leading-snug">
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Mentoring langsung dari Direksi Rekso</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Jalur promosi kepemimpinan dipercepat</span>
-                                </li>
-                            </ul>
+                            <div
+                                class="program-flip-back absolute inset-0 w-full h-full rounded-[30px] bg-[#B11116] p-7 sm:p-8 lg:p-9 flex flex-col justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] select-none">
+                                <div
+                                    class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-white/10 pointer-events-none">
+                                </div>
+                                <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
+                                    class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.14] pointer-events-none select-none transform -rotate-12 filter brightness-200">
+
+                                <div class="relative z-10">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider border border-white/30 backdrop-blur-sm">
+                                            Detail Program
+                                        </span>
+                                        <span class="text-xs font-bold text-white/70">02 / 03</span>
+                                    </div>
+
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl lg:text-[1.4rem] font-extrabold text-white uppercase tracking-tight mb-3">
+                                        MAGANG
+                                    </h3>
+
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-white/40 mb-6 group-hover:w-20 group-hover:bg-white transition-all duration-300">
+                                    </div>
+
+                                    <ul
+                                        class="space-y-4 sm:space-y-5 text-white/95 text-xs sm:text-sm lg:text-[15px] font-medium leading-relaxed">
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Mentoring langsung dari Direksi Rekso</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Jalur promosi kepemimpinan dipercepat</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Kartu 3: PROFESSIONAL -->
-                    <div
-                        class="group relative bg-white rounded-[30px] p-7 sm:p-8 lg:p-9 shadow-[0_18px_38px_rgba(70,6,10,0.32)] flex flex-col justify-between transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_24px_45px_rgba(70,6,10,0.45)] overflow-hidden border border-red-100/80">
-                        <!-- Aksen Top Bar Warna Utama Merah Sosro -->
+                    <div class="program-flip-card group [perspective:1200px] h-[480px] sm:h-[500px] cursor-pointer"
+                        data-program="3">
                         <div
-                            class="absolute top-0 inset-x-0 h-2 bg-gradient-to-r from-[#B11116] via-[#e62e3a] to-[#B11116]">
-                        </div>
+                            class="program-flip-inner relative w-full h-full rounded-[30px] transition-transform duration-700 [transform-style:preserve-3d]">
 
-                        <!-- Pernak-Pernik Sudut Bawah Kartu: Glow Merah Muda & Siluet Daun/Botol -->
-                        <div
-                            class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-gradient-to-tl from-red-100/70 via-rose-50/40 to-transparent pointer-events-none">
-                        </div>
-                        <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
-                            class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.08] pointer-events-none select-none transform -rotate-12 group-hover:opacity-[0.14] transition-opacity">
-
-                        <div class="relative z-10">
-                            <h3 style="font-weight: 800;"
-                                class="font-display-title text-lg sm:text-xl lg:text-[1.35rem] font-extrabold text-[#b81d26] uppercase tracking-tight mb-4">
-                                PROFESSIONAL
-                            </h3>
-
-                            <!-- Garis Pembatas Aksen Merah -->
                             <div
-                                class="w-12 h-1 rounded-full bg-[#B11116]/25 mb-6 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                class="program-flip-front absolute inset-0 w-full h-full rounded-[30px] overflow-hidden bg-white flex flex-col justify-end [backface-visibility:hidden] select-none">
+                                <img src="{{ asset('assets/images/our_program.png') }}"
+                                    alt="Program Professional PT Sinar Sosro Gunung Slamat"
+                                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 pointer-events-none">
+
+                                <div
+                                    class="absolute inset-0 bg-gradient-to-t from-white via-white/85 via-22% to-transparent pointer-events-none z-10">
+                                </div>
+
+                                <div class="relative z-20 p-6 sm:p-7">
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl font-extrabold text-[#b81d26] uppercase tracking-tight mb-2">
+                                        PROFESSIONAL
+                                    </h3>
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-[#B11116]/30 mb-3 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
+                                    </div>
+                                    <p class="text-[#9e1b24] text-xs sm:text-sm font-medium leading-snug line-clamp-2">
+                                        Kembangkan keahlian strategis bersama brand minuman kebanggaan Indonesia.
+                                    </p>
+
+                                    <div
+                                        class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
+                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Kolaborasi</span>
+                                        <span
+                                            class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
+                                            Balik Kartu
+                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
+                                                stroke="currentColor" stroke-width="2.5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <ul
-                                class="space-y-4 sm:space-y-5 text-[#9e1b24] text-sm sm:text-[15px] lg:text-base font-medium leading-snug">
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Mentoring langsung dari Direksi Rekso</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
-                                </li>
-                                <li class="flex items-start gap-3">
-                                    <span
-                                        class="mt-0.5 w-5 h-5 rounded-full bg-red-50 border border-red-200 flex items-center justify-center text-[#B11116] shrink-0 group-hover:bg-[#B11116] group-hover:text-white transition-colors">
-                                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            stroke-width="3">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </span>
-                                    <span>Jalur promosi kepemimpinan dipercepat</span>
-                                </li>
-                            </ul>
+                            <div
+                                class="program-flip-back absolute inset-0 w-full h-full rounded-[30px] bg-[#B11116] p-7 sm:p-8 lg:p-9 flex flex-col justify-center overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)] select-none">
+                                <div
+                                    class="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-white/10 pointer-events-none">
+                                </div>
+                                <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
+                                    class="absolute -bottom-4 -right-4 w-28 object-contain opacity-[0.14] pointer-events-none select-none transform -rotate-12 filter brightness-200">
+
+                                <div class="relative z-10">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider border border-white/30 backdrop-blur-sm">
+                                            Detail Program
+                                        </span>
+                                        <span class="text-xs font-bold text-white/70">03 / 03</span>
+                                    </div>
+
+                                    <h3 style="font-weight: 800;"
+                                        class="font-display-title text-xl sm:text-2xl lg:text-[1.4rem] font-extrabold text-white uppercase tracking-tight mb-3">
+                                        PROFESSIONAL
+                                    </h3>
+
+                                    <div
+                                        class="w-12 h-1 rounded-full bg-white/40 mb-6 group-hover:w-20 group-hover:bg-white transition-all duration-300">
+                                    </div>
+
+                                    <ul
+                                        class="space-y-4 sm:space-y-5 text-white/95 text-xs sm:text-sm lg:text-[15px] font-medium leading-relaxed">
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Mentoring langsung dari Direksi Rekso</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Rotasi lintas fungsional pabrik &amp; cabang</span>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <span
+                                                class="mt-0.5 w-5 h-5 rounded-full bg-white text-[#B11116] flex items-center justify-center shrink-0 shadow-sm">
+                                                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24"
+                                                    stroke="currentColor" stroke-width="3">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                            <span>Jalur promosi kepemimpinan dipercepat</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- SECTION TERAKHIR: APA KATA KARYAWAN KAMI? (Background Putih Menyatu Utuh Antara Judul & Konten Utama) -->
-    <section id="testimoni-karyawan" class="relative w-full bg-white py-16 sm:py-20 md:py-24 select-none overflow-hidden">
-        <!-- Dekorasi Background Putih Menyatu: Pattern Bintik Gradasi Halus & Soft Radial Glow (Searah Gaya Section Tentang Kami) -->
+    <section id="testimoni-karyawan"
+        class="relative w-full bg-white py-16 sm:py-20 md:py-24 select-none overflow-hidden">
         <div class="pointer-events-none select-none absolute inset-0 overflow-hidden">
             <div class="absolute inset-0 opacity-65"
                 style="background-image: radial-gradient(rgba(177, 17, 22, 0.14) 1.5px, transparent 1.5px); background-size: 24px 24px; mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 20%, transparent 85%); -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 20%, transparent 85%);">
@@ -1305,23 +1430,15 @@
             <div class="absolute -bottom-20 right-1/4 w-[480px] h-[320px] rounded-full bg-rose-100/50 blur-3xl"></div>
         </div>
 
-        <!-- Judul Section Menyatu di Latar Putih -->
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center mb-12 sm:mb-16 md:mb-20">
             <h2 style="font-weight: 800;"
                 class="font-display-title text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#B11116] uppercase tracking-wider">
                 APA KATA KARYAWAN KAMI?
             </h2>
-            <div class="mt-3 flex items-center justify-center gap-2">
-                <span class="w-3 h-1.5 rounded-full bg-[#B11116]/30"></span>
-                <span class="w-14 h-1.5 rounded-full bg-gradient-to-r from-[#B11116] via-[#ff4757] to-[#B11116]"></span>
-                <span class="w-3 h-1.5 rounded-full bg-[#B11116]/30"></span>
-            </div>
         </div>
 
-        <!-- Konten Utama Slider di Atas Latar Putih yang Sama -->
         <div id="testimoniSliderArea" class="relative z-10 max-w-6xl mx-auto px-4 sm:px-8 md:px-12">
 
-            <!-- Tombol Navigasi Kiri (<) -->
             <button type="button" id="testimoniPrevBtn" aria-label="Testimoni Sebelumnya"
                 class="cursor-pointer z-30 absolute left-1 sm:left-2 md:left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white hover:bg-[#B11116] text-[#B11116] hover:text-white border-2 border-red-100 hover:border-[#B11116] shadow-lg shadow-red-950/10 transition-all duration-200 active:scale-90">
                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -1330,7 +1447,6 @@
                 </svg>
             </button>
 
-            <!-- Tombol Navigasi Kanan (>) -->
             <button type="button" id="testimoniNextBtn" aria-label="Testimoni Berikutnya"
                 class="cursor-pointer z-30 absolute right-1 sm:right-2 md:right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-white hover:bg-[#B11116] text-[#B11116] hover:text-white border-2 border-red-100 hover:border-[#B11116] shadow-lg shadow-red-950/10 transition-all duration-200 active:scale-90">
                 <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -1339,9 +1455,7 @@
                 </svg>
             </button>
 
-            <!-- Wrapper Kartu Showcase Testimoni -->
             <div class="mx-6 sm:mx-10 md:mx-12 relative">
-                <!-- Layered Offset Frame Khas Sosro di Belakang Kartu (Seragam dengan Section Tentang Kami) -->
                 <div
                     class="absolute -bottom-3 -right-3 inset-x-4 top-4 rounded-[32px] bg-gradient-to-br from-[#B11116]/20 via-red-200/55 to-rose-200/65 -z-10 transform rotate-1">
                 </div>
@@ -1349,22 +1463,17 @@
                     class="absolute -top-3 -left-2 inset-x-4 bottom-3 rounded-[32px] border-2 border-[#B11116]/20 bg-red-50/40 -z-10 transform -rotate-1">
                 </div>
 
-                <!-- Slides Container -->
                 <div class="relative min-h-[260px] sm:min-h-[240px] md:min-h-[250px] flex items-center">
 
-                    <!-- SLIDE 1: April Riya Enziliana (Product Portfolio) -->
                     <div class="testimoni-slide w-full transition-all duration-500 ease-out opacity-100 translate-x-0 relative z-10"
                         data-testimoni-idx="0">
                         <div
                             class="relative flex flex-col md:flex-row items-center md:items-end bg-white rounded-[28px] border border-red-100 shadow-[0_20px_50px_rgba(177,17,22,0.12)] px-6 pt-6 pb-7 sm:px-8 sm:py-8 md:pl-0 md:pr-12 md:py-9 overflow-visible">
-                            <!-- Top Accent Strip -->
                             <div
                                 class="absolute top-0 inset-x-8 h-1.5 rounded-b-full bg-gradient-to-r from-[#B11116] via-[#ff4757] to-[#B11116]">
                             </div>
 
-                            <!-- Pedestal Merah & Foto Cutout Karyawan 1 (Menjorok ke Atas Kartu) -->
                             <div class="relative md:w-64 lg:w-72 shrink-0 flex justify-center items-end mb-5 md:mb-0">
-                                <!-- Arch Backdrop Merah di Belakang Foto Karyawan -->
                                 <div
                                     class="w-40 h-36 sm:w-44 sm:h-40 md:w-48 md:h-44 rounded-t-full rounded-b-3xl bg-gradient-to-b from-[#e02430] to-[#B11116] shadow-lg shadow-red-900/20 relative overflow-hidden flex items-end justify-center">
                                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -1375,9 +1484,7 @@
                                     class="absolute bottom-0 w-36 sm:w-40 md:w-48 lg:w-52 h-auto object-contain drop-shadow-[0_12px_20px_rgba(45,4,7,0.28)] pointer-events-none">
                             </div>
 
-                            <!-- Teks Kutipan Testimoni -->
                             <div class="flex-1 text-center md:text-left relative z-10">
-                                <!-- Watermark Quote & Ornamen di Sudut Kanan -->
                                 <svg class="hidden sm:block absolute -top-4 right-0 w-16 h-16 md:w-20 md:h-20 text-[#B11116]/[0.07] pointer-events-none select-none"
                                     viewBox="0 0 24 24" fill="currentColor">
                                     <path
@@ -1392,25 +1499,22 @@
                                 </p>
                                 <div class="mt-5 inline-flex flex-col md:border-l-4 md:border-[#B11116] md:pl-3.5">
                                     <p class="font-extrabold text-slate-900 text-sm sm:text-base">April Riya Enziliana</p>
-                                    <p class="text-[#B11116] italic text-xs sm:text-sm font-semibold">Product Portfolio</p>
+                                    <p class="text-[#B11116] italic text-xs sm:text-sm font-semibold">Product Portfolio
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- SLIDE 2: Adeline Chrisatmaja (Accounting) -->
                     <div class="testimoni-slide w-full transition-all duration-500 ease-out opacity-0 translate-x-6 pointer-events-none hidden relative z-0"
                         data-testimoni-idx="1">
                         <div
                             class="relative flex flex-col md:flex-row items-center md:items-end bg-white rounded-[28px] border border-red-100 shadow-[0_20px_50px_rgba(177,17,22,0.12)] px-6 pt-6 pb-7 sm:px-8 sm:py-8 md:pl-0 md:pr-12 md:py-9 overflow-visible">
-                            <!-- Top Accent Strip -->
                             <div
                                 class="absolute top-0 inset-x-8 h-1.5 rounded-b-full bg-gradient-to-r from-[#B11116] via-[#ff4757] to-[#B11116]">
                             </div>
 
-                            <!-- Pedestal Merah & Foto Cutout Karyawan 2 (Menjorok ke Atas Kartu) -->
                             <div class="relative md:w-64 lg:w-72 shrink-0 flex justify-center items-end mb-5 md:mb-0">
-                                <!-- Arch Backdrop Merah di Belakang Foto Karyawan -->
                                 <div
                                     class="w-40 h-36 sm:w-44 sm:h-40 md:w-48 md:h-44 rounded-t-full rounded-b-3xl bg-gradient-to-b from-[#e02430] to-[#B11116] shadow-lg shadow-red-900/20 relative overflow-hidden flex items-end justify-center">
                                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -1421,9 +1525,7 @@
                                     class="absolute bottom-0 w-36 sm:w-40 md:w-48 lg:w-52 h-auto object-contain drop-shadow-[0_12px_20px_rgba(45,4,7,0.28)] pointer-events-none">
                             </div>
 
-                            <!-- Teks Kutipan Testimoni -->
                             <div class="flex-1 text-center md:text-left relative z-10">
-                                <!-- Watermark Quote & Ornamen di Sudut Kanan -->
                                 <svg class="hidden sm:block absolute -top-4 right-0 w-16 h-16 md:w-20 md:h-20 text-[#B11116]/[0.07] pointer-events-none select-none"
                                     viewBox="0 0 24 24" fill="currentColor">
                                     <path
@@ -1443,19 +1545,15 @@
                         </div>
                     </div>
 
-                    <!-- SLIDE 3: Karyawan 3 (Operations & Supply Chain) -->
                     <div class="testimoni-slide w-full transition-all duration-500 ease-out opacity-0 translate-x-6 pointer-events-none hidden relative z-0"
                         data-testimoni-idx="2">
                         <div
                             class="relative flex flex-col md:flex-row items-center md:items-end bg-white rounded-[28px] border border-red-100 shadow-[0_20px_50px_rgba(177,17,22,0.12)] px-6 pt-6 pb-7 sm:px-8 sm:py-8 md:pl-0 md:pr-12 md:py-9 overflow-visible">
-                            <!-- Top Accent Strip -->
                             <div
                                 class="absolute top-0 inset-x-8 h-1.5 rounded-b-full bg-gradient-to-r from-[#B11116] via-[#ff4757] to-[#B11116]">
                             </div>
 
-                            <!-- Pedestal Merah & Foto Cutout Karyawan 3 (Menjorok ke Atas Kartu) -->
                             <div class="relative md:w-64 lg:w-72 shrink-0 flex justify-center items-end mb-5 md:mb-0">
-                                <!-- Arch Backdrop Merah di Belakang Foto Karyawan -->
                                 <div
                                     class="w-40 h-36 sm:w-44 sm:h-40 md:w-48 md:h-44 rounded-t-full rounded-b-3xl bg-gradient-to-b from-[#e02430] to-[#B11116] shadow-lg shadow-red-900/20 relative overflow-hidden flex items-end justify-center">
                                     <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -1466,9 +1564,7 @@
                                     class="absolute bottom-0 w-40 sm:w-44 md:w-52 lg:w-56 h-auto object-contain drop-shadow-[0_12px_20px_rgba(45,4,7,0.28)] pointer-events-none">
                             </div>
 
-                            <!-- Teks Kutipan Testimoni -->
                             <div class="flex-1 text-center md:text-left relative z-10">
-                                <!-- Watermark Quote & Ornamen di Sudut Kanan -->
                                 <svg class="hidden sm:block absolute -top-4 right-0 w-16 h-16 md:w-20 md:h-20 text-[#B11116]/[0.07] pointer-events-none select-none"
                                     viewBox="0 0 24 24" fill="currentColor">
                                     <path
@@ -1492,7 +1588,6 @@
                 </div>
             </div>
 
-            <!-- Dots Indicator Pill-Style Merah di Bawah Kartu -->
             <div class="flex items-center justify-center gap-2 mt-8 sm:mt-9" id="testimoniDots">
                 <button type="button"
                     class="testimoni-dot w-8 h-2.5 rounded-full bg-[#B11116] transition-all duration-300 cursor-pointer shadow-xs"
@@ -1658,6 +1753,7 @@
                         }
                     }
                 });
+
                 function submitSearchToLowongan() {
                     const params = new URLSearchParams();
                     if (jobSearch && jobSearch.value.trim()) {
@@ -1719,7 +1815,7 @@
                         if (other !== dropdown) {
                             other.querySelector('.dropdown-menu')?.classList.add('hidden');
                             other.querySelector('.dropdown-chevron')?.classList.remove(
-                            'rotate-180');
+                                'rotate-180');
                         }
                     });
                     menu.classList.remove('hidden');
@@ -2001,7 +2097,6 @@
         });
     </script>
 
-    <!-- MODAL 1: Notifikasi Belum Login -->
     <div id="modalBelumLogin"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -2037,7 +2132,6 @@
         </div>
     </div>
 
-    <!-- MODAL 2: Notifikasi Belum Isi Biodata -->
     <div id="modalBelumBiodata"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -2073,7 +2167,6 @@
         </div>
     </div>
 
-    <!-- MODAL 3: Konfirmasi Lamar (Sudah Login & Biodata Terisi) -->
     <div id="modalKonfirmasiLamar"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -2109,7 +2202,6 @@
         </div>
     </div>
 
-    <!-- MODAL 4: Akun Administrator Tidak Dapat Melamar -->
     <div id="modalAkunAdmin"
         class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all"
         role="dialog" aria-modal="true">
@@ -2418,30 +2510,6 @@
 
             startPhotoTimer();
 
-            // Interactive & Ambient Mesh Gradient Controller untuk Background Nilai Perusahaan
-            const nilaiSection = document.getElementById('nilaiPerusahaanSection');
-            const meshLeft = document.getElementById('nilaiMeshGlowLeft');
-            const meshRight = document.getElementById('nilaiMeshGlowRight');
-
-            if (nilaiSection && meshLeft && meshRight) {
-                nilaiSection.addEventListener('mousemove', (e) => {
-                    const rect = nilaiSection.getBoundingClientRect();
-                    const xRatio = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-                    const yRatio = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-                    meshLeft.style.transform = `translate3d(${xRatio * 18}px, ${yRatio * 14}px, 0)`;
-                    meshRight.style.transform = `translate3d(${xRatio * -18}px, ${yRatio * -14}px, 0)`;
-                }, {
-                    passive: true
-                });
-
-                nilaiSection.addEventListener('mouseleave', () => {
-                    meshLeft.style.transform = 'translate3d(0, 0, 0)';
-                    meshRight.style.transform = 'translate3d(0, 0, 0)';
-                }, {
-                    passive: true
-                });
-            }
-
             // Infinite Auto-Looping + Manual Drag/Swipe Slider untuk Produk Sosro
             const marqueeViewport = document.getElementById('productMarqueeViewport');
             const marqueeTrack = document.getElementById('productMarqueeTrack');
@@ -2643,14 +2711,66 @@
                 startTestimoniTimer();
             }
         })();
+
+        /* PROGRAM KAMI: 3D Flip Card & Scroll Trigger Interaction */
+        (function() {
+            const programSection = document.getElementById('program-kami');
+            const flipCards = document.querySelectorAll('.program-flip-card');
+
+            if (!programSection || !flipCards.length) return;
+
+            let hasTeased = false;
+
+            // Intersection Observer untuk mendeteksi ketika section masuk viewport
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            programSection.classList.add('in-view');
+
+                            // Jalankan efek intip (teaser peek) sekali saat pengguna scroll sampai ke section
+                            if (!hasTeased) {
+                                hasTeased = true;
+                                flipCards.forEach((card, index) => {
+                                    setTimeout(() => {
+                                        card.classList.add('teaser-peek');
+                                        setTimeout(() => {
+                                            card.classList.remove(
+                                                'teaser-peek');
+                                        }, 850);
+                                    }, index * 200 + 150);
+                                });
+                            }
+                        }
+                    });
+                }, {
+                    threshold: 0.2,
+                    rootMargin: '0px 0px -40px 0px'
+                });
+
+                observer.observe(programSection);
+            } else {
+                // Fallback untuk browser tanpa IntersectionObserver
+                programSection.classList.add('in-view');
+            }
+
+            // Dukungan klik / sentuh pada perangkat mobile & desktop
+            flipCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Jika klik tombol link atau anchor, biarkan link berjalan normal
+                    if (e.target.closest('a')) return;
+
+                    // Toggle status flip
+                    this.classList.toggle('is-flipped');
+                });
+            });
+        })();
     </script>
 
-    <!-- MODAL: Video Profil Perusahaan (Layar Penuh / Theater View) -->
     <div id="modalHeroVideo"
         class="fixed inset-0 z-[110] hidden items-center justify-center p-4 sm:p-6 md:p-8 bg-slate-950/85 backdrop-blur-md transition-all"
         role="dialog" aria-modal="true">
         <div class="relative w-full max-w-5xl bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/20">
-            <!-- Close Button -->
             <button type="button" onclick="tutupModalHeroVideo()" aria-label="Tutup Video"
                 class="absolute top-4 right-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-black/70 text-white hover:bg-black/95 transition border border-white/25 cursor-pointer shadow-lg hover:scale-105">
                 <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -2659,7 +2779,6 @@
                 </svg>
             </button>
             <div class="aspect-video w-full flex items-center justify-center bg-black text-white relative">
-                <!-- Theater Video Player -->
                 <iframe id="modalHeroVideoIframe" class="w-full h-full object-cover" src=""
                     data-src="https://www.youtube-nocookie.com/embed/LXb3EKWsInQ?autoplay=1&controls=1&rel=0&modestbranding=1"
                     title="Sosro Story Theater Video" frameborder="0"

@@ -66,14 +66,10 @@
     $interests = is_array($interests) ? array_slice($interests, 0, 5) : (filled($interests) ? [$interests] : []);
 @endphp
 
-<!-- COMPACT TWO-COLUMN GRID ARCHITECTURE -->
 <div class="grid grid-cols-1 xl:grid-cols-12 gap-4 items-start mt-3.5">
-    <!-- LEFT SIDEBAR: PROFILE, CONTACT, & BIODATA -->
     <div class="xl:col-span-4 space-y-3.5">
-        <!-- Candidate Main Card -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 relative overflow-hidden">
             <div class="flex items-center gap-3.5">
-                <!-- Profile Photo -->
                 <div class="relative shrink-0">
                     @if ($applicant->photo_url)
                         <img class="w-20 h-20 rounded-xl object-cover border border-slate-200 shadow-2xs"
@@ -114,7 +110,6 @@
                 </div>
             </div>
 
-            <!-- Quick Contacts List (Dense) -->
             <div class="mt-3 pt-3 border-t border-slate-100 space-y-1.5">
                 <div class="flex items-center justify-between text-xs py-1 px-2 rounded-lg bg-slate-50 border border-slate-100">
                     <div class="flex items-center gap-2 min-w-0">
@@ -167,7 +162,6 @@
             </div>
         </div>
 
-        <!-- Biodata Fisik & Sipil (Dense) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 space-y-2.5">
             <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
                 <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
@@ -214,7 +208,6 @@
                     </div>
                 </div>
 
-                <!-- Metrik Fisik & Lisensi -->
                 <div class="p-2 rounded bg-slate-50 border border-slate-100">
                     <div class="flex items-center justify-between mb-1">
                         <span class="text-slate-600 font-medium text-[10px]">Postur Fisik</span>
@@ -254,7 +247,6 @@
                     </div>
                 </div>
 
-                <!-- Kebiasaan & Medis -->
                 <div class="flex flex-wrap gap-1.5 pt-0.5">
                     @php
                         $isSmoker = in_array(strtolower((string) $applicant->is_smoker), ['1', 'y', 'yes', 'true'], true);
@@ -276,7 +268,6 @@
             </div>
         </div>
 
-        <!-- Alamat Lengkap (Compact) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 space-y-2">
             <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5 pb-1 border-b border-slate-100">
                 <span class="material-symbols-outlined text-[#9b1b1f] text-[15px]">home_pin</span>
@@ -308,7 +299,6 @@
             </div>
         </div>
 
-        <!-- Minat Pekerjaan / Divisi (Compact) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-3.5 space-y-2">
             <div class="flex items-center justify-between pb-1 border-b border-slate-100">
                 <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
@@ -350,9 +340,7 @@
         </div>
     </div>
 
-    <!-- RIGHT MAIN CONTENT: COMPREHENSIVE HISTORY -->
     <div class="xl:col-span-8 space-y-3.5">
-        <!-- 1. CARD: Riwayat Lamaran (Latest Application Only) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 relative overflow-hidden">
             @if ($latestApplication)
                 @php
@@ -414,7 +402,6 @@
                     </div>
                 </div>
 
-                <!-- Hiring Pipeline Progress Tracker -->
                 @if ($stages->count())
                     <div class="py-3">
                         <div class="flex items-center justify-between text-xs mb-2">
@@ -468,7 +455,6 @@
                     </div>
                 @endif
 
-                <!-- HR Notes Box (Compact) -->
                 <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200 flex items-start gap-2.5 {{ $stages->count() ? '' : 'mt-3' }}">
                     <span class="material-symbols-outlined text-[#9b1b1f] text-[17px] mt-0.5">sticky_note_2</span>
                     <div class="text-xs min-w-0 flex-1">
@@ -487,7 +473,6 @@
             @endif
         </div>
 
-        <!-- 2. CARD: Pengalaman Kerja (Compact) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-3">
             <div class="flex items-center justify-between pb-2 border-b border-slate-100">
                 <div class="flex items-center gap-2">
@@ -569,7 +554,6 @@
             @endif
         </div>
 
-        <!-- 3. CARD: Pendidikan Formal (Compact) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-2.5">
             <div class="flex items-center gap-2 pb-1.5 border-b border-slate-100">
                 <span class="w-6 h-6 rounded bg-red-50 flex items-center justify-center text-[#9b1b1f]">
@@ -613,7 +597,6 @@
             @endif
         </div>
 
-        <!-- 4. CARD: Pelatihan & Sertifikasi -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-2.5">
             <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
                 <div class="flex items-center gap-2">
@@ -651,7 +634,6 @@
             @endif
         </div>
 
-        <!-- 5. CARD: Data Keluarga (Compact Table) -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-2.5">
             <div class="flex items-center gap-2 pb-1.5 border-b border-slate-100">
                 <span class="w-6 h-6 rounded bg-red-50 flex items-center justify-center text-[#9b1b1f]">
@@ -709,7 +691,6 @@
             @endif
         </div>
 
-        <!-- 6. CARD: Kelengkapan Dokumen -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-2.5">
             <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
                 <div class="flex items-center gap-2">
@@ -735,7 +716,6 @@
             </div>
         </div>
 
-        <!-- 7. CARD: Kompensasi & Kesiapan -->
         <div class="bg-white rounded-xl border border-slate-200 shadow-2xs p-4 space-y-2.5">
             <div class="flex items-center gap-2 pb-1.5 border-b border-slate-100">
                 <span class="w-6 h-6 rounded bg-red-50 flex items-center justify-center text-[#9b1b1f]">

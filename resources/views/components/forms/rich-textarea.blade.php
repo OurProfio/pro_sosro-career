@@ -164,10 +164,8 @@
         }
     }
 }">
-    <!-- Smart Micro-Toolbar -->
     <div class="flex items-center justify-between px-3 py-1.5 bg-slate-100/90 rounded-t-xl border border-b-0 border-slate-200 text-xs">
         <div class="flex items-center gap-1">
-            <!-- Bullet List Button -->
             <button
                 type="button"
                 @click="insertPrefix('bullet')"
@@ -178,7 +176,6 @@
                 <span class="text-[11px]">Poin (Bullet)</span>
             </button>
 
-            <!-- Numbered List Button -->
             <button
                 type="button"
                 @click="insertPrefix('number')"
@@ -189,7 +186,6 @@
                 <span class="text-[11px]">Nomor</span>
             </button>
 
-            <!-- Bold Button -->
             <button
                 type="button"
                 @click="insertBold()"
@@ -199,7 +195,6 @@
                 <span class="text-xs font-black">B</span>
             </button>
 
-            <!-- Clear Formatting Button -->
             <button
                 type="button"
                 @click="clearFormatting()"
@@ -215,7 +210,6 @@
         </span>
     </div>
 
-    <!-- Native Textarea with Keyboard Handler -->
     <textarea
         x-ref="editorTextarea"
         name="{{ $name }}"

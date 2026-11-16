@@ -191,7 +191,6 @@
         @endif
     </div>
 
-    <!-- Modal Konfirmasi Batalkan Lamaran -->
     <div id="modalCancelApp" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-all" role="dialog" aria-modal="true">
         <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
             <div class="p-6 text-center">
