@@ -7,6 +7,7 @@ use App\Models\ContactMessage;
 use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class GuestController extends Controller
@@ -55,7 +56,9 @@ class GuestController extends Controller
 
     public function kontak(): View
     {
-        return view('guest.kontak');
+        $regions = ContactMessage::REGIONS;
+
+        return view('guest.kontak', compact('regions'));
     }
 
     public function storeKontak(Request $request): RedirectResponse
@@ -63,18 +66,20 @@ class GuestController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:120',
             'email' => 'required|email|max:150',
-            'region' => 'required|string|max:120',
+            'region' => ['required', 'string', 'max:120', Rule::in(ContactMessage::REGIONS)],
             'message' => 'required|string|max:2000',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.email' => 'Format alamat email tidak valid.',
             'region.required' => 'Tujuan wilayah wajib dipilih.',
+            'region.in' => 'Tujuan wilayah yang dipilih tidak valid.',
             'message.required' => 'Pesan wajib diisi.',
         ]);
 
         ContactMessage::create([
             'user_id' => auth()->id(),
+            'assigned_office_id' => null,
             'name' => $validated['name'],
             'email' => $validated['email'],
             'region' => $validated['region'],
@@ -82,6 +87,7 @@ class GuestController extends Controller
             'status' => 'unread',
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
+            'assigned_at' => null,
         ]);
 
         return back()->with('success', 'Pesan Anda berhasil dikirim! Tim rekrutmen kami akan segera menindaklanjutinya.');

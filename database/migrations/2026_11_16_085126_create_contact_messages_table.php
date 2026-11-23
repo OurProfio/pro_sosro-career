@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contact_messages', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('assigned_office_id')->nullable()->constrained('offices')->nullOnDelete();
             $table->string('name', 120);
             $table->string('email', 150);
             $table->string('region', 120);
@@ -21,7 +22,8 @@ return new class extends Migration
             $table->string('status', 30)->default('unread')->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
-            $table->text('admin_notes')->nullable();
+            $table->text('reply_message')->nullable();
+            $table->timestamp('assigned_at')->nullable();
             $table->timestamp('resolved_at')->nullable();
             $table->timestamps();
         });

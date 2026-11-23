@@ -1,14 +1,17 @@
 <?php
 
+use App\Mail\ContactMessageReplyMail;
 use App\Models\Admin;
 use App\Models\Applicant;
 use App\Models\ContactMessage;
+use App\Models\Office;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
 
-it('renders the kontak page jumbotron, contact form, and 10 FAQ items', function () {
+it('renders the kontak page jumbotron, contact form with 15 regions, and 10 FAQ items', function () {
     $response = $this->get(route('guest.kontak'));
 
     $response->assertOk()
@@ -23,6 +26,10 @@ it('renders the kontak page jumbotron, contact form, and 10 FAQ items', function
         ->assertSee('Tidak. Seluruh proses rekrutmen PT Sinar Sosro Gunung Slamat bersifat GRATIS.')
         ->assertSee('const isTransparentNav = true', false)
         ->assertSee(route('guest.kontak.store'));
+
+    foreach (ContactMessage::REGIONS as $region) {
+        $response->assertSee($region);
+    }
 });
 
 it('prefills contact form name and email for authenticated users', function () {
@@ -37,15 +44,22 @@ it('prefills contact form name and email for authenticated users', function () {
         ->assertSee('value="'.$applicant->user->email.'"', false);
 });
 
-it('validates and stores contact messages in database for guests and authenticated users', function () {
+it('validates and stores contact messages into central triage for guests and authenticated users', function () {
     $this->post(route('guest.kontak.store'), [])
         ->assertSessionHasErrors(['name', 'email', 'region', 'message']);
+
+    $this->post(route('guest.kontak.store'), [
+        'name' => 'Budi Santoso',
+        'email' => 'budi@example.com',
+        'region' => 'Wilayah Tidak Valid',
+        'message' => 'Test wilayah tidak valid.',
+    ])->assertSessionHasErrors(['region']);
 
     $guestResponse = $this->from(route('guest.kontak'))
         ->post(route('guest.kontak.store'), [
             'name' => 'Budi Santoso',
             'email' => 'budi@example.com',
-            'region' => 'Kantor Pusat (Head Office)',
+            'region' => 'Jakarta & Banten',
             'message' => 'Mohon informasi terkait jadwal rekrutmen MT batch berikutnya.',
         ]);
 
@@ -54,9 +68,10 @@ it('validates and stores contact messages in database for guests and authenticat
 
     $this->assertDatabaseHas('contact_messages', [
         'user_id' => null,
+        'assigned_office_id' => null,
         'name' => 'Budi Santoso',
         'email' => 'budi@example.com',
-        'region' => 'Kantor Pusat (Head Office)',
+        'region' => 'Jakarta & Banten',
         'message' => 'Mohon informasi terkait jadwal rekrutmen MT batch berikutnya.',
         'status' => 'unread',
     ]);
@@ -68,7 +83,7 @@ it('validates and stores contact messages in database for guests and authenticat
         ->post(route('guest.kontak.store'), [
             'name' => 'Dewi Lestari',
             'email' => $user->email,
-            'region' => 'KPW Jawa Barat',
+            'region' => 'Jawa Barat',
             'message' => 'Laporan kendala saat mengunggah berkas lamaran.',
         ]);
 
@@ -77,14 +92,24 @@ it('validates and stores contact messages in database for guests and authenticat
 
     $this->assertDatabaseHas('contact_messages', [
         'user_id' => $user->id,
+        'assigned_office_id' => null,
         'name' => 'Dewi Lestari',
         'email' => $user->email,
-        'region' => 'KPW Jawa Barat',
+        'region' => 'Jawa Barat',
         'status' => 'unread',
     ]);
 });
 
-it('allows only superadmin to view, update status, and delete contact messages', function () {
+it('allows superadmin to view, reply via email to resolve directly, and delete contact messages', function () {
+    Mail::fake();
+
+    $office = Office::factory()->create(['name' => 'KPW Jakarta Banten', 'type' => 'KPW']);
+    $superAdminUser = Admin::factory()->create([
+        'role' => 'superadmin',
+        'office_id' => $office->id,
+        'is_active' => true,
+    ])->user;
+
     $message = ContactMessage::factory()->create([
         'name' => 'Andi Pratama',
         'email' => 'andi@example.com',
@@ -92,14 +117,6 @@ it('allows only superadmin to view, update status, and delete contact messages',
         'message' => 'Pertanyaan mengenai status seleksi administrasi.',
         'status' => 'unread',
     ]);
-
-    $regularAdminUser = Admin::factory()->create(['role' => 'admin'])->user;
-
-    $this->actingAs($regularAdminUser)
-        ->get(route('contact-message.index'))
-        ->assertForbidden();
-
-    $superAdminUser = Admin::factory()->create(['role' => 'superadmin'])->user;
 
     $this->actingAs($superAdminUser)
         ->get(route('contact-message.index'))
@@ -109,17 +126,30 @@ it('allows only superadmin to view, update status, and delete contact messages',
         ->assertSee('andi@example.com')
         ->assertSee('KPW Jakarta Banten');
 
+    $replyText = 'Sudah saya ubah password Anda menjadi 123678, coba login kembali.';
+
     $this->actingAs($superAdminUser)
         ->patch(route('contact-message.updateStatus', $message), [
-            'status' => 'resolved',
-            'admin_notes' => 'Sudah dihubungi kembali melalui email resmi HR.',
+            'assigned_office_id' => '',
+            'reply_message' => $replyText,
         ])
         ->assertRedirect(route('contact-message.index'))
         ->assertSessionHas('success');
 
+    Mail::assertSent(ContactMessageReplyMail::class, function (ContactMessageReplyMail $mail) use ($message, $replyText): bool {
+        $rendered = $mail->render();
+
+        return $mail->hasTo($message->email)
+            && str_contains($rendered, $replyText)
+            && str_contains($rendered, 'Best regards,')
+            && str_contains($rendered, 'Human Capital Team')
+            && str_contains($rendered, 'PT. Sinar Sosro Gunung Slamat');
+    });
+
     $message->refresh();
     expect($message->status)->toBe('resolved')
-        ->and($message->admin_notes)->toBe('Sudah dihubungi kembali melalui email resmi HR.')
+        ->and($message->reply_message)->toBe($replyText)
+        ->and($message->assigned_office_id)->toBeNull()
         ->and($message->resolved_at)->not->toBeNull();
 
     $this->actingAs($superAdminUser)

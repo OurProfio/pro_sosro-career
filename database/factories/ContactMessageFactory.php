@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\ContactMessage;
+use App\Models\Office;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,22 +20,26 @@ class ContactMessageFactory extends Factory
     {
         return [
             'user_id' => null,
+            'assigned_office_id' => null,
             'name' => fake()->name(),
             'email' => fake()->safeEmail(),
-            'region' => fake()->randomElement([
-                'Kantor Pusat (Head Office)',
-                'KPW Jakarta Banten',
-                'KPW Jawa Barat',
-                'KPW Jawa Tengah',
-                'KPW Jawa Timur',
-            ]),
+            'region' => fake()->randomElement(ContactMessage::REGIONS),
             'message' => fake()->paragraph(),
             'status' => 'unread',
             'ip_address' => fake()->ipv4(),
             'user_agent' => fake()->userAgent(),
-            'admin_notes' => null,
+            'reply_message' => null,
+            'assigned_at' => null,
             'resolved_at' => null,
         ];
+    }
+
+    public function assignedTo(Office $office): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'assigned_office_id' => $office->id,
+            'assigned_at' => now(),
+        ]);
     }
 
     public function read(): static
@@ -48,8 +53,8 @@ class ContactMessageFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'status' => 'resolved',
+            'reply_message' => fake()->sentence(),
             'resolved_at' => now(),
-            'admin_notes' => fake()->sentence(),
         ]);
     }
 }

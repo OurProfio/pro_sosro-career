@@ -57,6 +57,8 @@ Route::group(['middleware' => ['auth']], function () {
             Route::patch('/application/{application}/status', [ApplicationController::class, 'updateStatus'])->name('application.updateStatus');
             Route::post('/job/{job}/psikotes-links', [PsikotesLinkController::class, 'import'])->name('job.psikotesLinks.import');
             Route::post('/job/{job}/psikotes-invitations', [PsikotesLinkController::class, 'invite'])->name('job.psikotesInvitations.store');
+            Route::get('/contact-message', [ContactMessageController::class, 'index'])->name('contact-message.index');
+            Route::patch('/contact-message/{contact_message}/status', [ContactMessageController::class, 'updateStatus'])->name('contact-message.updateStatus');
 
             // Khusus Super Admin
             Route::group(['middleware' => ['role:superadmin']], function () {
@@ -67,8 +69,7 @@ Route::group(['middleware' => ['auth']], function () {
                 Route::resource('division', DivisionController::class);
                 Route::resource('admin', AdminController::class);
                 Route::resource('user', UserController::class);
-                Route::resource('contact-message', ContactMessageController::class)->only(['index', 'destroy']);
-                Route::patch('/contact-message/{contact_message}/status', [ContactMessageController::class, 'updateStatus'])->name('contact-message.updateStatus');
+                Route::delete('/contact-message/{contact_message}', [ContactMessageController::class, 'destroy'])->name('contact-message.destroy');
             });
         });
     });
