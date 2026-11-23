@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -31,4 +32,23 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (InvalidSignatureException $exception, Request $request) {
+            if ($request->routeIs('verification.verify') || $request->is('email/verify/*')) {
+                if ($request->expectsJson()) {
+                    return response()->json([
+                        'message' => 'Link verifikasi email tidak valid atau sudah kedaluwarsa.',
+                    ], 403);
+                }
+
+                $expires = $request->query('expires');
+                $isExpired = is_numeric($expires) && (int) $expires < now()->timestamp;
+
+                return response()->view('guest.verify-email-invalid', [
+                    'isExpired' => $isExpired,
+                ], 403);
+            }
+
+            return null;
+        });
     })->create();

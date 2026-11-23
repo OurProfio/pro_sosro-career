@@ -39,4 +39,4 @@ pabrik
 cukul
 kpw
 
-tehbotol fruitea estea
+* save berdasarkan id buat sekolahnya kalo semisal gaada sekolahnya jadi masuk other tapi siapin table baru untuk sekolah yg belum ada ditable(plan)

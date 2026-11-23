@@ -164,22 +164,22 @@
 
     @php
         $contactRegions = [
-            'Kantor Pusat (Head Office)',
-            'KPW Sumut NAD - Sumbar Kepri',
-            'KPW Sumbagsel Babel',
-            'KPW Jakarta Banten',
-            'KPW Jawa Barat',
-            'KPW Jawa Tengah',
-            'KPW Jawa Timur',
-            'KPW Bali Nusra',
-            'KPW Kalimantan Sulawesi',
-            'Pabrik / Unit Produksi',
+            'Kantor Pusat (Head Office)' => 'Kantor Pusat',
+            'KPW Sumut NAD - Sumbar Kepri' => 'KPW Sumut NAD - Sumbar Kepri',
+            'KPW Sumbagsel Babel' => 'KPW Sumbagsel Babel',
+            'KPW Jakarta Banten' => 'KPW Jakarta Banten',
+            'KPW Jawa Barat' => 'KPW Jawa Barat',
+            'KPW Jawa Tengah' => 'KPW Jawa Tengah',
+            'KPW Jawa Timur' => 'KPW Jawa Timur',
+            'KPW Bali Nusra' => 'KPW Bali Nusra',
+            'KPW Kalimantan Sulawesi' => 'KPW Kalimantan Sulawesi',
+            'Pabrik / Unit Produksi' => 'Pabrik / Unit Produksi',
         ];
 
         $faqItems = [
             [
                 'question' => 'Tahapan apa saja jika ingin melamar di PT Sinar Sosro Gunung Slamat?',
-                'answer' => 'Tahapan umumnya: Pendaftaran Akun, Melengkapi Profil, Pemilihan Lowongan, Seleksi oleh HRD/User, hingga Offering.',
+                'answer' => 'Tahapan umumnya: Pendaftaran Akun, Melengkapi Profil, Pemilihan Lowongan, Seleksi oleh HRD/User, hingga Penawaran Kerja.',
             ],
             [
                 'question' => 'Dokumen apa saja yang harus dipersiapkan sebelum membuat akun?',
@@ -194,12 +194,12 @@
                 'answer' => 'Jangka waktu proses seleksi dapat memakan waktu 2 hingga 4 minggu sejak tanggal penutupan lamaran. Mohon menunggu informasi resmi dari HRD.',
             ],
             [
-                'question' => 'Apakah saya bisa melakukan update terhadap profil dan CV saya?',
+                'question' => 'Apakah saya bisa memperbarui profil dan CV saya?',
                 'answer' => 'Ya, Anda dapat memperbarui data profil dan mengunggah CV terbaru di akun Anda. Perubahan akan berlaku untuk lamaran yang akan datang.',
             ],
             [
-                'question' => 'Apa yang harus dilakukan jika lupa password?',
-                'answer' => 'Gunakan fitur "Lupa Kata Sandi" di halaman login. Masukkan email terdaftar Anda, dan ikuti instruksi yang dikirimkan ke email Anda untuk membuat password baru.',
+                'question' => 'Apa yang harus dilakukan jika lupa kata sandi?',
+                'answer' => 'Gunakan fitur "Lupa Kata Sandi" di halaman masuk. Masukkan email terdaftar Anda, dan ikuti instruksi yang dikirimkan ke email Anda untuk membuat kata sandi baru.',
             ],
             [
                 'question' => 'Mengapa saya gagal menyimpan data?',
@@ -259,9 +259,9 @@
                             <select id="contactRegion" name="region" required
                                 class="w-full appearance-none rounded-lg border border-slate-300 bg-white pl-4 pr-11 py-3 text-sm text-slate-800 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition cursor-pointer">
                                 <option value="" disabled {{ old('region') ? '' : 'selected' }}>Tujuan Wilayah</option>
-                                @foreach ($contactRegions as $region)
-                                    <option value="{{ $region }}" {{ old('region') === $region ? 'selected' : '' }}>
-                                        {{ $region }}
+                                @foreach ($contactRegions as $regionValue => $regionLabel)
+                                    <option value="{{ $regionValue }}" {{ old('region') === $regionValue ? 'selected' : '' }}>
+                                        {{ $regionLabel }}
                                     </option>
                                 @endforeach
                             </select>

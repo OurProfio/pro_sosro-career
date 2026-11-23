@@ -14,20 +14,47 @@ use Illuminate\Support\Facades\URL;
 
 uses(RefreshDatabase::class);
 
-it('redirects to login page without sending email after registration', function () {
+it('logs in the applicant, sends a verification email, and redirects to notice page after registration', function () {
     Notification::fake();
 
     $this->post(route('guest.register.post'), [
         'email' => 'kandidat@example.com',
         'password' => 'password123',
         'password_confirmation' => 'password123',
-    ])->assertRedirect(route('guest.login'));
+    ])->assertRedirect(route('verification.notice'))
+        ->assertSessionHas('success', 'Pendaftaran berhasil. Silakan cek email Anda untuk verifikasi akun.');
 
     $user = User::where('email', 'kandidat@example.com')->firstOrFail();
 
     expect($user->hasVerifiedEmail())->toBeFalse();
-    Notification::assertNothingSent();
-    expect(auth()->check())->toBeFalse();
+    Notification::assertSentTo($user, VerifyEmail::class);
+    expect(auth()->check())->toBeTrue();
+    expect(auth()->id())->toBe($user->id);
+});
+
+it('allows a newly registered applicant to verify email and enter dashboard without visiting login', function () {
+    Notification::fake();
+
+    $this->post(route('guest.register.post'), [
+        'email' => 'baru@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ])->assertRedirect(route('verification.notice'));
+
+    $user = User::where('email', 'baru@example.com')->firstOrFail();
+
+    $this->get(route('applicant.dashboard'))->assertRedirect(route('verification.notice'));
+
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $user->id,
+        'hash' => sha1($user->email),
+    ]);
+
+    $this->get($url)->assertRedirect(route('applicant.dashboard'));
+
+    expect($user->fresh()->hasVerifiedEmail())->toBeTrue();
+
+    $this->get(route('applicant.dashboard'))->assertOk();
 });
 
 it('renders the verification email from the career template', function () {
@@ -96,7 +123,34 @@ it('rejects an expired verification link', function () {
         'hash' => sha1($user->email),
     ]);
 
-    $this->actingAs($user)->get($url)->assertForbidden();
+    $this->actingAs($user)
+        ->get($url)
+        ->assertForbidden()
+        ->assertViewIs('guest.verify-email-invalid')
+        ->assertViewHas('isExpired', true)
+        ->assertSee('Kedaluwarsa')
+        ->assertSee('Kirim Ulang Link Verifikasi');
+
+    expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
+});
+
+it('renders invalid verification page when signature is tampered', function () {
+    $user = User::factory()->unverified()->create();
+
+    $url = URL::temporarySignedRoute('verification.verify', now()->addMinutes(15), [
+        'id' => $user->id,
+        'hash' => sha1($user->email),
+    ]);
+
+    $tamperedUrl = preg_replace('/signature=[^&]+/', 'signature=invalid', $url);
+
+    $this->actingAs($user)
+        ->get($tamperedUrl)
+        ->assertForbidden()
+        ->assertViewIs('guest.verify-email-invalid')
+        ->assertViewHas('isExpired', false)
+        ->assertSee('Tidak Valid');
+
     expect($user->fresh()->hasVerifiedEmail())->toBeFalse();
 });
 
@@ -104,7 +158,7 @@ it('resends the verification email', function () {
     Notification::fake();
     $user = User::factory()->unverified()->create();
 
-    $this->actingAs($user)->post(route('verification.send'))->assertRedirect();
+    $this->actingAs($user)->post(route('verification.send'))->assertRedirect(route('verification.notice'));
 
     Notification::assertSentTo($user, VerifyEmail::class);
 });

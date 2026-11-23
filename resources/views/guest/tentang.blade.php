@@ -308,7 +308,7 @@
                     ],
                     [
                         'number' => 3,
-                        'title' => 'Interview',
+                        'title' => 'Wawancara',
                         'title_i18n' => 'step_int_title',
                         'desc' => 'Pendalaman kompetensi, motivasi, dan kesesuaian kandidat.',
                         'desc_i18n' => 'step_int_desc',
@@ -322,7 +322,7 @@
                     ],
                     [
                         'number' => 5,
-                        'title' => 'On-Boarding',
+                        'title' => 'Orientasi Kerja',
                         'title_i18n' => 'step_onboard_title',
                         'desc' => 'Proses pengenalan dan penyesuaian karyawan baru dengan perusahaan.',
                         'desc_i18n' => 'step_onboard_desc',
@@ -355,14 +355,14 @@
                     ],
                     [
                         'number' => 4,
-                        'title' => 'Interview',
+                        'title' => 'Wawancara',
                         'title_i18n' => 'step_int_title',
                         'desc' => 'Pendalaman kompetensi, motivasi, dan kesesuaian kandidat.',
                         'desc_i18n' => 'step_int_desc',
                     ],
                     [
                         'number' => 5,
-                        'title' => 'Study Case',
+                        'title' => 'Studi Kasus',
                         'title_i18n' => 'step_case_title',
                         'desc' => 'Evaluasi kemampuan analisis dan pemecahan masalah.',
                         'desc_i18n' => 'step_case_desc',
@@ -376,7 +376,7 @@
                     ],
                     [
                         'number' => 7,
-                        'title' => 'On-Boarding',
+                        'title' => 'Orientasi Kerja',
                         'title_i18n' => 'step_onboard_title',
                         'desc' => 'Proses pengenalan dan penyesuaian karyawan baru dengan perusahaan.',
                         'desc_i18n' => 'step_onboard_desc',

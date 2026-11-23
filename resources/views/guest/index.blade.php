@@ -256,7 +256,7 @@
                     <div class="max-w-md lg:max-w-2xl text-left py-8 md:py-12">
                         <h1 data-i18n-key="hero_title"
                             class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.75rem] text-white font-semibold leading-[1.08] tracking-tight drop-shadow-md">
-                            Work Together<br>As A Team
+                            Bekerja Bersama<br>Sebagai Satu Tim
                         </h1>
 
                         <p data-i18n-key="hero_desc"
@@ -276,8 +276,7 @@
                     <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1440 600" preserveAspectRatio="none"
                         fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
-                            <linearGradient id="slide2MainFlow" x1="100%" y1="10%" x2="0%"
-                                y2="90%">
+                            <linearGradient id="slide2MainFlow" x1="100%" y1="10%" x2="0%" y2="90%">
                                 <stop offset="0%" stop-color="#df1a26" />
                                 <stop offset="50%" stop-color="#B11116" />
                                 <stop offset="100%" stop-color="#690609" />
@@ -303,7 +302,7 @@
                     <div class="max-w-md lg:max-w-2xl text-left py-8 md:py-12">
                         <h2 data-i18n-key="hero_title_2"
                             class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.75rem] text-white font-semibold leading-[1.08] tracking-tight drop-shadow-md">
-                            Be Part of<br>Something Bigger
+                            Jadilah Bagian dari<br>Sesuatu yang Lebih Besar
                         </h2>
 
                         <p data-i18n-key="hero_desc_2"
@@ -348,8 +347,7 @@
                         <path
                             d="M0,0 L580,0 C480,150 430,250 490,360 C550,470 740,490 980,515 C1160,535 1320,515 1440,520 L1440,600 L0,600 Z"
                             fill="url(#slide3CurveMain)" />
-                        <path
-                            d="M0,510 C320,470 540,530 840,505 C1140,480 1320,525 1440,510 L1440,600 L0,600 Z"
+                        <path d="M0,510 C320,470 540,530 840,505 C1140,480 1320,525 1440,510 L1440,600 L0,600 Z"
                             fill="url(#slide3WaveRipple)" />
                     </svg>
 
@@ -362,12 +360,6 @@
                 <div class="relative z-20 max-w-7xl mx-auto px-6 md:px-12 w-full h-full flex items-center py-6 md:py-8">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center w-full">
                         <div class="lg:col-span-6 text-left">
-                            <div
-                                class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-semibold tracking-wide mb-3.5 shadow-xs">
-                                <span class="flex h-2 w-2 rounded-full bg-amber-300"></span>
-                                <span>Cerita & Budaya Sosro</span>
-                            </div>
-
                             <h2 data-i18n-key="hero_title_3"
                                 class="font-display-title text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] text-white font-semibold leading-[1.1] tracking-tight drop-shadow-md">
                                 Kenali Lebih Dekat<br>Keluarga Sosro
@@ -391,7 +383,7 @@
 
                                 <div
                                     class="relative aspect-video rounded-3xl overflow-hidden shadow-2xl shadow-black/45 border-2 border-white bg-black group transition-all duration-300 hover:shadow-red-950/45 hover:scale-[1.01]">
-                                    <iframe id="slideHeroVideoIframe" class="w-full h-full object-cover"
+                                    <iframe id="slideHeroVideoIframe" class="w-full h-full object-cover" loading="lazy"
                                         src="https://www.youtube-nocookie.com/embed/LXb3EKWsInQ?enablejsapi=1&mute=1&loop=1&playlist=LXb3EKWsInQ&controls=1&rel=0&modestbranding=1"
                                         title="Sosro Story Video" frameborder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -665,7 +657,7 @@
                                             <path
                                                 d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5 2.5 2.5z" />
                                         </svg>
-                                        <span>Griya Rekso, Head Office</span>
+                                        <span>Griya Rekso, Kantor Pusat</span>
                                     </div>
                                 </div>
 
@@ -697,7 +689,7 @@
                                             <path
                                                 d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5 2.5 2.5z" />
                                         </svg>
-                                        <span>Griya Rekso & Operational Hub</span>
+                                        <span>Griya Rekso & Pusat Operasional</span>
                                     </div>
                                 </div>
 
@@ -771,8 +763,8 @@
                         </linearGradient>
                     </defs>
 
-                    <path d="M0,136 C190,32 420,22 700,102 C980,178 1260,168 1440,110 L1440,220 L0,220 Z"
-                        fill="#B11116"></path>
+                    <path d="M0,136 C190,32 420,22 700,102 C980,178 1260,168 1440,110 L1440,220 L0,220 Z" fill="#B11116">
+                    </path>
 
                     <path
                         d="M0,128 C190,26 420,16 700,95 C980,172 1260,160 1440,102 L1440,142 C1260,200 980,212 700,135 C420,56 190,66 0,168 Z"
@@ -780,7 +772,8 @@
                 </svg>
             </div>
 
-            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] lg:top-[175px] pointer-events-none select-none bg-[#B11116]">
+            <div
+                class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] lg:top-[175px] pointer-events-none select-none bg-[#B11116]">
             </div>
 
             <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -840,12 +833,12 @@
                         class="nilai-card relative bg-white rounded-[30px] px-4 pt-14 pb-8 flex flex-col items-center text-center min-h-[340px]">
                         <div
                             class="absolute -top-8 left-1/2 -translate-x-1/2 w-44 sm:w-48 h-16 rounded-t-[28px] bg-white px-4 pt-3 pb-1 flex items-center justify-center">
-                            <img src="{{ asset('assets/images/nilai-teruji.png') }}" alt="Tekad Rencana Ulat Jeli Iman"
+                            <img src="{{ asset('assets/images/nilai-teruji.png') }}" alt="Tekad Rencana Ulet Jeli Iman"
                                 class="w-full h-full object-contain">
                         </div>
                         <h3 style="font-weight: 800;"
                             class="font-display-title text-[2.05rem] sm:text-[2.3rem] font-extrabold text-[#9e1b24] leading-[1.03] mt-2 mb-4 uppercase tracking-[-0.03em]">
-                            TEKAD<br>RENCANA<br>ULAT JELI<br>IMAN
+                            TEKAD<br>RENCANA<br>ULET JELI<br>IMAN
                         </h3>
                         <p class="text-[#9e1b24] text-sm sm:text-[15px] leading-relaxed font-medium mt-auto">
                             Kesiapan menghadapi tantangan industri lewat perencanaan matang, kejelian, dan standar
@@ -883,7 +876,8 @@
             class="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-24 bg-gradient-to-l from-white to-transparent">
         </div>
 
-        <div id="productMarqueeViewport" class="w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y py-3.5 sm:py-4">
+        <div id="productMarqueeViewport"
+            class="w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y py-3.5 sm:py-4">
             <div id="productMarqueeTrack" class="flex w-max items-center will-change-transform">
                 @for ($loopSet = 0; $loopSet < 2; $loopSet++)
                     <div class="flex items-center gap-10 sm:gap-14 md:gap-16 pr-10 sm:pr-14 md:pr-16 shrink-0"
@@ -981,8 +975,7 @@
 
             <div class="relative z-20 max-w-6xl mx-auto px-6">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
-                    <div
-                        class="lg:col-span-6 flex justify-center lg:justify-start relative z-30 mb-0">
+                    <div class="lg:col-span-6 flex justify-center lg:justify-start relative z-30 mb-0">
                         <div
                             class="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[490px] transition-transform duration-500 hover:scale-[1.015]">
                             <div class="absolute inset-6 rounded-3xl bg-red-950/25 blur-2xl -z-10"></div>
@@ -1053,7 +1046,8 @@
                 </svg>
             </div>
 
-            <div class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] pointer-events-none select-none overflow-hidden bg-[#B11116]">
+            <div
+                class="absolute inset-x-0 bottom-0 top-[95px] sm:top-[127px] md:top-[159px] pointer-events-none select-none overflow-hidden bg-[#B11116]">
                 <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
                     class="absolute -left-10 bottom-4 w-48 sm:w-60 md:w-68 object-contain opacity-25 transform rotate-12">
                 <img src="{{ asset('assets/images/sosro-ornament.png') }}" alt=""
@@ -1114,7 +1108,7 @@
 
                                     <div
                                         class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
-                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Rotasi</span>
+                                        <span class="font-medium text-[#9e1b24]">Lihat Manfaat &amp; Rotasi</span>
                                         <span
                                             class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
                                             Balik Kartu
@@ -1224,7 +1218,7 @@
 
                                     <div
                                         class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
-                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Pembimbingan</span>
+                                        <span class="font-medium text-[#9e1b24]">Lihat Manfaat &amp; Pembimbingan</span>
                                         <span
                                             class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
                                             Balik Kartu
@@ -1323,7 +1317,7 @@
                                 <div class="relative z-20 p-6 sm:p-7">
                                     <h3 style="font-weight: 800;"
                                         class="font-display-title text-xl sm:text-2xl font-extrabold text-[#b81d26] uppercase tracking-tight mb-2">
-                                        PROFESSIONAL
+                                        PROFESIONAL
                                     </h3>
                                     <div
                                         class="w-12 h-1 rounded-full bg-[#B11116]/30 mb-3 group-hover:w-20 group-hover:bg-[#B11116] transition-all duration-300">
@@ -1334,7 +1328,7 @@
 
                                     <div
                                         class="mt-4 pt-3 border-t border-red-100 flex items-center justify-between text-xs">
-                                        <span class="font-medium text-[#9e1b24]">Lihat Benefit &amp; Kolaborasi</span>
+                                        <span class="font-medium text-[#9e1b24]">Lihat Manfaat &amp; Kolaborasi</span>
                                         <span
                                             class="inline-flex items-center gap-1 font-bold text-[#B11116] group-hover:text-[#8f090d] transition-colors">
                                             Balik Kartu
@@ -1367,7 +1361,7 @@
 
                                     <h3 style="font-weight: 800;"
                                         class="font-display-title text-xl sm:text-2xl lg:text-[1.4rem] font-extrabold text-white uppercase tracking-tight mb-3">
-                                        PROFESSIONAL
+                                        PROFESIONAL
                                     </h3>
 
                                     <div
@@ -1420,8 +1414,7 @@
         </div>
     </section>
 
-    <section id="testimoni-karyawan"
-        class="relative w-full bg-white py-16 sm:py-20 md:py-24 select-none overflow-hidden">
+    <section id="testimoni-karyawan" class="relative w-full bg-white py-16 sm:py-20 md:py-24 select-none overflow-hidden">
         <div class="pointer-events-none select-none absolute inset-0 overflow-hidden">
             <div class="absolute inset-0 opacity-65"
                 style="background-image: radial-gradient(rgba(177, 17, 22, 0.14) 1.5px, transparent 1.5px); background-size: 24px 24px; mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 20%, transparent 85%); -webkit-mask-image: radial-gradient(ellipse 80% 75% at 50% 50%, black 20%, transparent 85%);">
@@ -2105,8 +2098,7 @@
             <div class="p-6 text-center">
                 <div
                     class="w-12 h-12 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 mx-auto mb-4 shadow-sm">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
                     </svg>
@@ -2326,10 +2318,11 @@
 
         document.getElementById('btnSubmitLamar')?.addEventListener('click', function() {
             if (pendingLamarForm && pendingLamarButton) {
+                const submittingLabel = localStorage.getItem('preferred_lang') === 'en' ? 'Submitting...' : 'Mengirim...';
                 this.disabled = true;
-                this.textContent = 'Mengirim...';
+                this.textContent = submittingLabel;
                 pendingLamarButton.disabled = true;
-                pendingLamarButton.textContent = 'Mengirim...';
+                pendingLamarButton.textContent = submittingLabel;
                 pendingLamarForm.submit();
             }
         });

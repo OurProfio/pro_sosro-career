@@ -382,7 +382,7 @@
                     <p class="mt-1 text-sm text-slate-500">Tidak ada posisi yang cocok dengan kata kunci atau filter yang Anda pilih.</p>
                     <button type="button" id="btnResetFilter"
                         class="mt-4 cursor-pointer hover:cursor-pointer inline-flex items-center gap-2 rounded-xl bg-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-300">
-                        Reset Filter
+                        Atur Ulang Filter
                     </button>
                 </div>
             </div>
@@ -929,10 +929,11 @@
 
         document.getElementById('btnSubmitLamar')?.addEventListener('click', function() {
             if (pendingLamarForm && pendingLamarButton) {
+                const submittingLabel = localStorage.getItem('preferred_lang') === 'en' ? 'Submitting...' : 'Mengirim...';
                 this.disabled = true;
-                this.textContent = 'Mengirim...';
+                this.textContent = submittingLabel;
                 pendingLamarButton.disabled = true;
-                pendingLamarButton.textContent = 'Mengirim...';
+                pendingLamarButton.textContent = submittingLabel;
                 pendingLamarForm.submit();
             }
         });

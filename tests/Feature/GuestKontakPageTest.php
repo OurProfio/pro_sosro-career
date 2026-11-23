@@ -18,7 +18,7 @@ it('renders the kontak page jumbotron, contact form, and 10 FAQ items', function
         ->assertSee('KIRIM PESAN')
         ->assertSee('PERTANYAAN YANG SERING DIAJUKAN (FAQ)?')
         ->assertSee('Tahapan apa saja jika ingin melamar di PT Sinar Sosro Gunung Slamat?')
-        ->assertSee('Tahapan umumnya: Pendaftaran Akun, Melengkapi Profil, Pemilihan Lowongan, Seleksi oleh HRD/User, hingga Offering.')
+        ->assertSee('Tahapan umumnya: Pendaftaran Akun, Melengkapi Profil, Pemilihan Lowongan, Seleksi oleh HRD/User, hingga Penawaran Kerja.')
         ->assertSee('Apakah ada pungutan biaya dalam proses seleksi?')
         ->assertSee('Tidak. Seluruh proses rekrutmen PT Sinar Sosro Gunung Slamat bersifat GRATIS.')
         ->assertSee('const isTransparentNav = true', false)

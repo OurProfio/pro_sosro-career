@@ -41,6 +41,6 @@ class VerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('success', 'Link verifikasi baru telah dikirim ke email Anda.');
+        return redirect()->route('verification.notice')->with('success', 'Link verifikasi baru telah dikirim ke email Anda.');
     }
 }

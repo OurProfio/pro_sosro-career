@@ -15,7 +15,7 @@
 </head>
 
 <body>
-    <div class="min-h-screen flex flex-col">
+    <div class="min-h-screen flex flex-col max-w-[1900px] mx-auto">
         @include('guest.layouts.navbar')
         <main class="flex-1">
             @yield('content')

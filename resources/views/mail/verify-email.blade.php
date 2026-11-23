@@ -7,7 +7,7 @@
         <a href="{{ $url }}" style="display: inline-block; padding: 12px 24px; background-color: #dc2626; color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: bold;">Verifikasi Email</a>
     </p>
 
-    <p>Link ini berlaku selama {{ $expire }} menit. Setelah verifikasi, Anda bisa login kembali untuk melengkapi biodata dan mulai melamar posisi yang tersedia.</p>
+    <p>Link ini berlaku selama {{ $expire }} menit. Setelah verifikasi berhasil, Anda akan langsung masuk ke dashboard untuk melengkapi biodata dan mulai melamar posisi yang tersedia.</p>
 
     <p>Salam,<br>
         HC – Recruitment<br>

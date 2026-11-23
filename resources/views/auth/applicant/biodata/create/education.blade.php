@@ -888,6 +888,7 @@
                 .toLowerCase()
                 .replace(/["'’`]/g, '')
                 .replace(/ss/g, 's')
+                .replace(/\s+/g, ' ')
                 .trim();
         }
 
@@ -900,6 +901,10 @@
             if (input.value === 'Lainnya / Input Manual') {
                 input.value = '';
                 input.classList.remove('bg-gray-100', 'text-gray-500');
+            }
+
+            if (fieldType === 'school') {
+                return;
             }
 
             filterCombobox(input, fieldType);
@@ -918,6 +923,7 @@
 
         function filterCombobox(input, type) {
             const wrapper = input.closest('[data-field]');
+            const dropdown = wrapper.querySelector('.combobox-dropdown');
             const listEl = wrapper.querySelector('.combobox-list');
             const valInput = wrapper.querySelector('.combobox-value-input');
             const queryRaw = input.value.trim();
@@ -933,10 +939,25 @@
             // By default sync search input with value input
             valInput.value = input.value;
 
+            if (type === 'school') {
+                if (!queryNorm) {
+                    listEl.innerHTML = '';
+                    dropdown.classList.add('hidden');
+                    return;
+                }
+
+                dropdown.classList.remove('hidden');
+            }
+
             const filtered = items.filter(item => {
                 const rawName = item[nameProp] || '';
                 if (!queryNorm) return true;
                 const normName = normalizeSearchText(rawName);
+
+                if (type === 'school') {
+                    return normName.includes(queryNorm);
+                }
+
                 return queryWords.every(word => normName.includes(word));
             }).slice(0, 50);
 
