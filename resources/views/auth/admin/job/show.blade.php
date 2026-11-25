@@ -769,7 +769,7 @@
                     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
                     role="dialog" aria-modal="true" aria-labelledby="upload-psikotes-title"
                     @keydown.escape.window="uploadPsikotesModalOpen = false">
-                    <div x-show="uploadPsikotesModalOpen" @click.outside="uploadPsikotesModalOpen = false"
+                    <div x-show="uploadPsikotesModalOpen"
                         class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
                         <form method="POST" action="{{ route('job.psikotesLinks.import', $job) }}"
                             enctype="multipart/form-data">
@@ -821,7 +821,7 @@
                     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
                     role="dialog" aria-modal="true" aria-labelledby="invite-psikotes-title"
                     @keydown.escape.window="invitePsikotesModalOpen = false">
-                    <div x-show="invitePsikotesModalOpen" @click.outside="invitePsikotesModalOpen = false"
+                    <div x-show="invitePsikotesModalOpen"
                         class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
                         <form method="POST" action="{{ route('job.psikotesInvitations.store', $job) }}">
                             @csrf
@@ -881,7 +881,7 @@
                 <div x-show="openEditModal" x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95" @click.outside="openEditModal = false"
+                    x-transition:leave-end="opacity-0 scale-95"
                     class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
                     <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -1175,7 +1175,7 @@
                 <div x-show="closeModalOpen" x-transition:enter="ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95" @click.outside="closeModalOpen = false"
+                    x-transition:leave-end="opacity-0 scale-95"
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">
@@ -1233,7 +1233,7 @@
                 <div x-show="approveModalOpen" x-transition:enter="ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95" @click.outside="approveModalOpen = false"
+                    x-transition:leave-end="opacity-0 scale-95"
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">
