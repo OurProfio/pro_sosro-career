@@ -183,7 +183,7 @@
                             <select x-model="selectedOffice" @change="applyFilters()" aria-label="Filter Wilayah"
                                 class="bg-white border border-slate-300 text-slate-700 text-xs font-semibold rounded-full px-3.5 py-2 shadow-2xs hover:border-slate-400 focus:outline-none focus:ring-2 focus:ring-[#b91c1c]/20 focus:border-[#b91c1c] transition cursor-pointer">
                                 <option value="">Semua Wilayah</option>
-                                @foreach ($offices as $office)
+                                @foreach ($assignableOffices as $office)
                                     <option value="{{ $office->id }}">{{ $office->name }}</option>
                                 @endforeach
                             </select>
@@ -383,7 +383,7 @@
                 <div x-show="openCreateModal" x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95" @click.outside="openCreateModal = false"
+                    x-transition:leave-end="opacity-0 scale-95"
                     class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
                     <div class="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -689,7 +689,7 @@
                 <div x-show="openApproveModal" x-transition:enter="ease-out duration-200"
                     x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
                     x-transition:leave="ease-in duration-150" x-transition:leave-start="opacity-100 scale-100"
-                    x-transition:leave-end="opacity-0 scale-95" @click.outside="openApproveModal = false"
+                    x-transition:leave-end="opacity-0 scale-95"
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">

@@ -41,6 +41,16 @@ it('only includes offices with active admins in assignable offices for superadmi
         ->and($cities)->toContain('Medan', 'Jakarta Utara', 'Binjai');
 });
 
+it('lists only assignable offices in the superadmin region filter', function () {
+    $response = $this->actingAs($this->superAdminUser)
+        ->get(route('job.index'));
+
+    $response->assertOk();
+    $response->assertSee('Semua Wilayah');
+    $response->assertSee($this->officeWithAdmin->name);
+    $response->assertDontSee($this->officeWithoutAdmin->name);
+});
+
 it('allows creating a job with valid office having an admin and a valid city', function () {
     $payload = [
         'office_id' => $this->officeWithAdmin->id,
