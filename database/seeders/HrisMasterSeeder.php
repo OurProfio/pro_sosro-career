@@ -14,19 +14,23 @@ class HrisMasterSeeder extends Seeder
         $this->call([
             ThrmReligionSeeder::class,
             ThrmEducationSeeder::class,
+            ThrmListFacultySeeder::class,
             ThrmListMajorSeeder::class,
             ThrmListSchoolSeeder::class,
+            ThrmFamilyConnectionSeeder::class,
+            TLineOfBusinessSeeder::class,
+            ThrmPositionSeeder::class,
         ]);
     }
 
     /**
-     * Read semicolon-delimited headerless CSV rows from public/revisi/.
+     * Read semicolon-delimited headerless CSV rows from database/seeders/data/.
      *
      * @return list<list<?string>>
      */
     public static function readRevisionCsv(string $filename): array
     {
-        $filePath = public_path("revisi/{$filename}");
+        $filePath = database_path("seeders/data/{$filename}");
 
         if (! is_file($filePath)) {
             return [];

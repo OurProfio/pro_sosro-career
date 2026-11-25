@@ -3,8 +3,13 @@
 namespace App\Http\Requests\Applicant;
 
 use App\Http\Requests\Concerns\UppercasesInput;
+use Database\Seeders\ThrmListFacultySeeder;
+use Database\Seeders\ThrmListMajorSeeder;
+use Database\Seeders\ThrmListSchoolSeeder;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Validator;
 
 class StoreApplicantEducationRequest extends FormRequest
 {
@@ -25,12 +30,108 @@ class StoreApplicantEducationRequest extends FormRequest
     {
         $this->uppercaseInput([
             'educations.*.institution_name',
-            'educations.*.city',
+            'educations.*.faculty',
+            'educations.*.state',
             'educations.*.degree_level',
             'educations.*.major',
             'trainings.*.training_name',
             'trainings.*.organizer',
         ]);
+
+        $educations = $this->input('educations');
+        if (is_array($educations)) {
+            $hasOtherSchool = DB::table('thrm_list_school')
+                ->where('EDU_ID', ThrmListSchoolSeeder::OTHER_EDU_ID)
+                ->exists();
+            $hasOtherFaculty = DB::table('thrm_list_faculty')
+                ->where('FACULTY_ID', ThrmListFacultySeeder::OTHER_FACULTY_ID)
+                ->exists();
+            $hasOtherMajor = DB::table('thrm_list_major')
+                ->where('MAJOR_ID', ThrmListMajorSeeder::OTHER_MAJOR_ID)
+                ->exists();
+
+            foreach ($educations as $index => $education) {
+                if (! is_array($education)) {
+                    continue;
+                }
+
+                $degreeLevel = trim((string) ($education['degree_level'] ?? ''));
+                $isHighSchool = (bool) preg_match('/\b(SMA|SMK|STM)\b/i', $degreeLevel);
+
+                if (empty($education['edutype_id']) && $degreeLevel !== '') {
+                    $resolvedEduTypeId = DB::table('thrm_education')
+                        ->whereRaw('UPPER(EDUTYPE_NAME_ID) = ?', [strtoupper($degreeLevel)])
+                        ->orWhereRaw('UPPER(EDUTYPE_NAME_EN) = ?', [strtoupper($degreeLevel)])
+                        ->value('EDUTYPE_ID');
+
+                    if ($resolvedEduTypeId !== null) {
+                        $educations[$index]['edutype_id'] = (int) $resolvedEduTypeId;
+                    }
+                } elseif (! empty($education['edutype_id']) && is_numeric($education['edutype_id'])) {
+                    $educations[$index]['edutype_id'] = (int) $education['edutype_id'];
+                } else {
+                    $educations[$index]['edutype_id'] = null;
+                }
+
+                $institutionName = trim((string) ($education['institution_name'] ?? ''));
+                if (empty($education['school_id']) && $institutionName !== '') {
+                    $resolvedSchoolId = DB::table('thrm_list_school')
+                        ->whereRaw('LOWER(EDU_NAME) = ?', [mb_strtolower($institutionName, 'UTF-8')])
+                        ->value('EDU_ID');
+
+                    if ($resolvedSchoolId !== null) {
+                        $educations[$index]['school_id'] = (int) $resolvedSchoolId;
+                    } elseif ($hasOtherSchool) {
+                        $educations[$index]['school_id'] = ThrmListSchoolSeeder::OTHER_EDU_ID;
+                    }
+                } elseif (! empty($education['school_id']) && is_numeric($education['school_id'])) {
+                    $educations[$index]['school_id'] = (int) $education['school_id'];
+                } else {
+                    $educations[$index]['school_id'] = null;
+                }
+
+                if ($isHighSchool) {
+                    $educations[$index]['faculty'] = null;
+                    $educations[$index]['faculty_id'] = null;
+                } else {
+                    $facultyName = trim((string) ($education['faculty'] ?? ''));
+                    if (empty($education['faculty_id']) && $facultyName !== '') {
+                        $resolvedFacultyId = DB::table('thrm_list_faculty')
+                            ->whereRaw('LOWER(FACULTY_NAME) = ?', [mb_strtolower($facultyName, 'UTF-8')])
+                            ->value('FACULTY_ID');
+
+                        if ($resolvedFacultyId !== null) {
+                            $educations[$index]['faculty_id'] = (int) $resolvedFacultyId;
+                        } elseif ($hasOtherFaculty) {
+                            $educations[$index]['faculty_id'] = ThrmListFacultySeeder::OTHER_FACULTY_ID;
+                        }
+                    } elseif (! empty($education['faculty_id']) && is_numeric($education['faculty_id'])) {
+                        $educations[$index]['faculty_id'] = (int) $education['faculty_id'];
+                    } else {
+                        $educations[$index]['faculty_id'] = null;
+                    }
+                }
+
+                $majorName = trim((string) ($education['major'] ?? ''));
+                if (empty($education['major_id']) && $majorName !== '') {
+                    $resolvedMajorId = DB::table('thrm_list_major')
+                        ->whereRaw('LOWER(MAJOR_NAME) = ?', [mb_strtolower($majorName, 'UTF-8')])
+                        ->value('MAJOR_ID');
+
+                    if ($resolvedMajorId !== null) {
+                        $educations[$index]['major_id'] = (int) $resolvedMajorId;
+                    } elseif ($hasOtherMajor) {
+                        $educations[$index]['major_id'] = ThrmListMajorSeeder::OTHER_MAJOR_ID;
+                    }
+                } elseif (! empty($education['major_id']) && is_numeric($education['major_id'])) {
+                    $educations[$index]['major_id'] = (int) $education['major_id'];
+                } else {
+                    $educations[$index]['major_id'] = null;
+                }
+            }
+
+            $this->merge(['educations' => $educations]);
+        }
     }
 
     /**
@@ -44,8 +145,13 @@ class StoreApplicantEducationRequest extends FormRequest
 
         return [
             'educations' => ['required', 'array', 'min:1'],
+            'educations.*.edutype_id' => ['nullable', 'integer', 'exists:thrm_education,EDUTYPE_ID'],
+            'educations.*.school_id' => ['nullable', 'integer', 'exists:thrm_list_school,EDU_ID'],
+            'educations.*.faculty_id' => ['nullable', 'integer', 'exists:thrm_list_faculty,FACULTY_ID'],
+            'educations.*.major_id' => ['nullable', 'integer', 'exists:thrm_list_major,MAJOR_ID'],
             'educations.*.institution_name' => ['required', 'string', 'max:255'],
-            'educations.*.city' => ['required', 'string', 'max:255'],
+            'educations.*.faculty' => ['nullable', 'string', 'max:255'],
+            'educations.*.state' => ['required', 'string', 'max:255'],
             'educations.*.degree_level' => ['required', 'string', 'max:100'],
             'educations.*.major' => ['required', 'string', 'max:150'],
             'educations.*.gpa' => ['required', 'numeric', 'between:0,100.00'],
@@ -59,12 +165,39 @@ class StoreApplicantEducationRequest extends FormRequest
         ];
     }
 
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            $educations = $this->input('educations', []);
+            if (! is_array($educations)) {
+                return;
+            }
+
+            foreach ($educations as $index => $education) {
+                if (! is_array($education)) {
+                    continue;
+                }
+
+                $degreeLevel = (string) ($education['degree_level'] ?? '');
+                if (preg_match('/\b(SMA|SMK|STM)\b/i', $degreeLevel)) {
+                    continue;
+                }
+
+                $faculty = trim((string) ($education['faculty'] ?? ''));
+                if ($faculty === '') {
+                    $validator->errors()->add("educations.{$index}.faculty", 'Fakultas wajib diisi.');
+                }
+            }
+        });
+    }
+
     public function attributes(): array
     {
         return [
             'educations' => 'riwayat pendidikan',
             'educations.*.institution_name' => 'nama sekolah / universitas',
-            'educations.*.city' => 'kota/kabupaten sekolah',
+            'educations.*.faculty' => 'fakultas',
+            'educations.*.state' => 'kota/provinsi sekolah',
             'educations.*.degree_level' => 'jenjang pendidikan',
             'educations.*.major' => 'jurusan / program studi',
             'educations.*.gpa' => 'IPK / nilai rata-rata',
@@ -83,7 +216,7 @@ class StoreApplicantEducationRequest extends FormRequest
             'educations.required' => 'Data riwayat pendidikan wajib diisi.',
             'educations.min' => 'Minimal sertakan 1 riwayat pendidikan terakhir.',
             'educations.*.institution_name.required' => 'Nama sekolah / universitas wajib diisi.',
-            'educations.*.city.required' => 'Kota/Kabupaten sekolah wajib diisi.',
+            'educations.*.state.required' => 'Kota/Provinsi sekolah wajib diisi.',
             'educations.*.degree_level.required' => 'Jenjang pendidikan wajib dipilih.',
             'educations.*.degree_level.in' => 'Pilihan jenjang pendidikan tidak valid.',
             'educations.*.major.required' => 'Jurusan / program studi wajib diisi.',

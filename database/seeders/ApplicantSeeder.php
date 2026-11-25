@@ -53,7 +53,7 @@ class ApplicantSeeder extends Seeder
                     'marital_status' => $number % 5 === 0 ? 'married' : 'single',
                     'marital_date' => $number % 5 === 0 ? '2022-06-12' : null,
                     'emergency_contact_name' => 'Keluarga '.$name,
-                    'emergency_contact_relationship' => 'Orang Tua',
+                    'emergency_contact_relationship' => '1',
                     'emergency_contact_phone' => '08219876'.str_pad((string) $number, 4, '0', STR_PAD_LEFT),
                     'photo_url' => 'photos/default.jpg',
                 ],

@@ -45,6 +45,8 @@ class UpdateApplicationStatusRequest extends FormRequest
     {
         return [
             'status' => ['required', 'in:accepted,rejected'],
+            'request_code' => ['required_if:status,accepted', 'nullable', 'string', 'max:50'],
+            'position_id' => ['required_if:status,accepted', 'nullable', 'integer', 'exists:thrm_position,POSITION_ID'],
             'start_date' => ['required_if:status,accepted', 'nullable', 'date', 'after_or_equal:today'],
             'work_address' => ['required_if:status,accepted', 'nullable', 'string', 'max:1000'],
         ];

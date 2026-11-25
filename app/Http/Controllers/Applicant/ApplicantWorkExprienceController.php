@@ -38,8 +38,11 @@ class ApplicantWorkExprienceController extends Controller
         }
 
         $workExperiences = $applicant->workExperiences ?? collect();
+        $lineOfBusinesses = DB::table('t_line_of_business')
+            ->orderBy('LOB_NAME')
+            ->get(['LOB_ID', 'LOB_NAME']);
 
-        return view('auth.applicant.biodata.create.workExperience', compact('applicant', 'workExperiences'));
+        return view('auth.applicant.biodata.create.workExperience', compact('applicant', 'workExperiences', 'lineOfBusinesses'));
     }
 
     /**

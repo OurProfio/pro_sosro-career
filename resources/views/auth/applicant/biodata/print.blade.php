@@ -282,7 +282,16 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <div class="r" style="height:17px"><span class="l"></span><span class="c"></span><i class="sm w" style="width:200px;margin-left:3px"><sup>*)</sup> pilih (v) salah satu</i><label class="w" style="width:100px"><input type="checkbox" disabled @checked(in_array($marital, ['divorced', 'widowed']))>bercerai, sejak</label><span class="c">:</span>{!! $I(100, in_array($marital, ['divorced', 'widowed']) ? $maritalYear : '') !!}</div>
 {!! $R('No. KTP', $I(192, $applicant->nik)) !!}
 <div class="r" style="margin-top:8px"><b>Emergency Contacts</b></div>
-{!! $R('Nama Lengkap', $I(306, $applicant->emergency_contact_name ?? '')) !!}{!! $R('Hubungan', $I(306, $applicant->emergency_contact_relationship ?? '')) !!}{!! $R('No. HP', $I(306, $applicant->emergency_contact_phone ?? '')) !!}
+@php
+    $emergencyRelDisplay = $applicant->emergency_contact_relationship ?? '';
+    if (is_numeric($emergencyRelDisplay)) {
+        $fcRow = \Illuminate\Support\Facades\DB::table('thrm_family_connection')
+            ->where('RELATIONSHIP_ID', (int) $emergencyRelDisplay)
+            ->first(['FAMILY_RELATIONSHIP_ID', 'FAMILY_RELATIONSHIP_EN']);
+        $emergencyRelDisplay = $fcRow?->FAMILY_RELATIONSHIP_ID ?: ($fcRow?->FAMILY_RELATIONSHIP_EN ?: $emergencyRelDisplay);
+    }
+@endphp
+{!! $R('Nama Lengkap', $I(306, $applicant->emergency_contact_name ?? '')) !!}{!! $R('Hubungan', $I(306, $emergencyRelDisplay)) !!}{!! $R('No. HP', $I(306, $applicant->emergency_contact_phone ?? '')) !!}
 <div style="margin:10px 0 2px 6px"><b>B. 1. LINGKUNGAN KELUARGA INTI</b></div>
 <table>{!! $famHead . $famRows($nuclear) !!}</table>
 <div style="margin:10px 0 2px 6px"><b>2. LINGKUNGAN KELUARGA KANDUNG (Termasuk diri Anda)</b></div>
@@ -295,7 +304,7 @@ td div.cell-data{outline:0;min-height:14px;word-break:break-word;overflow-wrap:a
 <table style="width:692px;margin-left:-18px"><tr><th style="width:10%">Jenjang<th style="width:32%">Nama Sekolah<th style="width:9%">Kota<th style="width:6%">Th.<br>Masuk<th style="width:6%">Th.<br>Lulus<th style="width:18%">Fakultas / Jurusan<th style="width:19%">Keterangan / IPK</tr>
 @for ($i = 0; $i < 4; $i++)
 @php $edu = $applicant->educations->get($i); @endphp
-<tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell($edu?->city) . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
+<tr>{!! $cell($edu?->degree_level) . $cell($edu?->institution_name) . $cell($edu?->state) . $cell($edu?->entry_year) . $cell($edu?->graduation_year) . $cell($edu?->major) . $cell($edu?->gpa) !!}</tr>
 @endfor
 </table>
 <div style="margin:14px 0 3px 6px"><b>2. RIWAYAT PENDIDIKAN INFORMAL (TRAINING / KURSUS)</b></div>

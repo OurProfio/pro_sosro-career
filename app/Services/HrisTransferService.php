@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Applicant;
+use App\Models\ApplicantFamily;
 use App\Models\Application;
 use App\Models\Hris\ThrmAppCourse;
 use App\Models\Hris\ThrmAppEducation;
@@ -10,6 +11,10 @@ use App\Models\Hris\ThrmAppFamily;
 use App\Models\Hris\ThrmAppHistory;
 use App\Models\Hris\ThrmAppJobExp;
 use App\Models\Hris\ThrmAppPersonalData;
+use Database\Seeders\ThrmListFacultySeeder;
+use Database\Seeders\ThrmListMajorSeeder;
+use Database\Seeders\ThrmListSchoolSeeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class HrisTransferService
@@ -48,7 +53,7 @@ class HrisTransferService
         $this->syncCourseData($applicant, $applicantId);
 
         // 6. Application History / FPTK (THRMAPPHISTORY)
-        $this->syncApplicationHistory($application, $applicantId, $extraData);
+        $this->syncApplicationHistory($application, $applicant, $applicantId, $extraData);
 
         Log::info("Applicant ID {$applicant->id} successfully transferred to HRIS tables with APPLICANT_ID: {$applicantId}");
 
@@ -60,10 +65,10 @@ class HrisTransferService
      */
     protected function generateApplicantId(Applicant $applicant): string
     {
-        $year = date('Y');
+        $yearMonth = date('Ym');
         $id = str_pad((string) $applicant->id, 5, '0', STR_PAD_LEFT);
 
-        return "APP-{$year}-{$id}";
+        return "APL{$yearMonth}{$id}";
     }
 
     /**
@@ -75,9 +80,15 @@ class HrisTransferService
 
         $genderVal = match (strtolower((string) $applicant->gender)) {
             'l' => 1,
-            'p' => 2,
+            'p' => 0,
             default => null,
         };
+
+        $requestCode = ! empty($extraData['request_code'])
+            ? strtoupper(trim((string) $extraData['request_code']))
+            : null;
+
+        $biodataCompletedAt = $applicant->updated_at ?? $applicant->created_at ?? now();
 
         return ThrmAppPersonalData::updateOrCreate(
             ['APPLICANT_ID' => $applicantId],
@@ -86,16 +97,19 @@ class HrisTransferService
                 'MIDDLE_NAME' => $name['middle'],
                 'LAST_NAME' => $name['last'],
                 'GENDER' => $genderVal,
+                'REQUEST_CODE' => $requestCode,
                 'RELIGION_ID' => $applicant->religion,
                 'BIRTH_PLACE' => $applicant->place_of_birth,
                 'DATE_OF_BIRTH' => $applicant->date_of_birth ? date('Y-m-d H:i:s', strtotime($applicant->date_of_birth)) : null,
                 'MARITAL_STATUS' => $this->mapMaritalStatus($applicant->marital_status),
                 'ADDRESS1' => $applicant->address_ktp,
                 'ZIPCODE1' => $applicant->postal_code_ktp,
-                'COUNTRY1' => 'INDONESIA',
+                'COUNTRY1' => 'ID',
                 'ADDRESS2' => $applicant->address_domisili,
                 'ZIPCODE2' => $applicant->postal_code_domisili,
-                'COUNTRY2' => 'INDONESIA',
+                'COUNTRY2' => 'ID',
+                'NATIONALITY_ID' => 'ID',
+                'COMPANY_ID' => 73,
                 'NRIC' => $applicant->nik,
                 'PHONE' => $applicant->phone_number,
                 'MOBILE_PHONE' => $applicant->phone_number,
@@ -107,11 +121,23 @@ class HrisTransferService
                 'EMERGENCY_CONTACT_NAME' => $applicant->emergency_contact_name,
                 'EMERGENCY_CONTACT_RELATIONSHIP' => $applicant->emergency_contact_relationship,
                 'EMERGENCY_CONTACT_PHONE' => $applicant->emergency_contact_phone,
+                'EMERGENCY_CONTACT_ADDRESS' => $applicant->emergency_contact_address,
+                'EMERGENCY_CONTACT_STATE' => $applicant->emergency_contact_state,
+                'EMERGENCY_CONTACT_CITY' => $applicant->emergency_contact_city,
+                'EMERGENCY_CONTACT_COUNTRY' => filled($applicant->emergency_contact_address) ? 'ID' : null,
                 'EXPECTED_SALARY' => $applicant->expectation?->salary_expectation,
+                'CURRENCY_ID' => 'IDR',
                 'REFERRAL_NAME' => $applicant->expectation?->reference_by,
-                'STATUSAPP' => 'ACCEPTED',
+                'STATUSAPP' => 'A',
+                'MEDIUM_ID' => 63,
+                'MEDIUM_CODE' => 'IWT',
+                'APPLIED_DATE' => now(),
+                'IS_INTERNAL' => 'N',
                 'IS_ACTIVE' => '1',
-                'CREATEDBY' => auth()->user()?->email ?? 'SYSTEM',
+                'CREATEDDATE' => $biodataCompletedAt,
+                'UPDATEDDATE' => $biodataCompletedAt,
+                'CREATEDBY' => 'SYSTEM',
+                'UPDATEDBY' => 'SYSTEM',
                 'USER_INPUT' => auth()->user()?->name ?? 'Admin',
             ]
         );
@@ -125,16 +151,38 @@ class HrisTransferService
         ThrmAppFamily::where('APPLICANT_ID', $applicantId)->delete();
 
         foreach ($applicant->families as $family) {
+            $familyGender = match (strtolower((string) $family->gender)) {
+                'l' => '1',
+                'p' => '0',
+                default => null,
+            };
+
+            $relationshipId = $family->relationship_id
+                ?? ApplicantFamily::resolveRelationshipId($family->relationship, $family->gender);
+
+            $edutypeId = $family->edutype_id
+                ?? ApplicantFamily::resolveEdutypeId($family->education);
+
+            $familyMaritalStatus = in_array(
+                strtolower((string) $family->relationship),
+                ['father', 'mother', 'spouse', 'father_in_law', 'mother_in_law'],
+                true
+            ) ? '1' : null;
+
             ThrmAppFamily::create([
                 'APPLICANT_ID' => $applicantId,
                 'APPFAMILY_NAME' => $family->name,
-                'APPFAMILY_GENDER' => $family->gender,
+                'APPFAMILY_RELATIONSHIP_ID' => $relationshipId,
+                'APPFAMILY_GENDER' => $familyGender,
                 'APPFAMILY_BIRTHPLACE' => $family->place_of_birth,
                 'APPFAMILY_DOB' => $family->date_of_birth ? date('Y-m-d H:i:s', strtotime($family->date_of_birth)) : null,
-                'APPFAMILY_LASTEDUCATION' => $family->education,
+                'APPFAMILY_DEPENDENTSTS' => 0,
+                'APPFAMILY_LASTEDUCATION' => $edutypeId !== null ? (string) $edutypeId : $family->education,
                 'APPFAMILY_PHONE' => $family->phone_number,
                 'APPFAMILY_OCCUPATION' => $family->work,
-                'APPFAMILY_RELATIONSHIP2' => $family->relationship,
+                'APPFAMILY_ADDRESS' => $family->address,
+                'APPFAMILY_RELATIONSHIP2' => '',
+                'APPFAMILY_MARITAL_STATUS' => $familyMaritalStatus,
                 'ALIVE_STATUS' => $family->status === 'deceased' ? 0 : 1,
             ]);
         }
@@ -147,18 +195,41 @@ class HrisTransferService
     {
         ThrmAppEducation::where('APPLICANT_ID', $applicantId)->delete();
 
-        foreach ($applicant->educations as $education) {
+        foreach ($applicant->educations->values() as $index => $education) {
+            $isHighSchool = (bool) preg_match('/\b(SMA|SMK|STM)\b/i', (string) ($education->degree_level ?? ''));
+            $gpaValue = $education->gpa !== null ? (float) $education->gpa : null;
+            $gpaScale = $gpaValue !== null
+                ? ($isHighSchool || $gpaValue > 4.0 ? '100' : '4')
+                : null;
+
+            $eduName = (int) $education->school_id === ThrmListSchoolSeeder::OTHER_EDU_ID
+                ? 'Other'
+                : $education->institution_name;
+
+            $facultyName = $isHighSchool
+                ? null
+                : ((int) $education->faculty_id === ThrmListFacultySeeder::OTHER_FACULTY_ID
+                    ? 'Others'
+                    : $education->faculty);
+
+            $majorName = (int) $education->major_id === ThrmListMajorSeeder::OTHER_MAJOR_ID
+                ? 'Other'
+                : $education->major;
+
             ThrmAppEducation::create([
                 'APPLICANT_ID' => $applicantId,
-                'EDU_NAME' => $education->institution_name,
-                'CITY' => $education->city,
-                'COUNTRY' => 'INDONESIA',
-                'MAJOR' => $education->major,
-                'GPA' => $education->gpa ? (float) $education->gpa : null,
+                'EDUTYPE_ID' => $education->edutype_id,
+                'EDU_NAME' => $eduName,
+                'FACULTY' => $facultyName,
+                'STATE' => $education->state,
+                'COUNTRY' => 'ID',
+                'MAJOR' => $majorName,
+                'GPA' => $gpaValue,
+                'GPASCALE' => $gpaScale,
                 'START_YEAR' => $education->entry_year ? (int) $education->entry_year : null,
                 'END_YEAR' => $education->graduation_year ? (int) $education->graduation_year : null,
-                'SPECIALIZATION' => $education->degree_level,
-                'IS_DEFAULT' => 1,
+                'SPECIALIZATION' => null,
+                'IS_DEFAULT' => $index === 0 ? 1 : 0,
             ]);
         }
     }
@@ -170,11 +241,18 @@ class HrisTransferService
     {
         ThrmAppJobExp::where('APPLICANT_ID', $applicantId)->delete();
 
+        $lobNames = DB::table('t_line_of_business')->pluck('LOB_NAME', 'LOB_ID');
+
         foreach ($applicant->workExperiences as $work) {
             $startYear = $work->start_date ? (int) date('Y', strtotime($work->start_date)) : null;
             $startMonth = $work->start_date ? (int) date('n', strtotime($work->start_date)) : null;
             $endYear = $work->end_date ? (int) date('Y', strtotime($work->end_date)) : null;
             $endMonth = $work->end_date ? (int) date('n', strtotime($work->end_date)) : null;
+
+            $salaryValue = $work->salary ? (float) $work->salary : null;
+            $typeSalary = ($salaryValue !== null && $salaryValue > 0) ? '6' : '0';
+            $lobId = $work->lob_id ? (int) $work->lob_id : null;
+            $lobName = $lobId !== null ? ($lobNames[$lobId] ?? null) : null;
 
             ThrmAppJobExp::create([
                 'APPLICANT_ID' => $applicantId,
@@ -182,7 +260,16 @@ class HrisTransferService
                 'COMPANY_ADDR' => $work->company_address,
                 'COMPANY_PHONE' => $work->company_phone,
                 'JOB_POSITION' => $work->position,
-                'LAST_SALARY' => $work->salary ? (float) $work->salary : null,
+                'JOB_DESC' => $work->job_desc,
+                'START_SALARY' => $salaryValue ?? 0,
+                'LAST_SALARY' => $salaryValue ?? 0,
+                'TYPE_SALARY' => $typeSalary,
+                'START_TYPE_SALARY' => $typeSalary,
+                'CURRENCY_ID' => 'IDR',
+                'START_CURRENCY_ID' => 'IDR',
+                'GROSS_NETTO' => $work->gross_netto,
+                'LOB_ID' => $lobId,
+                'LOB' => $lobName,
                 'START_YEAR' => $startYear,
                 'START_MONTH' => $startMonth,
                 'END_YEAR' => $endYear,
@@ -205,12 +292,14 @@ class HrisTransferService
 
         foreach ($applicant->trainings as $training) {
             $year = $training->finished ? (int) date('Y', strtotime($training->finished)) : null;
+            $month = $training->finished ? (int) date('n', strtotime($training->finished)) : null;
 
             ThrmAppCourse::create([
                 'APPLICANT_ID' => $applicantId,
                 'COURSE_NAME' => $training->training_name,
                 'COURSE_INSTITUTION' => $training->organizer,
                 'PERIOD_TO' => $year,
+                'MONTHPERIOD_TO' => $month,
             ]);
         }
     }
@@ -218,17 +307,49 @@ class HrisTransferService
     /**
      * Sync THRMAPPHISTORY.
      */
-    protected function syncApplicationHistory(Application $application, string $applicantId, array $extraData): void
+    protected function syncApplicationHistory(Application $application, Applicant $applicant, string $applicantId, array $extraData): void
     {
         $application->loadMissing('job');
 
+        $now = now();
+
+        $requestCode = ! empty($extraData['request_code'])
+            ? strtoupper(trim((string) $extraData['request_code']))
+            : (string) ($application->job?->id ?? '');
+
+        $positionId = isset($extraData['position_id']) && $extraData['position_id'] !== ''
+            ? (int) $extraData['position_id']
+            : null;
+        $positionName = $positionId !== null
+            ? DB::table('thrm_position')->where('POSITION_ID', $positionId)->value('POSITION_NAME_EN')
+            : null;
+        $jobTitle = $positionName ?: (string) ($application->job?->title ?? '');
+
+        $currentSalary = $applicant->workExperiences->first()?->salary ?? 0;
+
         ThrmAppHistory::create([
             'APPLICANT_ID' => $applicantId,
-            'REQUEST_CODE' => (string) ($application->job?->id ?? ''),
-            'APPLIED_JOBTITLE' => (string) ($application->job?->title ?? ''),
-            'APPLIED_DATE' => $application->created_at ?? now(),
-            'APPSTS' => 1, // 1: Accepted
-            'REMARK' => 'Accepted on '.now()->toDateTimeString().' - Address: '.($extraData['work_address'] ?? '-'),
+            'REQUEST_CODE' => $requestCode,
+            'MEDIUM_ID' => 63,
+            'MEDIUM_CODE' => 'IWT',
+            'APPLIED_POSITION' => $positionId,
+            'EXPECTED_POSITION' => $positionId,
+            'APPLIED_JOBTITLE' => $jobTitle,
+            'EXPECTED_JOBTITLE' => $jobTitle,
+            'APPLIED_DATE' => $application->created_at ?? $now,
+            'EXPECTED_SALARY' => $applicant->expectation?->salary_expectation ?? 0,
+            'CURRENT_SALARY' => $currentSalary,
+            'CURRENCY_ID' => 'IDR',
+            'PAYMENTTYPECODE' => 'MONTHLY',
+            'COMPANY_ID' => 73,
+            'APPSTS' => 3,
+            'COMPLETETEST' => 1,
+            'APPLICANT_FLAG' => null,
+            'CREATEDBY' => 'SYSTEM',
+            'CREATEDDATE' => $now,
+            'UPDATEDBY' => 'SYSTEM',
+            'UPDATEDDATE' => $now,
+            'REMARK' => 'Accepted on '.$now->toDateTimeString().' - Address: '.($extraData['work_address'] ?? '-'),
         ]);
     }
 
@@ -238,10 +359,10 @@ class HrisTransferService
     protected function mapMaritalStatus(?string $status): ?int
     {
         return match (strtolower((string) $status)) {
-            'single' => 1,
-            'married' => 2,
-            'divorced' => 3,
-            'widowed' => 4,
+            'single' => 0,
+            'married' => 1,
+            'divorced' => 2,
+            'widowed' => 3,
             default => null,
         };
     }

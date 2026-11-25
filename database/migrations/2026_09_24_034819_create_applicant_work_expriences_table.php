@@ -19,15 +19,20 @@ return new class extends Migration
             $table->string('company_phone')->nullable();
             $table->string('position')->nullable();
             $table->string('division')->nullable();
+            $table->integer('lob_id')->nullable();
+            $table->text('job_desc')->nullable();
             $table->unsignedBigInteger('salary')->nullable();
+            $table->enum('gross_netto', ['Gross', 'Netto'])->default('Gross');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->string('facility')->nullable();
+            $table->string('facility', 50)->nullable();
             $table->string('reason_for_leaving')->nullable();
             $table->string('reference_name')->nullable();
             $table->string('reference_position')->nullable();
             $table->string('reference_phone')->nullable();
             $table->timestamps();
+
+            $table->foreign('lob_id')->references('LOB_ID')->on('t_line_of_business')->nullOnDelete();
         });
     }
 

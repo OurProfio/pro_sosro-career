@@ -17,7 +17,7 @@ class ThrmListSchoolSeeder extends Seeder
         $rows = HrisMasterSeeder::readRevisionCsv('THRMLISTSCHOOL.csv');
 
         if ($rows === []) {
-            $this->command?->warn('CSV file is empty or missing: public/revisi/THRMLISTSCHOOL.csv');
+            $this->command?->warn('CSV file is empty or missing: database/seeders/data/THRMLISTSCHOOL.csv');
 
             return;
         }

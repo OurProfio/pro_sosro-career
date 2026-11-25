@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use App\Models\Applicant;
+use App\Models\ApplicantEducationOther;
 use App\Models\ApplicantExpectation;
 use App\Models\ApplicantInterest;
 use App\Models\Application;
@@ -134,6 +135,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             HrisMasterSeeder::class,
             StageSeeder::class,
+            // ThrmAyleenSeeder::class,
             // JobSeeder::class,
             // ApplicantSeeder::class,
             // ApplicantEducationSeeder::class,
@@ -223,8 +225,11 @@ class DatabaseSeeder extends Seeder
                 'marital_status' => 'single',
                 'marital_date' => null,
                 'emergency_contact_name' => 'Bambang Santoso',
-                'emergency_contact_relationship' => 'Ayah',
+                'emergency_contact_relationship' => '1',
                 'emergency_contact_phone' => '081198765432',
+                'emergency_contact_address' => 'Jl. Raya Sultan Agung KM 28, Medan Satria, Bekasi',
+                'emergency_contact_state' => 'Jawa Barat',
+                'emergency_contact_city' => 'Kota Bekasi',
                 'has_applied_sosro' => 'n',
                 'previous_applied_position' => null,
                 'previous_applied_year' => null,
@@ -247,47 +252,62 @@ class DatabaseSeeder extends Seeder
                 'facility_expectation' => 'BPJS Kesehatan & Ketenagakerjaan, Tunjangan Transportasi',
                 'ready_to_relocate' => true,
                 'ready_to_travel' => true,
-                'job_source' => 'Website Resmi Sosro',
+                'job_source' => 'Career Page',
                 'reference_by' => null,
             ],
         );
 
         // Step 2: Data Keluarga
         if ($applicant->families()->doesntExist()) {
+            $sarjanaEduId = DB::table('thrm_education')->where('EDUTYPE_ID', 7)->value('EDUTYPE_ID');
+            $smaEduId = DB::table('thrm_education')->where('EDUTYPE_ID', 4)->value('EDUTYPE_ID');
+            $fatherRelId = DB::table('thrm_family_connection')->where('RELATIONSHIP_ID', 1)->value('RELATIONSHIP_ID');
+            $motherRelId = DB::table('thrm_family_connection')->where('RELATIONSHIP_ID', 2)->value('RELATIONSHIP_ID');
+            $sisterRelId = DB::table('thrm_family_connection')->where('RELATIONSHIP_ID', 6)->value('RELATIONSHIP_ID');
+
             $applicant->families()->createMany([
                 [
                     'relationship' => 'father',
-                    'name' => 'Bambang Santoso',
+                    'relationship_id' => $fatherRelId,
+                    'name' => 'BAMBANG SANTOSO',
                     'gender' => 'l',
-                    'place_of_birth' => 'Semarang',
+                    'place_of_birth' => 'SEMARANG',
                     'date_of_birth' => '1968-03-15',
-                    'education' => 'D4/S1',
+                    'education' => 'Sarjana',
+                    'edutype_id' => $sarjanaEduId,
                     'phone_number' => '081198765432',
-                    'work' => 'Wiraswasta',
+                    'work' => 'WIRASWASTA',
+                    'address' => 'JL. RAYA SULTAN AGUNG KM 28, MEDAN SATRIA, BEKASI',
                     'family_type' => 'biological',
                     'status' => 'alive',
                 ],
                 [
                     'relationship' => 'mother',
-                    'name' => 'Sri Wahyuni',
+                    'relationship_id' => $motherRelId,
+                    'name' => 'SRI WAHYUNI',
                     'gender' => 'p',
-                    'place_of_birth' => 'Yogyakarta',
+                    'place_of_birth' => 'YOGYAKARTA',
                     'date_of_birth' => '1971-08-21',
-                    'education' => 'SMA/SMK',
+                    'education' => 'SMA',
+                    'edutype_id' => $smaEduId,
                     'phone_number' => '081298765433',
-                    'work' => 'Ibu Rumah Tangga',
+                    'work' => 'IBU RUMAH TANGGA',
+                    'address' => 'JL. RAYA SULTAN AGUNG KM 28, MEDAN SATRIA, BEKASI',
                     'family_type' => 'biological',
                     'status' => 'alive',
                 ],
                 [
                     'relationship' => 'sibling',
-                    'name' => 'Rina Santoso',
+                    'relationship_id' => $sisterRelId,
+                    'name' => 'RINA SANTOSO',
                     'gender' => 'p',
-                    'place_of_birth' => 'Jakarta',
+                    'place_of_birth' => 'JAKARTA',
                     'date_of_birth' => '2003-11-10',
-                    'education' => 'SMA/SMK',
+                    'education' => 'SMA',
+                    'edutype_id' => $smaEduId,
                     'phone_number' => '081398765434',
-                    'work' => 'Mahasiswa',
+                    'work' => 'MAHASISWA',
+                    'address' => 'JL. RAYA SULTAN AGUNG KM 28, MEDAN SATRIA, BEKASI',
                     'family_type' => 'biological',
                     'status' => 'alive',
                 ],
@@ -296,37 +316,93 @@ class DatabaseSeeder extends Seeder
 
         // Step 3: Riwayat Pendidikan
         if ($applicant->educations()->doesntExist()) {
-            $applicant->educations()->createMany([
+            $smaEduTypeId = DB::table('thrm_education')->where('EDUTYPE_ID', 4)->value('EDUTYPE_ID');
+            $sarjanaEduTypeId = DB::table('thrm_education')->where('EDUTYPE_ID', 7)->value('EDUTYPE_ID');
+            $uiSchoolId = DB::table('thrm_list_school')
+                ->whereRaw('LOWER(EDU_NAME) = ?', ['universitas indonesia'])
+                ->value('EDU_ID');
+            $otherSchoolId = DB::table('thrm_list_school')
+                ->where('EDU_ID', ThrmListSchoolSeeder::OTHER_EDU_ID)
+                ->value('EDU_ID');
+            $teknikFacultyId = DB::table('thrm_list_faculty')
+                ->whereRaw('LOWER(FACULTY_NAME) = ?', ['teknik'])
+                ->value('FACULTY_ID');
+            $tiMajorId = DB::table('thrm_list_major')
+                ->whereRaw('LOWER(MAJOR_NAME) = ?', ['teknik informatika'])
+                ->value('MAJOR_ID');
+            $ipaMajorId = DB::table('thrm_list_major')
+                ->whereRaw('LOWER(MAJOR_NAME) = ?', ['ipa'])
+                ->value('MAJOR_ID')
+                ?? DB::table('thrm_list_major')
+                    ->where('MAJOR_ID', ThrmListMajorSeeder::OTHER_MAJOR_ID)
+                    ->value('MAJOR_ID');
+
+            $createdEducations = $applicant->educations()->createMany([
                 [
-                    'institution_name' => 'SMA Negeri 8 Jakarta',
-                    'city' => 'Jakarta',
-                    'degree_level' => 'SMA/SMK',
+                    'edutype_id' => $sarjanaEduTypeId,
+                    'school_id' => $uiSchoolId ?? $otherSchoolId,
+                    'faculty_id' => $teknikFacultyId,
+                    'major_id' => $tiMajorId,
+                    'institution_name' => 'UNIVERSITAS INDONESIA',
+                    'faculty' => 'TEKNIK',
+                    'state' => 'DEPOK',
+                    'degree_level' => 'SARJANA',
+                    'major' => 'TEKNIK INFORMATIKA',
+                    'gpa' => 3.65,
+                    'entry_year' => 2017,
+                    'graduation_year' => 2021,
+                ],
+                [
+                    'edutype_id' => $smaEduTypeId,
+                    'school_id' => $otherSchoolId,
+                    'faculty_id' => null,
+                    'major_id' => $ipaMajorId,
+                    'institution_name' => 'SMA NEGERI 8 JAKARTA',
+                    'faculty' => null,
+                    'state' => 'JAKARTA',
+                    'degree_level' => 'SMA',
                     'major' => 'IPA',
                     'gpa' => 88.50,
                     'entry_year' => 2014,
                     'graduation_year' => 2017,
                 ],
-                [
-                    'institution_name' => 'Universitas Indonesia',
-                    'city' => 'Depok',
-                    'degree_level' => 'D4/S1',
-                    'major' => 'Teknik Informatika',
-                    'gpa' => 3.65,
-                    'entry_year' => 2017,
-                    'graduation_year' => 2021,
-                ],
             ]);
+
+            foreach ($createdEducations as $createdEdu) {
+                if ((int) $createdEdu->school_id === ThrmListSchoolSeeder::OTHER_EDU_ID) {
+                    ApplicantEducationOther::create([
+                        'applicant_education_id' => $createdEdu->id,
+                        'applicant_id' => $applicant->id,
+                        'category' => ApplicantEducationOther::CATEGORY_SCHOOL,
+                        'custom_name' => $createdEdu->institution_name,
+                    ]);
+                }
+
+                if ((int) $createdEdu->major_id === ThrmListMajorSeeder::OTHER_MAJOR_ID) {
+                    ApplicantEducationOther::create([
+                        'applicant_education_id' => $createdEdu->id,
+                        'applicant_id' => $applicant->id,
+                        'category' => ApplicantEducationOther::CATEGORY_MAJOR,
+                        'custom_name' => $createdEdu->major,
+                    ]);
+                }
+            }
         }
 
         // Step 4: Pengalaman Kerja & Pelatihan
         if ($applicant->workExperiences()->doesntExist()) {
+            $itLobId = DB::table('t_line_of_business')->where('LOB_ID', 11)->value('LOB_ID');
+
             $applicant->workExperiences()->create([
                 'company_name' => 'PT Nusantara Digital Solusi',
                 'company_address' => 'Jl. Jend. Sudirman Kav. 52, Jakarta Selatan',
                 'company_phone' => '0215551234',
                 'position' => 'IT Support Specialist',
                 'division' => 'Information Technology',
+                'lob_id' => $itLobId,
+                'job_desc' => 'Menangani troubleshooting jaringan, maintenance perangkat kantor, dan dukungan pengguna harian',
                 'salary' => 6000000,
+                'gross_netto' => 'Netto',
                 'start_date' => '2022-01-10',
                 'end_date' => '2024-12-20',
                 'facility' => 'BPJS Kesehatan, Ketenagakerjaan, Laptop Kerja',

@@ -6,6 +6,7 @@ use App\Models\Stage;
 use App\Models\User;
 use App\Models\UserConfirmation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -123,12 +124,19 @@ it('renders the user email with the candidate and the link', function () {
 });
 
 it('still lets the admin accept an application the user rejected', function () {
+    DB::table('thrm_position')->insert([
+        'POSITION_ID' => 42036,
+        'POSITION_NAME_EN' => 'RECRUITMENT STAFF',
+    ]);
+
     $this->application->update(['stages_id' => $this->confirmationStage->id, 'status' => 'progress']);
     UserConfirmation::factory()->for($this->application)->create(['decision' => 'rejected']);
 
     $this->actingAs($this->admin)
         ->patch(route('application.updateStatus', $this->application), [
             'status' => 'accepted',
+            'request_code' => 'RCR20261117235',
+            'position_id' => 42036,
             'start_date' => now()->addWeek()->toDateString(),
             'work_address' => 'KPW Jawa Barat',
         ])

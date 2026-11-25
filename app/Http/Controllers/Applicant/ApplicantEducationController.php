@@ -6,7 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Applicant\StoreApplicantEducationRequest;
 use App\Http\Requests\Applicant\UpdateApplicantEducationRequest;
 use App\Models\ApplicantEducation;
+use App\Models\ApplicantEducationOther;
 use App\Models\ApplicantTraining;
+use Database\Seeders\ThrmListFacultySeeder;
+use Database\Seeders\ThrmListMajorSeeder;
+use Database\Seeders\ThrmListSchoolSeeder;
 use Illuminate\Support\Facades\DB;
 
 class ApplicantEducationController extends Controller
@@ -42,8 +46,17 @@ class ApplicantEducationController extends Controller
             ->orderByRaw('COALESCE(EDUTYPE_LEVEL, 99) ASC')
             ->get();
 
+        $faculties = DB::table('thrm_list_faculty')
+            ->select('FACULTY_ID', 'FACULTY_CODE', 'FACULTY_NAME')
+            ->where('FACULTY_ID', '!=', ThrmListFacultySeeder::OTHER_FACULTY_ID)
+            ->whereNotNull('FACULTY_NAME')
+            ->where('FACULTY_NAME', '!=', '')
+            ->orderBy('FACULTY_NAME', 'ASC')
+            ->get();
+
         $majors = DB::table('thrm_list_major')
             ->select('MAJOR_ID', 'MAJOR_CODE', 'MAJOR_NAME')
+            ->where('MAJOR_ID', '!=', ThrmListMajorSeeder::OTHER_MAJOR_ID)
             ->whereNotNull('MAJOR_NAME')
             ->where('MAJOR_NAME', '!=', '')
             ->orderBy('MAJOR_NAME', 'ASC')
@@ -51,6 +64,7 @@ class ApplicantEducationController extends Controller
 
         $schools = DB::table('thrm_list_school')
             ->select('EDU_ID', 'EDU_CODE', 'EDU_NAME')
+            ->where('EDU_ID', '!=', ThrmListSchoolSeeder::OTHER_EDU_ID)
             ->whereNotNull('EDU_NAME')
             ->where('EDU_NAME', '!=', '')
             ->orderBy('EDU_NAME', 'ASC')
@@ -61,6 +75,7 @@ class ApplicantEducationController extends Controller
             'educations',
             'trainings',
             'educationTypes',
+            'faculties',
             'majors',
             'schools'
         ));
@@ -78,7 +93,34 @@ class ApplicantEducationController extends Controller
             ApplicantTraining::where('applicant_id', $applicant->id)->delete();
 
             foreach ($request->validated('educations') as $education) {
-                ApplicantEducation::create($education + ['applicant_id' => $applicant->id]);
+                $createdEducation = ApplicantEducation::create($education + ['applicant_id' => $applicant->id]);
+
+                if ((int) $createdEducation->school_id === ThrmListSchoolSeeder::OTHER_EDU_ID && filled($createdEducation->institution_name)) {
+                    ApplicantEducationOther::create([
+                        'applicant_education_id' => $createdEducation->id,
+                        'applicant_id' => $applicant->id,
+                        'category' => ApplicantEducationOther::CATEGORY_SCHOOL,
+                        'custom_name' => $createdEducation->institution_name,
+                    ]);
+                }
+
+                if ((int) $createdEducation->faculty_id === ThrmListFacultySeeder::OTHER_FACULTY_ID && filled($createdEducation->faculty)) {
+                    ApplicantEducationOther::create([
+                        'applicant_education_id' => $createdEducation->id,
+                        'applicant_id' => $applicant->id,
+                        'category' => ApplicantEducationOther::CATEGORY_FACULTY,
+                        'custom_name' => $createdEducation->faculty,
+                    ]);
+                }
+
+                if ((int) $createdEducation->major_id === ThrmListMajorSeeder::OTHER_MAJOR_ID && filled($createdEducation->major)) {
+                    ApplicantEducationOther::create([
+                        'applicant_education_id' => $createdEducation->id,
+                        'applicant_id' => $applicant->id,
+                        'category' => ApplicantEducationOther::CATEGORY_MAJOR,
+                        'custom_name' => $createdEducation->major,
+                    ]);
+                }
             }
 
             if ($request->has('trainings')) {

@@ -23,6 +23,13 @@ it('transforms personal data string inputs to uppercase on update', function () 
         'RELIGION_NAME_EN' => 'Islam',
     ]);
 
+    DB::table('thrm_family_connection')->insertOrIgnore([
+        'RELATIONSHIP_ID' => 1,
+        'RELATIONSHIP_CODE' => 'FATHER',
+        'FAMILY_RELATIONSHIP_ID' => 'Ayah',
+        'FAMILY_RELATIONSHIP_EN' => 'Father',
+    ]);
+
     $division = Division::firstOrCreate(['name' => 'Information Technology']);
 
     $payload = [
@@ -32,7 +39,7 @@ it('transforms personal data string inputs to uppercase on update', function () 
         'address_ktp' => 'jl. raya bogor km 28',
         'address_domisili' => 'jl. mangga besar no 10',
         'emergency_contact_name' => 'siti aminah',
-        'emergency_contact_relationship' => 'Orang Tua',
+        'emergency_contact_relationship' => '1',
         'emergency_contact_phone' => '081234567890',
         'gender' => 'l',
         'date_of_birth' => '1998-05-10',

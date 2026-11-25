@@ -57,7 +57,7 @@ return new class extends Migration
 
         Schema::create('thrm_list_major', function (Blueprint $table) {
             $table->id('id');
-            $table->integer('MAJOR_ID')->nullable()->index();
+            $table->integer('MAJOR_ID')->nullable()->unique();
             $table->string('MAJOR_CODE', 50)->nullable()->index();
             $table->string('MAJOR_NAME', 255)->nullable();
             $table->string('MAJOR_NAME_EN', 150)->nullable();
