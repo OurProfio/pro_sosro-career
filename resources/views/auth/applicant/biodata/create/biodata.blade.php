@@ -471,7 +471,7 @@
                             </label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-xs font-bold text-gray-400">@</span>
-                                <input id="instagram" name="instagram" type="text"
+                                <input id="instagram" name="instagram" type="text" maxlength="100"
                                     value="{{ old('instagram', auth()->user()->applicant->instagram ?? '') }}"
                                     placeholder="username_anda"
                                     class="w-full pl-9 pr-4 py-2.5 bg-white rounded-xl border @error('instagram') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -486,7 +486,7 @@
                             <label for="linkedin" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                 Nama di LinkedIn
                             </label>
-                            <input id="linkedin" name="linkedin" type="text"
+                            <input id="linkedin" name="linkedin" type="text" maxlength="100"
                                 value="{{ old('linkedin', auth()->user()->applicant->linkedin ?? '') }}"
                                 placeholder="Contoh: Budi Santoso"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('linkedin') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -516,7 +516,7 @@
                                     <label for="emergency_contact_name" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                         Nama Kontak Darurat <span class="text-[#B11116]">*</span>
                                     </label>
-                                    <input id="emergency_contact_name" name="emergency_contact_name" type="text" required
+                                    <input id="emergency_contact_name" name="emergency_contact_name" type="text" required maxlength="255"
                                         value="{{ old('emergency_contact_name', auth()->user()->applicant->emergency_contact_name ?? '') }}"
                                         placeholder="Nama Lengkap Kerabat"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">

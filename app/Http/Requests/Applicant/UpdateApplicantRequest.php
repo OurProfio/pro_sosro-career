@@ -67,18 +67,12 @@ class UpdateApplicantRequest extends FormRequest
         }
 
         if ($this->has('instagram')) {
-            $ig = trim((string) $this->input('instagram'));
-            $ig = preg_replace('#^https?://(www\.)?instagram\.com/#i', '', $ig);
-            $ig = ltrim($ig, '@/');
-            $ig = rtrim($ig, '/');
+            $ig = $this->normalizeSocialInput((string) $this->input('instagram'), '#^https?://(www\.)?instagram\.com/#i');
             $merge['instagram'] = $ig !== '' ? $ig : null;
         }
 
         if ($this->has('linkedin')) {
-            $li = trim((string) $this->input('linkedin'));
-            $li = preg_replace('#^https?://(www\.)?linkedin\.com/in/#i', '', $li);
-            $li = ltrim($li, '@/');
-            $li = rtrim($li, '/');
+            $li = $this->normalizeSocialInput((string) $this->input('linkedin'), '#^https?://(www\.)?linkedin\.com/in/#i');
             $merge['linkedin'] = $li !== '' ? $li : null;
         }
 
@@ -245,6 +239,7 @@ class UpdateApplicantRequest extends FormRequest
             'has_tattoo.in' => 'Pilihan status bertato tidak valid.',
             'marital_status.required' => 'Status pernikahan wajib diisi.',
             'marital_status.in' => 'Pilihan status pernikahan tidak valid.',
+            'marital_date.integer' => 'Tahun pernikahan harus berupa tahun yang valid (contoh: 2020).',
             'marital_date.digits' => 'Tahun pernikahan harus terdiri dari 4 digit angka.',
             'marital_date.min' => 'Tahun pernikahan tidak valid (minimal tahun 1950).',
             'marital_date.max' => 'Tahun pernikahan tidak boleh melebihi tahun saat ini.',
@@ -263,11 +258,30 @@ class UpdateApplicantRequest extends FormRequest
             'photo.image' => 'Berkas yang diunggah harus berupa gambar.',
             'photo.mimes' => 'Format pas foto harus berupa JPEG, PNG, atau JPG.',
             'photo.max' => 'Ukuran pas foto tidak boleh melebihi 2MB.',
+            'instagram.string' => 'Akun Instagram harus berupa teks.',
+            'instagram.max' => 'Akun Instagram maksimal 100 karakter (cukup tulis username tanpa link).',
+            'linkedin.string' => 'Akun LinkedIn harus berupa teks.',
+            'linkedin.max' => 'Akun LinkedIn maksimal 100 karakter (cukup tulis nama akun tanpa link).',
             'emergency_contact_name.required' => 'Nama kontak darurat wajib diisi.',
+            'emergency_contact_name.string' => 'Nama kontak darurat harus berupa teks.',
+            'emergency_contact_name.max' => 'Nama kontak darurat maksimal 255 karakter.',
             'emergency_contact_relationship.required' => 'Hubungan kontak darurat wajib dipilih.',
             'emergency_contact_relationship.exists' => 'Hubungan kontak darurat yang dipilih tidak valid.',
             'emergency_contact_phone.required' => 'Nomor telepon kontak darurat wajib diisi.',
             'emergency_contact_phone.between' => 'Nomor telepon kontak darurat harus antara 10 sampai 15 digit.',
         ];
+    }
+
+    /**
+     * Bersihkan input sosial media: buang prefix URL, parameter query, dan karakter @ atau /.
+     */
+    protected function normalizeSocialInput(string $value, string $urlPattern): string
+    {
+        $value = trim($value);
+        $value = preg_replace($urlPattern, '', $value) ?? $value;
+        $value = preg_split('/[?#]/', $value)[0];
+        $value = ltrim($value, '@/');
+
+        return rtrim($value, '/');
     }
 }

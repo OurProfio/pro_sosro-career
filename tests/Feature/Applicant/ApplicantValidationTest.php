@@ -107,6 +107,22 @@ it('returns human-readable Indonesian error messages in step 1 personal data val
     ]);
 });
 
+it('returns Indonesian error message when marital year is not an integer', function (string $routeMethod, string $routeName) {
+    $userNew = User::factory()->create(['role' => 'user']);
+    $route = $routeName === 'biodata.update'
+        ? route($routeName, Applicant::factory()->create(['user_id' => $userNew->id]))
+        : route($routeName);
+
+    $response = $this->actingAs($userNew)->{$routeMethod}($route, ['marital_date' => '19.5']);
+
+    $response->assertSessionHasErrors([
+        'marital_date' => 'Tahun pernikahan harus berupa tahun yang valid (contoh: 2020).',
+    ]);
+})->with([
+    'create' => ['post', 'biodata.store'],
+    'edit' => ['put', 'biodata.update'],
+]);
+
 it('returns human-readable Indonesian error messages in step 3 education validation', function () {
     $response = $this->actingAs($this->user)
         ->from(route('biodata.education.create'))

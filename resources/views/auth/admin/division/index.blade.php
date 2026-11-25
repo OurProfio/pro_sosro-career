@@ -252,7 +252,6 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    @click.outside="openCreateModal = false"
                     class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -325,7 +324,6 @@
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    @click.outside="openEditModal = false"
                     class="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[92vh] overflow-hidden">
 
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
@@ -402,7 +400,6 @@
                     x-transition:leave="ease-in duration-150"
                     x-transition:leave-start="opacity-100 scale-100"
                     x-transition:leave-end="opacity-0 scale-95"
-                    @click.outside="openDeleteModal = false"
                     class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-200 overflow-hidden">
 
                     <div class="p-6 text-center">
