@@ -31,15 +31,26 @@ class ApplicantController extends Controller
             })
             // Hanya pelamar yang sudah pernah melamar minimal 1 lowongan
             ->whereHas('applications', function ($appQuery) use ($isSuperAdmin, $officeId) {
-                $appQuery->when(! $isSuperAdmin && $officeId, function ($query) use ($officeId) {
-                    $query->whereHas('job', fn ($jobQuery) => $jobQuery->where('office_id', $officeId));
+                $appQuery->when(! $isSuperAdmin, function ($query) use ($officeId) {
+                    if ($officeId) {
+                        $query->whereHas('job', fn ($jobQuery) => $jobQuery->where('office_id', $officeId));
+                    } else {
+                        $query->whereRaw('1 = 0');
+                    }
                 });
             })
             ->with([
                 'educations',
                 'workExperiences',
-                'applications.stage',
-                'applications.job',
+                'applications' => function ($appQuery) use ($isSuperAdmin, $officeId) {
+                    $appQuery->when(! $isSuperAdmin, function ($query) use ($officeId) {
+                        if ($officeId) {
+                            $query->whereHas('job', fn ($jobQuery) => $jobQuery->where('office_id', $officeId));
+                        } else {
+                            $query->whereRaw('1 = 0');
+                        }
+                    })->with(['stage', 'job']);
+                },
                 'interest',
             ])
             ->latest()
@@ -78,7 +89,9 @@ class ApplicantController extends Controller
         // Hanya pelamar yang sudah pernah melamar lowongan
         abort_if($applicant->applications()->doesntExist(), 404);
 
-        if (! $isSuperAdmin && $officeId) {
+        if (! $isSuperAdmin) {
+            abort_if(! $officeId, 403);
+
             $hasBranchApplication = $applicant->applications()
                 ->whereHas('job', fn ($q) => $q->where('office_id', $officeId))
                 ->exists();
@@ -93,8 +106,11 @@ class ApplicantController extends Controller
             'trainings',
             'expectation',
             'interest',
-            'applications.job',
-            'applications.stage',
+            'applications' => function ($appQuery) use ($isSuperAdmin, $officeId) {
+                $appQuery->when(! $isSuperAdmin && $officeId, function ($query) use ($officeId) {
+                    $query->whereHas('job', fn ($jobQuery) => $jobQuery->where('office_id', $officeId));
+                })->with(['job', 'stage']);
+            },
         ]);
 
         $interestIds = collect($applicant->interest?->interests ?? [])
@@ -124,7 +140,9 @@ class ApplicantController extends Controller
 
         abort_if($applicant->applications()->doesntExist(), 404);
 
-        if (! $isSuperAdmin && $officeId) {
+        if (! $isSuperAdmin) {
+            abort_if(! $officeId, 403);
+
             $hasBranchApplication = $applicant->applications()
                 ->whereHas('job', fn ($q) => $q->where('office_id', $officeId))
                 ->exists();

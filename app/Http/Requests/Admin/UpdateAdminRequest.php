@@ -40,7 +40,7 @@ class UpdateAdminRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($userId),
             ],
             'password' => ['nullable', 'string', 'min:8'],
-            'office_id' => ['required', 'exists:offices,id'],
+            'office_id' => ['required', Rule::exists('offices', 'id')->whereIn('type', ['HO', 'KPW'])],
             'role' => ['required', 'in:admin,superadmin'],
             'is_active' => ['nullable', 'boolean'],
         ];

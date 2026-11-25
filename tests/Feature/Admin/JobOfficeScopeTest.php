@@ -71,4 +71,20 @@ it('prevents regular admin from accessing jobs of another office', function () {
     $this->actingAs($this->adminBranchAUser)
         ->delete(route('job.destroy', $this->jobOfficeB))
         ->assertForbidden();
+
+    $this->actingAs($this->adminBranchAUser)
+        ->get(route('job.edit', $this->jobOfficeB))
+        ->assertForbidden();
+});
+
+it('prevents regular admin from seeing another office job on applicant detail or managing jobs without office', function () {
+    $unassignedAdmin = new Admin([
+        'role' => 'admin',
+        'office_id' => null,
+    ]);
+
+    expect($this->jobOfficeA->isManageableBy($unassignedAdmin))->toBeFalse()
+        ->and($this->jobOfficeA->isManageableBy(null))->toBeFalse()
+        ->and($this->jobOfficeA->isManageableBy($this->adminBranchBProfile))->toBeFalse()
+        ->and($this->jobOfficeA->isManageableBy($this->adminBranchAProfile))->toBeTrue();
 });

@@ -28,7 +28,11 @@ class JobController extends Controller
         $jobsQuery = Job::with('office')->withCount('applications')->latest();
 
         if (! $isSuperAdmin) {
-            $jobsQuery->where('office_id', $admin?->office_id);
+            if ($admin?->office_id) {
+                $jobsQuery->where('office_id', $admin->office_id);
+            } else {
+                $jobsQuery->whereRaw('1 = 0');
+            }
         }
 
         $jobs = $jobsQuery->get();
@@ -67,7 +71,9 @@ class JobController extends Controller
 
         $data = $request->validated();
         if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+            $admin->loadMissing('office');
             $data['office_id'] = $admin->office_id;
+            $data['location'] = $admin->office?->defaultLocation() ?? $data['location'];
         }
 
         Job::create($data + [
@@ -91,9 +97,7 @@ class JobController extends Controller
         $admin = auth()->user()->admin;
         $isSuperAdmin = $admin?->role === 'superadmin';
 
-        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
-            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
-        }
+        abort_unless($job->isManageableBy($admin), 403, 'Akses tidak diizinkan untuk kantor cabang lain.');
 
         if ($job->status === 'aktif' && $job->closing_date && Carbon::parse($job->closing_date)->isPast() && ! Carbon::parse($job->closing_date)->isToday()) {
             $job->update(['status' => 'nonaktif']);
@@ -140,6 +144,8 @@ class JobController extends Controller
      */
     public function edit(Job $job)
     {
+        abort_unless($job->isManageableBy(auth()->user()->admin), 403, 'Akses tidak diizinkan untuk kantor cabang lain.');
+
         return redirect()->route('job.show', $job->id);
     }
 
@@ -151,14 +157,14 @@ class JobController extends Controller
         $admin = auth()->user()->admin;
         $isSuperAdmin = $admin?->role === 'superadmin';
 
-        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
-            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
-        }
+        abort_unless($job->isManageableBy($admin), 403, 'Akses tidak diizinkan untuk kantor cabang lain.');
 
         $data = $request->validated();
 
         if ($admin && ! $isSuperAdmin && $admin->office_id) {
+            $admin->loadMissing('office');
             $data['office_id'] = $admin->office_id;
+            $data['location'] = $admin->office?->defaultLocation() ?? $data['location'];
         }
 
         if (! isset($data['status'])) {
@@ -195,9 +201,7 @@ class JobController extends Controller
         $admin = auth()->user()->admin;
         $isSuperAdmin = $admin?->role === 'superadmin';
 
-        if (! $isSuperAdmin && $admin?->office_id && $job->office_id !== $admin->office_id) {
-            abort(403, 'Akses tidak diizinkan untuk kantor cabang lain.');
-        }
+        abort_unless($job->isManageableBy($admin), 403, 'Akses tidak diizinkan untuk kantor cabang lain.');
 
         if (in_array($job->status, ['aktif', 'pending'])) {
             $job->update([

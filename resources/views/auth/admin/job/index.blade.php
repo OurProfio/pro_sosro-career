@@ -581,22 +581,34 @@
                                         class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                         Kota / Wilayah Penempatan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
-                                    <div class="relative">
-                                        <select name="location" id="modal_location"
-                                            class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
-                                            required>
-                                            <option value="" disabled {{ old('location') ? '' : 'selected' }}>--
-                                                Pilih Kota / Wilayah Penempatan --</option>
-                                            @if (isset($cities))
-                                                @foreach ($cities as $city)
-                                                    <option value="{{ $city }}"
-                                                        {{ old('location') == $city ? 'selected' : '' }}>
-                                                        {{ $city }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
+                                    @if (auth()->user()->admin?->role === 'superadmin')
+                                        <div class="relative">
+                                            <select name="location" id="modal_location"
+                                                class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                                required>
+                                                <option value="" disabled {{ old('location') ? '' : 'selected' }}>--
+                                                    Pilih Kota / Wilayah Penempatan --</option>
+                                                @if (isset($cities))
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city }}"
+                                                            {{ old('location') == $city ? 'selected' : '' }}>
+                                                            {{ $city }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    @else
+                                        @php
+                                            $adminDefaultLocation = auth()->user()->admin?->office?->defaultLocation() ?? '';
+                                        @endphp
+                                        <input type="hidden" name="location" value="{{ $adminDefaultLocation }}">
+                                        <div class="relative">
+                                            <input type="text" id="modal_location" value="{{ $adminDefaultLocation ?: 'Wilayah Kantor Anda' }}"
+                                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-100/80 text-slate-700 font-semibold cursor-not-allowed select-none"
+                                                readonly tabindex="-1">
+                                        </div>
+                                    @endif
                                     @error('location')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror

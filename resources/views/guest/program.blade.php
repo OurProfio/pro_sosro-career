@@ -142,7 +142,7 @@
                 'gallery' => [
                     ['image' => 'our_program.png', 'alt' => 'Briefing tim Pemagangan Sales'],
                     ['image' => 'hero-slide-team.jpg', 'alt' => 'Aksi lapangan bersama tim komersial'],
-                    ['image' => 'beranda.webp', 'alt' => 'Ragam portofolio produk unggulan Sinar Sosro'],
+                    ['image' => 'beranda.webp', 'alt' => 'Ragam portofolio produk unggulan Sinar Sosro Gunung Slamat'],
                     ['image' => 'outbound_sosro.png', 'alt' => 'Kekompakan tim area sales'],
                 ],
                 'testi_heading' => 'APA KATA PEMAGANGAN SALES KAMI?',

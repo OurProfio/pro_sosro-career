@@ -1,75 +1,12 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Pratinjau Biodata Pelamar')
 
 @section('content')
-    <style>
-        @media print {
-
-            nav,
-            .nav-buttons,
-            .sidebar,
-            .no-print,
-            button,
-            footer {
-                display: none !important;
-            }
-
-            body {
-                background: white !important;
-                padding: 0 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            .max-w-6xl {
-                max-width: 100% !important;
-                width: 100% !important;
-                margin: 0 !important;
-            }
-
-            .print-grid {
-                display: grid !important;
-                grid-template-columns: 280px 1fr !important;
-                gap: 1.5rem !important;
-            }
-
-            .shadow-sm,
-            .shadow-md,
-            .shadow-lg,
-            .rounded-2xl,
-            .rounded-xl {
-                box-shadow: none !important;
-                border-radius: 0 !important;
-            }
-
-            section,
-            .break-inside-avoid {
-                page-break-inside: avoid;
-            }
-
-            @page {
-                size: A4;
-                margin: 1.2cm;
-            }
-        }
-    </style>
-
-    {{-- Header Khusus Cetak --}}
-    <div class="hidden print:block mb-6 border-b-2 border-slate-900 pb-4">
-        <div class="flex justify-between items-end">
-            <div>
-                <h1 class="text-2xl font-bold uppercase tracking-wider text-slate-900">Biodata Calon Karyawan</h1>
-                <p class="text-xs text-slate-500 font-medium">Dokumen Resmi Sistem Rekrutmen Perusahaan</p>
-            </div>
-            <p class="text-[10px] text-slate-400 font-mono">Dicetak pada: {{ date('d/m/Y H:i') }}</p>
-        </div>
-    </div>
-
     <div class="max-w-6xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         {{-- Control Bar --}}
         <div
-            class="mb-6 flex flex-wrap justify-between items-center gap-4 no-print bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            class="mb-6 flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="flex items-center gap-3">
                 <a href="{{ route('applicant.dashboard') }}"
                     class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition" title="Kembali">
@@ -80,7 +17,7 @@
                 </a>
                 <div>
                     <h2 class="text-base font-bold text-slate-800">Pratinjau Biodata</h2>
-                    <p class="text-xs text-slate-500">Periksa kembali kelengkapan data sebelum mengunduh atau mencetak</p>
+                    <p class="text-xs text-slate-500">Periksa kembali kelengkapan data biodata Anda</p>
                 </div>
             </div>
 
@@ -93,20 +30,20 @@
                     </svg>
                     Edit Data
                 </a>
-                <a href="{{ route('biodata.print') }}" target="_blank"
-                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-md shadow-red-200 cursor-pointer">
+                <a href="{{ route('applicant.dashboard') }}"
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-md shadow-red-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
-                    Cetak / Simpan PDF
+                    Kembali ke Beranda
                 </a>
             </div>
         </div>
 
         {{-- Main Layout --}}
         <div
-            class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden print-grid grid grid-cols-1 lg:grid-cols-12">
+            class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 lg:grid-cols-12">
 
             {{-- COLUMN 1: Sidebar Informasi Pribadi & Kontak --}}
             <aside
@@ -380,7 +317,7 @@
                                             </span>
                                             <h3 class="font-bold text-slate-900">{{ $edu->institution_name }}</h3>
                                         </div>
-                                        <p class="text-slate-600 mt-1">{{ $edu->major }}</p>
+                                        <p class="text-slate-600 mt-1">{{ $edu->faculty ? $edu->faculty . ' — ' : '' }}{{ $edu->major }}</p>
                                     </div>
                                     <div class="text-right">
                                         <span class="text-slate-600 font-medium text-[11px]">

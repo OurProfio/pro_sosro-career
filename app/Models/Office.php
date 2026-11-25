@@ -40,9 +40,34 @@ class Office extends Model
         return $this->hasMany(Job::class, 'office_id');
     }
 
+    /**
+     * Resolve default city/location name for jobs created by this office's admin.
+     */
+    public function defaultLocation(): string
+    {
+        $cities = Job::CITIES;
+        usort($cities, fn (string $a, string $b): int => strlen($b) <=> strlen($a));
+
+        foreach ($cities as $city) {
+            if (stripos($this->name, $city) !== false) {
+                return $city;
+            }
+        }
+
+        return $this->name;
+    }
+
     public function assignedContactMessages(): HasMany
     {
         return $this->hasMany(ContactMessage::class, 'assigned_office_id');
+    }
+
+    /**
+     * Filter kantor utama yang dapat ditugaskan ke admin (HO dan KPW utama).
+     */
+    public function scopeMainOffices(Builder $query): Builder
+    {
+        return $query->whereIn('type', ['HO', 'KPW']);
     }
 
     /**

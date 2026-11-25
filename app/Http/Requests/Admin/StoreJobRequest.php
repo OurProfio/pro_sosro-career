@@ -25,8 +25,11 @@ class StoreJobRequest extends FormRequest
         $admin = $this->user()?->admin;
 
         if ($admin && $admin->role !== 'superadmin' && $admin->office_id) {
+            $admin->loadMissing('office');
+
             $this->merge([
                 'office_id' => $admin->office_id,
+                'location' => $admin->office?->defaultLocation() ?? $this->input('location'),
             ]);
         }
     }
@@ -38,6 +41,8 @@ class StoreJobRequest extends FormRequest
      */
     public function rules(): array
     {
+        $isSuperAdmin = $this->user()?->admin?->role === 'superadmin';
+
         return [
             'office_id' => [
                 'required',
@@ -48,7 +53,9 @@ class StoreJobRequest extends FormRequest
             'category' => ['required', 'in:profesional,management_trainee,internship,magang'],
             'occupation' => ['required', 'string', 'max:255'],
             'type' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', Rule::in(Job::CITIES)],
+            'location' => $isSuperAdmin
+                ? ['required', 'string', Rule::in(Job::CITIES)]
+                : ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'qualification' => ['required', 'string'],
             'closing_date' => ['required', 'date', 'after_or_equal:today'],

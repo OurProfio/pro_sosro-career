@@ -11,7 +11,7 @@
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
                 <li>
-                    <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
+                    <a href="{{ route('biodata.edit', auth()->user()->applicant->id) }}" title="Kembali ke Data Personal"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -20,7 +20,7 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Data Personal</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
@@ -35,28 +35,22 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & lanjut ke Data Pendidikan"
-                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
-                            <span>3</span>
-                        </span>
-                        <span class="hidden sm:inline group-hover:font-bold">Pendidikan</span>
-                    </button>
+                <li class="flex items-center transition-colors text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
+                        <span>3</span>
+                    </span>
+                    <span class="hidden sm:inline">Pendidikan</span>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('workExperience')" title="Simpan data saat ini & lanjut ke Data Pengalaman"
-                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
-                            <span>4</span>
-                        </span>
-                        <span class="hidden sm:inline group-hover:font-bold">Pengalaman</span>
-                    </button>
+                <li class="flex items-center transition-colors text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
+                        <span>4</span>
+                    </span>
+                    <span class="hidden sm:inline">Pengalaman</span>
                 </li>
             </ol>
         </div>
@@ -79,8 +73,9 @@
                         'gender' => $sib->gender,
                         'place_of_birth' => $sib->place_of_birth,
                         'date_of_birth' => $sib->date_of_birth ? \Carbon\Carbon::parse($sib->date_of_birth)->format('Y-m-d') : '',
-                        'education' => $sib->education,
+                        'education' => $sib->edutype_id ? (string) $sib->edutype_id : $sib->education,
                         'work' => $sib->work,
+                        'address' => $sib->address ?? '',
                         'phone_number' => $sib->phone_number,
                     ];
                 }
@@ -95,8 +90,9 @@
                         'gender' => $c->gender,
                         'place_of_birth' => $c->place_of_birth,
                         'date_of_birth' => $c->date_of_birth ? \Carbon\Carbon::parse($c->date_of_birth)->format('Y-m-d') : '',
-                        'education' => $c->education,
+                        'education' => $c->edutype_id ? (string) $c->edutype_id : $c->education,
                         'work' => $c->work,
+                        'address' => $c->address ?? '',
                         'phone_number' => $c->phone_number,
                     ];
                 }
@@ -119,7 +115,394 @@
                         </p>
                     </header>
 
-                    <section class="space-y-6">
+                    @php
+                        $isMarriedOrHasNuclear = in_array(auth()->user()->applicant->marital_status ?? 'single', [
+                            'married',
+                            'divorced',
+                            'widowed',
+                        ]);
+                    @endphp
+
+                    @if ($isMarriedOrHasNuclear)
+                        <section class="space-y-6">
+                            <div class="flex items-center gap-3 pb-2 border-b border-gray-100">
+                                <div class="p-2 bg-red-50 text-[#B11116] rounded-xl">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-base font-bold text-gray-900">Keluarga Inti (Pasangan & Anak)</h2>
+                                    <p class="text-xs text-gray-500">Terdeteksi status pernikahan Anda. Harap lengkapi data
+                                        pasangan dan anak (jika ada).</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-4">
+                                <h3
+                                    class="text-xs font-bold text-[#B11116] uppercase tracking-wider flex items-center gap-2">
+                                    <span>Data Suami / Istri</span>
+                                    <span class="text-[#B11116]">*</span>
+                                </h3>
+                                <input type="hidden" name="families[spouse][family_type]" value="nuclear">
+                                <input type="hidden" name="families[spouse][relationship]" value="spouse">
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama
+                                            Lengkap Pasangan <span class="text-[#B11116]">*</span></label>
+                                        <input type="text" name="families[spouse][name]" required
+                                            value="{{ old('families.spouse.name', $spouse?->name) }}"
+                                            placeholder="Nama Lengkap Suami / Istri"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error('families.spouse.name')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat
+                                            Lahir <span class="text-[#B11116]">*</span></label>
+                                        <input type="text" name="families[spouse][place_of_birth]" required
+                                            value="{{ old('families.spouse.place_of_birth', $spouse?->place_of_birth) }}"
+                                            placeholder="Kota Lahir Pasangan"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error('families.spouse.place_of_birth')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal
+                                            Lahir <span class="text-[#B11116]">*</span></label>
+                                        <input type="date" name="families[spouse][date_of_birth]" required
+                                            value="{{ old('families.spouse.date_of_birth', $spouse?->date_of_birth ? \Carbon\Carbon::parse($spouse->date_of_birth)->format('Y-m-d') : '') }}"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error('families.spouse.date_of_birth')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan
+                                            Terakhir <span class="text-[#B11116]">*</span></label>
+                                        @php
+                                            $spouseEdu = (string) old('families.spouse.education', $spouse?->edutype_id ? (string) $spouse->edutype_id : ($spouse?->education ?? ''));
+                                        @endphp
+                                        <select name="families[spouse][education]" required
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.education') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            <option value="" disabled {{ $spouseEdu !== '' ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                            @foreach ($educations as $edu)
+                                                @php
+                                                    $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                                @endphp
+                                                <option value="{{ $edu->EDUTYPE_ID }}" {{ $spouseEdu === (string) $edu->EDUTYPE_ID || strcasecmp($spouseEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('families.spouse.education')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label
+                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan
+                                            <span class="text-[#B11116]">*</span></label>
+                                        <input type="text" name="families[spouse][work]" required
+                                            value="{{ old('families.spouse.work', $spouse?->work) }}" placeholder="Pekerjaan Pasangan"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error('families.spouse.work')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No.
+                                            Telepon / WA <span class="text-[#B11116]">*</span></label>
+                                        <input type="tel" name="families[spouse][phone_number]" required
+                                            inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                            value="{{ old('families.spouse.phone_number', $spouse?->phone_number) }}"
+                                            placeholder="Contoh: 081234567890"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error('families.spouse.phone_number')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                        <textarea name="families[spouse][address]" rows="2"
+                                            placeholder="Alamat tempat tinggal pasangan saat ini"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.spouse.address', $spouse?->address) }}</textarea>
+                                        @error('families.spouse.address')
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-6">
+                                <div class="border-b border-gray-200/80 pb-3">
+                                    <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
+                                        <span>Data Orang Tua Mertua</span>
+                                        <span class="text-[11px] font-normal text-gray-400 capitalize">(Opsional)</span>
+                                    </h3>
+                                    <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
+                                </div>
+
+                                <div class="space-y-4">
+                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                        Ayah Mertua
+                                    </h4>
+                                    <input type="hidden" name="families[father_in_law][family_type]" value="nuclear">
+                                    <input type="hidden" name="families[father_in_law][relationship]" value="father_in_law">
+                                    <input type="hidden" name="families[father_in_law][gender]" value="l">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ayah Mertua</label>
+                                            <input type="text" name="families[father_in_law][name]"
+                                                value="{{ old('families.father_in_law.name', $fatherInLaw?->name) }}"
+                                                placeholder="Nama Lengkap Ayah Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
+                                            <input type="text" name="families[father_in_law][place_of_birth]"
+                                                value="{{ old('families.father_in_law.place_of_birth', $fatherInLaw?->place_of_birth) }}"
+                                                placeholder="Kota Lahir"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
+                                            <input type="date" name="families[father_in_law][date_of_birth]"
+                                                value="{{ old('families.father_in_law.date_of_birth', $fatherInLaw?->date_of_birth ? \Carbon\Carbon::parse($fatherInLaw->date_of_birth)->format('Y-m-d') : '') }}"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
+                                            @php
+                                                $filEdu = (string) old('families.father_in_law.education', $fatherInLaw?->edutype_id ? (string) $fatherInLaw->edutype_id : ($fatherInLaw?->education ?? ''));
+                                            @endphp
+                                            <select name="families[father_in_law][education]"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                <option value="" {{ $filEdu !== '' ? '' : 'selected' }}>Pilih Pendidikan (Opsional)</option>
+                                                @foreach ($educations as $edu)
+                                                    @php
+                                                        $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                                    @endphp
+                                                    <option value="{{ $edu->EDUTYPE_ID }}" {{ $filEdu === (string) $edu->EDUTYPE_ID || strcasecmp($filEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
+                                            <input type="text" name="families[father_in_law][work]"
+                                                value="{{ old('families.father_in_law.work', $fatherInLaw?->work) }}"
+                                                placeholder="Pekerjaan Ayah Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
+                                            <input type="tel" name="families[father_in_law][phone_number]"
+                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                value="{{ old('families.father_in_law.phone_number', $fatherInLaw?->phone_number) }}"
+                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                            <textarea name="families[father_in_law][address]" rows="2"
+                                                placeholder="Alamat tempat tinggal ayah mertua"
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.father_in_law.address', $fatherInLaw?->address) }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-gray-200/70 pt-4 space-y-4">
+                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                                        Ibu Mertua
+                                    </h4>
+                                    <input type="hidden" name="families[mother_in_law][family_type]" value="nuclear">
+                                    <input type="hidden" name="families[mother_in_law][relationship]" value="mother_in_law">
+                                    <input type="hidden" name="families[mother_in_law][gender]" value="p">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ibu Mertua</label>
+                                            <input type="text" name="families[mother_in_law][name]"
+                                                value="{{ old('families.mother_in_law.name', $motherInLaw?->name) }}"
+                                                placeholder="Nama Lengkap Ibu Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
+                                            <input type="text" name="families[mother_in_law][place_of_birth]"
+                                                value="{{ old('families.mother_in_law.place_of_birth', $motherInLaw?->place_of_birth) }}"
+                                                placeholder="Kota Lahir"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
+                                            <input type="date" name="families[mother_in_law][date_of_birth]"
+                                                value="{{ old('families.mother_in_law.date_of_birth', $motherInLaw?->date_of_birth ? \Carbon\Carbon::parse($motherInLaw->date_of_birth)->format('Y-m-d') : '') }}"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
+                                            @php
+                                                $milEdu = (string) old('families.mother_in_law.education', $motherInLaw?->edutype_id ? (string) $motherInLaw->edutype_id : ($motherInLaw?->education ?? ''));
+                                            @endphp
+                                            <select name="families[mother_in_law][education]"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                <option value="" {{ $milEdu !== '' ? '' : 'selected' }}>Pilih Pendidikan (Opsional)</option>
+                                                @foreach ($educations as $edu)
+                                                    @php
+                                                        $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                                    @endphp
+                                                    <option value="{{ $edu->EDUTYPE_ID }}" {{ $milEdu === (string) $edu->EDUTYPE_ID || strcasecmp($milEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1.5">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
+                                            <input type="text" name="families[mother_in_law][work]"
+                                                value="{{ old('families.mother_in_law.work', $motherInLaw?->work) }}"
+                                                placeholder="Pekerjaan Ibu Mertua"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
+                                            <input type="tel" name="families[mother_in_law][phone_number]"
+                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                                value="{{ old('families.mother_in_law.phone_number', $motherInLaw?->phone_number) }}"
+                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
+                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        </div>
+                                        <div class="space-y-1.5 md:col-span-2">
+                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                            <textarea name="families[mother_in_law][address]" rows="2"
+                                                placeholder="Alamat tempat tinggal ibu mertua"
+                                                class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.mother_in_law.address', $motherInLaw?->address) }}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4 pt-2">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider">Data Anak
+                                            (Maksimal 3)</h3>
+                                        <p class="text-xs text-gray-500">Tambahkan informasi anak kandung Anda jika ada.
+                                        </p>
+                                    </div>
+                                    <button type="button" id="btnAddChild" onclick="addChildRow()"
+                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-[#B11116] rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                                d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Tambah Anak
+                                    </button>
+                                </div>
+
+                                <div id="childrenContainer" class="space-y-4">
+                                    @if (!empty($oldChildren))
+                                        @foreach ($oldChildren as $cIndex => $child)
+                                            <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200 space-y-4 relative group" id="child_row_{{ $cIndex }}">
+                                                <div class="flex items-center justify-between pb-2 border-b border-gray-200">
+                                                    <span class="text-xs font-bold text-gray-700 uppercase tracking-wider">Anak Ke-{{ $loop->iteration }}</span>
+                                                    <button type="button" onclick="removeRow('child_row_{{ $cIndex }}', true)" class="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                        Hapus
+                                                    </button>
+                                                </div>
+                                                <input type="hidden" name="families[children][{{ $cIndex }}][family_type]" value="nuclear">
+                                                <input type="hidden" name="families[children][{{ $cIndex }}][relationship]" value="child">
+
+                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
+                                                        <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.name')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
+                                                        <select name="families[children][{{ $cIndex }}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                            <option value="" disabled {{ empty($child['gender']) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                                                            <option value="l" {{ ($child['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
+                                                            <option value="p" {{ ($child['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
+                                                        </select>
+                                                        @error('families.children.'.$cIndex.'.gender')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
+                                                        <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.place_of_birth')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
+                                                        <input type="date" name="families[children][{{ $cIndex }}][date_of_birth]" required value="{{ $child['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.date_of_birth')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan / Sekolah</label>
+                                                        @php
+                                                            $childEdu = (string) ($child['education'] ?? '');
+                                                        @endphp
+                                                        <select name="families[children][{{ $cIndex }}][education]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                            <option value="" disabled {{ $childEdu === '' ? 'selected' : '' }}>Pilih Jenjang Pendidikan</option>
+                                                            @foreach ($educations as $edu)
+                                                                @php
+                                                                    $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                                                @endphp
+                                                                <option value="{{ $edu->EDUTYPE_ID }}" {{ $childEdu === (string) $edu->EDUTYPE_ID || strcasecmp($childEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        @error('families.children.'.$cIndex.'.education')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
+                                                        <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.work')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5 md:col-span-2">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
+                                                        <input type="tel" name="families[children][{{ $cIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $child['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890 / 0 jika belum punya" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                                        @error('families.children.'.$cIndex.'.phone_number')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                    <div class="space-y-1.5 md:col-span-2">
+                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                                        <textarea name="families[children][{{ $cIndex }}][address]" rows="2" placeholder="Alamat tempat tinggal anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $child['address'] ?? '' }}</textarea>
+                                                        @error('families.children.'.$cIndex.'.address')
+                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </section>
+                    @endif
+
+                    <section class="space-y-6 {{ $isMarriedOrHasNuclear ? 'pt-6 border-t border-gray-200' : '' }}">
                         <div class="flex items-center gap-3 pb-2 border-b border-gray-100">
                             <div class="p-2 bg-red-50 text-[#B11116] rounded-xl">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -191,13 +574,16 @@
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan
                                         Terakhir <span class="text-[#B11116]">*</span></label>
                                     @php
-                                        $fatherEdu = old('families.father.education', $father?->education);
+                                        $fatherEdu = (string) old('families.father.education', $father?->edutype_id ? (string) $father->edutype_id : ($father?->education ?? ''));
                                     @endphp
                                     <select name="families[father][education]" required
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.education') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <option value="" disabled {{ $fatherEdu ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
-                                        @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                            <option value="{{ $val }}" {{ $fatherEdu == $val ? 'selected' : '' }}>{{ $lbl }}</option>
+                                        <option value="" disabled {{ $fatherEdu !== '' ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                        @foreach ($educations as $edu)
+                                            @php
+                                                $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                            @endphp
+                                            <option value="{{ $edu->EDUTYPE_ID }}" {{ $fatherEdu === (string) $edu->EDUTYPE_ID || strcasecmp($fatherEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
                                         @endforeach
                                     </select>
                                     @error('families.father.education')
@@ -224,6 +610,15 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.phone_number')
+                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                    <textarea name="families[father][address]" rows="2"
+                                        placeholder="Alamat tempat tinggal ayah kandung saat ini"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.father.address', $father?->address) }}</textarea>
+                                    @error('families.father.address')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -288,13 +683,16 @@
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan
                                         Terakhir <span class="text-[#B11116]">*</span></label>
                                     @php
-                                        $motherEdu = old('families.mother.education', $mother?->education);
+                                        $motherEdu = (string) old('families.mother.education', $mother?->edutype_id ? (string) $mother->edutype_id : ($mother?->education ?? ''));
                                     @endphp
                                     <select name="families[mother][education]" required
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.education') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <option value="" disabled {{ $motherEdu ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
-                                        @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                            <option value="{{ $val }}" {{ $motherEdu == $val ? 'selected' : '' }}>{{ $lbl }}</option>
+                                        <option value="" disabled {{ $motherEdu !== '' ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
+                                        @foreach ($educations as $edu)
+                                            @php
+                                                $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                            @endphp
+                                            <option value="{{ $edu->EDUTYPE_ID }}" {{ $motherEdu === (string) $edu->EDUTYPE_ID || strcasecmp($motherEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
                                         @endforeach
                                     </select>
                                     @error('families.mother.education')
@@ -321,6 +719,15 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.phone_number')
+                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                    <textarea name="families[mother][address]" rows="2"
+                                        placeholder="Alamat tempat tinggal ibu kandung saat ini"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.mother.address', $mother?->address) }}</textarea>
+                                    @error('families.mother.address')
                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -394,10 +801,16 @@
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
+                                                    @php
+                                                        $siblingEdu = (string) ($sibling['education'] ?? '');
+                                                    @endphp
                                                     <select name="families[siblings][{{ $sIndex }}][education]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        <option value="" disabled {{ empty($sibling['education']) ? 'selected' : '' }}>Pilih Pendidikan Terakhir</option>
-                                                        @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Belum Sekolah' => 'Belum Sekolah', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                                            <option value="{{ $val }}" {{ ($sibling['education'] ?? '') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
+                                                        <option value="" disabled {{ $siblingEdu === '' ? 'selected' : '' }}>Pilih Pendidikan Terakhir</option>
+                                                        @foreach ($educations as $edu)
+                                                            @php
+                                                                $eduLabel = $edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN;
+                                                            @endphp
+                                                            <option value="{{ $edu->EDUTYPE_ID }}" {{ $siblingEdu === (string) $edu->EDUTYPE_ID || strcasecmp($siblingEdu, (string) $eduLabel) === 0 ? 'selected' : '' }}>{{ $eduLabel }}</option>
                                                         @endforeach
                                                     </select>
                                                     @error('families.siblings.'.$sIndex.'.education')
@@ -418,6 +831,13 @@
                                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                                     @enderror
                                                 </div>
+                                                <div class="space-y-1.5 md:col-span-2">
+                                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                                                    <textarea name="families[siblings][{{ $sIndex }}][address]" rows="2" placeholder="Alamat tempat tinggal saudara kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $sibling['address'] ?? '' }}</textarea>
+                                                    @error('families.siblings.'.$sIndex.'.address')
+                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                    @enderror
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -425,350 +845,6 @@
                             </div>
                         </div>
                     </section>
-
-                    @php
-                        $isMarriedOrHasNuclear = in_array(auth()->user()->applicant->marital_status ?? 'single', [
-                            'married',
-                            'divorced',
-                            'widowed',
-                        ]);
-                    @endphp
-
-                    @if ($isMarriedOrHasNuclear)
-                        <section class="space-y-6 pt-6 border-t border-gray-200">
-                            <div class="flex items-center gap-3 pb-2 border-b border-gray-100">
-                                <div class="p-2 bg-red-50 text-[#B11116] rounded-xl">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h2 class="text-base font-bold text-gray-900">Keluarga Inti (Pasangan & Anak)</h2>
-                                    <p class="text-xs text-gray-500">Terdeteksi status pernikahan Anda. Harap lengkapi data
-                                        pasangan dan anak (jika ada).</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-4">
-                                <h3
-                                    class="text-xs font-bold text-[#B11116] uppercase tracking-wider flex items-center gap-2">
-                                    <span>Data Suami / Istri</span>
-                                    <span class="text-[#B11116]">*</span>
-                                </h3>
-                                <input type="hidden" name="families[spouse][family_type]" value="nuclear">
-                                <input type="hidden" name="families[spouse][relationship]" value="spouse">
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="space-y-1.5 md:col-span-2">
-                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama
-                                            Lengkap Pasangan <span class="text-[#B11116]">*</span></label>
-                                        <input type="text" name="families[spouse][name]" required
-                                            value="{{ old('families.spouse.name', $spouse?->name) }}"
-                                            placeholder="Nama Lengkap Suami / Istri"
-                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error('families.spouse.name')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label
-                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat
-                                            Lahir <span class="text-[#B11116]">*</span></label>
-                                        <input type="text" name="families[spouse][place_of_birth]" required
-                                            value="{{ old('families.spouse.place_of_birth', $spouse?->place_of_birth) }}"
-                                            placeholder="Kota Lahir Pasangan"
-                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error('families.spouse.place_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label
-                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal
-                                            Lahir <span class="text-[#B11116]">*</span></label>
-                                        <input type="date" name="families[spouse][date_of_birth]" required
-                                            value="{{ old('families.spouse.date_of_birth', $spouse?->date_of_birth ? \Carbon\Carbon::parse($spouse->date_of_birth)->format('Y-m-d') : '') }}"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error('families.spouse.date_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label
-                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan
-                                            Terakhir <span class="text-[#B11116]">*</span></label>
-                                        @php
-                                            $spouseEdu = old('families.spouse.education', $spouse?->education);
-                                        @endphp
-                                        <select name="families[spouse][education]" required
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.education') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                            <option value="" disabled {{ $spouseEdu ? '' : 'selected' }}>Pilih Pendidikan Terakhir</option>
-                                            @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                                <option value="{{ $val }}" {{ $spouseEdu == $val ? 'selected' : '' }}>{{ $lbl }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('families.spouse.education')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label
-                                            class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan
-                                            <span class="text-[#B11116]">*</span></label>
-                                        <input type="text" name="families[spouse][work]" required
-                                            value="{{ old('families.spouse.work', $spouse?->work) }}" placeholder="Pekerjaan Pasangan"
-                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error('families.spouse.work')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    <div class="space-y-1.5 md:col-span-2">
-                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No.
-                                            Telepon / WA <span class="text-[#B11116]">*</span></label>
-                                        <input type="tel" name="families[spouse][phone_number]" required
-                                            inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                            value="{{ old('families.spouse.phone_number', $spouse?->phone_number) }}"
-                                            placeholder="Contoh: 081234567890"
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error('families.spouse.phone_number')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50/70 rounded-2xl p-5 border border-gray-200 space-y-6">
-                                <div class="border-b border-gray-200/80 pb-3">
-                                    <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                                        <span>Data Orang Tua Mertua</span>
-                                        <span class="text-[11px] font-normal text-gray-400 capitalize">(Opsional)</span>
-                                    </h3>
-                                    <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
-                                </div>
-
-                                <div class="space-y-4">
-                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                                        Ayah Mertua
-                                    </h4>
-                                    <input type="hidden" name="families[father_in_law][family_type]" value="nuclear">
-                                    <input type="hidden" name="families[father_in_law][relationship]" value="father_in_law">
-                                    <input type="hidden" name="families[father_in_law][gender]" value="l">
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="space-y-1.5 md:col-span-2">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ayah Mertua</label>
-                                            <input type="text" name="families[father_in_law][name]"
-                                                value="{{ old('families.father_in_law.name', $fatherInLaw?->name) }}"
-                                                placeholder="Nama Lengkap Ayah Mertua"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                                            <input type="text" name="families[father_in_law][place_of_birth]"
-                                                value="{{ old('families.father_in_law.place_of_birth', $fatherInLaw?->place_of_birth) }}"
-                                                placeholder="Kota Lahir"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
-                                            <input type="date" name="families[father_in_law][date_of_birth]"
-                                                value="{{ old('families.father_in_law.date_of_birth', $fatherInLaw?->date_of_birth ? \Carbon\Carbon::parse($fatherInLaw->date_of_birth)->format('Y-m-d') : '') }}"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
-                                            @php
-                                                $filEdu = old('families.father_in_law.education', $fatherInLaw?->education);
-                                            @endphp
-                                            <select name="families[father_in_law][education]"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                <option value="" {{ $filEdu ? '' : 'selected' }}>Pilih Pendidikan (Opsional)</option>
-                                                @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                                    <option value="{{ $val }}" {{ $filEdu == $val ? 'selected' : '' }}>{{ $lbl }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                                            <input type="text" name="families[father_in_law][work]"
-                                                value="{{ old('families.father_in_law.work', $fatherInLaw?->work) }}"
-                                                placeholder="Pekerjaan Ayah Mertua"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5 md:col-span-2">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
-                                            <input type="tel" name="families[father_in_law][phone_number]"
-                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                                value="{{ old('families.father_in_law.phone_number', $fatherInLaw?->phone_number) }}"
-                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="border-t border-gray-200/70 pt-4 space-y-4">
-                                    <h4 class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-2">
-                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
-                                        Ibu Mertua
-                                    </h4>
-                                    <input type="hidden" name="families[mother_in_law][family_type]" value="nuclear">
-                                    <input type="hidden" name="families[mother_in_law][relationship]" value="mother_in_law">
-                                    <input type="hidden" name="families[mother_in_law][gender]" value="p">
-
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div class="space-y-1.5 md:col-span-2">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Ibu Mertua</label>
-                                            <input type="text" name="families[mother_in_law][name]"
-                                                value="{{ old('families.mother_in_law.name', $motherInLaw?->name) }}"
-                                                placeholder="Nama Lengkap Ibu Mertua"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                                            <input type="text" name="families[mother_in_law][place_of_birth]"
-                                                value="{{ old('families.mother_in_law.place_of_birth', $motherInLaw?->place_of_birth) }}"
-                                                placeholder="Kota Lahir"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
-                                            <input type="date" name="families[mother_in_law][date_of_birth]"
-                                                value="{{ old('families.mother_in_law.date_of_birth', $motherInLaw?->date_of_birth ? \Carbon\Carbon::parse($motherInLaw->date_of_birth)->format('Y-m-d') : '') }}"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
-                                            @php
-                                                $milEdu = old('families.mother_in_law.education', $motherInLaw?->education);
-                                            @endphp
-                                            <select name="families[mother_in_law][education]"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                <option value="" {{ $milEdu ? '' : 'selected' }}>Pilih Pendidikan (Opsional)</option>
-                                                @foreach (['SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2', 'S3' => 'S3', 'Tidak Sekolah' => 'Tidak Sekolah'] as $val => $lbl)
-                                                    <option value="{{ $val }}" {{ $milEdu == $val ? 'selected' : '' }}>{{ $lbl }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="space-y-1.5">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                                            <input type="text" name="families[mother_in_law][work]"
-                                                value="{{ old('families.mother_in_law.work', $motherInLaw?->work) }}"
-                                                placeholder="Pekerjaan Ibu Mertua"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                        <div class="space-y-1.5 md:col-span-2">
-                                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
-                                            <input type="tel" name="families[mother_in_law][phone_number]"
-                                                inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                                                value="{{ old('families.mother_in_law.phone_number', $motherInLaw?->phone_number) }}"
-                                                placeholder="Contoh: 081234567890 (atau isi 0 jika tidak ada)"
-                                                class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="space-y-4 pt-2">
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider">Data Anak
-                                            (Maksimal 3)</h3>
-                                        <p class="text-xs text-gray-500">Tambahkan informasi anak kandung Anda jika ada.
-                                        </p>
-                                    </div>
-                                    <button type="button" id="btnAddChild" onclick="addChildRow()"
-                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-[#B11116] rounded-xl text-xs font-bold transition-all active:scale-95 cursor-pointer">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                                d="M12 4v16m8-8H4" />
-                                        </svg>
-                                        Tambah Anak
-                                    </button>
-                                </div>
-
-                                <div id="childrenContainer" class="space-y-4">
-                                    @if (!empty($oldChildren))
-                                        @foreach ($oldChildren as $cIndex => $child)
-                                            <div class="bg-gray-50 rounded-2xl p-5 border border-gray-200 space-y-4 relative group" id="child_row_{{ $cIndex }}">
-                                                <div class="flex items-center justify-between pb-2 border-b border-gray-200">
-                                                    <span class="text-xs font-bold text-gray-700 uppercase tracking-wider">Anak Ke-{{ $loop->iteration }}</span>
-                                                    <button type="button" onclick="removeRow('child_row_{{ $cIndex }}', true)" class="text-red-500 hover:text-red-700 text-xs font-bold flex items-center gap-1 cursor-pointer">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                        Hapus
-                                                    </button>
-                                                </div>
-                                                <input type="hidden" name="families[children][{{ $cIndex }}][family_type]" value="nuclear">
-                                                <input type="hidden" name="families[children][{{ $cIndex }}][relationship]" value="child">
-
-                                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        @error('families.children.'.$cIndex.'.name')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Kelamin <span class="text-[#B11116]">*</span></label>
-                                                        <select name="families[children][{{ $cIndex }}][gender]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                            <option value="" disabled {{ empty($child['gender']) ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
-                                                            <option value="l" {{ ($child['gender'] ?? '') === 'l' ? 'selected' : '' }}>Laki-Laki (L)</option>
-                                                            <option value="p" {{ ($child['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
-                                                        </select>
-                                                        @error('families.children.'.$cIndex.'.gender')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        @error('families.children.'.$cIndex.'.place_of_birth')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
-                                                        <input type="date" name="families[children][{{ $cIndex }}][date_of_birth]" required value="{{ $child['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        @error('families.children.'.$cIndex.'.date_of_birth')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan / Sekolah</label>
-                                                        <select name="families[children][{{ $cIndex }}][education]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                            <option value="" disabled {{ empty($child['education']) ? 'selected' : '' }}>Pilih Jenjang Pendidikan</option>
-                                                            @foreach (['Belum Sekolah' => 'Belum Sekolah', 'PAUD/TK' => 'PAUD / TK', 'SD' => 'SD / Sederajat', 'SMP' => 'SMP / Sederajat', 'SMA/SMK' => 'SMA / SMK / Sederajat', 'D1/D2/D3' => 'D1 / D2 / D3', 'S1/D4' => 'S1 / D4', 'S2' => 'S2'] as $val => $lbl)
-                                                                <option value="{{ $val }}" {{ ($child['education'] ?? '') == $val ? 'selected' : '' }}>{{ $lbl }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                        @error('families.children.'.$cIndex.'.education')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
-                                                        <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        @error('families.children.'.$cIndex.'.work')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="space-y-1.5 md:col-span-2">
-                                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
-                                                        <input type="tel" name="families[children][{{ $cIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $child['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890 / 0 jika belum punya" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                                        @error('families.children.'.$cIndex.'.phone_number')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
-                                                        @enderror
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </section>
-                    @endif
 
                     <div class="pt-8 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4 mt-8">
                         <div class="flex items-center gap-3 w-full sm:w-auto">
@@ -809,6 +885,7 @@
         let siblingIndex = {{ !empty($oldSiblings) ? max(array_keys($oldSiblings)) : 0 }};
         let childIndex = {{ !empty($oldChildren) ? max(array_keys($oldChildren)) : 0 }};
         const maxChildren = 3;
+        const familyEducationOptionsHtml = @json($educations->map(fn ($edu) => '<option value="'.$edu->EDUTYPE_ID.'">'.e($edu->EDUTYPE_NAME_ID ?: $edu->EDUTYPE_NAME_EN).'</option>')->implode(''));
 
         function goToStep(step) {
             const redirectInput = document.getElementById('redirect_step');
@@ -866,15 +943,7 @@
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
                             <select name="families[siblings][${siblingIndex}][education]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 <option value="" disabled selected>Pilih Pendidikan Terakhir</option>
-                                <option value="SD">SD / Sederajat</option>
-                                <option value="SMP">SMP / Sederajat</option>
-                                <option value="SMA/SMK">SMA / SMK / Sederajat</option>
-                                <option value="D1/D2/D3">D1 / D2 / D3</option>
-                                <option value="S1/D4">S1 / D4</option>
-                                <option value="S2">S2</option>
-                                <option value="S3">S3</option>
-                                <option value="Belum Sekolah">Belum Sekolah</option>
-                                <option value="Tidak Sekolah">Tidak Sekolah</option>
+                                ${familyEducationOptionsHtml}
                             </select>
                         </div>
                         <div class="space-y-1.5">
@@ -884,6 +953,10 @@
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
                             <input type="tel" name="families[siblings][${siblingIndex}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                            <textarea name="families[siblings][${siblingIndex}][address]" rows="2" placeholder="Alamat tempat tinggal saudara kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"></textarea>
                         </div>
                     </div>
                 </div>
@@ -939,14 +1012,7 @@
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan / Sekolah</label>
                             <select name="families[children][${childIndex}][education]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 <option value="" disabled selected>Pilih Jenjang Pendidikan</option>
-                                <option value="Belum Sekolah">Belum Sekolah</option>
-                                <option value="PAUD/TK">PAUD / TK</option>
-                                <option value="SD">SD / Sederajat</option>
-                                <option value="SMP">SMP / Sederajat</option>
-                                <option value="SMA/SMK">SMA / SMK / Sederajat</option>
-                                <option value="D1/D2/D3">D1 / D2 / D3</option>
-                                <option value="S1/D4">S1 / D4</option>
-                                <option value="S2">S2</option>
+                                ${familyEducationOptionsHtml}
                             </select>
                         </div>
                         <div class="space-y-1.5">
@@ -956,6 +1022,10 @@
                         <div class="space-y-1.5 md:col-span-2">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
                             <input type="tel" name="families[children][${childIndex}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Contoh: 081234567890 / 0 jika belum punya" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        </div>
+                        <div class="space-y-1.5 md:col-span-2">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
+                            <textarea name="families[children][${childIndex}][address]" rows="2" placeholder="Alamat tempat tinggal anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"></textarea>
                         </div>
                     </div>
                 </div>

@@ -11,7 +11,7 @@
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
                 <li>
-                    <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
+                    <a href="{{ route('biodata.edit', auth()->user()->applicant->id) }}" title="Kembali ke Data Personal"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -20,13 +20,13 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Data Personal</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
                 <li>
-                    <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & kembali ke Data Keluarga"
+                    <a href="{{ route('biodata.family.create') }}" title="Kembali ke Data Keluarga"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -35,7 +35,7 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Keluarga</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
@@ -50,16 +50,12 @@
 
                 <li class="flex-1 border-t-2 border-gray-200 mx-2 sm:mx-4"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('workExperience')"
-                        title="Simpan data saat ini & lanjut ke Pengalaman Kerja"
-                        class="flex items-center text-gray-400 hover:text-gray-600 transition-colors cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-200 bg-white font-bold mr-2 text-xs group-hover:border-gray-400">
-                            4
-                        </span>
-                        <span class="hidden sm:inline font-semibold">Pengalaman</span>
-                    </button>
+                <li class="flex items-center text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 border-gray-200 bg-white font-bold mr-2 text-xs">
+                        4
+                    </span>
+                    <span class="hidden sm:inline font-semibold">Pengalaman</span>
                 </li>
             </ol>
         </div>
@@ -102,9 +98,14 @@
                                 if (isset($educations) && $educations->isNotEmpty()) {
                                     $oldEducations = $educations->map(function ($edu) {
                                         return [
+                                            'edutype_id' => $edu->edutype_id ?? '',
+                                            'school_id' => $edu->school_id ?? '',
+                                            'faculty_id' => $edu->faculty_id ?? '',
+                                            'major_id' => $edu->major_id ?? '',
                                             'degree_level' => $edu->degree_level,
                                             'institution_name' => $edu->institution_name,
-                                            'city' => $edu->city ?? '',
+                                            'faculty' => $edu->faculty ?? '',
+                                            'state' => $edu->state ?? '',
                                             'major' => $edu->major,
                                             'gpa' => $edu->gpa,
                                             'entry_year' => $edu->entry_year,
@@ -114,9 +115,14 @@
                                 } else {
                                     $oldEducations = [
                                         [
+                                            'edutype_id' => '',
+                                            'school_id' => '',
+                                            'faculty_id' => '',
+                                            'major_id' => '',
                                             'degree_level' => '',
                                             'institution_name' => '',
-                                            'city' => '',
+                                            'faculty' => '',
+                                            'state' => '',
                                             'major' => '',
                                             'gpa' => '',
                                             'entry_year' => '',
@@ -163,8 +169,11 @@
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Jenjang Pendidikan <span class="text-[#B11116]">*</span>
                                         </label>
+                                        <input type="hidden" name="educations[{{ $index }}][edutype_id]" class="edutype-id-input"
+                                            value="{{ $edu['edutype_id'] ?? '' }}">
                                         <select name="educations[{{ $index }}][degree_level]" required
-                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.degree_level") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            onchange="toggleFacultyField(this)"
+                                            class="degree-level-select w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.degree_level") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             <option value="" disabled {{ empty($edu['degree_level']) ? 'selected' : '' }}>
                                                 Pilih Jenjang
                                             </option>
@@ -174,18 +183,19 @@
                                                         $val = $etype->EDUTYPE_NAME_ID ?? $etype->EDUTYPE_NAME_EN;
                                                     @endphp
                                                     <option value="{{ $val }}"
-                                                        {{ ($edu['degree_level'] ?? '') == $val ? 'selected' : '' }}>
+                                                        data-edutype-id="{{ $etype->EDUTYPE_ID }}"
+                                                        {{ (! empty($edu['edutype_id']) && (int) $edu['edutype_id'] === (int) $etype->EDUTYPE_ID) || strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === strtoupper(trim((string) $val)) ? 'selected' : '' }}>
                                                         {{ $val }} ({{ $etype->EDUTYPE_NAME_EN }})
                                                     </option>
                                                 @endforeach
                                             @else
-                                                <option value="SMA" {{ ($edu['degree_level'] ?? '') == 'SMA' ? 'selected' : '' }}>SMA</option>
-                                                <option value="STM" {{ ($edu['degree_level'] ?? '') == 'STM' ? 'selected' : '' }}>STM</option>
-                                                <option value="Diploma" {{ ($edu['degree_level'] ?? '') == 'Diploma' ? 'selected' : '' }}>Diploma</option>
-                                                <option value="Sarjana" {{ ($edu['degree_level'] ?? '') == 'Sarjana' ? 'selected' : '' }}>Sarjana</option>
-                                                <option value="Master/S2" {{ ($edu['degree_level'] ?? '') == 'Master/S2' ? 'selected' : '' }}>Master/S2</option>
-                                                <option value="Doctor" {{ ($edu['degree_level'] ?? '') == 'Doctor' ? 'selected' : '' }}>Doctor</option>
-                                                <option value="Lain-lain" {{ ($edu['degree_level'] ?? '') == 'Lain-lain' ? 'selected' : '' }}>Lain-lain</option>
+                                                <option value="SMA" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'SMA' ? 'selected' : '' }}>SMA</option>
+                                                <option value="STM" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'STM' ? 'selected' : '' }}>STM</option>
+                                                <option value="Diploma" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'DIPLOMA' ? 'selected' : '' }}>Diploma</option>
+                                                <option value="Sarjana" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'SARJANA' ? 'selected' : '' }}>Sarjana</option>
+                                                <option value="Master/S2" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'MASTER/S2' ? 'selected' : '' }}>Master/S2</option>
+                                                <option value="Doctor" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'DOCTOR' ? 'selected' : '' }}>Doctor</option>
+                                                <option value="Lain-lain" {{ strtoupper(trim((string) ($edu['degree_level'] ?? ''))) === 'LAIN-LAIN' ? 'selected' : '' }}>Lain-lain</option>
                                             @endif
                                         </select>
                                         @error("educations.{$index}.degree_level")
@@ -211,9 +221,13 @@
                                                 class="combobox-value-input"
                                                 value="{{ $edu['institution_name'] ?? '' }}"
                                                 required>
+                                            <input type="hidden"
+                                                name="educations[{{ $index }}][school_id]"
+                                                class="combobox-id-input"
+                                                value="{{ $edu['school_id'] ?? '' }}">
 
                                             <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
-                                                <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                                                <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                                     onclick="selectOtherCombobox(this, 'school')">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -241,13 +255,68 @@
 
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                            Kota / Kabupaten Sekolah <span class="text-[#B11116]">*</span>
+                                            Kota / Provinsi Sekolah <span class="text-[#B11116]">*</span>
                                         </label>
-                                        <input type="text" name="educations[{{ $index }}][city]" required
-                                            value="{{ $edu['city'] ?? '' }}"
-                                            placeholder="Contoh: Jakarta Selatan, Surabaya, Kab. Slawi"
-                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.city") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        @error("educations.{$index}.city")
+                                        <input type="text" name="educations[{{ $index }}][state]" required
+                                            value="{{ $edu['state'] ?? '' }}"
+                                            placeholder="Contoh: Jakarta Selatan, Depok, Jawa Barat"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.state") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                        @error("educations.{$index}.state")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    @php
+                                        $isHighSchool = (bool) preg_match('/\b(SMA|SMK|STM)\b/i', (string) ($edu['degree_level'] ?? ''));
+                                        $facultyValue = $isHighSchool ? '' : ($edu['faculty'] ?? '');
+                                    @endphp
+                                    <div class="space-y-1.5 faculty-field-wrapper faculty-combobox-wrapper {{ $isHighSchool ? 'hidden' : '' }}" data-field="faculty">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Fakultas <span class="text-[#B11116]">*</span>
+                                        </label>
+                                        <div class="relative">
+                                            <input type="text"
+                                                class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.faculty") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                                                placeholder="Ketik untuk mencari fakultas..."
+                                                autocomplete="off"
+                                                value="{{ $facultyValue }}"
+                                                {{ $isHighSchool ? '' : 'required' }}
+                                                onfocus="openCombobox(this)"
+                                                oninput="filterCombobox(this, 'faculty')">
+
+                                            <input type="hidden"
+                                                name="educations[{{ $index }}][faculty]"
+                                                class="combobox-value-input faculty-value-input"
+                                                value="{{ $facultyValue }}"
+                                                {{ $isHighSchool ? '' : 'required' }}>
+                                            <input type="hidden"
+                                                name="educations[{{ $index }}][faculty_id]"
+                                                class="combobox-id-input"
+                                                value="{{ $isHighSchool ? '' : ($edu['faculty_id'] ?? '') }}">
+
+                                            <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
+                                                <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                                                    onclick="selectOtherCombobox(this, 'faculty')">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                                    </svg>
+                                                    <span>Lainnya / Tidak Terdaftar di List (Input Manual)</span>
+                                                </div>
+                                                <ul class="combobox-list divide-y divide-gray-50 text-sm text-gray-800">
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="manual-faculty-input-wrapper space-y-1.5 pt-1 hidden">
+                                            <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Fakultas</span>
+                                            <input type="text"
+                                                class="uppercase placeholder:normal-case manual-faculty-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                                                placeholder="Ketik nama lengkap fakultas..."
+                                                value="{{ $facultyValue }}"
+                                                oninput="syncManualValue(this, 'faculty')">
+                                        </div>
+
+                                        @error("educations.{$index}.faculty")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -270,9 +339,13 @@
                                                 class="combobox-value-input"
                                                 value="{{ $edu['major'] ?? '' }}"
                                                 required>
+                                            <input type="hidden"
+                                                name="educations[{{ $index }}][major_id]"
+                                                class="combobox-id-input"
+                                                value="{{ $edu['major_id'] ?? '' }}">
 
                                             <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
-                                                <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                                                <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                                     onclick="selectOtherCombobox(this, 'major')">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -525,15 +598,17 @@
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                         Jenjang Pendidikan <span class="text-[#B11116]">*</span>
                     </label>
+                    <input type="hidden" name="educations[{INDEX}][edutype_id]" class="edutype-id-input">
                     <select name="educations[{INDEX}][degree_level]" required
-                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        onchange="toggleFacultyField(this)"
+                        class="degree-level-select w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         <option value="" disabled selected>Pilih Jenjang</option>
                         @if (isset($educationTypes) && $educationTypes->isNotEmpty())
                             @foreach ($educationTypes as $etype)
                                 @php
                                     $val = $etype->EDUTYPE_NAME_ID ?? $etype->EDUTYPE_NAME_EN;
                                 @endphp
-                                <option value="{{ $val }}">{{ $val }} ({{ $etype->EDUTYPE_NAME_EN }})</option>
+                                <option value="{{ $val }}" data-edutype-id="{{ $etype->EDUTYPE_ID }}">{{ $val }} ({{ $etype->EDUTYPE_NAME_EN }})</option>
                             @endforeach
                         @else
                             <option value="SMA">SMA</option>
@@ -563,9 +638,12 @@
                             name="educations[{INDEX}][institution_name]"
                             class="combobox-value-input"
                             required>
+                        <input type="hidden"
+                            name="educations[{INDEX}][school_id]"
+                            class="combobox-id-input">
 
                         <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
-                            <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                            <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                 onclick="selectOtherCombobox(this, 'school')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -587,11 +665,53 @@
 
                 <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                        Kota / Kabupaten Sekolah <span class="text-[#B11116]">*</span>
+                        Kota / Provinsi Sekolah <span class="text-[#B11116]">*</span>
                     </label>
-                    <input type="text" name="educations[{INDEX}][city]" required
-                        placeholder="Contoh: Jakarta Selatan, Surabaya, Kab. Slawi"
+                    <input type="text" name="educations[{INDEX}][state]" required
+                        placeholder="Contoh: Jakarta Selatan, Depok, Jawa Barat"
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                </div>
+
+                <div class="space-y-1.5 faculty-field-wrapper faculty-combobox-wrapper" data-field="faculty">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                        Fakultas <span class="text-[#B11116]">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="text"
+                            class="uppercase placeholder:normal-case combobox-search-input w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"
+                            placeholder="Ketik untuk mencari fakultas..."
+                            autocomplete="off"
+                            required
+                            onfocus="openCombobox(this)"
+                            oninput="filterCombobox(this, 'faculty')">
+
+                        <input type="hidden"
+                            name="educations[{INDEX}][faculty]"
+                            class="combobox-value-input faculty-value-input"
+                            required>
+                        <input type="hidden"
+                            name="educations[{INDEX}][faculty_id]"
+                            class="combobox-id-input">
+
+                        <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
+                            <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                                onclick="selectOtherCombobox(this, 'faculty')">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                <span>Lainnya / Tidak Terdaftar di List (Input Manual)</span>
+                            </div>
+                            <ul class="combobox-list divide-y divide-gray-50 text-sm text-gray-800"></ul>
+                        </div>
+                    </div>
+
+                    <div class="manual-faculty-input-wrapper space-y-1.5 pt-1 hidden">
+                        <span class="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium inline-block">Mode Input Manual Fakultas</span>
+                        <input type="text"
+                            class="uppercase placeholder:normal-case manual-faculty-input w-full px-4 py-2 bg-amber-50/30 rounded-xl border border-amber-300 text-gray-900 text-sm focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none"
+                            placeholder="Ketik nama lengkap fakultas..."
+                            oninput="syncManualValue(this, 'faculty')">
+                    </div>
                 </div>
 
                 <div class="space-y-1.5 major-combobox-wrapper" data-field="major">
@@ -610,9 +730,12 @@
                             name="educations[{INDEX}][major]"
                             class="combobox-value-input"
                             required>
+                        <input type="hidden"
+                            name="educations[{INDEX}][major_id]"
+                            class="combobox-id-input">
 
                         <div class="combobox-dropdown absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto hidden">
-                            <div class="combobox-other-option p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
+                            <div class="combobox-other-option hidden p-3 bg-red-50/70 hover:bg-red-100/80 cursor-pointer border-b border-red-100 text-[#B11116] font-bold text-xs flex items-center gap-2"
                                 onclick="selectOtherCombobox(this, 'major')">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -729,6 +852,12 @@
     <script>
         const masterSchools = @json($schools ?? []);
         const masterMajors = @json($majors ?? []);
+        const masterFaculties = @json($faculties ?? []);
+        const OTHER_MASTER_IDS = {
+            school: {{ \Database\Seeders\ThrmListSchoolSeeder::OTHER_EDU_ID }},
+            faculty: {{ \Database\Seeders\ThrmListFacultySeeder::OTHER_FACULTY_ID }},
+            major: {{ \Database\Seeders\ThrmListMajorSeeder::OTHER_MAJOR_ID }},
+        };
 
         function goToStep(step) {
             const redirectInput = document.getElementById('redirect_step');
@@ -748,6 +877,59 @@
         const currentYear = new Date().getFullYear();
 
         /* --- LOGIK UTAMA PENDIDIKAN --- */
+        function isHighSchoolDegree(value) {
+            const normalized = (value || '').trim().toUpperCase();
+            return /\b(SMA|SMK|STM)\b/.test(normalized);
+        }
+
+        function toggleFacultyField(selectEl) {
+            if (!selectEl) return;
+            const card = selectEl.closest('.education-card');
+            if (!card) return;
+            const edutypeIdInput = card.querySelector('.edutype-id-input');
+            const selectedOption = selectEl.options[selectEl.selectedIndex];
+            if (edutypeIdInput) {
+                edutypeIdInput.value = selectedOption && selectedOption.dataset.edutypeId ? selectedOption.dataset.edutypeId : '';
+            }
+            const facultyWrapper = card.querySelector('.faculty-field-wrapper');
+            if (!facultyWrapper) return;
+            const searchInput = facultyWrapper.querySelector('.combobox-search-input');
+            const valueInput = facultyWrapper.querySelector('.combobox-value-input');
+            const idInput = facultyWrapper.querySelector('.combobox-id-input');
+            const manualWrapper = facultyWrapper.querySelector('.manual-faculty-input-wrapper');
+            const manualInput = facultyWrapper.querySelector('.manual-faculty-input');
+            const dropdown = facultyWrapper.querySelector('.combobox-dropdown');
+
+            if (isHighSchoolDegree(selectEl.value)) {
+                facultyWrapper.classList.add('hidden');
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.required = false;
+                    searchInput.classList.remove('bg-gray-100', 'text-gray-500');
+                }
+                if (valueInput) {
+                    valueInput.value = '';
+                    valueInput.required = false;
+                }
+                if (idInput) {
+                    idInput.value = '';
+                }
+                if (manualInput) {
+                    manualInput.value = '';
+                    manualInput.required = false;
+                }
+                if (manualWrapper) manualWrapper.classList.add('hidden');
+                if (dropdown) dropdown.classList.add('hidden');
+            } else {
+                facultyWrapper.classList.remove('hidden');
+                if (searchInput) searchInput.required = true;
+                if (valueInput) valueInput.required = true;
+                if (manualInput && manualWrapper && !manualWrapper.classList.contains('hidden')) {
+                    manualInput.required = true;
+                }
+            }
+        }
+
         function toggleCurrentStudy(checkbox) {
             const card = checkbox.closest('.education-card');
             const inputField = card.querySelector('.graduation-year-input');
@@ -798,6 +980,10 @@
                 .replace(/{NUMBER}/g, currentCards + 1);
 
             container.insertAdjacentHTML('beforeend', newCardHtml);
+            const insertedCard = container.lastElementChild;
+            if (insertedCard) {
+                toggleFacultyField(insertedCard.querySelector('.degree-level-select'));
+            }
             reindexEducationCards();
         }
 
@@ -903,7 +1089,7 @@
                 input.classList.remove('bg-gray-100', 'text-gray-500');
             }
 
-            if (fieldType === 'school') {
+            if (fieldType === 'school' || fieldType === 'faculty') {
                 return;
             }
 
@@ -924,24 +1110,37 @@
         function filterCombobox(input, type) {
             const wrapper = input.closest('[data-field]');
             const dropdown = wrapper.querySelector('.combobox-dropdown');
+            const otherOption = wrapper.querySelector('.combobox-other-option');
             const listEl = wrapper.querySelector('.combobox-list');
             const valInput = wrapper.querySelector('.combobox-value-input');
+            const idInput = wrapper.querySelector('.combobox-id-input');
             const queryRaw = input.value.trim();
             const queryNorm = normalizeSearchText(queryRaw);
             const queryWords = queryNorm.split(/\s+/).filter(Boolean);
-            const items = type === 'school' ? masterSchools : masterMajors;
-            const nameProp = type === 'school' ? 'EDU_NAME' : 'MAJOR_NAME';
+            const items = type === 'school'
+                ? masterSchools
+                : (type === 'faculty' ? masterFaculties : masterMajors);
+            const nameProp = type === 'school'
+                ? 'EDU_NAME'
+                : (type === 'faculty' ? 'FACULTY_NAME' : 'MAJOR_NAME');
+            const idProp = type === 'school'
+                ? 'EDU_ID'
+                : (type === 'faculty' ? 'FACULTY_ID' : 'MAJOR_ID');
 
             if (input.classList.contains('bg-gray-100')) {
                 input.classList.remove('bg-gray-100', 'text-gray-500');
             }
 
-            // By default sync search input with value input
+            // By default sync search input with value input and reset master ID until selected
             valInput.value = input.value;
+            if (idInput) {
+                idInput.value = '';
+            }
 
-            if (type === 'school') {
+            if (type === 'school' || type === 'faculty') {
                 if (!queryNorm) {
                     listEl.innerHTML = '';
+                    if (otherOption) otherOption.classList.add('hidden');
                     dropdown.classList.add('hidden');
                     return;
                 }
@@ -954,12 +1153,20 @@
                 if (!queryNorm) return true;
                 const normName = normalizeSearchText(rawName);
 
-                if (type === 'school') {
+                if (type === 'school' || type === 'faculty') {
                     return normName.includes(queryNorm);
                 }
 
                 return queryWords.every(word => normName.includes(word));
             }).slice(0, 50);
+
+            if (otherOption) {
+                if (queryNorm && filtered.length === 0) {
+                    otherOption.classList.remove('hidden');
+                } else {
+                    otherOption.classList.add('hidden');
+                }
+            }
 
             listEl.innerHTML = '';
 
@@ -971,34 +1178,42 @@
             } else {
                 filtered.forEach(item => {
                     const name = item[nameProp] || '';
+                    const itemId = item[idProp] ?? '';
                     const li = document.createElement('li');
                     li.className = 'p-2.5 px-3 hover:bg-red-50 hover:text-[#B11116] cursor-pointer transition-colors text-xs font-medium';
                     li.textContent = name;
                     li.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        selectItemCombobox(this, name, type);
+                        selectItemCombobox(this, name, type, itemId);
                     });
                     listEl.appendChild(li);
                 });
             }
         }
 
-        function selectItemCombobox(el, name, type) {
+        function selectItemCombobox(el, name, type, itemId = '') {
             const wrapper = el.closest('[data-field]');
             const searchInput = wrapper.querySelector('.combobox-search-input');
             const valInput = wrapper.querySelector('.combobox-value-input');
+            const idInput = wrapper.querySelector('.combobox-id-input');
             const dropdown = wrapper.querySelector('.combobox-dropdown');
             const manualWrapper = wrapper.querySelector(`.manual-${type}-input-wrapper`);
 
             searchInput.value = name;
             searchInput.classList.remove('bg-gray-100', 'text-gray-500');
             valInput.value = name;
+            if (idInput) {
+                idInput.value = itemId;
+            }
             dropdown.classList.add('hidden');
 
             if (manualWrapper) {
                 manualWrapper.classList.add('hidden');
                 const manualInput = manualWrapper.querySelector('input');
-                if (manualInput) manualInput.value = '';
+                if (manualInput) {
+                    manualInput.value = '';
+                    manualInput.required = false;
+                }
             }
         }
 
@@ -1006,6 +1221,7 @@
             const wrapper = el.closest('[data-field]');
             const searchInput = wrapper.querySelector('.combobox-search-input');
             const valInput = wrapper.querySelector('.combobox-value-input');
+            const idInput = wrapper.querySelector('.combobox-id-input');
             const dropdown = wrapper.querySelector('.combobox-dropdown');
             const manualWrapper = wrapper.querySelector(`.manual-${type}-input-wrapper`);
             const manualInput = manualWrapper.querySelector('input');
@@ -1013,11 +1229,18 @@
             searchInput.value = 'Lainnya / Input Manual';
             searchInput.classList.add('bg-gray-100', 'text-gray-500');
             valInput.value = '';
+            if (idInput) {
+                idInput.value = OTHER_MASTER_IDS[type] ?? '';
+            }
             dropdown.classList.add('hidden');
 
             if (manualWrapper) {
                 manualWrapper.classList.remove('hidden');
-                manualInput.focus();
+                if (manualInput) {
+                    manualInput.value = '';
+                    manualInput.required = true;
+                    manualInput.focus();
+                }
             }
         }
 
@@ -1047,7 +1270,9 @@
 
             // Cek kondisi awal pada tiap combobox (apakah nilai awal ada di list atau custom manual)
             document.querySelectorAll('.education-card').forEach(card => {
-                ['school', 'major'].forEach(type => {
+                toggleFacultyField(card.querySelector('.degree-level-select'));
+
+                ['school', 'major', 'faculty'].forEach(type => {
                     const wrapper = card.querySelector(`[data-field="${type}"]`);
                     if (!wrapper) return;
                     const valInput = wrapper.querySelector('.combobox-value-input');
@@ -1057,8 +1282,12 @@
                     const val = (valInput.value || '').trim();
 
                     if (val) {
-                        const items = type === 'school' ? masterSchools : masterMajors;
-                        const nameProp = type === 'school' ? 'EDU_NAME' : 'MAJOR_NAME';
+                        const items = type === 'school'
+                            ? masterSchools
+                            : (type === 'faculty' ? masterFaculties : masterMajors);
+                        const nameProp = type === 'school'
+                            ? 'EDU_NAME'
+                            : (type === 'faculty' ? 'FACULTY_NAME' : 'MAJOR_NAME');
                         const found = items.some(i => normalizeSearchText(i[nameProp]) === normalizeSearchText(val));
                         if (!found) {
                             // Berarti data manual / previously other

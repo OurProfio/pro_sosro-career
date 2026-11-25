@@ -447,9 +447,13 @@
                             @enderror
                         </div>
 
-                        <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array(old('marital_status', auth()->user()->applicant->marital_status ?? ''), ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
-                            <label for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Tahun Menikah / Bercerai (Sejak Tahun)
+                        @php
+                            $currentMaritalStatus = old('marital_status', auth()->user()->applicant->marital_status ?? '');
+                            $maritalDateLabelText = in_array($currentMaritalStatus, ['divorced', 'widowed']) ? 'Tahun Cerai' : 'Tahun Menikah';
+                        @endphp
+                        <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array($currentMaritalStatus, ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
+                            <label id="maritalDateLabel" for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                {{ $maritalDateLabelText }}
                             </label>
                             <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
                                 placeholder="Contoh: 2020"
@@ -524,11 +528,19 @@
                                     <label for="emergency_contact_relationship" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                         Hubungan <span class="text-[#B11116]">*</span>
                                     </label>
+                                    @php
+                                        $selectedEmergencyRel = trim((string) old('emergency_contact_relationship', auth()->user()->applicant->emergency_contact_relationship ?? ''));
+                                        $hasMatchingEmergencyRel = $familyConnections->contains(
+                                            fn ($fc): bool => (string) $fc->RELATIONSHIP_ID === $selectedEmergencyRel
+                                        );
+                                    @endphp
                                     <select id="emergency_contact_relationship" name="emergency_contact_relationship" required
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_relationship') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <option value="" {{ old('emergency_contact_relationship', auth()->user()->applicant->emergency_contact_relationship ?? '') ? '' : 'selected' }}>Pilih Hubungan</option>
-                                        @foreach (['Orang Tua', 'Pasangan (Suami/Istri)', 'Saudara Kandung', 'Kerabat/Keluarga Besar'] as $rel)
-                                            <option value="{{ $rel }}" {{ old('emergency_contact_relationship', auth()->user()->applicant->emergency_contact_relationship ?? '') == $rel ? 'selected' : '' }}>{{ $rel }}</option>
+                                        <option value="" {{ $hasMatchingEmergencyRel ? '' : 'selected' }}>Pilih Hubungan</option>
+                                        @foreach ($familyConnections as $fc)
+                                            <option value="{{ $fc->RELATIONSHIP_ID }}" {{ (string) $fc->RELATIONSHIP_ID === $selectedEmergencyRel ? 'selected' : '' }}>
+                                                {{ $fc->FAMILY_RELATIONSHIP_ID ?: $fc->FAMILY_RELATIONSHIP_EN }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('emergency_contact_relationship')
@@ -546,6 +558,44 @@
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     <span id="msg_emergency_contact_phone" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif kerabat (10-15 digit).</span>
                                     @error('emergency_contact_phone')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label for="emergency_contact_address" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Alamat Lengkap Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <textarea id="emergency_contact_address" name="emergency_contact_address" rows="2" required
+                                        placeholder="Nama Jalan, RT/RW, Kelurahan, Kecamatan"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('emergency_contact_address', auth()->user()->applicant->emergency_contact_address ?? '') }}</textarea>
+                                    @error('emergency_contact_address')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_state" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Provinsi Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_state" name="emergency_contact_state" type="text" required
+                                        value="{{ old('emergency_contact_state', auth()->user()->applicant->emergency_contact_state ?? '') }}"
+                                        placeholder="Contoh: DKI Jakarta, Jawa Barat"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_state') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('emergency_contact_state')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_city" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Kota / Kabupaten Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_city" name="emergency_contact_city" type="text" required
+                                        value="{{ old('emergency_contact_city', auth()->user()->applicant->emergency_contact_city ?? '') }}"
+                                        placeholder="Contoh: Jakarta Utara, Kota Bekasi"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_city') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('emergency_contact_city')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -1235,10 +1285,14 @@
 
         function toggleMaritalDate(status) {
             const wrapper = document.getElementById('maritalDateWrapper');
+            const label = document.getElementById('maritalDateLabel');
             const input = document.getElementById('marital_date');
             if (!wrapper) return;
             if (['married', 'divorced', 'widowed'].includes(status)) {
                 wrapper.classList.remove('hidden');
+                if (label) {
+                    label.textContent = status === 'married' ? 'Tahun Menikah' : 'Tahun Cerai';
+                }
             } else {
                 wrapper.classList.add('hidden');
                 if (input) input.value = '';

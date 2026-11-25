@@ -11,7 +11,7 @@
         <div class="mb-10">
             <ol class="flex items-center w-full text-xs font-semibold">
                 <li>
-                    <button type="button" onclick="goToStep('personal')" title="Simpan data saat ini & kembali ke Data Personal"
+                    <a href="{{ route('biodata.edit', auth()->user()->applicant->id) }}" title="Kembali ke Data Personal"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -20,13 +20,13 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Data Personal</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
                 <li>
-                    <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & kembali ke Data Keluarga"
+                    <a href="{{ route('biodata.family.create') }}" title="Kembali ke Data Keluarga"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -35,13 +35,13 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Keluarga</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
 
                 <li>
-                    <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & kembali ke Data Pendidikan"
+                    <a href="{{ route('biodata.education.create') }}" title="Kembali ke Data Pendidikan"
                         class="flex items-center transition-colors text-[#B11116] cursor-pointer group focus:outline-none">
                         <span
                             class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-[#B11116] bg-[#B11116] text-white group-hover:opacity-90">
@@ -50,7 +50,7 @@
                             </svg>
                         </span>
                         <span class="hidden sm:inline font-bold">Pendidikan</span>
-                    </button>
+                    </a>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-[#B11116]"></li>
@@ -95,7 +95,7 @@
                     <div class="space-y-3 border-b border-gray-100 pb-4">
                         <div class="space-y-1">
                             <span class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Pernahkah Anda Melamar di PT SINAR SOSRO / Group ini sebelumnya? <span class="text-[#B11116]">*</span>
+                                Pernahkah Anda Melamar di PT SINAR SOSRO GUNUNG SLAMAT / Group ini sebelumnya? <span class="text-[#B11116]">*</span>
                             </span>
                             <div class="flex items-center gap-6 py-1">
                                 <label for="applied_sosro_yes" class="inline-flex items-center cursor-pointer group py-1">
@@ -369,7 +369,10 @@
                                             'company_phone' => $we->company_phone,
                                             'position' => $we->position,
                                             'division' => $we->division,
+                                            'lob_id' => $we->lob_id ? (string) $we->lob_id : '',
+                                            'job_desc' => $we->job_desc,
                                             'salary' => $we->salary ? number_format($we->salary, 0, ',', '.') : '',
+                                            'gross_netto' => $we->gross_netto ?? '',
                                             'start_date' => $we->start_date ? \Carbon\Carbon::parse($we->start_date)->format('Y-m-d') : '',
                                             'end_date' => $we->end_date ? \Carbon\Carbon::parse($we->end_date)->format('Y-m-d') : '',
                                             'facility' => $we->facility,
@@ -388,7 +391,10 @@
                                             'company_phone' => '',
                                             'position' => '',
                                             'division' => '',
+                                            'lob_id' => '',
+                                            'job_desc' => '',
                                             'salary' => '',
+                                            'gross_netto' => '',
                                             'start_date' => '',
                                             'end_date' => '',
                                             'facility' => '',
@@ -441,6 +447,22 @@
                                             placeholder="Contoh: PT. Maju Bersama"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_name")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Bidang Usaha (Line of Business)
+                                        </label>
+                                        <select name="experiences[{{ $index }}][lob_id]"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.lob_id") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            <option value="">Pilih Bidang Usaha (LOB)</option>
+                                            @foreach ($lineOfBusinesses as $lob)
+                                                <option value="{{ $lob->LOB_ID }}" {{ (string) ($exp['lob_id'] ?? '') === (string) $lob->LOB_ID ? 'selected' : '' }}>{{ $lob->LOB_NAME }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error("experiences.{$index}.lob_id")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -517,6 +539,21 @@
 
                                     <div class="space-y-1.5">
                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Jenis Gaji (Gross / Netto) <span class="text-[#B11116]">*</span>
+                                        </label>
+                                        <select name="experiences[{{ $index }}][gross_netto]"
+                                            class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.gross_netto") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                            <option value="">Pilih Jenis Gaji</option>
+                                            <option value="Gross" {{ ($exp['gross_netto'] ?? '') === 'Gross' ? 'selected' : '' }}>Gross</option>
+                                            <option value="Netto" {{ ($exp['gross_netto'] ?? '') === 'Netto' ? 'selected' : '' }}>Netto</option>
+                                        </select>
+                                        @error("experiences.{$index}.gross_netto")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="space-y-1.5">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Tanggal Mulai Bekerja
                                         </label>
                                         <input type="date" name="experiences[{{ $index }}][start_date]"
@@ -555,10 +592,22 @@
                                             Fasilitas yang Diterima
                                         </label>
                                         <input type="text" name="experiences[{{ $index }}][facility]"
-                                            value="{{ $exp['facility'] ?? '' }}"
+                                            value="{{ $exp['facility'] ?? '' }}" maxlength="50"
                                             placeholder="Contoh: BPJS Kesehatan, Tunjangan Makan"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.facility") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.facility")
+                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="space-y-1.5 md:col-span-2">
+                                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                            Uraian Tugas / Pekerjaan
+                                        </label>
+                                        <textarea name="experiences[{{ $index }}][job_desc]" rows="3" maxlength="2000"
+                                            placeholder="Contoh: Mengelola operasional harian, membuat laporan bulanan, dan koordinasi antar divisi"
+                                            class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.job_desc") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $exp['job_desc'] ?? '' }}</textarea>
+                                        @error("experiences.{$index}.job_desc")
                                             <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -704,6 +753,17 @@
                 </div>
 
                 <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Bidang Usaha (Line of Business)</label>
+                    <select name="experiences[{INDEX}][lob_id]"
+                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        <option value="">Pilih Bidang Usaha (LOB)</option>
+                        @foreach ($lineOfBusinesses as $lob)
+                            <option value="{{ $lob->LOB_ID }}">{{ $lob->LOB_NAME }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon Perusahaan</label>
                     <input type="tel" name="experiences[{INDEX}][company_phone]" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="20" placeholder="Contoh: 0211234567 atau 0812345678"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -729,7 +789,7 @@
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                 </div>
 
-                <div class="space-y-1.5 md:col-span-2">
+                <div class="space-y-1.5">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Gaji Terakhir
                         (Rp)</label>
                     <div class="relative">
@@ -739,6 +799,17 @@
                             oninput="formatRupiahInput(this)"
                             class="salary-input w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                     </div>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Jenis Gaji (Gross /
+                        Netto) <span class="text-[#B11116]">*</span></label>
+                    <select name="experiences[{INDEX}][gross_netto]"
+                        class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                        <option value="">Pilih Jenis Gaji</option>
+                        <option value="Gross">Gross</option>
+                        <option value="Netto">Netto</option>
+                    </select>
                 </div>
 
                 <div class="space-y-1.5">
@@ -766,9 +837,17 @@
                 <div class="space-y-1.5 md:col-span-2">
                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Fasilitas yang
                         Diterima</label>
-                    <input type="text" name="experiences[{INDEX}][facility]"
+                    <input type="text" name="experiences[{INDEX}][facility]" maxlength="50"
                         placeholder="Contoh: BPJS Kesehatan, Tunjangan Makan"
                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                </div>
+
+                <div class="space-y-1.5 md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Uraian Tugas /
+                        Pekerjaan</label>
+                    <textarea name="experiences[{INDEX}][job_desc]" rows="3" maxlength="2000"
+                        placeholder="Contoh: Mengelola operasional harian, membuat laporan bulanan, dan koordinasi antar divisi"
+                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm"></textarea>
                 </div>
 
                 <div class="md:col-span-2 pt-2 border-t border-gray-200/80">

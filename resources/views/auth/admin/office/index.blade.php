@@ -1,6 +1,6 @@
 @extends('auth.admin.layouts.index')
 
-@section('title', 'Data Kantor & Unit Kerja - Sinar Sosro')
+@section('title', 'Data Kantor & Unit Kerja - Sinar Sosro Gunung Slamat')
 
 @section('content')
     @php

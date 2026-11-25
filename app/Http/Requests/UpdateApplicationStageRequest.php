@@ -66,20 +66,20 @@ class UpdateApplicationStageRequest extends FormRequest
 
         if (str_starts_with($stageName, 'interview')) {
             return $rules + [
-                'interview_type' => ['required', 'in:virtual,offline'],
+                'interview_type' => ['required', 'in:online,offline'],
                 'interview_date' => ['required', 'date', 'after_or_equal:today'],
                 'interview_time' => ['required', 'date_format:H:i'],
-                'interview_link' => ['required_if:interview_type,virtual', 'nullable', 'url', 'max:2048'],
+                'interview_link' => ['required_if:interview_type,online', 'nullable', 'url', 'max:2048'],
                 'interview_address' => ['required_if:interview_type,offline', 'nullable', 'string', 'max:1000'],
             ];
         }
 
         if ($stageName === 'panel bod') {
             return $rules + [
-                'panel_bod_type' => ['required', 'in:virtual,offline'],
+                'panel_bod_type' => ['required', 'in:online,offline'],
                 'panel_bod_date' => ['nullable', 'date', 'after_or_equal:today'],
                 'panel_bod_time' => ['nullable', 'date_format:H:i'],
-                'panel_bod_link' => ['required_if:panel_bod_type,virtual', 'nullable', 'url', 'max:2048'],
+                'panel_bod_link' => ['required_if:panel_bod_type,online', 'nullable', 'url', 'max:2048'],
                 'panel_bod_address' => ['required_if:panel_bod_type,offline', 'nullable', 'string', 'max:1000'],
             ];
         }
@@ -89,7 +89,7 @@ class UpdateApplicationStageRequest extends FormRequest
                 'psikotes_link' => ['nullable', 'url', 'max:2048'],
                 'psikotes_code' => ['nullable', 'string', 'max:100'],
                 'psikotes_date' => ['nullable', 'date', 'after_or_equal:today'],
-                'psikotes_time' => ['nullable', 'string', 'max:100'],
+                'psikotes_time' => ['nullable', 'date_format:H:i'],
             ];
         }
 

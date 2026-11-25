@@ -79,6 +79,8 @@ class Job extends Model
             return true;
         }
 
-        return ! ($admin?->office_id && $this->office_id !== $admin->office_id);
+        return $admin !== null
+            && $admin->office_id !== null
+            && $this->office_id === $admin->office_id;
     }
 }

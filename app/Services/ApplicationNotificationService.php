@@ -37,11 +37,11 @@ class ApplicationNotificationService
         $mailable = null;
 
         if (str_starts_with($stageName, 'interview') || $stageName === 'panel bod') {
-            $isVirtual = ($data['interview_type'] ?? $data['panel_bod_type'] ?? 'virtual') === 'virtual';
+            $isOnline = ($data['interview_type'] ?? $data['panel_bod_type'] ?? 'online') === 'online';
             $date = $data['interview_date'] ?? $data['panel_bod_date'] ?? date('Y-m-d');
             $time = $data['interview_time'] ?? $data['panel_bod_time'] ?? '09:00';
 
-            if ($isVirtual) {
+            if ($isOnline) {
                 $link = $data['interview_link'] ?? $data['panel_bod_link'] ?? '';
                 $mailable = new InterviewOnlineMail($application, $date, $time, $link);
             } else {

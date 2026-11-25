@@ -22,7 +22,7 @@ class AdminController extends Controller
             ->latest()
             ->get();
 
-        $offices = Office::orderBy('name')->get();
+        $offices = Office::mainOffices()->orderBy('name')->get();
 
         return view('auth.admin.admin.index', compact('admins', 'offices'));
     }
@@ -32,7 +32,7 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $offices = Office::orderBy('name')->get();
+        $offices = Office::mainOffices()->orderBy('name')->get();
 
         return view('auth.admin.admin.create', compact('offices'));
     }
@@ -73,7 +73,7 @@ class AdminController extends Controller
      */
     public function edit(Admin $admin)
     {
-        $offices = Office::orderBy('name')->get();
+        $offices = Office::mainOffices()->orderBy('name')->get();
 
         return view('auth.admin.admin.edit', compact('admin', 'offices'));
     }

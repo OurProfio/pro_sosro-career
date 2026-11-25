@@ -176,3 +176,48 @@ it('displays "Lihat Semua Pelamar" button on dashboard for superadmin and admin'
         ->assertOk()
         ->assertSee('Lihat Semua Pelamar');
 });
+
+it('only allows assigning HO and main KPW offices when creating or updating admins', function () {
+    $hoOffice = Office::factory()->headOffice()->create(['name' => 'Kantor Pusat HO']);
+    $kpwOffice = Office::factory()->create(['name' => 'KPW Jakarta Banten', 'type' => 'KPW']);
+    $subBranchOffice = Office::factory()->create(['name' => 'KPW Jakarta Banten KP Cakung', 'type' => 'KP']);
+    $factoryOffice = Office::factory()->create(['name' => 'Pabrik Cakung', 'type' => 'Pabrik']);
+
+    $this->actingAs($this->superAdminUser)
+        ->get(route('admin.index'))
+        ->assertOk()
+        ->assertSee('Kantor Pusat HO')
+        ->assertSee('KPW Jakarta Banten')
+        ->assertDontSee('KPW Jakarta Banten KP Cakung')
+        ->assertDontSee('Pabrik Cakung');
+
+    $this->actingAs($this->superAdminUser)
+        ->post(route('admin.store'), [
+            'name' => 'Admin Sub Cabang',
+            'email' => 'subcabang@example.com',
+            'password' => 'secret1234',
+            'office_id' => $subBranchOffice->id,
+            'role' => 'admin',
+        ])
+        ->assertSessionHasErrors('office_id');
+
+    $this->actingAs($this->superAdminUser)
+        ->put(route('admin.update', $this->targetAdminProfile), [
+            'name' => $this->targetAdminProfile->name,
+            'email' => $this->targetAdminUser->email,
+            'office_id' => $factoryOffice->id,
+            'role' => 'admin',
+        ])
+        ->assertSessionHasErrors('office_id');
+
+    $this->actingAs($this->superAdminUser)
+        ->post(route('admin.store'), [
+            'name' => 'Admin HO Valid',
+            'email' => 'admin_ho@example.com',
+            'password' => 'secret1234',
+            'office_id' => $hoOffice->id,
+            'role' => 'admin',
+        ])
+        ->assertRedirect(route('admin.index'))
+        ->assertSessionHasNoErrors();
+});

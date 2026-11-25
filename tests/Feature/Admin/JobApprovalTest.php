@@ -161,3 +161,35 @@ it('displays the pending tab and pending vacancies in admin job index', function
         ->assertSee('Lowongan Status Pending')
         ->assertSee('Ditunda (Pending)');
 });
+
+it('automatically sets branch admin location from their office and hides the location select', function () {
+    $medanOffice = Office::factory()->create(['name' => 'KPW Sumut NAD - Sumbar Kepri KP Medan']);
+    $medanAdmin = Admin::factory()->create([
+        'role' => 'admin',
+        'office_id' => $medanOffice->id,
+    ]);
+
+    $this->actingAs($medanAdmin->user)
+        ->get(route('job.index'))
+        ->assertOk()
+        ->assertDontSee('<select name="location"', false)
+        ->assertSee('value="Medan"', false);
+
+    $this->actingAs($medanAdmin->user)
+        ->post(route('job.store'), [
+            'title' => 'Lowongan Otomatis Kota Medan',
+            'category' => 'profesional',
+            'occupation' => 'Operasional',
+            'type' => 'Full-Time',
+            'description' => 'Deskripsi pekerjaan cabang Medan.',
+            'qualification' => 'Kualifikasi pekerjaan cabang Medan.',
+            'closing_date' => now()->addDays(10)->toDateString(),
+        ])
+        ->assertRedirect(route('job.index'))
+        ->assertSessionHas('success');
+
+    $job = Job::where('title', 'Lowongan Otomatis Kota Medan')->first();
+    expect($job)->not->toBeNull()
+        ->and($job->office_id)->toBe($medanOffice->id)
+        ->and($job->location)->toBe('Medan');
+});

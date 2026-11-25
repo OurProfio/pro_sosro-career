@@ -27,41 +27,32 @@
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('family')" title="Simpan data saat ini & lanjut ke Data Keluarga"
-                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
-                            <span>2</span>
-                        </span>
-                        <span class="hidden sm:inline group-hover:font-bold">Keluarga</span>
-                    </button>
+                <li class="flex items-center transition-colors text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
+                        <span>2</span>
+                    </span>
+                    <span class="hidden sm:inline">Keluarga</span>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('education')" title="Simpan data saat ini & lanjut ke Data Pendidikan"
-                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
-                            <span>3</span>
-                        </span>
-                        <span class="hidden sm:inline group-hover:font-bold">Pendidikan</span>
-                    </button>
+                <li class="flex items-center transition-colors text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
+                        <span>3</span>
+                    </span>
+                    <span class="hidden sm:inline">Pendidikan</span>
                 </li>
 
                 <li class="flex-1 border-t-2 mx-2 sm:mx-4 transition-colors duration-300 border-gray-200"></li>
 
-                <li>
-                    <button type="button" onclick="goToStep('workExperience')" title="Simpan data saat ini & lanjut ke Data Pengalaman"
-                        class="flex items-center transition-colors text-gray-500 hover:text-[#B11116] cursor-pointer group focus:outline-none">
-                        <span
-                            class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-500 group-hover:border-[#B11116] group-hover:text-[#B11116]">
-                            <span>4</span>
-                        </span>
-                        <span class="hidden sm:inline group-hover:font-bold">Pengalaman</span>
-                    </button>
+                <li class="flex items-center transition-colors text-gray-400">
+                    <span
+                        class="flex items-center justify-center w-8 h-8 rounded-full border-2 mr-2 shadow-sm transition-all text-xs font-bold border-gray-300 bg-white text-gray-400">
+                        <span>4</span>
+                    </span>
+                    <span class="hidden sm:inline">Pengalaman</span>
                 </li>
             </ol>
         </div>
@@ -454,9 +445,13 @@
                             @enderror
                         </div>
 
-                        <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array(old('marital_status', $applicant->marital_status), ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
-                            <label for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Tahun Menikah / Bercerai (Sejak Tahun)
+                        @php
+                            $currentMaritalStatus = old('marital_status', $applicant->marital_status);
+                            $maritalDateLabelText = in_array($currentMaritalStatus, ['divorced', 'widowed']) ? 'Tahun Cerai' : 'Tahun Menikah';
+                        @endphp
+                        <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array($currentMaritalStatus, ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
+                            <label id="maritalDateLabel" for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                {{ $maritalDateLabelText }}
                             </label>
                             <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
                                 placeholder="Contoh: 2020"
@@ -531,11 +526,19 @@
                                     <label for="emergency_contact_relationship" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
                                         Hubungan <span class="text-[#B11116]">*</span>
                                     </label>
+                                    @php
+                                        $selectedEmergencyRel = trim((string) old('emergency_contact_relationship', $applicant->emergency_contact_relationship ?? ''));
+                                        $hasMatchingEmergencyRel = $familyConnections->contains(
+                                            fn ($fc): bool => (string) $fc->RELATIONSHIP_ID === $selectedEmergencyRel
+                                        );
+                                    @endphp
                                     <select id="emergency_contact_relationship" name="emergency_contact_relationship" required
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_relationship') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <option value="" {{ old('emergency_contact_relationship', $applicant->emergency_contact_relationship ?? '') ? '' : 'selected' }}>Pilih Hubungan</option>
-                                        @foreach (['Orang Tua', 'Pasangan (Suami/Istri)', 'Saudara Kandung', 'Kerabat/Keluarga Besar'] as $rel)
-                                            <option value="{{ $rel }}" {{ old('emergency_contact_relationship', $applicant->emergency_contact_relationship ?? '') == $rel ? 'selected' : '' }}>{{ $rel }}</option>
+                                        <option value="" {{ $hasMatchingEmergencyRel ? '' : 'selected' }}>Pilih Hubungan</option>
+                                        @foreach ($familyConnections as $fc)
+                                            <option value="{{ $fc->RELATIONSHIP_ID }}" {{ (string) $fc->RELATIONSHIP_ID === $selectedEmergencyRel ? 'selected' : '' }}>
+                                                {{ $fc->FAMILY_RELATIONSHIP_ID ?: $fc->FAMILY_RELATIONSHIP_EN }}
+                                            </option>
                                         @endforeach
                                     </select>
                                     @error('emergency_contact_relationship')
@@ -553,6 +556,44 @@
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     <span id="msg_emergency_contact_phone" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif kerabat (10-15 digit).</span>
                                     @error('emergency_contact_phone')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                                <div class="space-y-1.5 md:col-span-2">
+                                    <label for="emergency_contact_address" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Alamat Lengkap Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <textarea id="emergency_contact_address" name="emergency_contact_address" rows="2" required
+                                        placeholder="Nama Jalan, RT/RW, Kelurahan, Kecamatan"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('emergency_contact_address', $applicant->emergency_contact_address ?? '') }}</textarea>
+                                    @error('emergency_contact_address')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_state" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Provinsi Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_state" name="emergency_contact_state" type="text" required
+                                        value="{{ old('emergency_contact_state', $applicant->emergency_contact_state ?? '') }}"
+                                        placeholder="Contoh: DKI Jakarta, Jawa Barat"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_state') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('emergency_contact_state')
+                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label for="emergency_contact_city" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                        Kota / Kabupaten Kontak Darurat <span class="text-[#B11116]">*</span>
+                                    </label>
+                                    <input id="emergency_contact_city" name="emergency_contact_city" type="text" required
+                                        value="{{ old('emergency_contact_city', $applicant->emergency_contact_city ?? '') }}"
+                                        placeholder="Contoh: Jakarta Utara, Kota Bekasi"
+                                        class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_city') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                                    @error('emergency_contact_city')
                                         <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
                                     @enderror
                                 </div>
@@ -1264,10 +1305,14 @@
 
         function toggleMaritalDate(status) {
             const wrapper = document.getElementById('maritalDateWrapper');
+            const label = document.getElementById('maritalDateLabel');
             const input = document.getElementById('marital_date');
             if (!wrapper) return;
             if (['married', 'divorced', 'widowed'].includes(status)) {
                 wrapper.classList.remove('hidden');
+                if (label) {
+                    label.textContent = status === 'married' ? 'Tahun Menikah' : 'Tahun Cerai';
+                }
             } else {
                 wrapper.classList.add('hidden');
                 if (input) input.value = '';

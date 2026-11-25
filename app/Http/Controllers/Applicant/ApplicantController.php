@@ -40,33 +40,19 @@ class ApplicantController extends Controller
     }
 
     /**
-     * Tampilkan formulir biodata (HC-ODR.FRM.001.00) yang sudah terisi untuk dicetak.
-     */
-    public function print()
-    {
-        $applicant = auth()->user()->applicant;
-
-        if (! $applicant) {
-            return redirect()->route('biodata.create');
-        }
-
-        if ($incompleteRoute = $applicant->incompleteStepRoute()) {
-            return redirect($incompleteRoute);
-        }
-
-        return view('auth.applicant.biodata.print', $applicant->biodataPrintData());
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
         $divisions = Division::all();
         $religions = DB::table('treligion')->select('RELIGION_ID', 'RELIGION_NAME_ID', 'RELIGION_NAME_EN')->get();
+        $familyConnections = DB::table('thrm_family_connection')
+            ->select('RELATIONSHIP_ID', 'FAMILY_RELATIONSHIP_ID', 'FAMILY_RELATIONSHIP_EN')
+            ->orderBy('RELATIONSHIP_ID')
+            ->get();
         $applicant = auth()->user()->applicant ?? null;
 
-        return view('auth.applicant.biodata.create.biodata', compact('divisions', 'religions', 'applicant'));
+        return view('auth.applicant.biodata.create.biodata', compact('divisions', 'religions', 'familyConnections', 'applicant'));
     }
 
     /**
@@ -126,8 +112,12 @@ class ApplicantController extends Controller
     {
         $divisions = Division::all();
         $religions = DB::table('treligion')->select('RELIGION_ID', 'RELIGION_NAME_ID', 'RELIGION_NAME_EN')->get();
+        $familyConnections = DB::table('thrm_family_connection')
+            ->select('RELATIONSHIP_ID', 'FAMILY_RELATIONSHIP_ID', 'FAMILY_RELATIONSHIP_EN')
+            ->orderBy('RELATIONSHIP_ID')
+            ->get();
 
-        return view('auth.applicant.biodata.edit', compact('applicant', 'divisions', 'religions'));
+        return view('auth.applicant.biodata.edit', compact('applicant', 'divisions', 'religions', 'familyConnections'));
     }
 
     /**
@@ -142,7 +132,20 @@ class ApplicantController extends Controller
                 $validated['photo_url'] = $request->file('photo')->store('applicants', 'public');
             }
 
+            if (($validated['marital_status'] ?? null) === 'single') {
+                $validated['marital_date'] = null;
+            }
+
             $applicant->update($validated);
+
+            if (($validated['marital_status'] ?? null) === 'single') {
+                $applicant->families()
+                    ->where(function ($query): void {
+                        $query->where('family_type', 'nuclear')
+                            ->orWhereIn('relationship', ['spouse', 'child', 'father_in_law', 'mother_in_law']);
+                    })
+                    ->delete();
+            }
 
             if (! empty($validated['email']) && $applicant->user && $applicant->user->email !== $validated['email']) {
                 $applicant->user->update(['email' => $validated['email']]);

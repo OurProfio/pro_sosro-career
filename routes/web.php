@@ -82,7 +82,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/biodata/pendidikan', [ApplicantEducationController::class, 'store'])->name('biodata.education.store');
         Route::get('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'create'])->name('biodata.workExperience.create');
         Route::post('/biodata/pengalaman-kerja', [ApplicantWorkExprienceController::class, 'store'])->name('biodata.workExperience.store');
-        Route::get('/biodata/cetak', [ApplicantController::class, 'print'])->name('biodata.print');
         Route::resource('biodata', ApplicantController::class)->parameters(['biodata' => 'applicant']);
 
         Route::get('/applications', [ApplicationController::class, 'index'])->name('applications.index');

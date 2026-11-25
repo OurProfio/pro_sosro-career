@@ -73,7 +73,7 @@
                                     <label for="psikotes_time" class="block mb-2 text-sm font-semibold text-slate-700">
                                         Batas Waktu / Jam
                                     </label>
-                                    <input type="text" name="psikotes_time" id="psikotes_time" placeholder="Contoh: 08:00 - 17:00 WIB"
+                                    <input type="time" name="psikotes_time" id="psikotes_time"
                                         class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
                                 </div>
                             </div>
@@ -120,12 +120,12 @@
                                 </label>
                                 <select name="interview_type" id="interview_type"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-                                    <option value="virtual">Virtual</option>
+                                    <option value="online">Online</option>
                                     <option value="offline">Offline</option>
                                 </select>
                             </div>
 
-                            <div id="interview-virtual-field">
+                            <div id="interview-online-field">
                                 <label for="interview_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link GMeet / Zoom
                                 </label>
@@ -240,12 +240,12 @@
                                 </label>
                                 <select name="panel_bod_type" id="panel_bod_type"
                                     class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-                                    <option value="virtual">Virtual</option>
+                                    <option value="online">Online</option>
                                     <option value="offline">Offline</option>
                                 </select>
                             </div>
 
-                            <div id="panel-bod-virtual-field">
+                            <div id="panel-bod-online-field">
                                 <label for="panel_bod_link" class="block mb-2 text-sm font-semibold text-slate-700">
                                     Link GMeet / Zoom
                                 </label>
@@ -269,6 +269,31 @@
                                 <p class="text-sm text-emerald-700">
                                     Template email: <strong id="modal-office-type">-</strong>
                                 </p>
+                            </div>
+
+                            <div>
+                                <label for="request_code" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Request Code FPTK <span class="text-red-600">*</span>
+                                </label>
+
+                                <input type="text" name="request_code" id="request_code"
+                                    placeholder="Contoh: RCR20261117235"
+                                    class="uppercase placeholder:normal-case block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                <p class="mt-1 text-xs text-slate-400">Kode FPTK dari HRIS yang akan disimpan ke data transfer HRIS.</p>
+                            </div>
+
+                            <div class="relative">
+                                <label for="position_search" class="block mb-2 text-sm font-semibold text-slate-700">
+                                    Posisi HRIS (Position) <span class="text-red-600">*</span>
+                                </label>
+                                <input type="hidden" name="position_id" id="position_id" value="">
+                                <input type="text" id="position_search" autocomplete="off"
+                                    placeholder="Ketik nama atau ID posisi (contoh: RECRUITMENT STAFF / 42036)..."
+                                    class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
+                                <div id="position_dropdown"
+                                    class="hidden absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
+                                </div>
+                                <p class="mt-1 text-xs text-slate-400">Pilih posisi dari master THRMPosition HRIS untuk Applied &amp; Expected Position.</p>
                             </div>
 
                             <div>
@@ -340,3 +365,71 @@
         </div>
     </div>
 </div>
+
+<script>
+    (function () {
+        const positions = @json($positions->map(fn ($p) => ['id' => $p->POSITION_ID, 'name' => $p->POSITION_NAME_EN])->values());
+        const searchInput = document.getElementById('position_search');
+        const hiddenInput = document.getElementById('position_id');
+        const dropdown = document.getElementById('position_dropdown');
+        const form = document.getElementById('stage-email-form');
+
+        if (!searchInput || !hiddenInput || !dropdown) {
+            return;
+        }
+
+        function renderOptions(query) {
+            const q = (query || '').trim().toLowerCase();
+            const filtered = q === ''
+                ? positions.slice(0, 50)
+                : positions.filter(p =>
+                    String(p.id).includes(q) || (p.name || '').toLowerCase().includes(q)
+                ).slice(0, 50);
+
+            dropdown.innerHTML = '';
+
+            if (filtered.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'px-3 py-2 text-xs text-slate-400';
+                empty.textContent = 'Posisi tidak ditemukan.';
+                dropdown.appendChild(empty);
+                return;
+            }
+
+            filtered.forEach(p => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'flex w-full items-center justify-between px-3 py-2 text-left text-sm text-slate-700 hover:bg-emerald-50 hover:text-emerald-700';
+                btn.innerHTML = `<span class="truncate">${p.name}</span><span class="ml-2 shrink-0 text-xs text-slate-400">${p.id}</span>`;
+                btn.addEventListener('mousedown', function (e) {
+                    e.preventDefault();
+                    hiddenInput.value = p.id;
+                    searchInput.value = `${p.name} (${p.id})`;
+                    dropdown.classList.add('hidden');
+                });
+                dropdown.appendChild(btn);
+            });
+        }
+
+        searchInput.addEventListener('focus', function () {
+            renderOptions(this.value);
+            dropdown.classList.remove('hidden');
+        });
+
+        searchInput.addEventListener('input', function () {
+            hiddenInput.value = '';
+            renderOptions(this.value);
+            dropdown.classList.remove('hidden');
+        });
+
+        searchInput.addEventListener('blur', function () {
+            setTimeout(() => dropdown.classList.add('hidden'), 150);
+        });
+
+        form?.addEventListener('reset', function () {
+            hiddenInput.value = '';
+            searchInput.value = '';
+            dropdown.classList.add('hidden');
+        });
+    })();
+</script>

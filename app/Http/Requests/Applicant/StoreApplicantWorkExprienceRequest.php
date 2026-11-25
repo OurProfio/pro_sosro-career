@@ -29,6 +29,7 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.company_address',
             'experiences.*.position',
             'experiences.*.division',
+            'experiences.*.job_desc',
             'experiences.*.facility',
             'experiences.*.reason_for_leaving',
             'experiences.*.reference_name',
@@ -41,6 +42,10 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
                 if (isset($exp['salary']) && is_string($exp['salary'])) {
                     $cleaned = preg_replace('/[^0-9]/', '', $exp['salary']);
                     $experiences[$key]['salary'] = $cleaned !== '' ? (int) $cleaned : null;
+                }
+
+                if ($key === 0 && empty($exp['gross_netto']) && (! empty($exp['company_name']) || ! empty($exp['position']))) {
+                    $experiences[$key]['gross_netto'] = 'Gross';
                 }
             }
             $this->merge(['experiences' => $experiences]);
@@ -64,10 +69,13 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.company_phone' => ['nullable', 'string', 'max:20'],
             'experiences.*.position' => ['nullable', 'string', 'max:255'],
             'experiences.*.division' => ['nullable', 'string', 'max:255'],
+            'experiences.*.lob_id' => ['nullable', 'integer', 'exists:t_line_of_business,LOB_ID'],
+            'experiences.*.job_desc' => ['nullable', 'string', 'max:2000'],
             'experiences.*.salary' => ['nullable', 'numeric', 'min:0'],
+            'experiences.*.gross_netto' => ['required_with:experiences.*.company_name,experiences.*.position', 'nullable', 'string', 'in:Gross,Netto'],
             'experiences.*.start_date' => ['nullable', 'date', 'before_or_equal:today'],
             'experiences.*.end_date' => ['nullable', 'date', 'after_or_equal:experiences.*.start_date'],
-            'experiences.*.facility' => ['nullable', 'string', 'max:255'],
+            'experiences.*.facility' => ['nullable', 'string', 'max:50'],
             'experiences.*.reason_for_leaving' => ['nullable', 'string', 'max:255'],
             'experiences.*.reference_name' => ['nullable', 'string', 'max:255'],
             'experiences.*.reference_position' => ['nullable', 'string', 'max:255'],
@@ -88,7 +96,10 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.company_phone' => 'nomor telepon perusahaan',
             'experiences.*.position' => 'jabatan / posisi',
             'experiences.*.division' => 'divisi / departemen',
+            'experiences.*.lob_id' => 'bidang usaha (LOB)',
+            'experiences.*.job_desc' => 'uraian tugas / pekerjaan',
             'experiences.*.salary' => 'gaji terakhir',
+            'experiences.*.gross_netto' => 'jenis gaji (gross/netto)',
             'experiences.*.start_date' => 'tanggal mulai bekerja',
             'experiences.*.end_date' => 'tanggal selesai bekerja',
             'experiences.*.facility' => 'fasilitas / tunjangan',
@@ -111,14 +122,19 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.position.max' => 'Jabatan / posisi maksimal 255 karakter.',
             'experiences.*.division.string' => 'Divisi / departemen harus berupa teks.',
             'experiences.*.division.max' => 'Divisi / departemen maksimal 255 karakter.',
+            'experiences.*.lob_id.exists' => 'Bidang usaha (LOB) yang dipilih tidak valid.',
+            'experiences.*.job_desc.string' => 'Uraian tugas / pekerjaan harus berupa teks.',
+            'experiences.*.job_desc.max' => 'Uraian tugas / pekerjaan maksimal 2000 karakter.',
             'experiences.*.salary.numeric' => 'Gaji terakhir harus berupa angka.',
             'experiences.*.salary.min' => 'Gaji terakhir tidak boleh bernilai negatif.',
+            'experiences.*.gross_netto.required_with' => 'Jenis gaji (Gross / Netto) wajib dipilih.',
+            'experiences.*.gross_netto.in' => 'Pilihan jenis gaji harus Gross atau Netto.',
             'experiences.*.start_date.date' => 'Format tanggal mulai bekerja tidak valid.',
             'experiences.*.start_date.before_or_equal' => 'Tanggal mulai bekerja tidak boleh melebihi hari ini.',
             'experiences.*.end_date.date' => 'Format tanggal selesai bekerja tidak valid.',
             'experiences.*.end_date.after_or_equal' => 'Tanggal selesai bekerja harus sama atau setelah tanggal mulai.',
             'experiences.*.facility.string' => 'Fasilitas harus berupa teks.',
-            'experiences.*.facility.max' => 'Fasilitas maksimal 255 karakter.',
+            'experiences.*.facility.max' => 'Fasilitas maksimal 50 karakter.',
             'experiences.*.reference_name.string' => 'Nama referensi atasan harus berupa teks.',
             'experiences.*.reference_name.max' => 'Nama referensi atasan maksimal 255 karakter.',
             'experiences.*.reference_position.string' => 'Jabatan referensi atasan harus berupa teks.',
@@ -127,8 +143,8 @@ class StoreApplicantWorkExprienceRequest extends FormRequest
             'experiences.*.reason_for_leaving.string' => 'Alasan berhenti harus berupa teks.',
             'experiences.*.reason_for_leaving.max' => 'Alasan berhenti maksimal 255 karakter.',
             'experiences.max' => 'Maksimal riwayat pengalaman kerja yang dapat dimasukkan adalah 3.',
-            'previous_applied_position.required_if' => 'Jabatan posisi wajib diisi jika pernah melamar di Sinar Sosro / Group.',
-            'previous_applied_year.required_if' => 'Tahun wajib diisi jika pernah melamar di Sinar Sosro / Group.',
+            'previous_applied_position.required_if' => 'Jabatan posisi wajib diisi jika pernah melamar di PT Sinar Sosro Gunung Slamat / Group.',
+            'previous_applied_year.required_if' => 'Tahun wajib diisi jika pernah melamar di PT Sinar Sosro Gunung Slamat / Group.',
             'previous_applied_year.digits' => 'Tahun melamar harus terdiri dari 4 digit angka.',
         ];
     }

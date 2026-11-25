@@ -20,11 +20,21 @@ class AdminDashboardController extends Controller
         $officeId = $admin->office_id;
 
         $jobsQuery = static fn (): Builder => Job::query()
-            ->when(! $isSuperAdmin, fn (Builder $query): Builder => $query->where('office_id', $officeId));
+            ->when(! $isSuperAdmin, function (Builder $query) use ($officeId): void {
+                if ($officeId) {
+                    $query->where('office_id', $officeId);
+                } else {
+                    $query->whereRaw('1 = 0');
+                }
+            });
 
         $applicationsQuery = static fn (): Builder => Application::query()
             ->when(! $isSuperAdmin, function (Builder $query) use ($officeId): void {
-                $query->whereHas('job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+                if ($officeId) {
+                    $query->whereHas('job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+                } else {
+                    $query->whereRaw('1 = 0');
+                }
             });
 
         $today = today();
@@ -60,8 +70,12 @@ class AdminDashboardController extends Controller
                     });
             })
             ->whereHas('applications', function (Builder $appQuery) use ($isSuperAdmin, $officeId): void {
-                $appQuery->when(! $isSuperAdmin && $officeId, function (Builder $query) use ($officeId): void {
-                    $query->whereHas('job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+                $appQuery->when(! $isSuperAdmin, function (Builder $query) use ($officeId): void {
+                    if ($officeId) {
+                        $query->whereHas('job', fn (Builder $jobQuery): Builder => $jobQuery->where('office_id', $officeId));
+                    } else {
+                        $query->whereRaw('1 = 0');
+                    }
                 });
             })
             ->count();

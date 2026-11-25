@@ -4,6 +4,7 @@ use App\Mail\AcceptedHOMail;
 use App\Mail\AcceptedKpwMail;
 use App\Mail\InterviewOfflineMail;
 use App\Mail\InterviewOnlineMail;
+use App\Mail\MedicalCheckUpMail;
 use App\Mail\RejectedMail;
 use App\Models\Admin;
 use App\Models\Applicant;
@@ -13,12 +14,23 @@ use App\Models\Office;
 use App\Models\Stage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     Mail::fake();
+
+    DB::table('t_line_of_business')->insert([
+        'LOB_ID' => 28,
+        'LOB_NAME' => 'FMCG',
+    ]);
+
+    DB::table('thrm_position')->insert([
+        'POSITION_ID' => 42036,
+        'POSITION_NAME_EN' => 'RECRUITMENT STAFF',
+    ]);
 
     $this->admin = User::factory()->admin()->create();
     $this->application = Application::factory()->create();
@@ -45,7 +57,7 @@ it('sends the online interview email', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStage', $this->application), [
             'stages_id' => $this->interviewStage->id,
-            'interview_type' => 'virtual',
+            'interview_type' => 'online',
             'interview_date' => now()->addDay()->toDateString(),
             'interview_time' => '09:00',
             'interview_link' => 'https://meet.google.com/abc-defg-hij',
@@ -64,7 +76,7 @@ it('sends the interview email for the second interview stage', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStage', $this->application), [
             'stages_id' => $secondInterviewStage->id,
-            'interview_type' => 'virtual',
+            'interview_type' => 'online',
             'interview_date' => now()->addDay()->toDateString(),
             'interview_time' => '10:00',
             'interview_link' => 'https://meet.google.com/xyz',
@@ -103,7 +115,7 @@ it('requires schedule details for the interview stage', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStage', $this->application), [
             'stages_id' => $this->interviewStage->id,
-            'interview_type' => 'virtual',
+            'interview_type' => 'online',
         ])
         ->assertSessionHasErrors(['interview_date', 'interview_time', 'interview_link']);
 
@@ -139,6 +151,8 @@ it('sends the head office acceptance email for HO jobs', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStatus', $application), [
             'status' => 'accepted',
+            'request_code' => 'RCR20261117235',
+            'position_id' => 42036,
             'start_date' => now()->addWeek()->toDateString(),
             'work_address' => 'Graha Rekso Lt.8',
         ])
@@ -147,11 +161,18 @@ it('sends the head office acceptance email for HO jobs', function () {
     expect($application->fresh()->status)->toBe('accepted');
     $this->assertDatabaseHas('thrm_app_personal_data', [
         'EMAIL' => $application->applicant->email,
-        'STATUSAPP' => 'ACCEPTED',
+        'STATUSAPP' => 'A',
+        'REQUEST_CODE' => 'RCR20261117235',
     ]);
     $this->assertDatabaseHas('thrm_app_history', [
-        'REQUEST_CODE' => (string) $job->id,
-        'APPSTS' => 1,
+        'REQUEST_CODE' => 'RCR20261117235',
+        'APPLIED_POSITION' => 42036,
+        'EXPECTED_POSITION' => 42036,
+        'APPLIED_JOBTITLE' => 'RECRUITMENT STAFF',
+        'EXPECTED_JOBTITLE' => 'RECRUITMENT STAFF',
+        'APPSTS' => 3,
+        'COMPLETETEST' => 1,
+        'APPLICANT_FLAG' => null,
     ]);
     Mail::assertSent(AcceptedHOMail::class);
     Mail::assertNotSent(AcceptedKpwMail::class);
@@ -161,6 +182,8 @@ it('sends the KPW acceptance email for KPW jobs', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStatus', $this->application), [
             'status' => 'accepted',
+            'request_code' => 'RCR20261117236',
+            'position_id' => 42036,
             'start_date' => now()->addWeek()->toDateString(),
             'work_address' => 'KPW Jawa Barat',
         ])
@@ -170,12 +193,12 @@ it('sends the KPW acceptance email for KPW jobs', function () {
     Mail::assertNotSent(AcceptedHOMail::class);
 });
 
-it('requires a start date and address when accepting', function () {
+it('requires a request code, position, start date and address when accepting', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStatus', $this->application), [
             'status' => 'accepted',
         ])
-        ->assertSessionHasErrors(['start_date', 'work_address']);
+        ->assertSessionHasErrors(['request_code', 'position_id', 'start_date', 'work_address']);
 
     Mail::assertNothingSent();
 });
@@ -303,6 +326,8 @@ it('does not change an application that already reached a final status', functio
     $this->actingAs($this->admin)
         ->patch(route('application.updateStatus', $this->application), [
             'status' => 'accepted',
+            'request_code' => 'RCR20261117235',
+            'position_id' => 42036,
             'start_date' => now()->addWeek()->toDateString(),
             'work_address' => 'Graha Rekso Lt.8',
         ])
@@ -329,10 +354,39 @@ it('limits the length of stage links and addresses', function () {
     $this->actingAs($this->admin)
         ->patch(route('application.updateStage', $this->application), [
             'stages_id' => $this->interviewStage->id,
-            'interview_type' => 'virtual',
+            'interview_type' => 'online',
             'interview_date' => now()->addDay()->toDateString(),
             'interview_time' => '09:00',
             'interview_link' => 'https://meet.google.com/'.str_repeat('a', 2100),
         ])
         ->assertSessionHasErrors('interview_link');
+});
+
+it('validates psikotes time format', function () {
+    $psikotesStage = Stage::factory()->create(['name' => 'psikotes', 'step' => 2]);
+
+    $this->actingAs($this->admin)
+        ->patch(route('application.updateStage', $this->application), [
+            'stages_id' => $psikotesStage->id,
+            'psikotes_date' => now()->addDay()->toDateString(),
+            'psikotes_time' => '08:00 - 17:00 WIB',
+        ])
+        ->assertSessionHasErrors('psikotes_time');
+});
+
+it('renders the mcu email schedule details once without duplicates', function () {
+    $mail = new MedicalCheckUpMail(
+        application: $this->application,
+        date: '2026-10-20',
+        time: '09:00',
+        location: 'RS Siloam',
+        address: 'Jl. Jenderal Sudirman No. 1',
+    );
+
+    $html = $mail->render();
+
+    expect(substr_count($html, '09:00 WIB'))->toBe(1)
+        ->and(substr_count($html, 'RS Siloam'))->toBe(1)
+        ->and(substr_count($html, 'Jl. Jenderal Sudirman No. 1'))->toBe(1)
+        ->and($html)->not->toContain('Tanggal :');
 });

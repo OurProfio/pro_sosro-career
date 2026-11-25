@@ -1,6 +1,6 @@
 @extends('auth.admin.layouts.index')
 
-@section('title', 'Detail Lowongan - ' . ($job->title ?? 'Sinar Sosro'))
+@section('title', 'Detail Lowongan - ' . ($job->title ?? 'Sinar Sosro Gunung Slamat'))
 
 @section('content')
     @php
@@ -1067,21 +1067,33 @@
                                         class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                         Kota / Wilayah Penempatan <span class="text-[#A6192E] font-semibold">*</span>
                                     </label>
-                                    <div class="relative">
-                                        <select name="location" id="modal_edit_location"
-                                            class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
-                                            required>
-                                            <option value="" disabled>-- Pilih Kota / Wilayah Penempatan --</option>
-                                            @if (isset($cities))
-                                                @foreach ($cities as $city)
-                                                    <option value="{{ $city }}"
-                                                        {{ old('location', $job->location) == $city ? 'selected' : '' }}>
-                                                        {{ $city }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        </select>
-                                    </div>
+                                    @if (auth()->user()->admin?->role === 'superadmin')
+                                        <div class="relative">
+                                            <select name="location" id="modal_edit_location"
+                                                class="w-full appearance-none px-4 pr-10 py-2.5 text-xs rounded-xl border {{ $errors->has('location') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-700 cursor-pointer transition"
+                                                required>
+                                                <option value="" disabled>-- Pilih Kota / Wilayah Penempatan --</option>
+                                                @if (isset($cities))
+                                                    @foreach ($cities as $city)
+                                                        <option value="{{ $city }}"
+                                                            {{ old('location', $job->location) == $city ? 'selected' : '' }}>
+                                                            {{ $city }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    @else
+                                        @php
+                                            $adminEditLocation = auth()->user()->admin?->office?->defaultLocation() ?? $job->location;
+                                        @endphp
+                                        <input type="hidden" name="location" value="{{ $adminEditLocation }}">
+                                        <div class="relative">
+                                            <input type="text" id="modal_edit_location" value="{{ $adminEditLocation ?: '-' }}"
+                                                class="w-full px-4 py-2.5 text-xs rounded-xl border border-slate-200 bg-slate-100/80 text-slate-700 font-semibold cursor-not-allowed select-none"
+                                                readonly tabindex="-1">
+                                        </div>
+                                    @endif
                                     @error('location')
                                         <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
                                     @enderror
@@ -1359,8 +1371,8 @@
                     break;
             }
 
-            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
-            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
+            toggleMethodFields('interview_type', 'interview-online-field', 'interview-offline-field');
+            toggleMethodFields('panel_bod_type', 'panel-bod-online-field', 'panel-bod-offline-field');
         }
 
         function closeStageModal() {
@@ -1456,19 +1468,19 @@
             notesField.value = isVisible ? (notes ?? '') : '';
         }
 
-        function toggleMethodFields(selectId, virtualFieldId, offlineFieldId) {
-            const isVirtual = document.getElementById(selectId).value === 'virtual';
+        function toggleMethodFields(selectId, onlineFieldId, offlineFieldId) {
+            const isOnline = document.getElementById(selectId).value === 'online';
 
-            document.getElementById(virtualFieldId).classList.toggle('hidden', !isVirtual);
-            document.getElementById(offlineFieldId).classList.toggle('hidden', isVirtual);
+            document.getElementById(onlineFieldId).classList.toggle('hidden', !isOnline);
+            document.getElementById(offlineFieldId).classList.toggle('hidden', isOnline);
         }
 
         document.getElementById('interview_type').addEventListener('change', () => {
-            toggleMethodFields('interview_type', 'interview-virtual-field', 'interview-offline-field');
+            toggleMethodFields('interview_type', 'interview-online-field', 'interview-offline-field');
         });
 
         document.getElementById('panel_bod_type').addEventListener('change', () => {
-            toggleMethodFields('panel_bod_type', 'panel-bod-virtual-field', 'panel-bod-offline-field');
+            toggleMethodFields('panel_bod_type', 'panel-bod-online-field', 'panel-bod-offline-field');
         });
     </script>
 @endsection

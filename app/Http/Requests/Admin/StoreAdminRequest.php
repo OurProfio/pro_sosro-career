@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreAdminRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class StoreAdminRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'in:admin,superadmin'],
-            'office_id' => ['nullable', 'exists:offices,id'],
+            'office_id' => ['nullable', Rule::exists('offices', 'id')->whereIn('type', ['HO', 'KPW'])],
         ];
     }
 
