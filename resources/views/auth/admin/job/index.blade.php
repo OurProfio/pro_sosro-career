@@ -566,8 +566,8 @@
                                                     Kontrak (PKWT)</option>
                                                 <option value="Part-Time"
                                                     {{ old('type') == 'Part-Time' ? 'selected' : '' }}>Part Time</option>
-                                                <option value="Freelance"
-                                                    {{ old('type') == 'Freelance' ? 'selected' : '' }}>Freelance</option>
+                                                <option value="Magang"
+                                                    {{ old('type') == 'Magang' ? 'selected' : '' }}>Magang</option>
                                             </select>
                                         </div>
                                         @error('type')

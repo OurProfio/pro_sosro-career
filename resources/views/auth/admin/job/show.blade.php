@@ -1051,9 +1051,9 @@
                                                 <option value="Part-Time"
                                                     {{ old('type', $job->type) == 'Part-Time' ? 'selected' : '' }}>Part
                                                     Time</option>
-                                                <option value="Freelance"
-                                                    {{ old('type', $job->type) == 'Freelance' ? 'selected' : '' }}>
-                                                    Freelance</option>
+                                                <option value="Magang"
+                                                    {{ old('type', $job->type) == 'Magang' ? 'selected' : '' }}>
+                                                    Magang</option>
                                             </select>
                                         </div>
                                         @error('type')
