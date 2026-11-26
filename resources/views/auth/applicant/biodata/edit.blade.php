@@ -325,7 +325,7 @@
                                 Tanggal Lahir <span class="text-[#B11116]">*</span>
                             </label>
                             <input id="date_of_birth" name="date_of_birth" type="date" required
-                                max="{{ now()->subYears(15)->format('Y-m-d') }}"
+                                max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                 value="{{ old('date_of_birth', \Carbon\Carbon::parse($applicant->date_of_birth)->format('Y-m-d')) }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('date_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('date_of_birth')
@@ -451,9 +451,10 @@
                         @endphp
                         <div id="maritalDateWrapper" class="space-y-1.5 md:col-span-2 {{ in_array($currentMaritalStatus, ['married', 'divorced', 'widowed']) ? '' : 'hidden' }}">
                             <label id="maritalDateLabel" for="marital_date" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                {{ $maritalDateLabelText }}
+                                <span id="maritalDateLabelText">{{ $maritalDateLabelText }}</span> <span class="text-[#B11116]">*</span>
                             </label>
                             <input id="marital_date" name="marital_date" type="number" min="1950" max="{{ date('Y') }}"
+                                {{ in_array($currentMaritalStatus, ['married', 'divorced', 'widowed']) ? 'required' : '' }}
                                 placeholder="Contoh: 2020"
                                 value="{{ old('marital_date', $applicant->marital_date ? (strlen($applicant->marital_date) > 4 ? \Carbon\Carbon::parse($applicant->marital_date)->format('Y') : $applicant->marital_date) : '') }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
@@ -1305,17 +1306,21 @@
 
         function toggleMaritalDate(status) {
             const wrapper = document.getElementById('maritalDateWrapper');
-            const label = document.getElementById('maritalDateLabel');
+            const labelText = document.getElementById('maritalDateLabelText');
             const input = document.getElementById('marital_date');
             if (!wrapper) return;
             if (['married', 'divorced', 'widowed'].includes(status)) {
                 wrapper.classList.remove('hidden');
-                if (label) {
-                    label.textContent = status === 'married' ? 'Tahun Menikah' : 'Tahun Cerai';
+                if (labelText) {
+                    labelText.textContent = status === 'married' ? 'Tahun Menikah' : 'Tahun Cerai';
                 }
+                if (input) input.setAttribute('required', 'required');
             } else {
                 wrapper.classList.add('hidden');
-                if (input) input.value = '';
+                if (input) {
+                    input.removeAttribute('required');
+                    input.value = '';
+                }
             }
         }
     </script>

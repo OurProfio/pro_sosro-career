@@ -123,6 +123,84 @@ it('returns Indonesian error message when marital year is not an integer', funct
     'edit' => ['put', 'biodata.update'],
 ]);
 
+it('requires marital year when marital status is married, divorced, or widowed', function (string $routeMethod, string $routeName, string $maritalStatus) {
+    $userNew = User::factory()->create(['role' => 'user']);
+    $route = $routeName === 'biodata.update'
+        ? route($routeName, Applicant::factory()->create(['user_id' => $userNew->id]))
+        : route($routeName);
+
+    $response = $this->actingAs($userNew)->{$routeMethod}($route, [
+        'marital_status' => $maritalStatus,
+        'marital_date' => '',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'marital_date' => 'Tahun pernikahan/perceraian wajib diisi.',
+    ]);
+})->with([
+    'create married' => ['post', 'biodata.store', 'married'],
+    'create divorced' => ['post', 'biodata.store', 'divorced'],
+    'create widowed' => ['post', 'biodata.store', 'widowed'],
+    'edit married' => ['put', 'biodata.update', 'married'],
+    'edit divorced' => ['put', 'biodata.update', 'divorced'],
+    'edit widowed' => ['put', 'biodata.update', 'widowed'],
+]);
+
+it('does not require marital year when marital status is single', function (string $routeMethod, string $routeName) {
+    $userNew = User::factory()->create(['role' => 'user']);
+    $route = $routeName === 'biodata.update'
+        ? route($routeName, Applicant::factory()->create(['user_id' => $userNew->id]))
+        : route($routeName);
+
+    $response = $this->actingAs($userNew)->{$routeMethod}($route, [
+        'marital_status' => 'single',
+        'marital_date' => '',
+    ]);
+
+    $response->assertSessionDoesntHaveErrors(['marital_date']);
+})->with([
+    'create' => ['post', 'biodata.store'],
+    'edit' => ['put', 'biodata.update'],
+]);
+
+it('rejects applicant date of birth that is today, in the future, or younger than 17 years', function (string $routeMethod, string $routeName, string $invalidDob) {
+    $userNew = User::factory()->create(['role' => 'user']);
+    $route = $routeName === 'biodata.update'
+        ? route($routeName, Applicant::factory()->create(['user_id' => $userNew->id]))
+        : route($routeName);
+
+    $response = $this->actingAs($userNew)->{$routeMethod}($route, [
+        'date_of_birth' => $invalidDob,
+    ]);
+
+    $response->assertSessionHasErrors([
+        'date_of_birth' => 'Usia pelamar minimal harus 17 tahun.',
+    ]);
+})->with([
+    'create today' => ['post', 'biodata.store', now()->format('Y-m-d')],
+    'create future' => ['post', 'biodata.store', now()->addDay()->format('Y-m-d')],
+    'create 16 years ago' => ['post', 'biodata.store', now()->subYears(16)->format('Y-m-d')],
+    'edit today' => ['put', 'biodata.update', now()->format('Y-m-d')],
+    'edit future' => ['put', 'biodata.update', now()->addDay()->format('Y-m-d')],
+    'edit 16 years ago' => ['put', 'biodata.update', now()->subYears(16)->format('Y-m-d')],
+]);
+
+it('accepts applicant date of birth that is exactly 17 years ago', function (string $routeMethod, string $routeName) {
+    $userNew = User::factory()->create(['role' => 'user']);
+    $route = $routeName === 'biodata.update'
+        ? route($routeName, Applicant::factory()->create(['user_id' => $userNew->id]))
+        : route($routeName);
+
+    $response = $this->actingAs($userNew)->{$routeMethod}($route, [
+        'date_of_birth' => now()->subYears(17)->format('Y-m-d'),
+    ]);
+
+    $response->assertSessionDoesntHaveErrors(['date_of_birth']);
+})->with([
+    'create' => ['post', 'biodata.store'],
+    'edit' => ['put', 'biodata.update'],
+]);
+
 it('returns human-readable Indonesian error messages in step 3 education validation', function () {
     $response = $this->actingAs($this->user)
         ->from(route('biodata.education.create'))

@@ -135,6 +135,7 @@
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal
                                         Lahir <span class="text-[#B11116]">*</span></label>
                                     <input type="date" name="families[father][date_of_birth]" required
+                                        max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                         value="{{ old('families.father.date_of_birth') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.date_of_birth')
@@ -247,6 +248,7 @@
                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal
                                         Lahir <span class="text-[#B11116]">*</span></label>
                                     <input type="date" name="families[mother][date_of_birth]" required
+                                        max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                         value="{{ old('families.mother.date_of_birth') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.date_of_birth')
@@ -399,6 +401,7 @@
                                             class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal
                                             Lahir <span class="text-[#B11116]">*</span></label>
                                         <input type="date" name="families[spouse][date_of_birth]" required
+                                            max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                             value="{{ old('families.spouse.date_of_birth') }}"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.date_of_birth')
@@ -505,6 +508,7 @@
                                         <div class="space-y-1.5">
                                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                             <input type="date" name="families[father_in_law][date_of_birth]"
+                                                max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                                 value="{{ old('families.father_in_law.date_of_birth') }}"
                                                 class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         </div>
@@ -563,6 +567,7 @@
                                         <div class="space-y-1.5">
                                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                             <input type="date" name="families[mother_in_law][date_of_birth]"
+                                                max="{{ now()->subYears(17)->format('Y-m-d') }}"
                                                 value="{{ old('families.mother_in_law.date_of_birth') }}"
                                                 class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         </div>
@@ -707,7 +712,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
-                            <input type="date" name="families[siblings][${siblingIndex}][date_of_birth]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="date" name="families[siblings][${siblingIndex}][date_of_birth]" required max="{{ now()->subDay()->format('Y-m-d') }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan Terakhir</label>
@@ -784,7 +789,7 @@
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
-                            <input type="date" name="families[children][${childIndex}][date_of_birth]" required class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
+                            <input type="date" name="families[children][${childIndex}][date_of_birth]" required max="{{ now()->subDay()->format('Y-m-d') }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pendidikan / Sekolah</label>

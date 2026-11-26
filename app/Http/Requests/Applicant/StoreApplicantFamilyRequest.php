@@ -69,11 +69,13 @@ class StoreApplicantFamilyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $maxAdultBirthDate = now()->subYears(17)->format('Y-m-d');
+
         $rules = [
             'families.father.name' => ['required', 'string', 'max:255'],
             'families.father.status' => ['required', 'in:alive,deceased,divorced'],
             'families.father.place_of_birth' => ['required', 'string', 'max:100'],
-            'families.father.date_of_birth' => ['required', 'date', 'before:today'],
+            'families.father.date_of_birth' => ['required', 'date', 'before_or_equal:'.$maxAdultBirthDate],
             'families.father.education' => ['required', 'string', 'max:100'],
             'families.father.work' => ['nullable', 'string', 'max:100'],
             'families.father.address' => ['nullable', 'string', 'max:500'],
@@ -83,7 +85,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             'families.mother.name' => ['required', 'string', 'max:255'],
             'families.mother.status' => ['required', 'in:alive,deceased,divorced'],
             'families.mother.place_of_birth' => ['required', 'string', 'max:100'],
-            'families.mother.date_of_birth' => ['required', 'date', 'before:today'],
+            'families.mother.date_of_birth' => ['required', 'date', 'before_or_equal:'.$maxAdultBirthDate],
             'families.mother.education' => ['required', 'string', 'max:100'],
             'families.mother.work' => ['nullable', 'string', 'max:100'],
             'families.mother.address' => ['nullable', 'string', 'max:500'],
@@ -108,7 +110,7 @@ class StoreApplicantFamilyRequest extends FormRequest
         if (in_array($maritalStatus, ['married', 'divorced', 'widowed'])) {
             $rules['families.spouse.name'] = ['required', 'string', 'max:255'];
             $rules['families.spouse.place_of_birth'] = ['required', 'string', 'max:100'];
-            $rules['families.spouse.date_of_birth'] = ['required', 'date', 'before:today'];
+            $rules['families.spouse.date_of_birth'] = ['required', 'date', 'before_or_equal:'.$maxAdultBirthDate];
             $rules['families.spouse.education'] = ['required', 'string', 'max:100'];
             $rules['families.spouse.work'] = ['required', 'string', 'max:100'];
             $rules['families.spouse.address'] = ['nullable', 'string', 'max:500'];
@@ -130,7 +132,7 @@ class StoreApplicantFamilyRequest extends FormRequest
 
             $rules['families.father_in_law.name'] = ['nullable', 'string', 'max:255'];
             $rules['families.father_in_law.place_of_birth'] = ['nullable', 'string', 'max:100'];
-            $rules['families.father_in_law.date_of_birth'] = ['nullable', 'date', 'before:today'];
+            $rules['families.father_in_law.date_of_birth'] = ['nullable', 'date', 'before_or_equal:'.$maxAdultBirthDate];
             $rules['families.father_in_law.education'] = ['nullable', 'string', 'max:100'];
             $rules['families.father_in_law.work'] = ['nullable', 'string', 'max:100'];
             $rules['families.father_in_law.address'] = ['nullable', 'string', 'max:500'];
@@ -141,7 +143,7 @@ class StoreApplicantFamilyRequest extends FormRequest
 
             $rules['families.mother_in_law.name'] = ['nullable', 'string', 'max:255'];
             $rules['families.mother_in_law.place_of_birth'] = ['nullable', 'string', 'max:100'];
-            $rules['families.mother_in_law.date_of_birth'] = ['nullable', 'date', 'before:today'];
+            $rules['families.mother_in_law.date_of_birth'] = ['nullable', 'date', 'before_or_equal:'.$maxAdultBirthDate];
             $rules['families.mother_in_law.education'] = ['nullable', 'string', 'max:100'];
             $rules['families.mother_in_law.work'] = ['nullable', 'string', 'max:100'];
             $rules['families.mother_in_law.address'] = ['nullable', 'string', 'max:500'];
@@ -170,6 +172,7 @@ class StoreApplicantFamilyRequest extends FormRequest
             'string' => ':attribute harus berupa teks.',
             'date' => ':attribute harus berupa tanggal yang valid.',
             'before' => ':attribute harus sebelum hari ini.',
+            'before_or_equal' => ':attribute minimal harus 17 tahun sebelum hari ini.',
             'numeric' => ':attribute harus berupa angka.',
             'digits_between' => ':attribute harus berisi antara :min sampai :max digit.',
             'in' => 'Pilihan :attribute tidak valid.',
@@ -204,6 +207,8 @@ class StoreApplicantFamilyRequest extends FormRequest
             'father' => 'ayah',
             'mother' => 'ibu',
             'spouse' => 'pasangan',
+            'father_in_law' => 'ayah mertua',
+            'mother_in_law' => 'ibu mertua',
             'siblings.*' => 'saudara kandung ke-:position',
             'children.*' => 'anak ke-:position',
         ];
