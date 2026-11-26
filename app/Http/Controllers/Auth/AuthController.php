@@ -38,6 +38,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = auth()->user();
+            $this->recordLogin($user, $request);
 
             if (! $user->hasVerifiedEmail()) {
                 $intended = $request->session()->get('url.intended');
@@ -81,6 +82,7 @@ class AuthController extends Controller
             }
 
             $request->session()->regenerate();
+            $this->recordLogin(auth()->user(), $request);
 
             return redirect()->intended(route('admin.dashboard'));
         }
@@ -99,6 +101,7 @@ class AuthController extends Controller
 
         Auth::login($user);
         $request->session()->regenerate();
+        $this->recordLogin($user, $request);
 
         return redirect()->route('verification.notice')->with('success', 'Pendaftaran berhasil. Silakan cek email Anda untuk verifikasi akun.');
     }
@@ -113,5 +116,22 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         return redirect()->route($isAdmin ? 'admin.login' : 'guest.login');
+    }
+
+    private function recordLogin(User $user, Request $request): void
+    {
+        $now = now();
+        $ipAddress = $request->ip();
+
+        $user->forceFill([
+            'last_login_ip' => $ipAddress,
+            'last_login_at' => $now,
+        ])->save();
+
+        $user->loginLogs()->create([
+            'ip_address' => $ipAddress,
+            'user_agent' => $request->userAgent(),
+            'logged_in_at' => $now,
+        ]);
     }
 }
