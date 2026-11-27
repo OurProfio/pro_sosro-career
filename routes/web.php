@@ -103,5 +103,9 @@ Route::middleware('throttle:10,1')->group(function () {
 Route::get('/feedback', [Controller::class, 'feedback'])->name('feedback.index');
 Route::post('/feedback', [Controller::class, 'storeFeedback'])->name('feedback.store');
 
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/dev/ui-preview', fn () => view('dev.ui-preview'))->name('dev.ui-preview');
+}
+
 // Route::get('/email', [MailController::class, 'index'])->name('email.index');
 // Route::post('/email', [MailController::class, 'sendEmail'])->name('email.send');

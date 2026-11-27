@@ -36,7 +36,7 @@
         {{-- @include('guest.layouts.notification') --}}
     </div>
 
-    @include('auth.applicant.layouts.components.notification')
+    <x-notification />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();

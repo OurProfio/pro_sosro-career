@@ -32,7 +32,7 @@
                         placeholder="Masukkan nama divisi"
                         class="w-full px-3.5 py-2 text-xs bg-slate-50/50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all {{ $errors->has('name') ? 'border-rose-400 focus:border-rose-500' : 'border-slate-200 focus:border-blue-500' }}">
                     @error('name')
-                        <p class="text-[11px] text-rose-500 mt-1 font-medium">{{ $message }}</p>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
 

@@ -24,7 +24,8 @@
         {{-- @include('guest.layouts.notification') --}}
     </div>
 
-    @include('guest.layouts.components.notification')
+    <x-notification required-warning-title="Perlu Masuk Akun"
+        required-warning-message="Silakan masuk (login) terlebih dahulu untuk dapat melamar lowongan pekerjaan." />
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             lucide.createIcons();

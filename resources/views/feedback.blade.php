@@ -32,30 +32,6 @@
             </p>
         </div>
 
-        @if (session('success'))
-            <div class="mb-6 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-start gap-3 shadow-xs">
-                <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div class="flex-1">
-                    <p class="font-semibold">Berhasil Terkirim</p>
-                    <p class="text-xs text-emerald-700 mt-0.5">{{ session('success') }}</p>
-                </div>
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="mb-6 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-3 shadow-xs">
-                <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <div class="flex-1">
-                    <p class="font-semibold">Mohon periksa formulir</p>
-                    <p class="text-xs text-rose-700 mt-0.5">{{ $errors->first() }}</p>
-                </div>
-            </div>
-        @endif
-
         <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm">
             <form action="{{ route('feedback.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
@@ -65,7 +41,7 @@
                         <label for="screenshot" class="block text-sm font-semibold text-slate-800">
                             Screenshot Tampilan
                         </label>
-                        <span class="text-xs text-slate-400 font-normal">Opsional (bisa dikosongkan)</span>
+                        <span class="text-xs text-slate-500 font-normal">Opsional (bisa dikosongkan)</span>
                     </div>
 
                     <div id="drop-zone" class="relative group border-2 border-dashed border-slate-200 hover:border-[#B42C33] rounded-2xl p-5 text-center transition-all bg-slate-50/50 hover:bg-[#FDF2F2]/30 cursor-pointer">
@@ -93,7 +69,7 @@
                     </div>
 
                     @error('screenshot')
-                        <p class="mt-1.5 text-xs text-rose-500 font-medium">{{ $message }}</p>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
 
@@ -110,7 +86,7 @@
                         required>{{ old('notes') }}</textarea>
 
                     @error('notes')
-                        <p class="mt-1.5 text-xs text-rose-500 font-medium">{{ $message }}</p>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
 
@@ -154,6 +130,7 @@
             }
         }
     </script>
+    <x-notification />
 </body>
 
 </html>

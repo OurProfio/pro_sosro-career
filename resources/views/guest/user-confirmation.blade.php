@@ -22,17 +22,6 @@
                 </p>
             </div>
 
-            @if (session('success'))
-                <div class="mb-6 rounded-lg bg-green-50 border border-green-200 text-green-700 px-4 py-3 text-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="mb-6 rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
-                    {{ session('error') }}
-                </div>
-            @endif
-
             <div class="flex items-center gap-4 mb-6">
                 <img src="{{ asset('storage/' . $applicant->photo_url) }}" alt="Foto {{ $applicant->name }}"
                     class="w-20 h-20 rounded-full object-cover border border-gray-200">
@@ -104,7 +93,7 @@
                             </label>
                         </div>
                         @error('decision')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 
@@ -113,7 +102,7 @@
                         <textarea id="note" name="note" rows="4" maxlength="1000"
                             class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600">{{ old('note', $confirmation->note) }}</textarea>
                         @error('note')
-                            <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 

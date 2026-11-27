@@ -34,7 +34,7 @@
                         <span class="font-bold text-[11px] text-slate-700 uppercase tracking-tight font-mono">
                             Informasi Akun & Kredensial
                         </span>
-                        <span class="text-[10px] text-rose-600 font-medium">* Wajib Diisi</span>
+                        <span class="text-xs text-rose-600 font-medium">* Wajib Diisi</span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-2 text-[11px]">
@@ -48,7 +48,7 @@
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('email') border-rose-500 @enderror"
                                     required>
                                 @error('email')
-                                    <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                                     class="w-full px-2 py-1 bg-slate-50 border border-slate-300 rounded text-[11px] font-mono text-slate-900 focus:bg-white focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 @error('password') border-rose-500 @enderror"
                                     required>
                                 @error('password')
-                                    <span class="text-[10px] text-rose-600 mt-0.5 block">{{ $message }}</span>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>

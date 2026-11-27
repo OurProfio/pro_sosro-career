@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    @include('auth.admin.layouts.components.alert')
+    <x-notification />
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

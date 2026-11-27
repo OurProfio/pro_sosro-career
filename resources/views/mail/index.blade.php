@@ -14,7 +14,7 @@
     <label for="email">Alamat tujuan tes</label>
     <input type="email" id="email" name="email" value="{{ old('email') }}" required>
     @error('email')
-        <small style="color: red">{{ $message }}</small>
+        <x-input-error :message="$message" />
     @enderror
 
     <fieldset>
@@ -27,7 +27,7 @@
             </div>
         @endforeach
         @error('templates')
-            <small style="color: red">{{ $message }}</small>
+            <x-input-error :message="$message" />
         @enderror
     </fieldset>
 
@@ -78,7 +78,7 @@
                     <label for="{{ $name }}">{{ $label }}</label>
                     <input type="{{ $type }}" id="{{ $name }}" name="{{ $name }}" value="{{ old($name, $defaults[$name]) }}">
                     @error($name)
-                        <small style="color: red">{{ $message }}</small>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
             @endforeach

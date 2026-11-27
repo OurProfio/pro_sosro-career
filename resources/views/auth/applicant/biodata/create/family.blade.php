@@ -157,7 +157,7 @@
                                             placeholder="Nama Lengkap Suami / Istri"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.name')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -169,7 +169,7 @@
                                             placeholder="Kota Lahir Pasangan"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.place_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -181,7 +181,7 @@
                                             value="{{ old('families.spouse.date_of_birth', $spouse?->date_of_birth ? \Carbon\Carbon::parse($spouse->date_of_birth)->format('Y-m-d') : '') }}"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.date_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -202,7 +202,7 @@
                                             @endforeach
                                         </select>
                                         @error('families.spouse.education')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -213,7 +213,7 @@
                                             value="{{ old('families.spouse.work', $spouse?->work) }}" placeholder="Pekerjaan Pasangan"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.work')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
@@ -225,7 +225,7 @@
                                             placeholder="Contoh: 081234567890"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.phone_number')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
@@ -234,7 +234,7 @@
                                             placeholder="Alamat tempat tinggal pasangan saat ini"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.spouse.address', $spouse?->address) }}</textarea>
                                         @error('families.spouse.address')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                 <div class="border-b border-gray-200/80 pb-3">
                                     <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
                                         <span>Data Orang Tua Mertua</span>
-                                        <span class="text-[11px] font-normal text-gray-400 capitalize">(Opsional)</span>
+                                        <span class="text-xs font-normal text-slate-500 capitalize">(Opsional)</span>
                                     </h3>
                                     <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
                                 </div>
@@ -429,7 +429,7 @@
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap Anak</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][name]" required value="{{ $child['name'] ?? '' }}" placeholder="Nama Lengkap Anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                         @error('families.children.'.$cIndex.'.name')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
@@ -440,21 +440,21 @@
                                                             <option value="p" {{ ($child['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
                                                         </select>
                                                         @error('families.children.'.$cIndex.'.gender')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][place_of_birth]" required value="{{ $child['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                         @error('families.children.'.$cIndex.'.place_of_birth')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                                         <input type="date" name="families[children][{{ $cIndex }}][date_of_birth]" required max="{{ now()->subDay()->format('Y-m-d') }}" value="{{ $child['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                         @error('families.children.'.$cIndex.'.date_of_birth')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
@@ -472,28 +472,28 @@
                                                             @endforeach
                                                         </select>
                                                         @error('families.children.'.$cIndex.'.education')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
                                                         <input type="text" name="families[children][{{ $cIndex }}][work]" required value="{{ $child['work'] ?? '' }}" placeholder="Contoh: Pelajar / Belum Bekerja" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                         @error('families.children.'.$cIndex.'.work')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5 md:col-span-2">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA (Jika ada)</label>
                                                         <input type="tel" name="families[children][{{ $cIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $child['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890 / 0 jika belum punya" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                         @error('families.children.'.$cIndex.'.phone_number')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                     <div class="space-y-1.5 md:col-span-2">
                                                         <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
                                                         <textarea name="families[children][{{ $cIndex }}][address]" rows="2" placeholder="Alamat tempat tinggal anak" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $child['address'] ?? '' }}</textarea>
                                                         @error('families.children.'.$cIndex.'.address')
-                                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                            <x-input-error :message="$message" />
                                                         @enderror
                                                     </div>
                                                 </div>
@@ -535,7 +535,7 @@
                                         value="{{ old('families.father.name', $father?->name) }}" placeholder="Nama Lengkap Ayah Kandung"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.name')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -550,7 +550,7 @@
                                         <option value="divorced" {{ $fatherStatus === 'divorced' ? 'selected' : '' }}>Bercerai</option>
                                     </select>
                                     @error('families.father.status')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -560,7 +560,7 @@
                                         value="{{ old('families.father.place_of_birth', $father?->place_of_birth) }}" placeholder="Kota Lahir Ayah"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.place_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -571,7 +571,7 @@
                                         value="{{ old('families.father.date_of_birth', $father?->date_of_birth ? \Carbon\Carbon::parse($father->date_of_birth)->format('Y-m-d') : '') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.date_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -591,7 +591,7 @@
                                         @endforeach
                                     </select>
                                     @error('families.father.education')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -602,7 +602,7 @@
                                         placeholder="Contoh: PNS / Wirausaha / Pensiunan"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.work')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -614,7 +614,7 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.phone_number')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -623,7 +623,7 @@
                                         placeholder="Alamat tempat tinggal ayah kandung saat ini"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.father.address', $father?->address) }}</textarea>
                                     @error('families.father.address')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -645,7 +645,7 @@
                                          value="{{ old('families.mother.name', $mother?->name) }}" placeholder="Nama Lengkap Ibu Kandung"
                                          class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                      @error('families.mother.name')
-                                         <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                         <x-input-error :message="$message" />
                                      @enderror
                                  </div>
                                  <div class="space-y-1.5">
@@ -660,7 +660,7 @@
                                         <option value="divorced" {{ $motherStatus === 'divorced' ? 'selected' : '' }}>Bercerai</option>
                                     </select>
                                     @error('families.mother.status')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -670,7 +670,7 @@
                                         value="{{ old('families.mother.place_of_birth', $mother?->place_of_birth) }}" placeholder="Kota Lahir Ibu"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.place_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -681,7 +681,7 @@
                                         value="{{ old('families.mother.date_of_birth', $mother?->date_of_birth ? \Carbon\Carbon::parse($mother->date_of_birth)->format('Y-m-d') : '') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.date_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -701,7 +701,7 @@
                                         @endforeach
                                     </select>
                                     @error('families.mother.education')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -712,7 +712,7 @@
                                         placeholder="Contoh: Ibu Rumah Tangga / Wirausaha"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.work')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -724,7 +724,7 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.phone_number')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -733,7 +733,7 @@
                                         placeholder="Alamat tempat tinggal ibu kandung saat ini"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.address') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('families.mother.address', $mother?->address) }}</textarea>
                                     @error('families.mother.address')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -776,7 +776,7 @@
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Nama Lengkap</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][name]" required value="{{ $sibling['name'] ?? '' }}" placeholder="Nama Lengkap Saudara Kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     @error('families.siblings.'.$sIndex.'.name')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
@@ -787,21 +787,21 @@
                                                         <option value="p" {{ ($sibling['gender'] ?? '') === 'p' ? 'selected' : '' }}>Perempuan (P)</option>
                                                     </select>
                                                     @error('families.siblings.'.$sIndex.'.gender')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tempat Lahir</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][place_of_birth]" required value="{{ $sibling['place_of_birth'] ?? '' }}" placeholder="Kota Lahir" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     @error('families.siblings.'.$sIndex.'.place_of_birth')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Tanggal Lahir</label>
                                                     <input type="date" name="families[siblings][{{ $sIndex }}][date_of_birth]" required max="{{ now()->subDay()->format('Y-m-d') }}" value="{{ $sibling['date_of_birth'] ?? '' }}" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     @error('families.siblings.'.$sIndex.'.date_of_birth')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
@@ -819,28 +819,28 @@
                                                         @endforeach
                                                     </select>
                                                     @error('families.siblings.'.$sIndex.'.education')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Pekerjaan</label>
                                                     <input type="text" name="families[siblings][{{ $sIndex }}][work]" required value="{{ $sibling['work'] ?? '' }}" placeholder="Pekerjaan / Pelajar" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     @error('families.siblings.'.$sIndex.'.work')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5 md:col-span-2">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">No. Telepon / WA</label>
                                                     <input type="tel" name="families[siblings][{{ $sIndex }}][phone_number]" required inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ $sibling['phone_number'] ?? '' }}" placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                     @error('families.siblings.'.$sIndex.'.phone_number')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                                 <div class="space-y-1.5 md:col-span-2">
                                                     <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider">Alamat Lengkap</label>
                                                     <textarea name="families[siblings][{{ $sIndex }}][address]" rows="2" placeholder="Alamat tempat tinggal saudara kandung" class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $sibling['address'] ?? '' }}</textarea>
                                                     @error('families.siblings.'.$sIndex.'.address')
-                                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                        <x-input-error :message="$message" />
                                                     @enderror
                                                 </div>
                                             </div>

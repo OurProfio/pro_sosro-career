@@ -114,7 +114,7 @@
                                 </label>
                             </div>
                             @error('has_applied_sosro')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -129,7 +129,7 @@
                                         placeholder="Contoh: Staff HRD / Sales Officer"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('previous_applied_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('previous_applied_position')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -142,7 +142,7 @@
                                         placeholder="Contoh: {{ date('Y') - 1 }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('previous_applied_year') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('previous_applied_year')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                                 </label>
                             </div>
                             @error('has_worked_in_sosro')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -198,7 +198,7 @@
                                         placeholder="Contoh: PT SINAR SOSRO GUNUNG SLAMAT - KBT Jakarta"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_name')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -212,7 +212,7 @@
                                         placeholder="Contoh: Jl. Raya Bogor KM 28, Jakarta Timur"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_address')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -227,7 +227,7 @@
                                         placeholder="Contoh: 0211234567 atau 0812345678"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_phone')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -241,7 +241,7 @@
                                         placeholder="Contoh: Jl. Raya Sultan Agung KM 28, Bekasi"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.company_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.company_address')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -255,7 +255,7 @@
                                         placeholder="Contoh: Sales Officer"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.position')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -269,7 +269,7 @@
                                         value="{{ old('experiences.0.start_date', $sosroExp?->start_date ? \Carbon\Carbon::parse($sosroExp->start_date)->format('Y-m-d') : '') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.start_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.start_date')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -293,7 +293,7 @@
                                         value="{{ old('experiences.0.end_date', $sosroExp?->end_date ? \Carbon\Carbon::parse($sosroExp->end_date)->format('Y-m-d') : '') }}"
                                         class="end-date-input w-full px-4 py-2.5 bg-white rounded-xl border @error('experiences.0.end_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('experiences.0.end_date')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -312,7 +312,7 @@
                                                 placeholder="Contoh: Bpk. Budi Santoso"
                                                 class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_name')
-                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
                                         <div class="space-y-1">
@@ -325,7 +325,7 @@
                                                 placeholder="Contoh: Manager Area Sales"
                                                 class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_position') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_position')
-                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
                                         <div class="space-y-1">
@@ -339,7 +339,7 @@
                                                 placeholder="Contoh: 081234567890"
                                                 class="w-full px-3 py-2 bg-white rounded-xl border @error('experiences.0.reference_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error('experiences.0.reference_phone')
-                                                <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
                                     </div>
@@ -447,7 +447,7 @@
                                             placeholder="Contoh: PT. Maju Bersama"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_name")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -463,7 +463,7 @@
                                             @endforeach
                                         </select>
                                         @error("experiences.{$index}.lob_id")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -476,7 +476,7 @@
                                             placeholder="Contoh: Jl. Merdeka No. 1, Jakarta"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_address") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_address")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -490,7 +490,7 @@
                                             placeholder="Contoh: 0211234567 atau 0812345678"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.company_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.company_phone")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -502,7 +502,7 @@
                                             value="{{ $exp['position'] ?? '' }}" placeholder="Contoh: Staff IT Support"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.position")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -515,7 +515,7 @@
                                             placeholder="Contoh: Information Technology"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.division") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.division")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -533,7 +533,7 @@
                                                 class="salary-input w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.salary") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         </div>
                                         @error("experiences.{$index}.salary")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -548,7 +548,7 @@
                                             <option value="Netto" {{ ($exp['gross_netto'] ?? '') === 'Netto' ? 'selected' : '' }}>Netto</option>
                                         </select>
                                         @error("experiences.{$index}.gross_netto")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -560,7 +560,7 @@
                                             value="{{ $exp['start_date'] ?? '' }}"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.start_date") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.start_date")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -583,7 +583,7 @@
                                             value="{{ $exp['end_date'] ?? '' }}"
                                             class="end-date-input w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.end_date") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.end_date")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -596,7 +596,7 @@
                                             placeholder="Contoh: BPJS Kesehatan, Tunjangan Makan"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.facility") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.facility")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -608,7 +608,7 @@
                                             placeholder="Contoh: Mengelola operasional harian, membuat laporan bulanan, dan koordinasi antar divisi"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.job_desc") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ $exp['job_desc'] ?? '' }}</textarea>
                                         @error("experiences.{$index}.job_desc")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -626,7 +626,7 @@
                                                     placeholder="Contoh: Bpk. Hendra Gunawan"
                                                     class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 @error("experiences.{$index}.reference_name")
-                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                    <x-input-error :message="$message" />
                                                 @enderror
                                             </div>
                                             <div class="space-y-1">
@@ -638,7 +638,7 @@
                                                     placeholder="Contoh: Manager Operasional"
                                                     class="uppercase placeholder:normal-case w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_position") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 @error("experiences.{$index}.reference_position")
-                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                    <x-input-error :message="$message" />
                                                 @enderror
                                             </div>
                                             <div class="space-y-1">
@@ -650,7 +650,7 @@
                                                     placeholder="Contoh: 081234567890"
                                                     class="w-full px-3 py-2 bg-white rounded-xl border @error("experiences.{$index}.reference_phone") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-xs transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                                 @error("experiences.{$index}.reference_phone")
-                                                    <p class="text-[10px] text-red-600 font-medium">{{ $message }}</p>
+                                                    <x-input-error :message="$message" />
                                                 @enderror
                                             </div>
                                         </div>
@@ -665,7 +665,7 @@
                                             placeholder="Contoh: Kontrak kerja berakhir / Ingin mengembangkan karir"
                                             class="uppercase placeholder:normal-case reason-leaving-input w-full px-4 py-2.5 bg-white rounded-xl border @error("experiences.{$index}.reason_for_leaving") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("experiences.{$index}.reason_for_leaving")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-﻿@extends('auth.applicant.layouts.index')
+@extends('auth.applicant.layouts.index')
 
 @section('title', 'Edit Biodata Pelamar')
 
@@ -80,9 +80,9 @@
                                 pattern="[0-9]{16}" maxlength="16" value="{{ old('nik', $applicant->nik) }}"
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="16 digit angka KTP"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('nik') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span class="text-[11px] text-gray-400 block">Harus berisi 16 digit angka.</span>
+                            <span class="text-xs text-slate-500 block">Harus berisi 16 digit angka.</span>
                             @error('nik')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -94,7 +94,7 @@
                                 value="{{ old('name', $applicant->name) }}" placeholder="Nama Lengkap Sesuai KTP"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('name')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -117,7 +117,7 @@
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '');" placeholder="Contoh: 081234567890"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('phone_number') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('phone_number')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -131,7 +131,7 @@
                                     placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
                                     class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', $applicant->address_ktp) }}</textarea>
                                 @error('address_ktp')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -153,7 +153,7 @@
                                     placeholder="Alamat Domisili Tempat Tinggal Saat Ini"
                                     class="w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', $applicant->address_domisili) }}</textarea>
                                 @error('address_domisili')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -179,7 +179,7 @@
                                 </label>
                             </div>
                             @error('gender')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -203,7 +203,7 @@
                                 @endforeach
                             </select>
                             @error('religion')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -216,7 +216,7 @@
                                 value="{{ old('place_of_birth', $applicant->place_of_birth) }}" placeholder="Kota Lahir"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('place_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('place_of_birth')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -230,7 +230,7 @@
                                 value="{{ old('date_of_birth', \Carbon\Carbon::parse($applicant->date_of_birth)->format('Y-m-d')) }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('date_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('date_of_birth')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -242,7 +242,7 @@
                                 value="{{ old('height', $applicant->height) }}" placeholder="Contoh: 170"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('height') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('height')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -254,7 +254,7 @@
                                 value="{{ old('weight', $applicant->weight) }}" placeholder="Contoh: 65"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('weight') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('weight')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -272,7 +272,7 @@
                                 @endforeach
                             </select>
                             @error('blood_type')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -293,7 +293,7 @@
                                 </option>
                             </select>
                             @error('is_smoker')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -315,7 +315,7 @@
                                 </option>
                             </select>
                             @error('has_tattoo')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -343,7 +343,7 @@
                                     Cerai Mati</option>
                             </select>
                             @error('marital_status')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -356,7 +356,7 @@
                                 placeholder="https://instagram.com/username"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('instagram') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('instagram')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -369,7 +369,7 @@
                                 placeholder="https://linkedin.com/in/username"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('linkedin') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('linkedin')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -397,7 +397,7 @@
                                 @endforeach
                             </div>
                             @error('driver_licenses')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -410,7 +410,7 @@
                                 placeholder="Tuliskan riwayat penyakit kronis/serius yang pernah atau sedang diderita, atau kosongkan jika tidak ada"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('medical_history') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('medical_history', $applicant->medical_history) }}</textarea>
                             @error('medical_history')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
                     </div>
@@ -503,7 +503,7 @@
                         @endif
 
                         @error('division_preferences')
-                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 

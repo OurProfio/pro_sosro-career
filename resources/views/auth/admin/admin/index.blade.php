@@ -481,7 +481,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('name') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     placeholder="Contoh: Hendra Gunawan, S.T." required>
                                 @error('name')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -493,7 +493,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('email') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     placeholder="hendra.gunawan@sosro.com" required>
                                 @error('email')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -505,7 +505,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('password') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     placeholder="Minimal 8 karakter" required>
                                 @error('password')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -521,7 +521,7 @@
                                         <option value="superadmin" {{ old('role') === 'superadmin' ? 'selected' : '' }}>Superadmin (Holding)</option>
                                     </select>
                                     @error('role')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -540,7 +540,7 @@
                                         @endforeach
                                     </select>
                                     @error('office_id')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -617,7 +617,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('name') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('name')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -629,7 +629,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('email') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('email')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -638,13 +638,13 @@
                                     <label for="edit_password" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
                                         Kata Sandi Baru
                                     </label>
-                                    <span class="text-[10px] text-slate-400">Kosongkan jika tidak ingin mengubah</span>
+                                    <span class="text-xs text-slate-500">Kosongkan jika tidak ingin mengubah</span>
                                 </div>
                                 <input type="password" name="password" id="edit_password"
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('password') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     placeholder="Masukkan kata sandi baru (minimal 8 karakter)">
                                 @error('password')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -660,7 +660,7 @@
                                         <option value="superadmin">Superadmin (Holding)</option>
                                     </select>
                                     @error('role')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
 
@@ -679,7 +679,7 @@
                                         @endforeach
                                     </select>
                                     @error('office_id')
-                                        <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>

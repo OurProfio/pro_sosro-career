@@ -438,7 +438,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('email') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('email')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -451,7 +451,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('password') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('password')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -527,20 +527,20 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('email') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('email')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
                             <div class="space-y-1.5">
                                 <label for="edit_user_password" class="block text-[11px] font-semibold text-slate-700 uppercase tracking-wider">
-                                    Kata Sandi Baru <span class="text-slate-400 font-normal lowercase">(opsional)</span>
+                                    Kata Sandi Baru <span class="text-slate-500 font-normal lowercase">(opsional)</span>
                                 </label>
                                 <input type="password" name="password" id="edit_user_password"
                                     placeholder="Kosongkan jika tidak ingin mengubah kata sandi"
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('password') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition">
                                 <p class="text-[11px] text-slate-400 mt-1 italic">Isi kolom kata sandi hanya jika ingin mengganti password akun ini.</p>
                                 @error('password')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>

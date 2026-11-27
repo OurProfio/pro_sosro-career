@@ -226,7 +226,7 @@
                             required placeholder="Nama Lengkap"
                             class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition">
                         @error('name')
-                            <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 
@@ -236,7 +236,7 @@
                             value="{{ old('email', auth()->user()?->email ?? '') }}" required placeholder="Email"
                             class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition">
                         @error('email')
-                            <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 
@@ -259,7 +259,7 @@
                             </span>
                         </div>
                         @error('region')
-                            <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 
@@ -269,7 +269,7 @@
                             placeholder="Pesan"
                             class="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-[#B11116] focus:outline-none focus:ring-2 focus:ring-[#B11116]/20 transition resize-y">{{ old('message') }}</textarea>
                         @error('message')
-                            <p class="mt-1.5 text-xs font-medium text-red-600">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 

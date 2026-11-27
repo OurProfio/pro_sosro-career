@@ -127,7 +127,7 @@
                                         class="text-gray-700">2MB</strong>).
                                 </p>
                                 @error('photo')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -135,16 +135,21 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-1.5">
-                            <label for="nik" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                NIK (Sesuai KTP) <span class="text-[#B11116]">*</span>
-                            </label>
+                            <div class="flex items-center justify-between">
+                                <label for="nik" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    NIK (Sesuai KTP) <span class="text-[#B11116]">*</span>
+                                </label>
+                                <span id="nik_counter" class="text-xs font-semibold tabular-nums text-slate-500">{{ strlen((string) old('nik', $applicant->nik ?? '')) }} / 16 digit</span>
+                            </div>
                             <input id="nik" name="nik" type="text" inputmode="numeric" required
                                 pattern="[0-9]{16}" maxlength="16" value="{{ old('nik', $applicant->nik) }}"
                                 placeholder="16 digit angka KTP"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('nik') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span id="msg_nik" class="text-[11px] text-gray-400 block transition-colors">Harus berisi 16 digit angka.</span>
+                                @error('nik') aria-invalid="true" @enderror aria-describedby="msg_nik"
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('nik') border-red-500 ring-2 ring-red-100 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('nik')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error id="msg_nik" :message="$message" />
+                            @else
+                                <span id="msg_nik" class="text-xs text-slate-500 block transition-colors">Harus berisi 16 digit angka sesuai KTP.</span>
                             @enderror
                         </div>
 
@@ -156,21 +161,30 @@
                                 value="{{ old('name', $applicant->name) }}" placeholder="Nama Lengkap Sesuai KTP"
                                 class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('name')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
                         <div class="space-y-1.5">
-                            <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                Alamat Email Resmi <span class="text-[#B11116]">*</span>
-                            </label>
+                            <div class="flex items-center justify-between">
+                                <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider">
+                                    Alamat Email Resmi <span class="text-[#B11116]">*</span>
+                                </label>
+                                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                    </svg>
+                                    Terkunci
+                                </span>
+                            </div>
                             <input id="email" name="email" type="email" required readonly
                                 value="{{ old('email', $applicant->email) }}"
                                 placeholder="nama@email.com"
-                                class="w-full px-4 py-2.5 bg-gray-100 rounded-xl border @error('email') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-600 text-sm transition-all outline-none shadow-sm cursor-not-allowed">
-                            <span id="msg_email" class="text-[11px] text-gray-400 block transition-colors">Alamat email terdaftar akun Anda (tidak dapat diubah).</span>
+                                class="w-full px-4 py-2.5 bg-gray-100 rounded-xl border @error('email') border-red-500 ring-2 ring-red-100 @else border-gray-300 @enderror text-gray-600 text-sm transition-all outline-none shadow-sm cursor-not-allowed">
                             @error('email')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error id="msg_email" :message="$message" />
+                            @else
+                                <span id="msg_email" class="text-xs text-slate-500 block transition-colors">Alamat email terdaftar akun Anda (tidak dapat diubah).</span>
                             @enderror
                         </div>
 
@@ -182,10 +196,12 @@
                             <input id="phone_number" name="phone_number" type="tel" inputmode="numeric" required
                                 maxlength="15" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="{{ old('phone_number', $applicant->phone_number) }}"
                                 placeholder="Contoh: 081234567890"
-                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('phone_number') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span id="msg_phone_number" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif WhatsApp (10-15 digit).</span>
+                                @error('phone_number') aria-invalid="true" @enderror aria-describedby="msg_phone_number"
+                                class="w-full px-4 py-2.5 bg-white rounded-xl border @error('phone_number') border-red-500 ring-2 ring-red-100 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('phone_number')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error id="msg_phone_number" :message="$message" />
+                            @else
+                                <span id="msg_phone_number" class="text-xs text-slate-500 block transition-colors">Nomor aktif WhatsApp (10-15 digit).</span>
                             @enderror
                         </div>
 
@@ -200,7 +216,7 @@
                                         placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota/Kabupaten"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('address_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_ktp', $applicant->address_ktp) }}</textarea>
                                     @error('address_ktp')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -212,9 +228,10 @@
                                         value="{{ old('postal_code_ktp', $applicant->postal_code_ktp ?? '') }}"
                                         placeholder="Contoh: 12345"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('postal_code_ktp') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                    <span id="msg_postal_code_ktp" class="text-[11px] text-gray-400 block transition-colors">5 digit kode pos.</span>
                                     @error('postal_code_ktp')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error id="msg_postal_code_ktp" :message="$message" />
+                                    @else
+                                        <span id="msg_postal_code_ktp" class="text-xs text-slate-500 block transition-colors">5 digit kode pos.</span>
                                     @enderror
                                 </div>
                             </div>
@@ -239,7 +256,7 @@
                                             placeholder="Alamat Domisili Tempat Tinggal Saat Ini"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('address_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('address_domisili', $applicant->address_domisili) }}</textarea>
                                         @error('address_domisili')
-                                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -251,9 +268,10 @@
                                             value="{{ old('postal_code_domisili', $applicant->postal_code_domisili ?? '') }}"
                                             placeholder="Contoh: 12345"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('postal_code_domisili') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <span id="msg_postal_code_domisili" class="text-[11px] text-gray-400 block transition-colors">5 digit kode pos.</span>
                                         @error('postal_code_domisili')
-                                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                            <x-input-error id="msg_postal_code_domisili" :message="$message" />
+                                        @else
+                                            <span id="msg_postal_code_domisili" class="text-xs text-slate-500 block transition-colors">5 digit kode pos.</span>
                                         @enderror
                                     </div>
                                 </div>
@@ -281,7 +299,7 @@
                                 </label>
                             </div>
                             @error('gender')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -302,7 +320,7 @@
                                 @endforeach
                             </select>
                             @error('religion')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -315,7 +333,7 @@
                                 value="{{ old('place_of_birth', $applicant->place_of_birth) }}" placeholder="Kota Lahir"
                                 class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('place_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('place_of_birth')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -329,7 +347,7 @@
                                 value="{{ old('date_of_birth', \Carbon\Carbon::parse($applicant->date_of_birth)->format('Y-m-d')) }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('date_of_birth') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('date_of_birth')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -341,7 +359,7 @@
                                 value="{{ old('height', $applicant->height) }}" placeholder="Contoh: 170"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('height') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('height')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -353,7 +371,7 @@
                                 value="{{ old('weight', $applicant->weight) }}" placeholder="Contoh: 65"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('weight') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             @error('weight')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -371,7 +389,7 @@
                                 @endforeach
                             </select>
                             @error('blood_type')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -392,7 +410,7 @@
                                 </option>
                             </select>
                             @error('is_smoker')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -414,7 +432,7 @@
                                 </option>
                             </select>
                             @error('has_tattoo')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -441,7 +459,7 @@
                                     Cerai Mati</option>
                             </select>
                             @error('marital_status')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -458,9 +476,9 @@
                                 placeholder="Contoh: 2020"
                                 value="{{ old('marital_date', $applicant->marital_date ? (strlen($applicant->marital_date) > 4 ? \Carbon\Carbon::parse($applicant->marital_date)->format('Y') : $applicant->marital_date) : '') }}"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('marital_date') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span class="text-[11px] text-gray-400 block">Masukkan tahun (4 digit, contoh: 2020).</span>
+                            <span class="text-xs text-slate-500 block">Masukkan tahun (4 digit, contoh: 2020).</span>
                             @error('marital_date')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -475,9 +493,9 @@
                                     placeholder="username_anda"
                                     class="w-full pl-9 pr-4 py-2.5 bg-white rounded-xl border @error('instagram') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                             </div>
-                            <span class="text-[11px] text-gray-400 block">Cukup tulis username saja (tanpa link / URL).</span>
+                            <span class="text-xs text-slate-500 block">Cukup tulis username saja (tanpa link / URL).</span>
                             @error('instagram')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -489,9 +507,9 @@
                                 value="{{ old('linkedin', $applicant->linkedin) }}"
                                 placeholder="Contoh: Budi Santoso"
                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error('linkedin') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                            <span class="text-[11px] text-gray-400 block">Tulis nama akun Anda di LinkedIn (jangan gunakan link/URL).</span>
+                            <span class="text-xs text-slate-500 block">Tulis nama akun Anda di LinkedIn (jangan gunakan link/URL).</span>
                             @error('linkedin')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -507,7 +525,7 @@
                                     <h3 class="text-xs font-bold uppercase tracking-wider text-gray-800">
                                         Kontak Darurat (Emergency Contact) <span class="text-[#B11116]">*</span>
                                     </h3>
-                                    <p class="text-[11px] text-gray-500">Wajib diisi: Keluarga atau kerabat terdekat yang dapat dihubungi saat situasi darurat.</p>
+                                    <p class="text-xs text-slate-500">Wajib diisi: Keluarga atau kerabat terdekat yang dapat dihubungi saat situasi darurat.</p>
                                 </div>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -520,7 +538,7 @@
                                         placeholder="Nama Lengkap Kerabat"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_name') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('emergency_contact_name')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -543,7 +561,7 @@
                                         @endforeach
                                     </select>
                                     @error('emergency_contact_relationship')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -555,9 +573,10 @@
                                         value="{{ old('emergency_contact_phone', $applicant->emergency_contact_phone ?? '') }}"
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_phone') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                    <span id="msg_emergency_contact_phone" class="text-[11px] text-gray-400 block transition-colors">Nomor aktif kerabat (10-15 digit).</span>
                                     @error('emergency_contact_phone')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error id="msg_emergency_contact_phone" :message="$message" />
+                                    @else
+                                        <span id="msg_emergency_contact_phone" class="text-xs text-slate-500 block transition-colors">Nomor aktif kerabat (10-15 digit).</span>
                                     @enderror
                                 </div>
                             </div>
@@ -571,7 +590,7 @@
                                         placeholder="Nama Jalan, RT/RW, Kelurahan, Kecamatan"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_address') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('emergency_contact_address', $applicant->emergency_contact_address ?? '') }}</textarea>
                                     @error('emergency_contact_address')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -583,7 +602,7 @@
                                         placeholder="Contoh: DKI Jakarta, Jawa Barat"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_state') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('emergency_contact_state')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -595,7 +614,7 @@
                                         placeholder="Contoh: Jakarta Utara, Kota Bekasi"
                                         class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('emergency_contact_city') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('emergency_contact_city')
-                                        <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -625,7 +644,7 @@
                                 @endforeach
                             </div>
                             @error('driver_licenses')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
 
@@ -638,7 +657,7 @@
                                 placeholder="Tuliskan riwayat penyakit kronis/serius yang pernah atau sedang diderita, atau kosongkan jika tidak ada"
                                 class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('medical_history') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('medical_history', $applicant->medical_history) }}</textarea>
                             @error('medical_history')
-                                <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                <x-input-error :message="$message" />
                             @enderror
                         </div>
                     </div>
@@ -665,7 +684,7 @@
                                         class="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border @error('salary_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 </div>
                                 @error('salary_expectation')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -699,7 +718,7 @@
                                     @endforeach
                                 </select>
                                 @error('job_source')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -713,7 +732,7 @@
                                     placeholder="Masukkan Nama Lengkap Karyawan"
                                     class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('reference_by') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                 @error('reference_by')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -726,7 +745,7 @@
                                     placeholder="Tuliskan ekspektasi fasilitas seperti tunjangan kesehatan, mess, laptop kantor, dll."
                                     class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error('facility_expectation') border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">{{ old('facility_expectation', $applicant->expectation->facility_expectation ?? '') }}</textarea>
                                 @error('facility_expectation')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -753,7 +772,7 @@
                                     </label>
                                 </div>
                                 @error('ready_to_relocate')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
 
@@ -780,7 +799,7 @@
                                     </label>
                                 </div>
                                 @error('ready_to_travel')
-                                    <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -874,7 +893,7 @@
                         @endif
 
                         @error('division_preferences')
-                            <p class="text-xs text-red-600 font-medium mt-1">{{ $message }}</p>
+                            <x-input-error :message="$message" />
                         @enderror
                     </div>
 
@@ -1103,119 +1122,148 @@
             }
 
             // ================= REAL-TIME VALIDATION =================
+            const hciIconOk = '<svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>';
+            const hciIconErr = '<svg class="w-3.5 h-3.5 shrink-0 mt-0.5 text-red-600" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>';
+
             function setFieldStatus(input, msgEl, isValid, message, isNeutral = false) {
                 if (!input || !msgEl) return;
-                msgEl.textContent = message;
-
-                input.classList.remove('border-red-500', 'ring-red-500', 'border-emerald-500', 'ring-emerald-500', 'border-amber-500', 'ring-amber-500');
-                msgEl.classList.remove('text-red-600', 'text-emerald-600', 'text-amber-600', 'text-gray-400');
+                input.classList.remove('border-red-500', 'ring-1', 'ring-red-500', 'ring-2', 'ring-red-100', 'border-emerald-500', 'ring-emerald-500', 'border-amber-500', 'ring-amber-500');
 
                 if (isNeutral) {
-                    msgEl.classList.add('text-gray-400');
+                    input.removeAttribute('aria-invalid');
+                    msgEl.className = 'text-xs text-slate-500 block transition-colors';
+                    msgEl.textContent = message;
                 } else if (isValid) {
                     input.classList.add('border-emerald-500');
-                    msgEl.classList.add('text-emerald-600');
+                    input.removeAttribute('aria-invalid');
+                    msgEl.className = 'text-xs text-emerald-700 font-medium flex items-start gap-1.5 leading-snug transition-colors';
+                    msgEl.innerHTML = `${hciIconOk}<span>${message}</span>`;
                 } else {
-                    input.classList.add('border-red-500');
-                    msgEl.classList.add('text-red-600');
+                    input.classList.add('border-red-500', 'ring-2', 'ring-red-100');
+                    input.setAttribute('aria-invalid', 'true');
+                    msgEl.className = 'text-xs text-red-600 font-medium flex items-start gap-1.5 leading-snug transition-colors';
+                    msgEl.innerHTML = `${hciIconErr}<span>${message}</span>`;
                 }
             }
 
-            // 1. NIK Real-time (16 digits)
+            // 1. NIK Real-time (16 digits — Reward Early, Punish Late)
             const nikInput = document.getElementById('nik');
             const msgNik = document.getElementById('msg_nik');
-            function validateNik() {
+            const nikCounter = document.getElementById('nik_counter');
+            let nikTouched = false;
+            function validateNik(showError = false) {
                 if (!nikInput || !msgNik) return;
                 nikInput.value = nikInput.value.replace(/[^0-9]/g, '');
                 const len = nikInput.value.length;
+                if (nikCounter) {
+                    nikCounter.textContent = `${len} / 16 digit`;
+                    nikCounter.className = len === 16
+                        ? 'text-xs font-semibold tabular-nums text-emerald-700'
+                        : (showError && len > 0 ? 'text-xs font-semibold tabular-nums text-red-600' : 'text-xs font-semibold tabular-nums text-slate-500');
+                }
                 if (len === 0) {
-                    setFieldStatus(nikInput, msgNik, false, 'Wajib diisi (tepat 16 digit angka KTP).', true);
-                } else if (len < 16) {
-                    setFieldStatus(nikInput, msgNik, false, `Masih kurang ${16 - len} digit lagi (${len}/16 digit).`);
+                    setFieldStatus(nikInput, msgNik, false, 'Harus berisi 16 digit angka sesuai KTP.', true);
                 } else if (len === 16) {
-                    setFieldStatus(nikInput, msgNik, true, '✓ NIK lengkap dan valid (16 digit).');
+                    setFieldStatus(nikInput, msgNik, true, 'NIK lengkap dan valid (16 digit).');
+                } else if (showError) {
+                    setFieldStatus(nikInput, msgNik, false, `NIK masih kurang ${16 - len} digit lagi (${len}/16 digit).`);
+                } else {
+                    setFieldStatus(nikInput, msgNik, true, `Sedang mengetik: ${len}/16 digit angka KTP.`, true);
                 }
             }
             if (nikInput) {
-                nikInput.addEventListener('input', validateNik);
-                if (nikInput.value) validateNik();
+                nikInput.addEventListener('input', () => validateNik(nikTouched));
+                nikInput.addEventListener('blur', () => {
+                    if (nikInput.value.length > 0 && nikInput.value.length < 16) {
+                        nikTouched = true;
+                        validateNik(true);
+                    }
+                });
+                if (nikInput.value.length === 16) validateNik(false);
             }
 
-            // Email Real-time
-            const emailInput = document.getElementById('email');
-            const msgEmail = document.getElementById('msg_email');
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            function validateEmail() {
-                if (!emailInput || !msgEmail) return;
-                const val = emailInput.value.trim();
-                if (val.length === 0) {
-                    setFieldStatus(emailInput, msgEmail, false, 'Alamat email wajib diisi.', true);
-                } else if (!emailRegex.test(val)) {
-                    setFieldStatus(emailInput, msgEmail, false, 'Format email harus resmi & valid (contoh: nama@domain.com).');
-                } else {
-                    setFieldStatus(emailInput, msgEmail, true, '✓ Format email resmi valid.');
-                }
-            }
-            if (emailInput) {
-                emailInput.addEventListener('input', validateEmail);
-                if (emailInput.value) validateEmail();
-            }
-
-            // 2. Phone Number Real-time (10-15 digits)
+            // 2. Phone Number Real-time (10-15 digits — Reward Early, Punish Late)
             const phoneInput = document.getElementById('phone_number');
             const msgPhone = document.getElementById('msg_phone_number');
-            function validatePhone(input, msgEl, required = true) {
+            let phoneTouched = false;
+            function validatePhone(input, msgEl, required = true, showError = false) {
                 if (!input || !msgEl) return;
                 input.value = input.value.replace(/[^0-9]/g, '');
                 const len = input.value.length;
                 if (len === 0) {
-                    if (required) {
-                        setFieldStatus(input, msgEl, false, 'Wajib diisi (10 - 15 digit angka).', true);
-                    } else {
-                        setFieldStatus(input, msgEl, true, 'Nomor aktif WhatsApp (10-15 digit).', true);
-                    }
-                } else if (len < 10) {
-                    setFieldStatus(input, msgEl, false, `Masih kurang ${10 - len} digit lagi (minimal 10 digit, saat ini ${len}).`);
-                } else if (len <= 15) {
-                    setFieldStatus(input, msgEl, true, `✓ Nomor telepon valid (${len} digit).`);
-                } else {
+                    setFieldStatus(input, msgEl, true, 'Nomor aktif WhatsApp (10-15 digit).', true);
+                } else if (len >= 10 && len <= 15) {
+                    setFieldStatus(input, msgEl, true, `Nomor telepon valid (${len} digit).`);
+                } else if (len > 15) {
                     setFieldStatus(input, msgEl, false, `Nomor terlalu panjang (maksimal 15 digit, saat ini ${len}).`);
+                } else if (showError) {
+                    setFieldStatus(input, msgEl, false, `Masih kurang ${10 - len} digit lagi (minimal 10 digit, saat ini ${len}).`);
+                } else {
+                    setFieldStatus(input, msgEl, true, `Sedang mengetik: ${len} digit (minimal 10 digit).`, true);
                 }
             }
             if (phoneInput) {
-                phoneInput.addEventListener('input', () => validatePhone(phoneInput, msgPhone, true));
-                if (phoneInput.value) validatePhone(phoneInput, msgPhone, true);
+                phoneInput.addEventListener('input', () => validatePhone(phoneInput, msgPhone, true, phoneTouched));
+                phoneInput.addEventListener('blur', () => {
+                    if (phoneInput.value.length > 0 && phoneInput.value.length < 10) {
+                        phoneTouched = true;
+                        validatePhone(phoneInput, msgPhone, true, true);
+                    }
+                });
+                if (phoneInput.value.length >= 10) validatePhone(phoneInput, msgPhone, true, false);
             }
 
             // 3. Emergency Contact Phone Real-time
             const emgPhoneInput = document.getElementById('emergency_contact_phone');
             const msgEmgPhone = document.getElementById('msg_emergency_contact_phone');
+            let emgPhoneTouched = false;
             if (emgPhoneInput) {
-                emgPhoneInput.addEventListener('input', () => validatePhone(emgPhoneInput, msgEmgPhone, true));
-                if (emgPhoneInput.value) validatePhone(emgPhoneInput, msgEmgPhone, true);
+                emgPhoneInput.addEventListener('input', () => validatePhone(emgPhoneInput, msgEmgPhone, true, emgPhoneTouched));
+                emgPhoneInput.addEventListener('blur', () => {
+                    if (emgPhoneInput.value.length > 0 && emgPhoneInput.value.length < 10) {
+                        emgPhoneTouched = true;
+                        validatePhone(emgPhoneInput, msgEmgPhone, true, true);
+                    }
+                });
+                if (emgPhoneInput.value.length >= 10) validatePhone(emgPhoneInput, msgEmgPhone, true, false);
             }
 
-            // 4. Postal Code Real-time (5 digits)
-            function validatePostal(input, msgId) {
+            // 4. Postal Code Real-time (5 digits — Reward Early, Punish Late)
+            const postalTouched = {};
+            function validatePostal(input, msgId, showError = false) {
                 const msgEl = document.getElementById(msgId);
                 if (!input || !msgEl) return;
                 input.value = input.value.replace(/[^0-9]/g, '');
                 const len = input.value.length;
                 if (len === 0) {
                     setFieldStatus(input, msgEl, true, '5 digit kode pos.', true);
-                } else if (len < 5) {
-                    setFieldStatus(input, msgEl, false, `Masih kurang ${5 - len} digit lagi (${len}/5 digit).`);
                 } else if (len === 5) {
-                    setFieldStatus(input, msgEl, true, '✓ Kode pos valid (5 digit).');
+                    setFieldStatus(input, msgEl, true, 'Kode pos valid (5 digit).');
+                } else if (showError) {
+                    setFieldStatus(input, msgEl, false, `Masih kurang ${5 - len} digit lagi (${len}/5 digit).`);
+                } else {
+                    setFieldStatus(input, msgEl, true, `Sedang mengetik: ${len}/5 digit kode pos.`, true);
                 }
             }
             if (postalKtp) {
-                postalKtp.addEventListener('input', () => validatePostal(postalKtp, 'msg_postal_code_ktp'));
-                if (postalKtp.value) validatePostal(postalKtp, 'msg_postal_code_ktp');
+                postalKtp.addEventListener('input', () => validatePostal(postalKtp, 'msg_postal_code_ktp', !!postalTouched.ktp));
+                postalKtp.addEventListener('blur', () => {
+                    if (postalKtp.value.length > 0 && postalKtp.value.length < 5) {
+                        postalTouched.ktp = true;
+                        validatePostal(postalKtp, 'msg_postal_code_ktp', true);
+                    }
+                });
+                if (postalKtp.value.length === 5) validatePostal(postalKtp, 'msg_postal_code_ktp', false);
             }
             if (postalDomisili) {
-                postalDomisili.addEventListener('input', () => validatePostal(postalDomisili, 'msg_postal_code_domisili'));
-                if (postalDomisili.value) validatePostal(postalDomisili, 'msg_postal_code_domisili');
+                postalDomisili.addEventListener('input', () => validatePostal(postalDomisili, 'msg_postal_code_domisili', !!postalTouched.dom));
+                postalDomisili.addEventListener('blur', () => {
+                    if (postalDomisili.value.length > 0 && postalDomisili.value.length < 5) {
+                        postalTouched.dom = true;
+                        validatePostal(postalDomisili, 'msg_postal_code_domisili', true);
+                    }
+                });
+                if (postalDomisili.value.length === 5) validatePostal(postalDomisili, 'msg_postal_code_domisili', false);
             }
 
             // 5. Height & Weight Real-time

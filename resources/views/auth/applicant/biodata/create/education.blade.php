@@ -86,9 +86,7 @@
                     </div>
 
                     @error('educations')
-                        <div class="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-semibold">
-                            {{ $message }}
-                        </div>
+                        <x-input-error :message="$message" class="p-3 bg-red-50 border border-red-200 rounded-xl" />
                     @enderror
 
                     <div id="educationContainer" class="space-y-6">
@@ -199,7 +197,7 @@
                                             @endif
                                         </select>
                                         @error("educations.{$index}.degree_level")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -249,7 +247,7 @@
                                         </div>
 
                                         @error("educations.{$index}.institution_name")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -262,7 +260,7 @@
                                             placeholder="Contoh: Jakarta Selatan, Depok, Jawa Barat"
                                             class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.state") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("educations.{$index}.state")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -317,7 +315,7 @@
                                         </div>
 
                                         @error("educations.{$index}.faculty")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -367,7 +365,7 @@
                                         </div>
 
                                         @error("educations.{$index}.major")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -379,10 +377,10 @@
                                             name="educations[{{ $index }}][gpa]" required
                                             value="{{ $edu['gpa'] ?? '' }}" placeholder="Contoh: 3.75 atau 85.50"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.gpa") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                                        <span class="text-[11px] text-gray-400 block">Gunakan skala 4.00 untuk PT atau
+                                        <span class="text-xs text-slate-500 block">Gunakan skala 4.00 untuk PT atau
                                             100.00 untuk SMA.</span>
                                         @error("educations.{$index}.gpa")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -395,7 +393,7 @@
                                             value="{{ $edu['entry_year'] ?? '' }}" placeholder="Contoh: 2020"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.entry_year") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("educations.{$index}.entry_year")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
 
@@ -415,7 +413,7 @@
                                             value="{{ $edu['graduation_year'] ?? '' }}" placeholder="Contoh: 2024"
                                             class="graduation-year-input w-full px-4 py-2.5 bg-white rounded-xl border @error("educations.{$index}.graduation_year") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error("educations.{$index}.graduation_year")
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                 </div>
@@ -505,7 +503,7 @@
                                                 placeholder="Contoh: Fullstack Web Development"
                                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.training_name") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("trainings.{$tIndex}.training_name")
-                                                <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
 
@@ -517,7 +515,7 @@
                                                 value="{{ $tr['organizer'] ?? '' }}" placeholder="Contoh: Dicoding Indonesia / BNSP"
                                                 class="uppercase placeholder:normal-case w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.organizer") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("trainings.{$tIndex}.organizer")
-                                                <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
 
@@ -529,7 +527,7 @@
                                                 value="{{ $tr['finished'] ?? '' }}"
                                                 class="w-full px-4 py-2.5 bg-white rounded-xl border @error("trainings.{$tIndex}.finished") border-red-500 ring-1 ring-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                             @error("trainings.{$tIndex}.finished")
-                                                <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                                <x-input-error :message="$message" />
                                             @enderror
                                         </div>
                                     </div>
@@ -762,7 +760,7 @@
                     <input type="number" step="0.01" min="0" max="100" name="educations[{INDEX}][gpa]"
                         required placeholder="Contoh: 3.75 atau 85.50"
                         class="w-full px-4 py-2.5 bg-white rounded-xl border border-gray-300 text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
-                    <span class="text-[11px] text-gray-400 block">Gunakan skala 4.00 untuk PT atau 100.00 untuk SMA.</span>
+                    <span class="text-xs text-slate-500 block">Gunakan skala 4.00 untuk PT atau 100.00 untuk SMA.</span>
                 </div>
 
                 <div class="space-y-1.5">

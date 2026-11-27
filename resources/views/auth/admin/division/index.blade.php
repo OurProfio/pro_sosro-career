@@ -284,7 +284,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('name') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     placeholder="Contoh: Human Capital & Corporate Affairs" required>
                                 @error('name')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>
@@ -360,7 +360,7 @@
                                     class="w-full px-4 py-2 text-xs rounded-xl border {{ $errors->has('name') ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200' }} bg-slate-50/50 hover:border-slate-300 focus:bg-white focus:border-[#A6192E] focus:ring-2 focus:ring-[#A6192E]/20 text-slate-800 placeholder-slate-400 transition"
                                     required>
                                 @error('name')
-                                    <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+                                    <x-input-error :message="$message" />
                                 @enderror
                             </div>
                         </div>

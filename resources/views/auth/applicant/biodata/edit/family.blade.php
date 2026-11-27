@@ -106,7 +106,7 @@
                                         value="{{ old('families.father.name') }}" placeholder="Nama Lengkap Ayah Kandung"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.name')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -118,7 +118,7 @@
                                         <option value="divorced" {{ old('families.father.status') === 'divorced' ? 'selected' : '' }}>Bercerai</option>
                                     </select>
                                     @error('families.father.status')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -128,7 +128,7 @@
                                         value="{{ old('families.father.place_of_birth') }}" placeholder="Kota Lahir Ayah"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.place_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -139,7 +139,7 @@
                                         value="{{ old('families.father.date_of_birth') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.date_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -174,7 +174,7 @@
                                             Tidak Sekolah</option>
                                     </select>
                                     @error('families.father.education')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -185,7 +185,7 @@
                                         placeholder="Contoh: PNS / Wirausaha / Pensiunan"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.work')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -197,7 +197,7 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.father.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.father.phone_number')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -219,7 +219,7 @@
                                         value="{{ old('families.mother.name') }}" placeholder="Nama Lengkap Ibu Kandung"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.name')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -231,7 +231,7 @@
                                         <option value="divorced" {{ old('families.mother.status') === 'divorced' ? 'selected' : '' }}>Bercerai</option>
                                     </select>
                                     @error('families.mother.status')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -241,7 +241,7 @@
                                         value="{{ old('families.mother.place_of_birth') }}" placeholder="Kota Lahir Ibu"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.place_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -252,7 +252,7 @@
                                         value="{{ old('families.mother.date_of_birth') }}"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.date_of_birth')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -288,7 +288,7 @@
                                             Tidak Sekolah</option>
                                     </select>
                                     @error('families.mother.education')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5">
@@ -299,7 +299,7 @@
                                         placeholder="Contoh: Ibu Rumah Tangga / Wirausaha"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.work')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                                 <div class="space-y-1.5 md:col-span-2">
@@ -311,7 +311,7 @@
                                         placeholder="Contoh: 081234567890"
                                         class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.mother.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                     @error('families.mother.phone_number')
-                                        <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                        <x-input-error :message="$message" />
                                     @enderror
                                 </div>
                             </div>
@@ -381,7 +381,7 @@
                                             placeholder="Nama Lengkap Suami / Istri"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.name') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.name')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -393,7 +393,7 @@
                                             placeholder="Kota Lahir Pasangan"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.place_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.place_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -405,7 +405,7 @@
                                             value="{{ old('families.spouse.date_of_birth') }}"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.date_of_birth') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.date_of_birth')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -443,7 +443,7 @@
                                                 Tidak Sekolah</option>
                                         </select>
                                         @error('families.spouse.education')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5">
@@ -454,7 +454,7 @@
                                             value="{{ old('families.spouse.work') }}" placeholder="Pekerjaan Pasangan"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.work') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.work')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                     <div class="space-y-1.5 md:col-span-2">
@@ -466,7 +466,7 @@
                                             placeholder="Contoh: 081234567890"
                                             class="w-full px-4 py-2.5 bg-white rounded-xl border @error('families.spouse.phone_number') border-red-500 @else border-gray-300 @enderror text-gray-900 text-sm transition-all focus:border-[#B11116] focus:ring-2 focus:ring-red-100 outline-none shadow-sm">
                                         @error('families.spouse.phone_number')
-                                            <p class="text-xs text-red-600 font-medium">{{ $message }}</p>
+                                            <x-input-error :message="$message" />
                                         @enderror
                                     </div>
                                 </div>
@@ -476,7 +476,7 @@
                                 <div class="border-b border-gray-200/80 pb-3">
                                     <h3 class="text-xs font-bold text-gray-800 uppercase tracking-wider flex items-center gap-2">
                                         <span>Data Orang Tua Mertua</span>
-                                        <span class="text-[11px] font-normal text-gray-400 capitalize">(Opsional)</span>
+                                        <span class="text-xs font-normal text-slate-500 capitalize">(Opsional)</span>
                                     </h3>
                                     <p class="text-xs text-gray-500 mt-0.5">Isi data ayah mertua dan ibu mertua jika berkenan.</p>
                                 </div>

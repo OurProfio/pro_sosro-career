@@ -190,9 +190,12 @@
                         </div>
 
                         <div id="fields-offering" class="stage-fields hidden space-y-4">
-                            <div class="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3">
-                                <p class="text-sm text-amber-700">
-                                    Email pemberitahuan tahap <strong>Offering Letter</strong> akan dikirimkan secara otomatis kepada kandidat.
+                            <div class="bg-white rounded-xl border border-amber-200 border-l-4 border-l-amber-500 p-3.5 flex items-start gap-3 shadow-xs">
+                                <div class="shrink-0 w-7 h-7 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed pt-0.5">
+                                    Email pemberitahuan tahap <strong class="text-slate-900">Offering Letter</strong> akan dikirimkan secara otomatis kepada kandidat.
                                 </p>
                             </div>
                         </div>
@@ -265,9 +268,12 @@
 
                         <div id="fields-accept" class="stage-fields hidden space-y-4">
 
-                            <div class="rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3">
-                                <p class="text-sm text-emerald-700">
-                                    Template email: <strong id="modal-office-type">-</strong>
+                            <div class="bg-white rounded-xl border border-slate-200 border-l-4 border-l-emerald-600 p-3.5 flex items-center gap-3 shadow-xs">
+                                <div class="shrink-0 w-7 h-7 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                                </div>
+                                <p class="text-xs text-slate-600">
+                                    Template email: <strong id="modal-office-type" class="text-slate-900">-</strong>
                                 </p>
                             </div>
 
@@ -279,7 +285,7 @@
                                 <input type="text" name="request_code" id="request_code"
                                     placeholder="Contoh: RCR20261117235"
                                     class="uppercase placeholder:normal-case block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100">
-                                <p class="mt-1 text-xs text-slate-400">Kode FPTK dari HRIS yang akan disimpan ke data transfer HRIS.</p>
+                                <p class="mt-1 text-xs text-slate-500">Kode FPTK dari HRIS yang akan disimpan ke data transfer HRIS.</p>
                             </div>
 
                             <div class="relative">
@@ -293,7 +299,7 @@
                                 <div id="position_dropdown"
                                     class="hidden absolute z-50 mt-1 max-h-56 w-full overflow-y-auto rounded-lg border border-slate-200 bg-white shadow-lg">
                                 </div>
-                                <p class="mt-1 text-xs text-slate-400">Pilih posisi dari master THRMPosition HRIS untuk Applied &amp; Expected Position.</p>
+                                <p class="mt-1 text-xs text-slate-500">Pilih posisi dari master THRMPosition HRIS untuk Applied &amp; Expected Position.</p>
                             </div>
 
                             <div>
@@ -317,16 +323,22 @@
                         </div>
 
                         <div id="fields-reject" class="stage-fields hidden space-y-4">
-                            <div class="rounded-xl border border-rose-100 bg-rose-50 px-4 py-3">
-                                <p class="text-sm text-rose-700">
+                            <div class="bg-white rounded-xl border border-red-200 border-l-4 border-l-red-600 p-3.5 flex items-start gap-3 shadow-xs">
+                                <div class="shrink-0 w-7 h-7 rounded-lg bg-red-50 text-red-700 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed pt-0.5">
                                     Email penolakan akan dikirimkan secara otomatis kepada kandidat.
                                 </p>
                             </div>
                         </div>
 
                         <div id="fields-none" class="stage-fields hidden">
-                            <div class="rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
-                                <p class="text-sm text-slate-600">
+                            <div class="bg-white rounded-xl border border-slate-200 border-l-4 border-l-blue-600 p-3.5 flex items-start gap-3 shadow-xs">
+                                <div class="shrink-0 w-7 h-7 rounded-lg bg-blue-50 text-blue-700 flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed pt-0.5">
                                     Tahapan ini tidak membutuhkan input tambahan.
                                 </p>
                             </div>
@@ -341,7 +353,7 @@
                         <textarea name="notes" id="modal-notes" rows="3" maxlength="2000" disabled
                             placeholder="Contoh: hasil interview, kekuatan & kekurangan kandidat"
                             class="block w-full rounded-lg border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"></textarea>
-                        <p class="mt-1 text-xs text-slate-400">Catatan ini terlihat di detail pelamar dan oleh user saat konfirmasi.</p>
+                        <p class="mt-1 text-xs text-slate-500">Catatan ini terlihat di detail pelamar dan oleh user saat konfirmasi.</p>
                     </div>
 
                 </div>

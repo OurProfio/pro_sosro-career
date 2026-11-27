@@ -21,20 +21,20 @@
                 <div>
                     <label for="email" class="block font-semibold text-gray-700 text-sm mb-1">Email</label>
                     <input id="email" type="email" name="email"
-                        class="block w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none"
-                        value="{{ old('email') }}" required autofocus placeholder="Masukkan email Anda" />
+                        class="block w-full bg-gray-50 border @error('email') border-red-500 ring-2 ring-red-100 @else border-gray-200 @enderror rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none"
+                        value="{{ old('email') }}" required autofocus placeholder="Masukkan email Anda" @error('email') aria-invalid="true" @enderror />
 
                     @error('email')
-                        <p class="text-sm text-red-600 mt-1.5 font-medium">{{ $message }}</p>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
                 <div>
                     <label for="password" class="block font-semibold text-gray-700 text-sm mb-1">Password</label>
                     <input id="password" type="password" name="password"
-                        class="block w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none pr-12"
-                        required placeholder="••••••••" />
+                        class="block w-full bg-gray-50 border @error('password') border-red-500 ring-2 ring-red-100 @else border-gray-200 @enderror rounded-lg px-4 py-3 text-sm focus:ring-4 focus:ring-red-50 focus:border-red-500 focus:bg-white transition-all outline-none pr-12"
+                        required placeholder="••••••••" @error('password') aria-invalid="true" @enderror />
                     @error('password')
-                        <p class="text-sm text-red-600 mt-1.5 font-medium">{{ $message }}</p>
+                        <x-input-error :message="$message" />
                     @enderror
                 </div>
 
